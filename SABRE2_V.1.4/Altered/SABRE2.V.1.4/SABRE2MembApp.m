@@ -107,7 +107,7 @@ else
    JNodevalue_i(mnum,12)=JNodevalue_i(mnum,10) ...
       +JNodevalue_i(mnum,7)+JNodevalue_i(mnum,9);     % total depth
    JNodevalue_i(mnum,13)=JNodevalue_i(mnum,10) ...
-      +(JNodevalue_i(mnum,7)+JNodevalue_i(mnum,9))/2; % flange centroid 
+      +(JNodevalue_i(mnum,7)+JNodevalue_i(mnum,9))/2; %top flange centroid coordinates
    JNodevalue_i(mnum,14)=str2double(get(pde_fili_edit, 'String')); 
    % j node
    JNodevalue_j(mnum,1)=Massemble(mnum,1);
@@ -124,7 +124,7 @@ else
    JNodevalue_j(mnum,12)=JNodevalue_j(mnum,10) ...
       +JNodevalue_j(mnum,7)+JNodevalue_j(mnum,9);     % total depth
    JNodevalue_j(mnum,13)=JNodevalue_j(mnum,10) ...
-      +(JNodevalue_j(mnum,7)+JNodevalue_j(mnum,9))/2; % flange centroid 
+      +(JNodevalue_j(mnum,7)+JNodevalue_j(mnum,9))/2; %top flange centroid coordinates
    JNodevalue_j(mnum,14)=str2double(get(pde_filj_edit, 'String'));
    % Reference axis.
    if isempty(Rval)
@@ -134,7 +134,7 @@ else
       end   
    end
    Rval(mnum,1)=mnum;
-   Rval(mnum,2)=get(pde_reference_edit,'Value');   
+   Rval(mnum,2)=get(pde_reference_edit,'Value');   %Rval is design axis information, 3 = flange 1, 2 = flange 2, 1= mid-web
 
    % ************** Rolled section   
    % Set pre-definded database
@@ -143,6 +143,7 @@ else
    SECTION=Sectiondata.SECTION;
 
    for i=1:(length(SECTION(:,1)))
+       i
       if isequal(SECTION(i,1),str2double(get(pde_bfbi_edit,'String'))) && isequal(SECTION(i,2),str2double(get(pde_tfbi_edit,'String'))) ... 
             && isequal(SECTION(i,3),str2double(get(pde_bfti_edit,'String'))) && isequal(SECTION(i,4),str2double(get(pde_tfti_edit,'String'))) ...
             && isequal(round(SECTION(i,5)*10^5)/10^5,round( ( str2double(get(pde_dwi_edit,'String'))  + str2double(get(pde_tfbi_edit,'String')) + str2double(get(pde_tfti_edit,'String'))  )*10^5)/10^5) ...
@@ -162,8 +163,8 @@ else
                Massemble(mnum,2) = str2double(get(pde_jointi_edit,'String'));
                Massemble(mnum,3) = str2double(get(pde_jointj_edit,'String'));           
                Massemble(mnum,4) = 1;
-               Massemble(mnum,5) = SECTION(i,7); % A
-               Massemble(mnum,6) = SECTION(i,8); % W
+               Massemble(mnum,5) = SECTION(i,7); % Area 
+               Massemble(mnum,6) = SECTION(i,8); % Nominal Weight
                Massemble(mnum,7) = SECTION(i,9); % Ix
                Massemble(mnum,8) = SECTION(i,10); % Zx
                Massemble(mnum,9) = SECTION(i,11); % Sx
@@ -174,6 +175,8 @@ else
                Massemble(mnum,14) = SECTION(i,16); % ry
                Massemble(mnum,15) = SECTION(i,17); % J
                Massemble(mnum,16) = SECTION(i,18); % Cw
+               format shortG
+               Massemble
             break;
             
       else

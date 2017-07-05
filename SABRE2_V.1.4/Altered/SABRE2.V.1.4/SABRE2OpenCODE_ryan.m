@@ -1,13 +1,20 @@
-function [JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,...
-   SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,LNC,LNC1,LNC2,...
-   LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,AnalP]=SABRE2OpenCODE(data,vrum_az_slider,vrum_el_slider,...
-   vrum_az_edit,vrum_el_edit,axesm,vstm)
+% function [JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,...
+%    SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,LNC,LNC1,LNC2,...
+%    LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,AnalP]=SABRE2OpenCODE(data,vrum_az_slider,vrum_el_slider,...
+%    vrum_az_edit,vrum_el_edit,axesm,vstm)
 % Developed by Woo Yong Jeong.
 % Date : 12/01/2012.
 % ************************************************************************
 % *****************           OPEN AND LOAD FILE      ********************
+<<<<<<< HEAD:SABRE2_V.1.4/Altered/SABRE2.V.1.4/SABRE2OpenCODE_ryan.m
+% ************************************************************************
+file = 'C:\Users\rslein3\Desktop\SABRE2Calculator.V.1.4_Batch_Elastic_mod\input\case errors\rho02.mat'
+data=load(file,'-ascii');
+JNodevalue = data.JNodevalue; 
+=======
 % ************************************************************************ 
 JNodevalue = data.JNodevalue 
+>>>>>>> 6b28822d7139bc6b5a1ae2bd584aacb50f0cca1e:SABRE2_V.1.4/Altered/SABRE2.V.1.4/SABRE2OpenCODE.m
 Massemble = data.Massemble;
 disp(num2str(Massemble))
 JNodevalue_i = data.JNodevalue_i

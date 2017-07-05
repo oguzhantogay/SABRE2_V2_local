@@ -8,307 +8,260 @@ function SABRE2
 % *****      Linear/Nonlinear Elastic & Linear/Nonlinear Inelastic   *****
 % *****      3D Rendering                                            *****
 % ************************************************************************
-clc; 
-scrsz = get(groot,'ScreenSize'); Sw=scrsz(3); Sd=scrsz(4);% Get ScreenSize
-% Create and then hide the GUI(Master figure) as it is being constructed.
-masterf = figure('Position',[Sw/10,Sd/10,round(Sw*8/10),round(Sd*8/10)],'Units','normalized',...
-   'MenuBar','none','NumberTitle','off','Visible','off','Name','SABRE2','Color','k');
-if scrsz(3) > 2050
-   Fs=1;
-else
-   Fs = Sw/2050;
-end
-% Global Variables
-global filename; filename = []; 
-global pathname; pathname = [];
-global JNodevalue; JNodevalue = [];       % Joint Nodes Information
-global Massemble;  Massemble = [];        % Member assemble Information
-global JNodevalue_i; JNodevalue_i = [];   % Joint Nodes i Information
-global JNodevalue_j; JNodevalue_j = [];   % Joint Nodes j Information
-global Rval; Rval=[];                     % Reference axis
-global BNodevalue; BNodevalue = [];       % Additional Nodes Information
-global SNodevalue; SNodevalue =[];        % Material Properties & # of ele.
-global RNCc;  RNCc = [];   % Total Nodes Information without duplication
-global NCc;  NCc = [];     % Total Nodes Information without duplication
-global Nshe1;  Nshe1 = []; % Total Nodes SC Information for start nodes
-global Nshe2;  Nshe2 = []; % Total Nodes SC Information for end nodes
-global DUP1; DUP1 = [];    % Total Nodes RA Information for start nodes
-global DUP2; DUP2 = [];    % Total Nodes RA Information for end nodes
-global LNC; LNC = [];      % Point Loading Nodal Information
-global LNC1; LNC1 = [];    % Point Loading Information for start nodes
-global LNC2; LNC2 = [];    % Point Loading Information for end nodes
-global LUEC; LUEC = [];    % Distributed Loading Information 
-global PNC; PNC = [];      % Fixed Boundary Condition Information
-global PNC1; PNC1 = [];    % Fixed Boundary Condition Information for start nodes
-global PNC2; PNC2 = [];    % Fixed Boundary Condition Information for end nodes
-global BNC; BNC = [];      % Ground Spring Information
-global FEL; FEL = [];      % Flexure Information
-global BNC1; BNC1 = [];    % Shear Panel Information for start nodes
-global BNC2; BNC2 = [];    % Shear Panel Information for end nodes
-global OBJ;                % Fitting Objective
-global t; t=[]; global ULoad; ULoad=[]; 
 
-global gammma; global Funew; global FunewP; global FunewR; global QintgP;global EGunew; global Qintf; global QintfE;global Qintg1; global Qintg2;
-global APP; global AR; global AS; global AE; global AI; global Sincre; global error; global MIE;
-global ANE; global ANI; global Buc; global Rtype; global crLTB; global LGv; global Itype; global LabType;
-global Bhe1; Bhe1=[]; global Bhe2; Bhe2=[]; global The1; The1=[];
-global The2; The2=[]; global Bhg; Bhg=[]; global Thg; Thg=[]; global CSg; CSg=[];
-global SGhe1; SGhe1=[]; global SGhe2; SGhe2=[]; global Mhe1; Mhe1=[]; global Mhe2; Mhe2=[]; 
-global tau; tau=[]; global Rpg; Rpg=[]; global Rpc; Rpc=[]; global Rpt; Rpt=[];
-global Rh; Rh=[]; global Myc; Myc=[]; global Jval; Jval=[]; global My; My=[]; global Phi_Py; Phi_Py=[];
-global Myt; Myt=[]; global Phi_Mmax; Phi_Mmax=[]; global UC; UC=[];
-global LTYPE; LTYPE=[]; global cflag; cflag=0; global LNCpv; LNCpv=[];
-global LIAType; LIAType=0; global NLIAType; NLIAType=0; global HomoType; HomoType=0; global AnalP; AnalP=[];
-APP=0;AR=0; AS=0; AE=0; AI=0; ANE=0; ANI=0; Buc=0; Rtype=0; crLTB = 0; LGv=0; Itype=zeros(1,2); LabType=zeros(1,10);
-gammma=[]; Funew=[]; FunewP=[]; FunewR=[];QintgP=[];EGunew=[]; Qintf=[];QintfE=[];Qintg1=[];Qintg2=[]; MIE =[];
-% ************************************************************************
-% *****************               MENUS              *********************
-% ************************************************************************
-fm = uimenu(masterf,'Label','File');   % File memu
-   fim = uimenu(fm,'Label','About','Callback',{@file_info_menu_Callback});
-   fnm = uimenu(fm,'Label','New','Callback',{@file_new_menu_Callback});
-   fom = uimenu(fm,'Label','Open','Callback',{@file_open_menu_Callback});
-   fsm = uimenu(fm,'Label','Save','Callback',{@file_save_menu_Callback});
-   fsam= uimenu(fm,'Label','Save As','Callback',{@file_saveas_menu_Callback});
-   fprm= uimenu(fm,'Label','Preview','Callback',{@file_preview_menu_Callback});
-   fpm = uimenu(fm,'Label','Print','Callback',{@file_print_menu_Callback});
-   fppm= uimenu(fm,'Label','Print Photo','Callback',{@file_printphoto_menu_Callback});
-   fqm = uimenu(fm,'Label','Quit','Callback',{@file_quit_menu_Callback});   
-vm = uimenu(masterf,'Label','View');
-   vzm = uimenu(vm,'Label','Zoom','Callback',{@view_zoom_menu_Callback});
-   vrm = uimenu(vm,'Label','Rotate','Callback',{@view_rotate_menu_Callback});
-   vpm = uimenu(vm,'Label','Pan','Callback',{@view_pan_menu_Callback});
-   vctm = uimenu(vm,'Label','Camera Toolbar','Callback',{@view_camera_toolbar_menu_Callback});
-   vdm = uimenu(vm,'Label','Defined Views');   
-      vrom = uimenu(vdm,'Label','Isometric(X-Y-Z) View','Callback',{@view_defined_xyz_menu_Callback});
-      vrxym = uimenu(vdm,'Label','Front(X-Y) View','Callback',{@view_defined_xy_menu_Callback});
-      vrxzm = uimenu(vdm,'Label','Top(X-Z) View','Callback',{@view_defined_xz_menu_Callback});
-      vryzm = uimenu(vdm,'Label','Side(Y-Z) View','Callback',{@view_defined_yz_menu_Callback});
-      vrum = uimenu(vdm,'Label','User Defined View','Callback',{@view_defined_user_menu_Callback});      
-   vfm = uimenu(vm,'Label','Fit','Callback',{@view_fit_menu_Callback});
-   vcm = uimenu(vm,'Label','Screen Center','Callback',{@view_center_menu_Callback});  
-   vdum = uimenu(vm,'enable','off','Label','Diagram Data View','Callback',{@view_diagram_menu_Callback});
-   vtum = uimenu(vm,'enable','off','Label','Data Labels','Callback',{@view_text_menu_Callback});  
-   vlam = uimenu(vm,'Label','Graphic Labels');
-%       vmjn = uimenu(vlam,'Label','Joint Number','Callback',{@view_jn_menu_Callback}); 
-%       vmmn = uimenu(vlam,'Label','Member Number','Callback',{@view_mnum_menu_Callback}); 
-%       vmsn = uimenu(vlam,'Label','Segment Number','Callback',{@view_snum_menu_Callback});
-%       vmfn = uimenu(vlam,'Label','Flange Number','Callback',{@view_fnum_menu_Callback});  
-      vmbf = uimenu(vlam,'Label','Fixities','Callback',{@view_bf_menu_Callback});
-      vmbs = uimenu(vlam,'Label','Shear Panel','Callback',{@view_bs_menu_Callback});
-      vmbg = uimenu(vlam,'Label','Discrete Grounded Spring','Callback',{@view_bg_menu_Callback});
-      vmbw = uimenu(vlam,'Label','Element Flexural & /or Warping Releases','Callback',{@view_bw_menu_Callback});
-      vmbp = uimenu(vlam,'Label','Point Loads','Callback',{@view_bp_menu_Callback});
-      vmbu = uimenu(vlam,'Label','Uniform Loads','Callback',{@view_bu_menu_Callback});      
-   vstm = uimenu(vm,'Label','White Background','Callback',{@view_screenshot_menu_Callback});
-pm = uimenu(masterf,'Label','Properties');
-   pdm = uimenu(pm,'Label','Define Geometry','Tag','define','Callback',{@property_define_model_menu_Callback});
-      pdnm = uimenu(pdm,'Label','Define Joint(s)','Callback',{@property_define_joint_menu_Callback});
-      pdem = uimenu(pdm,'Label','Define Member(s) & Section(s)','Callback',{@property_define_member_menu_Callback}); 
-      pdbm = uimenu(pdm,'Label','Add node(s)','Callback',{@property_define_segment_menu_Callback});
-      pdmi = uimenu(pdm,'Label','Mirror w.r.t y-axis','Callback',{@property_define_mirror_menu_Callback});
-   pam = uimenu(pm,'Label','Subdivide Segment(s) & Assign Material','Tag','assign','Callback',{@property_assign_menu_Callback});   
-      psm = uimenu(pam,'Label','Homogenous Member(s)','Callback',{@property_homo_material_menu_Callback}); 
-      phm = uimenu(pam,'Label','Hybrid Member(s)','Callback',{@property_hybrid_material_menu_Callback}); 
-cm = uimenu(masterf,'Label','Conditions');      
-   bm = uimenu(cm,'Label','Boundary Conditions','Tag','bcs','Callback',{@bc_menu_Callback});
-      bfm = uimenu(bm,'Label','Define Fixities','Callback',{@bc_fixities_menu_Callback}); 
-      bsm = uimenu(bm,'Label','Define Shear Panel','Callback',{@bc_shear_menu_Callback}); 
-      bgm = uimenu(bm,'Label','Define Discrete Grounded Spring','Callback',{@bc_ground_menu_Callback});    
-      bpm = uimenu(bm,'Label','Define Element Flexural & /or Warping Releases','Callback',{@bc_flexure_menu_Callback}); 
-   lm = uimenu(cm,'Label','Loads','Tag','loads','Callback',{@loads_menu_Callback});
-      lfm = uimenu(lm,'Label','Define Point Loads','Callback',{@loads_force_menu_Callback});
-      lum = uimenu(lm,'Label','Define Uniform Loads','Callback',{@loads_uniform_menu_Callback});       
-ap = uimenu(masterf,'Label','Analysis Parameters','Tag','Anal','Callback',{@analysis_para_Callback}); 
-   aps = uimenu(ap,'Label','Analysis Parameters','Callback',{@analysis_parasub_menu_Callback});
-am = uimenu(masterf,'Label','Analysis','Tag','Anal','Callback',{@analysis_menu_Callback});
-   a1m = uimenu(am,'Label','1st-Order Elastic Analysis','Callback',{@analysis_1stelastic_menu_Callback});
-   a2m = uimenu(am,'Label','2nd-Order Elastic Analysis','Callback',{@analysis_2ndelastic_menu_Callback}); 
-   a3m = uimenu(am,'Label','Elastic Linear Buckling Analysis','Callback',{@analysis_ecba_menu_Callback});     
-   a5m = uimenu(am,'Label','Elastic Nonlinear Buckling Analysis','Callback',{@analysis_nonecba_menu_Callback});    
-   a4m = uimenu(am,'Label','Inelastic Linear Buckling','Callback',{@analysis_icba_menu_Callback});
-      a4md = uimenu(a4m,'Label','Inelastic Linear Buckling Analysis','Callback',{@analysis_icba_Design_menu_Callback});
-      a4mc = uimenu(a4m,'Label','Inelastic Linear Buckling Check','Callback',{@analysis_icba_Check_menu_Callback});
-   a6m = uimenu(am,'Label','Inelastic Nonlinear Buckling','Callback',{@analysis_nonicba_menu_Callback}); 
-      a6md = uimenu(a6m,'Label','Inelastic Nonlinear Buckling Analysis','Callback',{@analysis_nonicba_Design_menu_Callback});
-      a6mc = uimenu(a6m,'Label','Inelastic Nonlinear Buckling Check','Callback',{@analysis_nonicba_Check_menu_Callback});
-rm = uimenu(masterf,'Label','Results','Callback',{@results_menu_Callback},'Tag','res');
-  rim = uimenu(rm,'Label','Diagrams & Deflected Shapes','Callback',{@results_diagram_menu_Callback});  
-  rnm = uimenu(rm,'Label','Nodal Reactions & Displacements','Callback',{@results_nodalrd_menu_Callback});
-  rem = uimenu(rm,'Label','Element Forces','Callback',{@results_elementforces_menu_Callback});  
-  rcv = uimenu(rm,'Label','Plots','Tag','Curve','Callback',{@results_curve_menu_Callback});
+% scrsz = get(groot,'ScreenSize'); Sw=scrsz(3); Sd=scrsz(4);% Get ScreenSize
+% % Create and then hide the GUI(Master figure) as it is being constructed.
+% masterf = figure('Position',[Sw/10,Sd/10,round(Sw*8/10),round(Sd*8/10)],'Units','normalized',...
+%    'MenuBar','none','NumberTitle','off','Visible','off','Name','SABRE2','Color','k');
+% if scrsz(3) > 2050
+%    Fs=1;
+% else
+%    Fs = Sw/2050;
+% end
+% % ************************************************************************
+% % *****************               MENUS              *********************
+% % ************************************************************************
+% fm = uimenu(masterf,'Label','File');   % File memu
+%    fim = uimenu(fm,'Label','About','Callback',{@file_info_menu_Callback});
+%    fnm = uimenu(fm,'Label','New','Callback',{@file_new_menu_Callback});
+%    fom = uimenu(fm,'Label','Open','Callback',{@file_open_menu_Callback});
+%    fsm = uimenu(fm,'Label','Save','Callback',{@file_save_menu_Callback});
+%    fsam= uimenu(fm,'Label','Save As','Callback',{@file_saveas_menu_Callback});
+%    fprm= uimenu(fm,'Label','Preview','Callback',{@file_preview_menu_Callback});
+%    fpm = uimenu(fm,'Label','Print','Callback',{@file_print_menu_Callback});
+%    fppm= uimenu(fm,'Label','Print Photo','Callback',{@file_printphoto_menu_Callback});
+%    fqm = uimenu(fm,'Label','Quit','Callback',{@file_quit_menu_Callback});   
+% vm = uimenu(masterf,'Label','View');
+%    vzm = uimenu(vm,'Label','Zoom','Callback',{@view_zoom_menu_Callback});
+%    vrm = uimenu(vm,'Label','Rotate','Callback',{@view_rotate_menu_Callback});
+%    vpm = uimenu(vm,'Label','Pan','Callback',{@view_pan_menu_Callback});
+%    vctm = uimenu(vm,'Label','Camera Toolbar','Callback',{@view_camera_toolbar_menu_Callback});
+%    vdm = uimenu(vm,'Label','Defined Views');   
+%    vrom = uimenu(vdm,'Label','Isometric(X-Y-Z) View','Callback',{@view_defined_xyz_menu_Callback});
+%    vrxym = uimenu(vdm,'Label','Front(X-Y) View','Callback',{@view_defined_xy_menu_Callback});
+%    vrxzm = uimenu(vdm,'Label','Top(X-Z) View','Callback',{@view_defined_xz_menu_Callback});
+%    vryzm = uimenu(vdm,'Label','Side(Y-Z) View','Callback',{@view_defined_yz_menu_Callback});
+%    vrum = uimenu(vdm,'Label','User Defined View','Callback',{@view_defined_user_menu_Callback});      
+%    vfm = uimenu(vm,'Label','Fit','Callback',{@view_fit_menu_Callback});
+%    vcm = uimenu(vm,'Label','Screen Center','Callback',{@view_center_menu_Callback});  
+%    vdum = uimenu(vm,'enable','off','Label','Diagram Data View','Callback',{@view_diagram_menu_Callback});
+%    vtum = uimenu(vm,'enable','off','Label','Data Labels','Callback',{@view_text_menu_Callback});  
+%    vlam = uimenu(vm,'Label','Graphic Labels');
+%    vmbf = uimenu(vlam,'Label','Fixities','Callback',{@view_bf_menu_Callback});
+%    vmbs = uimenu(vlam,'Label','Shear Panel','Callback',{@view_bs_menu_Callback});
+%    vmbg = uimenu(vlam,'Label','Discrete Grounded Spring','Callback',{@view_bg_menu_Callback});
+%    vmbw = uimenu(vlam,'Label','Element Flexural & /or Warping Releases','Callback',{@view_bw_menu_Callback});
+%    vmbp = uimenu(vlam,'Label','Point Loads','Callback',{@view_bp_menu_Callback});
+%    vmbu = uimenu(vlam,'Label','Uniform Loads','Callback',{@view_bu_menu_Callback});      
+%    vstm = uimenu(vm,'Label','White Background','Callback',{@view_screenshot_menu_Callback});
+% pm = uimenu(masterf,'Label','Properties');
+%    pdm = uimenu(pm,'Label','Define Geometry','Tag','define','Callback',{@property_define_model_menu_Callback});
+%    pdnm = uimenu(pdm,'Label','Define Joint(s)','Callback',{@property_define_joint_menu_Callback});
+%    pdem = uimenu(pdm,'Label','Define Member(s) & Section(s)','Callback',{@property_define_member_menu_Callback}); 
+%    pdbm = uimenu(pdm,'Label','Add node(s)','Callback',{@property_define_segment_menu_Callback});
+%    pdmi = uimenu(pdm,'Label','Mirror w.r.t y-axis','Callback',{@property_define_mirror_menu_Callback});
+%    pam = uimenu(pm,'Label','Subdivide Segment(s) & Assign Material','Tag','assign','Callback',{@property_assign_menu_Callback});   
+%    psm = uimenu(pam,'Label','Homogenous Member(s)','Callback',{@property_homo_material_menu_Callback}); 
+%    phm = uimenu(pam,'Label','Hybrid Member(s)','Callback',{@property_hybrid_material_menu_Callback}); 
+% cm = uimenu(masterf,'Label','Conditions');      
+%    bm = uimenu(cm,'Label','Boundary Conditions','Tag','bcs','Callback',{@bc_menu_Callback});
+%    bfm = uimenu(bm,'Label','Define Fixities','Callback',{@bc_fixities_menu_Callback}); 
+%    bsm = uimenu(bm,'Label','Define Shear Panel','Callback',{@bc_shear_menu_Callback}); 
+%    bgm = uimenu(bm,'Label','Define Discrete Grounded Spring','Callback',{@bc_ground_menu_Callback});    
+%    bpm = uimenu(bm,'Label','Define Element Flexural & /or Warping Releases','Callback',{@bc_flexure_menu_Callback}); 
+%    lm = uimenu(cm,'Label','Loads','Tag','loads','Callback',{@loads_menu_Callback});
+%    lfm = uimenu(lm,'Label','Define Point Loads','Callback',{@loads_force_menu_Callback});
+%    lum = uimenu(lm,'Label','Define Uniform Loads','Callback',{@loads_uniform_menu_Callback});       
+% ap = uimenu(masterf,'Label','Analysis Parameters','Tag','Anal','Callback',{@analysis_para_Callback}); 
+%    aps = uimenu(ap,'Label','Analysis Parameters','Callback',{@analysis_parasub_menu_Callback});
+% am = uimenu(masterf,'Label','Analysis','Tag','Anal','Callback',{@analysis_menu_Callback});
+%    a1m = uimenu(am,'Label','1st-Order Elastic Analysis','Callback',{@analysis_1stelastic_menu_Callback});
+%    a2m = uimenu(am,'Label','2nd-Order Elastic Analysis','Callback',{@analysis_2ndelastic_menu_Callback}); 
+%    a3m = uimenu(am,'Label','Elastic Linear Buckling Analysis','Callback',{@analysis_ecba_menu_Callback});     
+%    a5m = uimenu(am,'Label','Elastic Nonlinear Buckling Analysis','Callback',{@analysis_nonecba_menu_Callback});    
+%    a4m = uimenu(am,'Label','Inelastic Linear Buckling','Callback',{@analysis_icba_menu_Callback});
+%       a4md = uimenu(a4m,'Label','Inelastic Linear Buckling Analysis','Callback',{@analysis_icba_Design_menu_Callback});
+%       a4mc = uimenu(a4m,'Label','Inelastic Linear Buckling Check','Callback',{@analysis_icba_Check_menu_Callback});
+%    a6m = uimenu(am,'Label','Inelastic Nonlinear Buckling','Callback',{@analysis_nonicba_menu_Callback}); 
+%       a6md = uimenu(a6m,'Label','Inelastic Nonlinear Buckling Analysis','Callback',{@analysis_nonicba_Design_menu_Callback});
+%       a6mc = uimenu(a6m,'Label','Inelastic Nonlinear Buckling Check','Callback',{@analysis_nonicba_Check_menu_Callback});
+% rm = uimenu(masterf,'Label','Results','Callback',{@results_menu_Callback},'Tag','res');
+%   rim = uimenu(rm,'Label','Diagrams & Deflected Shapes','Callback',{@results_diagram_menu_Callback});  
+%   rnm = uimenu(rm,'Label','Nodal Reactions & Displacements','Callback',{@results_nodalrd_menu_Callback});
+%   rem = uimenu(rm,'Label','Element Forces','Callback',{@results_elementforces_menu_Callback});  
+%   rcv = uimenu(rm,'Label','Plots','Tag','Curve','Callback',{@results_curve_menu_Callback});
 % *************************************************************** set menu
-% submenu accelerator : shortcut
-set(fnm,'Accelerator','N'); set(fom,'Accelerator','O');
-set(fsm,'Accelerator','S'); set(fpm,'Accelerator','P');
-set(fqm,'Accelerator','Q')
-% submenu sepatation & Checked
-set([fim,fnm,fom,fsm,fprm,fqm],'Separator','on')
-set([vzm,vdm,vfm,vdum,vtum,vstm],'Separator','on')
-set(vctm,'Checked','off')
-set([pdm,pdnm,pdem,pdbm,pdmi,pam],'Separator','on')   
-set([bm,lm,bfm,bsm,bpm],'Separator','on')  
-set([a1m,a3m,a4m],'Separator','on')
-set([rim,rnm,rem,rcv],'Separator','on')
-set(vctm,'Checked','off') ;set(vdum,'Checked','on') ; set([vmbf,vmbs,vmbg,vmbw,vmbp,vmbu],'Checked','on') ; 
+% % submenu accelerator : shortcut
+% set(fnm,'Accelerator','N'); set(fom,'Accelerator','O');
+% set(fsm,'Accelerator','S'); set(fpm,'Accelerator','P');
+% set(fqm,'Accelerator','Q')
+% % submenu sepatation & Checked
+% set([fim,fnm,fom,fsm,fprm,fqm],'Separator','on')
+% set([vzm,vdm,vfm,vdum,vtum,vstm],'Separator','on')
+% set(vctm,'Checked','off')
+% set([pdm,pdnm,pdem,pdbm,pdmi,pam],'Separator','on')   
+% set([bm,lm,bfm,bsm,bpm],'Separator','on')  
+% set([a1m,a3m,a4m],'Separator','on')
+% set([rim,rnm,rem,rcv],'Separator','on')
+% set(vctm,'Checked','off') ;set(vdum,'Checked','on') ; set([vmbf,vmbs,vmbg,vmbw,vmbp,vmbu],'Checked','on') ; 
 % ************************************************************************
 % *****************                AXES              *********************
-% ************************************************************************  
-axesm = axes('Position',[0,0,round(Sw*(8/10)*(9/10)),round(Sd*(8/10))],...
-   'Visible','off','Units','Pixels');
-% Initial View : X-Y View
-az = 0; el = 0; view(az, el);
+% % ************************************************************************  
+% axesm = axes('Position',[0,0,round(Sw*(8/10)*(9/10)),round(Sd*(8/10))],...
+%    'Visible','off','Units','Pixels');
+% % Initial View : X-Y View
+% az = 0; el = 0; view(az, el);
 % ************************************************************************
 % *****************            COMPONENTS            *********************
 % ************************************************************************
-Pw=round(Sw*(8/10)*(1/10));Pd=round(Sd*(8/10));
+% Pw=round(Sw*(8/10)*(1/10));Pd=round(Sd*(8/10));
 % ***************************************************** INFORMATION panel
-% INPUT BACKGROUNG using panel.
-inf_panel = uipanel('Visible','off','Title','','Units','Pixels','Tag','IPanel',...
-   'BackgroundColor',[0.9412 0.9412 0.9412],'Position',...
-   [round(Sw*(2/10)*(8.5/10)),round(Sd*(1.9/10)),round(Sw*(5/10)*(9.4/10)),round(Sd*(4/10))]);
-% Post-setting
-set(inf_panel,'Units','normalized')
-% INPUT BACKGROUNG TEXT 
-inf_title_name = uicontrol('Style','text','String','SABRE2 v1.4','Tag','ITitle',...  
-   'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(5/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
-   'ForegroundColor','b','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*22,'FontWeight','bold','FontUnits','normalized');
-inf_name = uicontrol('Style','text','String','Developed by ','Tag','IText',...  
-   'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(4/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
-   'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*17,'FontWeight','bold','FontUnits','normalized');
-inf_wj_name = uicontrol('Style','text','String','Woo Yong Jeong,','Tag','IText',...  
-   'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(3.5/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
-   'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*17,'FontWeight','bold','FontUnits','normalized');
-inf_and_name = uicontrol('Style','text','String','Oguzhan Togay,','Tag','IText',...  
-   'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(3/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
-   'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*17,'FontWeight','bold','FontUnits','normalized');
-inf_dw_name = uicontrol('Style','text','String','Donald W. White.','Tag','IText',...  
-   'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(2.5/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
-   'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*17,'FontWeight','bold','FontUnits','normalized');
-inf_cp_name = uicontrol('Style','text','String','(Copyright 2017 All rights reserved)','Tag','IText',...  
-   'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(2/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
-   'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*17,'FontWeight','bold','FontUnits','normalized');
-% Post-setting
-set([inf_title_name,inf_name,inf_wj_name,inf_and_name,inf_dw_name,inf_cp_name],'Visible','off','Units','normalized') 
+% % INPUT BACKGROUNG using panel.
+% inf_panel = uipanel('Visible','off','Title','','Units','Pixels','Tag','IPanel',...
+%    'BackgroundColor',[0.9412 0.9412 0.9412],'Position',...
+%    [round(Sw*(2/10)*(8.5/10)),round(Sd*(1.9/10)),round(Sw*(5/10)*(9.4/10)),round(Sd*(4/10))]);
+% % Post-setting
+% set(inf_panel,'Units','normalized')
+% % INPUT BACKGROUNG TEXT 
+% inf_title_name = uicontrol('Style','text','String','SABRE2 v1.4','Tag','ITitle',...  
+%    'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(5/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
+%    'ForegroundColor','b','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*22,'FontWeight','bold','FontUnits','normalized');
+% inf_name = uicontrol('Style','text','String','Developed by ','Tag','IText',...  
+%    'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(4/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
+%    'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*17,'FontWeight','bold','FontUnits','normalized');
+% inf_wj_name = uicontrol('Style','text','String','Woo Yong Jeong,','Tag','IText',...  
+%    'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(3.5/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
+%    'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*17,'FontWeight','bold','FontUnits','normalized');
+% inf_and_name = uicontrol('Style','text','String','Oguzhan Togay,','Tag','IText',...  
+%    'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(3/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
+%    'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*17,'FontWeight','bold','FontUnits','normalized');
+% inf_dw_name = uicontrol('Style','text','String','Donald W. White.','Tag','IText',...  
+%    'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(2.5/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
+%    'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*17,'FontWeight','bold','FontUnits','normalized');
+% inf_cp_name = uicontrol('Style','text','String','(Copyright 2017 All rights reserved)','Tag','IText',...  
+%    'Position',[round(Sw*(2/10)*(9/10)),round(Sd*(2/10)),round(Sw*(5/10)*(9/10)),round(Sd*(0.5/10))],...
+%    'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412],'FontSize',Fs*17,'FontWeight','bold','FontUnits','normalized');
+% % Post-setting
+% set([inf_title_name,inf_name,inf_wj_name,inf_and_name,inf_dw_name,inf_cp_name],'Visible','off','Units','normalized') 
 % ******************************************************** Main Side panel
-pn_panel = uipanel('Visible','off','Title','','Units','Pixels','BackgroundColor',[0.5 0.5 0.5],...
-   'Position',[round(Sw*(8/10)*(9/10)),0,round(Sw*(8/10)*(1/10)),round(Sd*(8/10))]);
-% Post-setting
-set(pn_panel,'Units','normalized')
-% ******************************************************* Top Center title
-pt_title_name = uicontrol('Style','text','String','','BackgroundColor','k',...
-   'Position',[0,round(Sd*(8/10)*(9.55/10)),round(Sw*(8/10)*(9/10)),round(Sd*(8/10)*(0.35/10))],...
-   'ForegroundColor','r','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-% Post-setting
-set(pt_title_name,'Visible','off','Units','normalized') 
-% ****************************************************************** ABOUT
-fim_infor_name = uicontrol('Style','text','String','','BackgroundColor',[0 0 0],...
-   'Position',[0,round(Sd*(8/10)*(9.55/10)),round(Sw*(8/10)*(9/10)),round(Sd*(8/10)*(0.35/10))],...
-   'ForegroundColor','yellow','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-% Post-setting
-set(fim_infor_name,'Visible','off','Units','normalized') 
+% pn_panel = uipanel('Visible','off','Title','','Units','Pixels','BackgroundColor',[0.5 0.5 0.5],...
+%    'Position',[round(Sw*(8/10)*(9/10)),0,round(Sw*(8/10)*(1/10)),round(Sd*(8/10))]);
+% % Post-setting
+% set(pn_panel,'Units','normalized')
+% % ******************************************************* Top Center title
+% pt_title_name = uicontrol('Style','text','String','','BackgroundColor','k',...
+%    'Position',[0,round(Sd*(8/10)*(9.55/10)),round(Sw*(8/10)*(9/10)),round(Sd*(8/10)*(0.35/10))],...
+%    'ForegroundColor','r','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% % Post-setting
+% set(pt_title_name,'Visible','off','Units','normalized') 
+% % ****************************************************************** ABOUT
+% fim_infor_name = uicontrol('Style','text','String','','BackgroundColor',[0 0 0],...
+%    'Position',[0,round(Sd*(8/10)*(9.55/10)),round(Sw*(8/10)*(9/10)),round(Sd*(8/10)*(0.35/10))],...
+%    'ForegroundColor','yellow','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% % Post-setting
+% set(fim_infor_name,'Visible','off','Units','normalized') 
 % ****************************************************** USER DEFINED VIEW
-vrum_panel = uipanel('Visible','on','Title','','Units','Pixels','BackgroundColor',[0.5 0.5 0.5],...
-   'Position',[round(Sw*(7/10)*(9/10)),0,round(Sw*(8/10)*(1/10)),round(Sd*(1.4/10))]);
-vrum_type_subpanel = uipanel(vrum_panel,'Title','','Units','Pixels','BackgroundColor','black',...
-   'Position',[round(Pw*(1/20)),round(Pd*(0.5/40)),round(Pw*(17.5/20)),round(Pd*(5.5/40))]);
+% vrum_panel = uipanel('Visible','on','Title','','Units','Pixels','BackgroundColor',[0.5 0.5 0.5],...
+%    'Position',[round(Sw*(7/10)*(9/10)),0,round(Sw*(8/10)*(1/10)),round(Sd*(1.4/10))]);
+% vrum_type_subpanel = uipanel(vrum_panel,'Title','','Units','Pixels','BackgroundColor','black',...
+%    'Position',[round(Pw*(1/20)),round(Pd*(0.5/40)),round(Pw*(17.5/20)),round(Pd*(5.5/40))]);
 % INPUT BACKGROUNG using slider.
-vrum_el_slider = uicontrol(vrum_type_subpanel,'Style','slider','BackgroundColor',[0.7 0.7 0.7],...
-   'Max',180,'Min',-180,'Value',0,'SliderStep',[0.01 0.1],'Callback',{@vrum_el_slider_callback},...
-   'Position',[round(Pw*(1.5/20)),round(Pd*(3/40)),round(Pw*(14.5/20)),round(Pd*(0.65/40))]);
-vrum_az_slider = uicontrol(vrum_type_subpanel,'Style','slider','BackgroundColor',[0.7 0.7 0.7],...
-   'Max',180,'Min',-180,'Value',0,'SliderStep',[0.01 0.1],'Callback',{@vrum_az_slider_callback},...
-   'Position',[round(Pw*(1.5/20)),round(Pd*(0.5/40)),round(Pw*(14.5/20)),round(Pd*(0.65/40))]);
+% vrum_el_slider = uicontrol(vrum_type_subpanel,'Style','slider','BackgroundColor',[0.7 0.7 0.7],...
+%    'Max',180,'Min',-180,'Value',0,'SliderStep',[0.01 0.1],'Callback',{@vrum_el_slider_callback},...
+%    'Position',[round(Pw*(1.5/20)),round(Pd*(3/40)),round(Pw*(14.5/20)),round(Pd*(0.65/40))]);
+% vrum_az_slider = uicontrol(vrum_type_subpanel,'Style','slider','BackgroundColor',[0.7 0.7 0.7],...
+%    'Max',180,'Min',-180,'Value',0,'SliderStep',[0.01 0.1],'Callback',{@vrum_az_slider_callback},...
+%    'Position',[round(Pw*(1.5/20)),round(Pd*(0.5/40)),round(Pw*(14.5/20)),round(Pd*(0.65/40))]);
 % INPUT BACKGROUNG TEXT 
-vrum_vi_name = uicontrol(vrum_panel,'Style','text','String','Define View','BackgroundColor',[0 0 0],...
-   'Position',[round(Pw*(2/20)),round(Pd*(5.7/40)),round(Pw*(13/20)),round(Pd*(0.65/40))],...
-   'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-vrum_el_name = uicontrol(vrum_type_subpanel,'Style','text','String','Elevation','BackgroundColor',[0 0 0],...
-   'Position',[round(Pw*(1/20)),round(Pd*(3.8/40)),round(Pw*(8/20)),round(Pd*(0.65/40))],...
-   'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-vrum_az_name = uicontrol(vrum_type_subpanel,'Style','text','String','Azimuth','BackgroundColor',[0 0 0],...
-   'Position',[round(Pw*(1/20)),round(Pd*(1.3/40)),round(Pw*(8/20)),round(Pd*(0.65/40))],...
-   'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-% INPUT BOX using edit
-vrum_el_edit = uicontrol(vrum_type_subpanel,'Style','edit','String','0.00','FontSize',Fs*9,'FontWeight','bold',...
-   'BackgroundColor','black','ForegroundColor','white','FontUnits','normalized',...
-   'Position',[round(Pw*(10.5/20)),round(Pd*(3.8/40)),round(Pw*(5/20)),round(Pd*(0.65/40))]); 
-vrum_az_edit = uicontrol(vrum_type_subpanel,'Style','edit','String','0.00','FontSize',Fs*9,'FontWeight','bold',...
-   'BackgroundColor','black','ForegroundColor','white','FontUnits','normalized',...
-   'Position',[round(Pw*(10.5/20)),round(Pd*(1.3/40)),round(Pw*(5/20)),round(Pd*(0.65/40))]); 
-% Post-setting
-set([vrum_panel,vrum_type_subpanel],'Units','normalized')
-set([vrum_az_slider,vrum_el_slider],'Units','normalized');
-set([vrum_vi_name,vrum_el_name,vrum_az_name],'Units','normalized') 
-set([vrum_el_edit,vrum_az_edit],'Units','normalized');
-% *************** Visible off for USER DEFINED VIEW S
-set([vrum_panel,vrum_type_subpanel,vrum_az_slider,vrum_el_slider],'Visible','off')
-set([vrum_vi_name,vrum_az_name,vrum_el_name,vrum_az_edit,vrum_el_edit],'Visible','off');
+% vrum_vi_name = uicontrol(vrum_panel,'Style','text','String','Define View','BackgroundColor',[0 0 0],...
+%    'Position',[round(Pw*(2/20)),round(Pd*(5.7/40)),round(Pw*(13/20)),round(Pd*(0.65/40))],...
+%    'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% vrum_el_name = uicontrol(vrum_type_subpanel,'Style','text','String','Elevation','BackgroundColor',[0 0 0],...
+%    'Position',[round(Pw*(1/20)),round(Pd*(3.8/40)),round(Pw*(8/20)),round(Pd*(0.65/40))],...
+%    'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% vrum_az_name = uicontrol(vrum_type_subpanel,'Style','text','String','Azimuth','BackgroundColor',[0 0 0],...
+%    'Position',[round(Pw*(1/20)),round(Pd*(1.3/40)),round(Pw*(8/20)),round(Pd*(0.65/40))],...
+%    'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% % INPUT BOX using edit
+% vrum_el_edit = uicontrol(vrum_type_subpanel,'Style','edit','String','0.00','FontSize',Fs*9,'FontWeight','bold',...
+%    'BackgroundColor','black','ForegroundColor','white','FontUnits','normalized',...
+%    'Position',[round(Pw*(10.5/20)),round(Pd*(3.8/40)),round(Pw*(5/20)),round(Pd*(0.65/40))]); 
+% vrum_az_edit = uicontrol(vrum_type_subpanel,'Style','edit','String','0.00','FontSize',Fs*9,'FontWeight','bold',...
+%    'BackgroundColor','black','ForegroundColor','white','FontUnits','normalized',...
+%    'Position',[round(Pw*(10.5/20)),round(Pd*(1.3/40)),round(Pw*(5/20)),round(Pd*(0.65/40))]); 
+% % Post-setting
+% set([vrum_panel,vrum_type_subpanel],'Units','normalized')
+% set([vrum_az_slider,vrum_el_slider],'Units','normalized');
+% set([vrum_vi_name,vrum_el_name,vrum_az_name],'Units','normalized') 
+% set([vrum_el_edit,vrum_az_edit],'Units','normalized');
+% % *************** Visible off for USER DEFINED VIEW S
+% set([vrum_panel,vrum_type_subpanel,vrum_az_slider,vrum_el_slider],'Visible','off')
+% set([vrum_vi_name,vrum_az_name,vrum_el_name,vrum_az_edit,vrum_el_edit],'Visible','off');
 % *************** Visible off for USER DEFINED VIEW E
 % ****************************************************** DIAGRAM DATA VIEW
-% INPUT BACKGROUNG using panel.
-vdum_panel = uipanel('Visible','on','Title','','Units','Pixels','BackgroundColor',[0.5 0.5 0.5],...
-   'Position',[round(Sw*(1/10)*(1/10)),round(Pd*(1/100)),round(Sw*(8/10)*(1/10)),round(Sd*(1.4/10))]);
-vdum_type_subpanel = uipanel(vdum_panel,'Title','','Units','Pixels','BackgroundColor','black',...
-   'Position',[round(Pw*(1/20)),round(Pd*(0.5/40)),round(Pw*(17.5/20)),round(Pd*(5.5/40))]);
-% INPUT BACKGROUNG TEXT 
-vdum_type_name = uicontrol(vdum_panel,'Style','text','String','Diagram Data','BackgroundColor',[0 0 0],...
-   'Position',[round(Pw*(2/20)),round(Pd*(5.7/40)),round(Pw*(15/20)),round(Pd*(0.65/40))],...
-   'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-v1um_p1_text = uicontrol(vdum_type_subpanel,'Style','text','String','P1 =','BackgroundColor',[0 0 0],...
-   'Position',[round(Pw*(1/20)),round(Pd*(4.1/40)),round(Pw*(5/20)),round(Pd*(0.65/40))],...
-   'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-v1um_p2_text = uicontrol(vdum_type_subpanel,'Style','text','String','P2 =','BackgroundColor',[0 0 0],...
-   'Position',[round(Pw*(1/20)),round(Pd*(3.2/40)),round(Pw*(5/20)),round(Pd*(0.65/40))],...
-   'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-v1um_p3_text = uicontrol(vdum_type_subpanel,'Style','text','String','P3 =','BackgroundColor',[0 0 0],...
-   'Position',[round(Pw*(1/20)),round(Pd*(2.3/40)),round(Pw*(5/20)),round(Pd*(0.65/40))],...
-   'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-v1um_p4_text = uicontrol(vdum_type_subpanel,'Style','text','String','P4 =','BackgroundColor',[0 0 0],...
-   'Position',[round(Pw*(1/20)),round(Pd*(1.4/40)),round(Pw*(5/20)),round(Pd*(0.65/40))],...
-   'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-v1um_p5_text = uicontrol(vdum_type_subpanel,'Style','text','String','P5 =','BackgroundColor',[0 0 0],...
-   'Position',[round(Pw*(1/20)),round(Pd*(0.5/40)),round(Pw*(5/20)),round(Pd*(0.65/40))],...
-   'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-% INPUT BOX using edit
-v1um_p1_edit = uicontrol(vdum_type_subpanel,'Style','edit','String','','FontSize',Fs*11,'FontWeight','bold',...
-   'BackgroundColor','white','ForegroundColor','black','FontUnits','normalized',...
-   'Position',[round(Pw*(6.5/20)),round(Pd*(4.1/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))]); 
-v1um_p2_edit = uicontrol(vdum_type_subpanel,'Style','edit','String','','FontSize',Fs*11,'FontWeight','bold',...
-   'BackgroundColor','white','ForegroundColor','black','FontUnits','normalized',...
-   'Position',[round(Pw*(6.5/20)),round(Pd*(3.2/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))]); 
-v1um_p3_edit = uicontrol(vdum_type_subpanel,'Style','edit','String','','FontSize',Fs*11,'FontWeight','bold',...
-   'BackgroundColor','white','ForegroundColor','black','FontUnits','normalized',...
-   'Position',[round(Pw*(6.5/20)),round(Pd*(2.3/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))]); 
-v1um_p4_edit = uicontrol(vdum_type_subpanel,'Style','edit','String','','FontSize',Fs*11,'FontWeight','bold',...
-   'BackgroundColor','white','ForegroundColor','black','FontUnits','normalized',...
-   'Position',[round(Pw*(6.5/20)),round(Pd*(1.4/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))]); 
-v1um_p5_edit = uicontrol(vdum_type_subpanel,'Style','edit','String','','FontSize',Fs*11,'FontWeight','bold',...
-   'BackgroundColor','white','ForegroundColor','black','FontUnits','normalized',...
-   'Position',[round(Pw*(6.5/20)),round(Pd*(0.5/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))]); 
-% Post-setting
-set([vdum_panel,vdum_type_subpanel],'Units','normalized')
-set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Units','normalized') 
-set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Units','normalized') 
-% *************** Visible off for DIAGRAM DATA VIEW S
-set([vdum_panel,vdum_type_subpanel],'Visible','off')
-set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')
-% *************** Visible off for DIAGRAM DATA VIEW E
-% ********************************************************** DEFINE JOINTS 
-% ************************************************ sub panel1
-pd_type_subpanel = uipanel(pn_panel,'Title','','Units','Pixels','BackgroundColor','black',...
-   'Position',[round(Pw*(1/20)),round(Pd*(38.4/40)),round(Pw*(18/20)),round(Pd*(1.1/40))]);
-% INPUT DESCRIPTION using text
-pdn_type_text = uicontrol(pn_panel,'Style','text','String','Joint','BackgroundColor','black',...
-   'Position',[round(Pw*(1.5/20)),round(Pd*(38.6/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))],...
-   'ForegroundColor','yellow','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
-pdn_type_name = uicontrol(pn_panel,'Style','edit','String','1',...
-   'Position',[round(Pw*(11.5/20)),round(Pd*(38.6/40)),round(Pw*(7/20)),round(Pd*(0.65/40))],...
-   'FontSize',Fs*8,'FontUnits','normalized');   
-% Post-setting
-set(pd_type_subpanel,'Units','normalized')
-set([pdn_type_text,pdn_type_name],'Units','normalized')
+% % INPUT BACKGROUNG using panel.
+% vdum_panel = uipanel('Visible','on','Title','','Units','Pixels','BackgroundColor',[0.5 0.5 0.5],...
+%    'Position',[round(Sw*(1/10)*(1/10)),round(Pd*(1/100)),round(Sw*(8/10)*(1/10)),round(Sd*(1.4/10))]);
+% vdum_type_subpanel = uipanel(vdum_panel,'Title','','Units','Pixels','BackgroundColor','black',...
+%    'Position',[round(Pw*(1/20)),round(Pd*(0.5/40)),round(Pw*(17.5/20)),round(Pd*(5.5/40))]);
+% % INPUT BACKGROUNG TEXT 
+% vdum_type_name = uicontrol(vdum_panel,'Style','text','String','Diagram Data','BackgroundColor',[0 0 0],...
+%    'Position',[round(Pw*(2/20)),round(Pd*(5.7/40)),round(Pw*(15/20)),round(Pd*(0.65/40))],...
+%    'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% v1um_p1_text = uicontrol(vdum_type_subpanel,'Style','text','String','P1 =','BackgroundColor',[0 0 0],...
+%    'Position',[round(Pw*(1/20)),round(Pd*(4.1/40)),round(Pw*(5/20)),round(Pd*(0.65/40))],...
+%    'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% v1um_p2_text = uicontrol(vdum_type_subpanel,'Style','text','String','P2 =','BackgroundColor',[0 0 0],...
+%    'Position',[round(Pw*(1/20)),round(Pd*(3.2/40)),round(Pw*(5/20)),round(Pd*(0.65/40))],...
+%    'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% v1um_p3_text = uicontrol(vdum_type_subpanel,'Style','text','String','P3 =','BackgroundColor',[0 0 0],...
+%    'Position',[round(Pw*(1/20)),round(Pd*(2.3/40)),round(Pw*(5/20)),round(Pd*(0.65/40))],...
+%    'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% v1um_p4_text = uicontrol(vdum_type_subpanel,'Style','text','String','P4 =','BackgroundColor',[0 0 0],...
+%    'Position',[round(Pw*(1/20)),round(Pd*(1.4/40)),round(Pw*(5/20)),round(Pd*(0.65/40))],...
+%    'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% v1um_p5_text = uicontrol(vdum_type_subpanel,'Style','text','String','P5 =','BackgroundColor',[0 0 0],...
+%    'Position',[round(Pw*(1/20)),round(Pd*(0.5/40)),round(Pw*(5/20)),round(Pd*(0.65/40))],...
+% %    'ForegroundColor','white','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% % INPUT BOX using edit
+% v1um_p1_edit = uicontrol(vdum_type_subpanel,'Style','edit','String','','FontSize',Fs*11,'FontWeight','bold',...
+%    'BackgroundColor','white','ForegroundColor','black','FontUnits','normalized',...
+%    'Position',[round(Pw*(6.5/20)),round(Pd*(4.1/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))]); 
+% v1um_p2_edit = uicontrol(vdum_type_subpanel,'Style','edit','String','','FontSize',Fs*11,'FontWeight','bold',...
+%    'BackgroundColor','white','ForegroundColor','black','FontUnits','normalized',...
+%    'Position',[round(Pw*(6.5/20)),round(Pd*(3.2/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))]); 
+% v1um_p3_edit = uicontrol(vdum_type_subpanel,'Style','edit','String','','FontSize',Fs*11,'FontWeight','bold',...
+%    'BackgroundColor','white','ForegroundColor','black','FontUnits','normalized',...
+%    'Position',[round(Pw*(6.5/20)),round(Pd*(2.3/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))]); 
+% v1um_p4_edit = uicontrol(vdum_type_subpanel,'Style','edit','String','','FontSize',Fs*11,'FontWeight','bold',...
+%    'BackgroundColor','white','ForegroundColor','black','FontUnits','normalized',...
+%    'Position',[round(Pw*(6.5/20)),round(Pd*(1.4/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))]); 
+% v1um_p5_edit = uicontrol(vdum_type_subpanel,'Style','edit','String','','FontSize',Fs*11,'FontWeight','bold',...
+%    'BackgroundColor','white','ForegroundColor','black','FontUnits','normalized',...
+%    'Position',[round(Pw*(6.5/20)),round(Pd*(0.5/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))]); 
+% % Post-setting
+% set([vdum_panel,vdum_type_subpanel],'Units','normalized')
+% set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Units','normalized') 
+% set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Units','normalized') 
+% % *************** Visible off for DIAGRAM DATA VIEW S
+% set([vdum_panel,vdum_type_subpanel],'Visible','off')
+% set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
+% set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')
+% % *************** Visible off for DIAGRAM DATA VIEW E
+% % ********************************************************** DEFINE JOINTS 
+% % ************************************************ sub panel1
+% pd_type_subpanel = uipanel(pn_panel,'Title','','Units','Pixels','BackgroundColor','black',...
+%    'Position',[round(Pw*(1/20)),round(Pd*(38.4/40)),round(Pw*(18/20)),round(Pd*(1.1/40))]);
+% % INPUT DESCRIPTION using text
+% pdn_type_text = uicontrol(pn_panel,'Style','text','String','Joint','BackgroundColor','black',...
+%    'Position',[round(Pw*(1.5/20)),round(Pd*(38.6/40)),round(Pw*(9.5/20)),round(Pd*(0.65/40))],...
+%    'ForegroundColor','yellow','FontSize',Fs*10,'FontWeight','bold','FontUnits','normalized');
+% pdn_type_name = uicontrol(pn_panel,'Style','edit','String','1',...
+%    'Position',[round(Pw*(11.5/20)),round(Pd*(38.6/40)),round(Pw*(7/20)),round(Pd*(0.65/40))],...
+%    'FontSize',Fs*8,'FontUnits','normalized');   
+% % Post-setting
+% set(pd_type_subpanel,'Units','normalized')
+% set([pdn_type_text,pdn_type_name],'Units','normalized')
 % ************************************************ sub panel2
 pd_coord_subpanel = uipanel(pn_panel,'Title','','Units','Pixels','BackgroundColor','black',...
    'Position',[round(Pw*(1/20)),round(Pd*(31.4/40)),round(Pw*(18/20)),round(Pd*(6/40))]);   

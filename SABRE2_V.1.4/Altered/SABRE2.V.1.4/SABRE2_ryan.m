@@ -2145,6 +2145,7 @@ function file_new_menu_Callback(hObject, eventdata)
 end % function end
 % --------------------------------------------------------------------
 function file_open_menu_Callback(hObject, eventdata)
+   %%
    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    set(masterf,'WindowButtonDownFcn',@view_defined_xy_menu_Callback);
    % Visible function
@@ -2176,6 +2177,7 @@ function file_open_menu_Callback(hObject, eventdata)
    if isequal([filename,pathname],[0,0]) || isempty(filename) || isempty(pathname)
       return
    else
+       %%
       SABRE2OpenFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
          pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
          pdn_coordz_text,pdn_coordx_edit,pdn_coordy_edit,pdn_coordz_edit,punit_text,punit_edit,pd_app_subpanel,...
@@ -4102,6 +4104,7 @@ end % function end
 % --------------------------------------------------------------------
 function analysis_1stelastic_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
+   %% This function sets the UI panel properties
    SABRE2A1stFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
       pdn_coordz_text,pdn_coordx_edit,pdn_coordy_edit,pdn_coordz_edit,punit_text,punit_edit,pd_app_subpanel,...
@@ -4173,6 +4176,7 @@ function analysis_1stelastic_menu_Callback(hObject, eventdata)
       if isequal(max(max(abs(LNC(:,5:10)))),0) && isequal(max(max(abs(LUEC(:,5:7)))),0) && isequal(strcmp(get(get(ap_sw_buttongroup,'SelectedObject'),'Tag'),'sw_on'),0)
          set(pt_title_name,'String','Modeling is not completed')
          set(pt_title_name,'Visible','on')  
+         %% 1st order elastic analysis starts at this point
       else
          set(pt_title_name,'Visible','off'); set(ri_infor,'enable','off'); 
          APP=0;AR=0;AS=0;AE=0;AI=0;ANE=0;ANI=0;gammma=[];

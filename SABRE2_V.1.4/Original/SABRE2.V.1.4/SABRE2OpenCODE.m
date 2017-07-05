@@ -7,17 +7,17 @@ function [JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,...
 % ************************************************************************
 % *****************           OPEN AND LOAD FILE      ********************
 % ************************************************************************ 
-JNodevalue = data.JNodevalue; 
-Massemble = data.Massemble;
-JNodevalue_i = data.JNodevalue_i; 
-JNodevalue_j = data.JNodevalue_j;
-Rval = data.Rval;
-BNodevalue = data.BNodevalue;
-SNodevalue = data.SNodevalue;
-RNCc = data.RNCc;
-NCc = data.NCc;
-Nshe1 = data.Nshe1;
-Nshe2 = data.Nshe2;
+JNodevalue = data.JNodevalue
+Massemble = data.Massemble
+JNodevalue_i = data.JNodevalue_i
+JNodevalue_j = data.JNodevalue_j
+Rval = data.Rval
+BNodevalue = data.BNodevalue
+SNodevalue = data.SNodevalue
+RNCc = data.RNCc
+NCc = data.NCc
+Nshe1 = data.Nshe1
+Nshe2 = data.Nshe2
 DUP1 = data.DUP1;
 DUP2 = data.DUP2;
 LNC = data.LNC;

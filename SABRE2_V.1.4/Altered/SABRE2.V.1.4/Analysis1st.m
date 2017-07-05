@@ -6,7 +6,7 @@ function [AR,Funew,Qintf,QintfE,Qintg,Qint1,Qint2,MI] = Analysis1st(Massemble,Rv
 % Date : 12/01/2012.
 % ************************************************************************
 % *****************       1st Elastic Analysis       *********************
-% ************************************************************************ 
+% ************************************************************************
 % ************************** Wait1
 wh = waitbar(0,'Initializing waitbar...');
 
@@ -16,9 +16,9 @@ N = length(RNCc(:,1));                 % Total number of Nodes
 mem=length(Massemble(:,1));            % Total number of members
 nodedof=7;                    % Number of degree of freedom in each node
 nDOF = nodedof*N;             % Total number of dofs
-Qintg=zeros(N,nodedof,(round(ninc/lambda))); % Preallocationg 
-Qint1=zeros(xn,nodedof,(round(ninc/lambda))); % Preallocationg 
-Qint2=zeros(xn,nodedof,(round(ninc/lambda))); % Preallocationg 
+Qintg=zeros(N,nodedof,(round(ninc/lambda))); % Preallocationg
+Qint1=zeros(xn,nodedof,(round(ninc/lambda))); % Preallocationg
+Qint2=zeros(xn,nodedof,(round(ninc/lambda))); % Preallocationg
 Qintf=zeros(xn,nodedof*2,(round(ninc/lambda))); % Preallocationg
 QintfE=zeros(xn,nodedof*2,(round(ninc/lambda))); % Preallocationg
 % Preallocationg Elastic modulus, Shear modulus, Yield stress, Density
@@ -32,11 +32,11 @@ for i = 1:mem
          G(nel,1)=SNodevalue(i,j,5);      % Shear modulus in each element
          Fy(nel,1)=SNodevalue(i,j,6);     % Yield Stress
          stRho(nel,1)=SNodevalue(i,j,7);  % Density
-         
-         
-         
-         
-         
+
+
+
+
+
          % Data calling
          fillet(nel,1)=Massemble(i,4);    % Selection of AISC section
          fillet(nel,2)=Massemble(i,5);    % A
@@ -84,7 +84,7 @@ tw1=Nshe1(:,9);tw2=Nshe2(:,9);  % Web thickness
 hg1=Nshe1(:,11);hg2=Nshe2(:,11);  % h : Distance between flange centroids
 Afillet1=Nshe1(:,12);Afillet2=Nshe2(:,12);  % h : Distance between flange centroids
 % -------------------------------- Geometric dimension of Cross-section S
-% Mid-web depth 
+% Mid-web depth
 Dt1=Dg1/2;        Dt2=Dg2/2;        % top of Web depth to mid web depth
 Db1=Dt1;          Db2=Dt2;          % bottom of Web depth to mid web depth
 ht1=Dt1+tft1/2;   ht2=Dt2+tft2/2;   % top flange centroid to mid web depth
@@ -93,13 +93,13 @@ hb1=Db1 + tfb1/2; hb2=Db2 + tfb2/2; % bottom flange centroid to mid web depth
 % Shear center
 % Start node
 % bottom flange centroid to shear center
-hsb1 = (tft1.*bft1.^3.*hg1)./(tfb1.*bfb1.^3+tft1.*bft1.^3); 
+hsb1 = (tft1.*bft1.^3.*hg1)./(tfb1.*bfb1.^3+tft1.*bft1.^3);
 Dsb1 = hsb1 - tfb1/2; % bottom of Web depth to shear center
 hst1 = hg1 - hsb1;    % top flange centroid to shear center
 Dst1 = hst1 - tft1/2; % top of Web depth to shear center
 % End node
 % bottom flange centroid to shear center
-hsb2 = (tft2.*bft2.^3.*hg2)./(tfb2.*bfb2.^3+tft2.*bft2.^3); 
+hsb2 = (tft2.*bft2.^3.*hg2)./(tfb2.*bfb2.^3+tft2.*bft2.^3);
 Dsb2 = hsb2 - tfb2/2; % bottom of Web depth to shear center
 hst2 = hg2 - hsb2;    % top flange centroid to shear center
 Dst2 = hst2 - tft2/2;    % top of Web depth to shear center
@@ -124,13 +124,13 @@ CSD2 = hct2-hst2;
 % -------------------------------- Geometric dimension of Cross-section E
 
 % *** Global frame angle for each element without considering shear center
-q = 0; alpharef = zeros(xn,2);    
+q = 0; alpharef = zeros(xn,2);
 for i = 1:mem
-   for j=1:sum(SNodevalue(i,:,3))          
+   for j=1:sum(SNodevalue(i,:,3))
       opp = JNodevalue_j(i,4)-JNodevalue_i(i,4);  % element depth in y-dir
-      adj = JNodevalue_j(i,3)-JNodevalue_i(i,3);  % element length in x-dir         
+      adj = JNodevalue_j(i,3)-JNodevalue_i(i,3);  % element length in x-dir
       alpharef(q+j,1)=MI(q+j,1);
-      alpharef(q+j,2)=atan2(opp,adj); % Only global frame angle      
+      alpharef(q+j,2)=atan2(opp,adj); % Only global frame angle
    end
  q = sum(SNodevalue(i,:,3))+q;
 end
@@ -141,7 +141,7 @@ for i=1:xn
    Rz=[cos(-alpharef(i,2)) -sin(-alpharef(i,2)) 0; sin(-alpharef(i,2)) cos(-alpharef(i,2)) 0; 0 0 1];
    DLe1(i,:)=Rz*[xg1(i,1);yg1(i,1);0];
    DLe2(i,:)=Rz*[xg2(i,1);yg2(i,1);0];
-end 
+end
 % ----------------------------------------------------- Centroidal Angle E
 
 % Update Global frame nodal coordinates w.r.t Shear center
@@ -152,7 +152,7 @@ xg2=Nshe2(:,1); yg2=Nshe2(:,2); zg2=Nshe2(:,3);
 alphatap = zeros(xn,2);
 for i=1:xn
     opp = yg2(i,1)-yg1(i,1);        % element depth in y-dir
-    adj = xg2(i,1)-xg1(i,1);        % element length in x-dir         
+    adj = xg2(i,1)-xg1(i,1);        % element length in x-dir
     alphatap(i,1)=MI(i,1);
     alphatap(i,2)=atan2(opp,adj);   % Global frame angle w.r.t Shear center
 end
@@ -161,37 +161,37 @@ angletap = alphatap - alpharef;
 segnum(1,1)=0;          % (Start node number - 1) for each member
 ys1=zeros(xn,1);ys2=zeros(xn,1);yc1=zeros(xn,1);yc2=zeros(xn,1);
 for i = 1:mem
-   switch Rval(i,2)  
-      
+   switch Rval(i,2)
+
       case 1                                    % mid-web depth ; val = 1
-         
+
          for k = 1:sum(SNodevalue(i,:,3))
-            ys1(k+segnum(i,1),1)=Dg1(k+segnum(i,1),1)/2 - Dst1(k+segnum(i,1),1); 
-            ys2(k+segnum(i,1),1)=Dg2(k+segnum(i,1),1)/2 - Dst2(k+segnum(i,1),1);    % Shear center   
-            yc1(k+segnum(i,1),1)=Dg1(k+segnum(i,1),1)/2 - Dct1(k+segnum(i,1),1); 
-            yc2(k+segnum(i,1),1)=Dg2(k+segnum(i,1),1)/2 - Dct2(k+segnum(i,1),1);    % Centroid                   
-         end        
-            
+            ys1(k+segnum(i,1),1)=Dg1(k+segnum(i,1),1)/2 - Dst1(k+segnum(i,1),1);
+            ys2(k+segnum(i,1),1)=Dg2(k+segnum(i,1),1)/2 - Dst2(k+segnum(i,1),1);    % Shear center
+            yc1(k+segnum(i,1),1)=Dg1(k+segnum(i,1),1)/2 - Dct1(k+segnum(i,1),1);
+            yc2(k+segnum(i,1),1)=Dg2(k+segnum(i,1),1)/2 - Dct2(k+segnum(i,1),1);    % Centroid
+         end
+
       case 2                                    % top of web; val = 2
-        
+
          for k = 1:sum(SNodevalue(i,:,3))
             ys1(k+segnum(i,1),1)=-Dst1(k+segnum(i,1),1);
-            ys2(k+segnum(i,1),1)=-Dst2(k+segnum(i,1),1);                % Shear center        
+            ys2(k+segnum(i,1),1)=-Dst2(k+segnum(i,1),1);                % Shear center
             yc1(k+segnum(i,1),1)=-Dct1(k+segnum(i,1),1);
-            yc2(k+segnum(i,1),1)=-Dct2(k+segnum(i,1),1);                % Centroid              
-         end        
-       
+            yc2(k+segnum(i,1),1)=-Dct2(k+segnum(i,1),1);                % Centroid
+         end
+
       case 3                                    % bottom of web; val = 3
-        
+
          for k = 1:sum(SNodevalue(i,:,3))
-            ys1(k+segnum(i,1),1)=Dsb1(k+segnum(i,1),1); 
-            ys2(k+segnum(i,1),1)=Dsb2(k+segnum(i,1),1);              % Shear center      
-            yc1(k+segnum(i,1),1)=Dcb1(k+segnum(i,1),1); 
-            yc2(k+segnum(i,1),1)=Dcb2(k+segnum(i,1),1);              % Centroid                   
-         end        
-   end 
+            ys1(k+segnum(i,1),1)=Dsb1(k+segnum(i,1),1);
+            ys2(k+segnum(i,1),1)=Dsb2(k+segnum(i,1),1);              % Shear center
+            yc1(k+segnum(i,1),1)=Dcb1(k+segnum(i,1),1);
+            yc2(k+segnum(i,1),1)=Dcb2(k+segnum(i,1),1);              % Centroid
+         end
+   end
    segnum(i+1,1) = segnum(i,1) + sum(SNodevalue(i,:,3));
-end   
+end
 
 % ------------------------------------------------------------------------
 % ----------------          Tapering factors        ----------------------
@@ -208,7 +208,7 @@ for i=1:xn
     ysp(i,1)  = ( ys2(i,1) -ys1(i,1)  )/DX(i,1);
     bftp(i,1) = ( bft2(i,1)-bft1(i,1) )/DX(i,1);
     bfbp(i,1) = ( bfb2(i,1)-bfb1(i,1) )/DX(i,1);
-end 
+end
 
 % ------------------------------------------------------------------------
 % --------       Angle between centroid and shear center         ---------
@@ -216,33 +216,33 @@ end
 alphacen = zeros(xn,2);alphasc = zeros(xn,2);
 for i=1:xn
     oppc = yc2(i,1)-yc1(i,1);        % element depth centroid in y-dir
-    adj = DLe2(i,1)-DLe1(i,1);       % element length in x-dir         
+    adj = DLe2(i,1)-DLe1(i,1);       % element length in x-dir
     alphacen(i,1)=MI(i,1);
     alphacen(i,2)=atan2(oppc,adj);   % Global frame angle w.r.t Shear center
     opps = ys2(i,1)-ys1(i,1);        % element depth shear center in y-dir
     alphasc(i,1)=MI(i,1);
-    alphasc(i,2)=atan2(opps,adj);   % Global frame angle w.r.t Shear center     
+    alphasc(i,2)=atan2(opps,adj);   % Global frame angle w.r.t Shear center
 end
-CSangel = alphacen -  alphasc;   
+CSangel = alphacen -  alphasc;
 
 % ------------------------------------------------------------------------
 % ----------          Reset Shear Center and Centroid        -------------
 % ------------------------------------------------------------------------
-segnum(1,1)=0; 
+segnum(1,1)=0;
 for i = 1:mem                                  % mid-web depth ; val = 1
    for k = 1:sum(SNodevalue(i,:,3))
-      ys1(k+segnum(i,1),1)=Dg1(k+segnum(i,1),1)/2 - Dst1(k+segnum(i,1),1); 
-      ys2(k+segnum(i,1),1)=Dg2(k+segnum(i,1),1)/2 - Dst2(k+segnum(i,1),1);    % Shear center    
-      yc1(k+segnum(i,1),1)=Dg1(k+segnum(i,1),1)/2 - Dct1(k+segnum(i,1),1); 
-      yc2(k+segnum(i,1),1)=Dg2(k+segnum(i,1),1)/2 - Dct2(k+segnum(i,1),1);    % Centroid           
-   end        
+      ys1(k+segnum(i,1),1)=Dg1(k+segnum(i,1),1)/2 - Dst1(k+segnum(i,1),1);
+      ys2(k+segnum(i,1),1)=Dg2(k+segnum(i,1),1)/2 - Dst2(k+segnum(i,1),1);    % Shear center
+      yc1(k+segnum(i,1),1)=Dg1(k+segnum(i,1),1)/2 - Dct1(k+segnum(i,1),1);
+      yc2(k+segnum(i,1),1)=Dg2(k+segnum(i,1),1)/2 - Dct2(k+segnum(i,1),1);    % Centroid
+   end
    segnum(i+1,1) = segnum(i,1) + sum(SNodevalue(i,:,3));
-end   
+end
 
 % ------------------------------------------------------------------------
 % --------------------      Rigid offset for Supports  -------------------
 % ------------------------------------------------------------------------
-rd1=zeros(xn,1); 
+rd1=zeros(xn,1);
 for i=1:xn
    if isequal(PNC1(i,7),0)
       rd1(i,1)=0;
@@ -250,11 +250,11 @@ for i=1:xn
       if isequal(PNC1(i,13),1) || isequal(PNC1(i,13),0)% None
          rd1(i,1)=0;
       elseif isequal(PNC1(i,13),2) % Top
-         rd1(i,1)=-(hst1(i,1)+tft1(i,1)/2);      
+         rd1(i,1)=-(hst1(i,1)+tft1(i,1)/2);
       elseif isequal(PNC1(i,13),3) % Bottom
          rd1(i,1)=(hsb1(i,1)+tfb1(i,1)/2);
       elseif isequal(PNC1(i,13),4) % Centroid
-         rd1(i,1)=CSD1(i,1);      
+         rd1(i,1)=CSD1(i,1);
       end
    end
 end
@@ -262,32 +262,32 @@ rd2=zeros(xn,1);
 for i=1:xn
    if isequal(PNC2(i,7),0)
       rd2(i,1)=0;
-   else   
+   else
       if isequal(PNC2(i,13),1) || isequal(PNC2(i,13),0)% None
          rd2(i,1)=0;
       elseif isequal(PNC2(i,13),2) % Top
-         rd2(i,1)=-(hst2(i,1)+tft2(i,1)/2);      
+         rd2(i,1)=-(hst2(i,1)+tft2(i,1)/2);
       elseif isequal(PNC2(i,13),3) % Bottom
          rd2(i,1)=(hsb2(i,1)+tfb2(i,1)/2);
       elseif isequal(PNC2(i,13),4) % Bottom
-         rd2(i,1)=CSD2(i,1);      
+         rd2(i,1)=CSD2(i,1);
       end
    end
 end
 
-rxd1=zeros(xn,1); 
+rxd1=zeros(xn,1);
 for i=1:xn
    if isequal(PNC1(i,5),0)
       rxd1(i,1)=0;
-   else   
+   else
       if isequal(PNC1(i,13),1) || isequal(PNC1(i,13),0)% None
          rxd1(i,1)=0;
       elseif isequal(PNC1(i,13),2) % Top
-         rxd1(i,1)=-(hst1(i,1)+tft1(i,1)/2);      
+         rxd1(i,1)=-(hst1(i,1)+tft1(i,1)/2);
       elseif isequal(PNC1(i,13),3) % Bottom
          rxd1(i,1)=(hsb1(i,1)+tfb1(i,1)/2);
       elseif isequal(PNC1(i,13),4) % Centroid
-         rxd1(i,1)=CSD1(i,1);      
+         rxd1(i,1)=CSD1(i,1);
       end
    end
 end
@@ -295,15 +295,15 @@ rxd2=zeros(xn,1);
 for i=1:xn
    if isequal(PNC2(i,5),0)
       rxd2(i,1)=0;
-   else     
+   else
       if isequal(PNC2(i,13),1) || isequal(PNC2(i,13),0)% None
          rxd2(i,1)=0;
       elseif isequal(PNC2(i,13),2) % Top
-         rxd2(i,1)=-(hst2(i,1)+tft2(i,1)/2);      
+         rxd2(i,1)=-(hst2(i,1)+tft2(i,1)/2);
       elseif isequal(PNC2(i,13),3) % Bottom
          rxd2(i,1)=(hsb2(i,1)+tfb2(i,1)/2);
       elseif isequal(PNC2(i,13),4) % Bottom
-         rxd2(i,1)=CSD2(i,1);      
+         rxd2(i,1)=CSD2(i,1);
       end
    end
 end
@@ -311,19 +311,19 @@ end
 % ------------------------------------------------------------------------
 % ----------------      Rigid offset for Point Loads     -----------------
 % ------------------------------------------------------------------------
-Lrd1=zeros(xn,1); 
+Lrd1=zeros(xn,1);
 for i=1:xn
    if isequal(LNC1(i,5),0)
       Lrd1(i,1)=0;
-   else     
+   else
       if isequal(LNC1(i,13),1) || isequal(LNC1(i,13),0)% None
          Lrd1(i,1)=0;
       elseif isequal(LNC1(i,13),2) % Top
-         Lrd1(i,1)=-(hst1(i,1)+tft1(i,1)/2);      
+         Lrd1(i,1)=-(hst1(i,1)+tft1(i,1)/2);
       elseif isequal(LNC1(i,13),3) % Bottom
          Lrd1(i,1)=(hsb1(i,1)+tfb1(i,1)/2);
       elseif isequal(LNC1(i,13),4) % Centroid
-         Lrd1(i,1)=CSD1(i,1);      
+         Lrd1(i,1)=CSD1(i,1);
       end
    end
 end
@@ -331,15 +331,15 @@ Lrd2=zeros(xn,1);
 for i=1:xn
    if isequal(LNC2(i,5),0)
       Lrd2(i,1)=0;
-   else    
+   else
       if isequal(LNC2(i,13),1) || isequal(LNC2(i,13),0)% None
          Lrd2(i,1)=0;
       elseif isequal(LNC2(i,13),2) % Top
-         Lrd2(i,1)=-(hst2(i,1)+tft2(i,1)/2);      
+         Lrd2(i,1)=-(hst2(i,1)+tft2(i,1)/2);
       elseif isequal(LNC2(i,13),3) % Bottom
          Lrd2(i,1)=(hsb2(i,1)+tfb2(i,1)/2);
       elseif isequal(LNC2(i,13),4) % Bottom
-         Lrd2(i,1)=CSD2(i,1);      
+         Lrd2(i,1)=CSD2(i,1);
       end
    end
 end
@@ -352,15 +352,15 @@ if ~isempty(LUEC)
    for i=1:xn
       if isequal(LUEC(i,5),0)
          Lud1(i,1)=0;
-      else       
+      else
          if isequal(LUEC(i,17),1) || isequal(LUEC(i,17),0)% None
             Lud1(i,1)=0;
          elseif isequal(LUEC(i,17),2) % Top
-            Lud1(i,1)=-(hst1(i,1)+tft1(i,1)/2);      
+            Lud1(i,1)=-(hst1(i,1)+tft1(i,1)/2);
          elseif isequal(LUEC(i,17),3) % Bottom
             Lud1(i,1)=(hsb1(i,1)+tfb1(i,1)/2);
          elseif isequal(LUEC(i,17),4) % Centroid
-            Lud1(i,1)=CSD1(i,1);      
+            Lud1(i,1)=CSD1(i,1);
          end
       end
    end
@@ -368,15 +368,15 @@ if ~isempty(LUEC)
    for i=1:xn
       if isequal(LUEC(i,5),0)
          Lud2(i,1)=0;
-      else       
+      else
          if isequal(LUEC(i,17),1) || isequal(LUEC(i,17),0)% None
             Lud2(i,1)=0;
          elseif isequal(LUEC(i,17),2) % Top
-            Lud2(i,1)=-(hst2(i,1)+tft2(i,1)/2);      
+            Lud2(i,1)=-(hst2(i,1)+tft2(i,1)/2);
          elseif isequal(LUEC(i,17),3) % Bottom
             Lud2(i,1)=(hsb2(i,1)+tfb2(i,1)/2);
          elseif isequal(LUEC(i,17),4) % Bottom
-            Lud2(i,1)=CSD2(i,1);      
+            Lud2(i,1)=CSD2(i,1);
          end
       end
    end
@@ -386,11 +386,11 @@ end
 % ------       Boundary Conditions & External Force matrix        --------
 % ------------------------------------------------------------------------
 % Preallocationg
-BC = zeros(N,1); Qe = zeros(N,1); 
+BC = zeros(N,1); Qe = zeros(N,1);
 for i = 1:N
-   for j = 1:nodedof    
+   for j = 1:nodedof
       BC((i-1)*nodedof+j,1) =  PNC(i,j+4);    % Boundary Conditions
-      
+
       if isempty(LNC)
          Qe =[];
       else
@@ -416,33 +416,33 @@ for i=1:xn
    for j=1:2
       Ldp1(i,1)=Ldupcount(MI(i,2),1);
       Ldp1(i,2)=Ldupcount(MI(i,2),2);
-      Ldp2(i,1)=Ldupcount(MI(i,3),1);     
-      Ldp2(i,2)=Ldupcount(MI(i,3),2);          
+      Ldp2(i,1)=Ldupcount(MI(i,3),1);
+      Ldp2(i,2)=Ldupcount(MI(i,3),2);
    end
-end  
+end
 
 [dFn]=CurrentDisplacement(dF,N,nodedof); % including supports nodes;
 
 dFn1 = zeros(xn,7); dFn2 = zeros(xn,7);
 for i=1:xn
    for j=1:7
-      dFn1(i,j)=dFn(MI(i,2),j); 
+      dFn1(i,j)=dFn(MI(i,2),j);
       dFn2(i,j)=dFn(MI(i,3),j);
    end
-end  
+end
 
 % Load transform
 dF=zeros(nDOF,1);
 for n=1:xn
    % Rigid offset for Supports in Element Frame
    Rsd = eye(14);
-%    Rsd(3,4)=rd1(n);  Rsd(10,11)=rd2(n); 
+%    Rsd(3,4)=rd1(n);  Rsd(10,11)=rd2(n);
    Rsd(1,6)=-rxd1(n); Rsd(8,13)=-rxd2(n);
-   
+
    % Rigid offset for Loads in Element Frame
    LHd = eye(14);
-   LHd(1,6)=Lrd1(n); LHd(8,13)=Lrd2(n);  
-  
+   LHd(1,6)=Lrd1(n); LHd(8,13)=Lrd2(n);
+
    % Inverse Rotation from Global Frame to Element Frame
    RLz=[cos(-alpharef(n,2)) -sin(-alpharef(n,2)) 0; ...
       sin(-alpharef(n,2)) cos(-alpharef(n,2)) 0; ...
@@ -450,12 +450,12 @@ for n=1:xn
    eL1 = [1; 0; 0];eL1 = RLz*eL1;
    eL2 = [0; 1; 0];eL2 = RLz*eL2;
    eL3 = [0; 0; 1];eL3 = RLz*eL3;
-   
+
    [GLe]=CoordTransform(eL1,eL2,eL3);
-   
+
    % Load Transform using Rigid Offset within Element Frame
    Ft = LHd'*Rsd'*GLe*[dFn1(n,:)'/Ldp1(n,2);dFn2(n,:)'/Ldp2(n,2)];
-   
+
    % Rotation from Element Frame to Global Frame
    RRz=[cos(alpharef(n,2)) -sin(alpharef(n,2)) 0; ...
       sin(alpharef(n,2)) cos(alpharef(n,2)) 0; ...
@@ -465,7 +465,7 @@ for n=1:xn
    eR3 = [0; 0; 1];eR3 = RRz*eR3;
 
    [GRe]=CoordTransform(eR1,eR2,eR3);
-   
+
    Ft=GRe*Ft;
    % Assemble
    [dF] = assemble2(dF,Ft,MI,n);
@@ -502,7 +502,7 @@ if ~isempty(LNC)
       elseif isequal(LNC1(i,13),3) % Bottom
          hd1(i,1)=-(hsb1(i,1)+tfb1(i,1)/2 +LNC1(i,12) );
       elseif isequal(LNC1(i,13),4) % Centroid
-         hd1(i,1)=-( CSD1(i,1) +LNC1(i,12) );      
+         hd1(i,1)=-( CSD1(i,1) +LNC1(i,12) );
       end
 
       if isequal(LNC2(i,13),1) || isequal(LNC2(i,13),0)% None
@@ -512,7 +512,7 @@ if ~isempty(LNC)
       elseif isequal(LNC2(i,13),3) % Bottom
          hd2(i,1)=-(hsb2(i,1)+tfb2(i,1)/2 +LNC2(i,12) );
       elseif isequal(LNC2(i,13),4) % Centroid
-         hd2(i,1)=-( CSD2(i,1)+LNC2(i,12) );    
+         hd2(i,1)=-( CSD2(i,1)+LNC2(i,12) );
       end
 
       d1(i,1)=LNCe1(i,2)*hd1(i,1)/Ldp1(i,2);
@@ -524,29 +524,29 @@ end
 % ----------------             Self weight           ---------------------
 % ------------------------------------------------------------------------
 SUEC1(xn,20)=0; SUEC2(xn,20)=0;
-SUNCe1=zeros(xn,3); SUNCe2=zeros(xn,3); 
+SUNCe1=zeros(xn,3); SUNCe2=zeros(xn,3);
 switch get(get(ap_sw_buttongroup,'SelectedObject'),'Tag')
    case 'sw_on'
       SUEC1(:,6)=-Ag1.*stRho;
       SUEC2(:,6)=-Ag2.*stRho;
-      
+
    case 'sw_off'
 end
-   
+
 for i=1:xn
    Rz=[cos(-alpharef(i,2)) -sin(-alpharef(i,2)) 0; ...
    sin(-alpharef(i,2)) cos(-alpharef(i,2)) 0; ...
    0 0 1];
 
    SUNCe1(i,:)=Rz*[SUEC1(i,5);SUEC1(i,6);SUEC1(i,7)];
-   SUNCe2(i,:)=Rz*[SUEC2(i,5);SUEC2(i,6);SUEC2(i,7)];   
+   SUNCe2(i,:)=Rz*[SUEC2(i,5);SUEC2(i,6);SUEC2(i,7)];
 end
 
 % ------------------------------------------------------------------------
 % ----------------     Distributed Load Height       ---------------------
 % ------------------------------------------------------------------------
-if ~isempty(LUEC) 
-   LUNCe=zeros(xn,3);      
+if ~isempty(LUEC)
+   LUNCe=zeros(xn,3);
    for i=1:xn
       Rz=[cos(-alpharef(i,2)) -sin(-alpharef(i,2)) 0; ...
       sin(-alpharef(i,2)) cos(-alpharef(i,2)) 0; ...
@@ -560,67 +560,67 @@ end
 % ----------------             Shear Spring          ---------------------
 % ------------------------------------------------------------------------
 KSg=zeros(nodedof*N,nodedof*N);
-if ~isempty(BNC1) 
-   alphashear = zeros(length(BNC1(:,1)),2);   
-   BNC1e=zeros(length(BNC1(:,1)),3); 
+if ~isempty(BNC1)
+   alphashear = zeros(length(BNC1(:,1)),2);
+   BNC1e=zeros(length(BNC1(:,1)),3);
    BNC2e=zeros(length(BNC1(:,1)),3);
    srd1=zeros(length(BNC1(:,1)),1);
    srd2=zeros(length(BNC1(:,1)),1);
-   
-   
-   for i=1:length(BNC1(:,1))  
+
+
+   for i=1:length(BNC1(:,1))
       SRd = eye(nodedof*N);
-      
+
       opp = BNC2(i,4)-BNC1(i,4);  % element depth in y-dir
-      adj = BNC2(i,3)-BNC1(i,3);  % element length in x-dir         
+      adj = BNC2(i,3)-BNC1(i,3);  % element length in x-dir
       alphashear(i,1)=BNC1(i,1);
       alphashear(i,2)=atan2(opp,adj); % Only global frame angle
-       
+
       Rz=[cos(-alphashear(i,2)) -sin(-alphashear(i,2)) 0; ...
       sin(-alphashear(i,2)) cos(-alphashear(i,2)) 0; ...
       0 0 1];
-   
+
       BNC1e(i,:)=Rz*[BNC1(i,6);BNC1(i,7);BNC1(i,8)];
       BNC2e(i,:)=Rz*[BNC2(i,6);BNC2(i,7);BNC2(i,8)];
-      
+
       KS=zeros(nodedof*N,nodedof*N);
       KS((BNC1(i,2)-1)*7+1,(BNC1(i,2)-1)*7+1)= BNC1e(i,1)+KS((BNC1(i,2)-1)*7+1,(BNC1(i,2)-1)*7+1);
       KS((BNC2(i,2)-1)*7+1,(BNC2(i,2)-1)*7+1)= BNC2e(i,1)+KS((BNC2(i,2)-1)*7+1,(BNC2(i,2)-1)*7+1);
       KS((BNC2(i,2)-1)*7+1,(BNC1(i,2)-1)*7+1)= -BNC2e(i,1);
       KS((BNC1(i,2)-1)*7+1,(BNC2(i,2)-1)*7+1)= -BNC2e(i,1);
-      
+
       KS((BNC1(i,2)-1)*7+2,(BNC1(i,2)-1)*7+2)= BNC1e(i,2)+KS((BNC1(i,2)-1)*7+2,(BNC1(i,2)-1)*7+2);
       KS((BNC2(i,2)-1)*7+2,(BNC2(i,2)-1)*7+2)= BNC2e(i,2)+KS((BNC2(i,2)-1)*7+2,(BNC2(i,2)-1)*7+2);
       KS((BNC2(i,2)-1)*7+2,(BNC1(i,2)-1)*7+2)= -BNC2e(i,2);
       KS((BNC1(i,2)-1)*7+2,(BNC2(i,2)-1)*7+2)= -BNC2e(i,2);
-      
+
       KS((BNC1(i,2)-1)*7+3,(BNC1(i,2)-1)*7+3)= BNC1e(i,3)+KS((BNC1(i,2)-1)*7+3,(BNC1(i,2)-1)*7+3);
       KS((BNC2(i,2)-1)*7+3,(BNC2(i,2)-1)*7+3)= BNC2e(i,3)+KS((BNC2(i,2)-1)*7+3,(BNC2(i,2)-1)*7+3);
       KS((BNC2(i,2)-1)*7+3,(BNC1(i,2)-1)*7+3)= -BNC2e(i,3);
-      KS((BNC1(i,2)-1)*7+3,(BNC2(i,2)-1)*7+3)= -BNC2e(i,3);   
-      
+      KS((BNC1(i,2)-1)*7+3,(BNC2(i,2)-1)*7+3)= -BNC2e(i,3);
+
       if isequal(BNC1(i,9),1) || isequal(BNC1(i,9),0)% Top
-         srd1(i,1)=-(hst1(i,1)+tft1(i,1)/2);         
+         srd1(i,1)=-(hst1(i,1)+tft1(i,1)/2);
       elseif isequal(BNC1(i,9),2) % None
-         srd1(i,1)=0;     
+         srd1(i,1)=0;
       elseif isequal(BNC1(i,9),3) % Bottom
          srd1(i,1)=(hsb1(i,1)+tfb1(i,1)/2);
-      end      
- 
+      end
+
       if isequal(BNC2(i,9),1) || isequal(BNC2(i,9),0)% Top
          srd2(i,1)=-(hst2(i,1)+tft2(i,1)/2);
       elseif isequal(BNC2(i,9),2) % None
-         srd2(i,1)=0;      
+         srd2(i,1)=0;
       elseif isequal(BNC2(i,9),3) % Bottom
          srd2(i,1)=(hsb2(i,1)+tfb2(i,1)/2);
       end
-            
-      SRd((BNC1(i,2)-1)*7+3,(BNC1(i,2)-1)*7+4) = -srd1(i,1);   
-      SRd((BNC2(i,2)-1)*7+3,(BNC2(i,2)-1)*7+4) = -srd2(i,1); 
+
+      SRd((BNC1(i,2)-1)*7+3,(BNC1(i,2)-1)*7+4) = -srd1(i,1);
+      SRd((BNC2(i,2)-1)*7+3,(BNC2(i,2)-1)*7+4) = -srd2(i,1);
 
       KSg=SRd'*KS*SRd +KSg;
 
-   end 
+   end
 end
 
 KS=KSg;
@@ -636,19 +636,19 @@ tft=RNCc(:,8);  % Top flange thickness
 hg=RNCc(:,12);  % h : Distance between flange centroids
 % Shear center
 % bottom flange centroid to shear center
-hsb = (tft.*bft.^3.*hg)./(tfb.*bfb.^3+tft.*bft.^3); 
+hsb = (tft.*bft.^3.*hg)./(tfb.*bfb.^3+tft.*bft.^3);
 hst = hg - hsb;    % top flange centroid to shear center
 
 grd=zeros(N,1);
-if ~isempty(BNC)    
+if ~isempty(BNC)
    for i=1:N
       if isequal(BNC(i,13),1) || isequal(BNC(i,13),0)% None
-         grd(i,1)=0;         
-      elseif isequal(BNC(i,13),2) % Top              
+         grd(i,1)=0;
+      elseif isequal(BNC(i,13),2) % Top
          grd(i,1)=-(hst(i,1)+tft(i,1)/2);
       elseif isequal(BNC(i,13),3) % Bottom
          grd(i,1)=(hsb(i,1)+tfb(i,1)/2);
-      end 
+      end
    end
 end
 
@@ -657,7 +657,7 @@ GRd = eye(nodedof*N);
 if ~isempty(BNC)
    for i = 1:N
        for j = 1:nodedof
-       KBe((i-1)*nodedof+j,(i-1)*nodedof+j) = BNC(i,j+4);  
+       KBe((i-1)*nodedof+j,(i-1)*nodedof+j) = BNC(i,j+4);
        end
        GRd((i-1)*nodedof+3,(i-1)*nodedof+4) = -grd(i,1);
    end
@@ -675,14 +675,14 @@ Bflag=0;
 
 
 while increment < (ninc/lambda)+1
-   
+
    % set up initial values for global solution; Zero nodal displacements
    % Initial imperfection
    u = zeros(N,1); v = zeros(N,1); w = zeros(N,1);
    wx = zeros(N,1); wy = zeros(N,1); wz = zeros(N,1); wxp = zeros(N,1);
 
    [L,L0,ul,dX,dY,dZ]=InitialEleVal(xn,xg1,yg1,zg1,xg2,yg2,zg2,u,v,w,MI);
-   
+
    beta1x=zeros(xn,1);beta1y=zeros(xn,1);beta1z=zeros(xn,1);beta1xp=zeros(xn,1);
    beta2x=zeros(xn,1);beta2y=zeros(xn,1);beta2z=zeros(xn,1);beta2xp=zeros(xn,1);
    for i=1:xn
@@ -708,18 +708,18 @@ while increment < (ninc/lambda)+1
 
       % Rigid offset
       Rd = eye(14);
-      Rd(3,4)=rd1(n,1);Rd(10,11)=rd2(n,1); 
+      Rd(3,4)=rd1(n,1);Rd(10,11)=rd2(n,1);
       Rd(1,6)=-rxd1(n,1)*cos(-angletap(n,2));Rd(8,13)=-rxd2(n,1)*cos(-angletap(n,2));
       Rd(2,6)=-rxd1(n,1)*sin(-angletap(n,2));Rd(9,13)=-rxd2(n,1)*sin(-angletap(n,2));
 
       % Rigid offset for Uniform Loads in Element Frame
       Ld = eye(14);
-      Ld(1,6)=Lud1(n,1); Ld(8,13)=Lud2(n,1);  
+      Ld(1,6)=Lud1(n,1); Ld(8,13)=Lud2(n,1);
       % Rigid offset for Self-weight in Element Frame
       Lsd = eye(14);
-      Lsd(1,6)=CSD1(n,1); Lsd(8,13)=CSD2(n,1);        
+      Lsd(1,6)=CSD1(n,1); Lsd(8,13)=CSD2(n,1);
 
-      % Update Nodal Triads using global solution : Angle between Element frame and CR frame 
+      % Update Nodal Triads using global solution : Angle between Element frame and CR frame
       [t1,t2,t3,u1,u2,u3] = UpdatedElementNodalTriadsTU(beta1x(n,1),beta2x(n,1),beta1y(n,1),beta2y(n,1),beta1z(n,1),beta2z(n,1),alphatap(n,2));
       [e1,e2,e3,Zetaavg,Zeta1,Zeta2,Eta1,Eta2] = ElementBaseVector(dX(n,1),dY(n,1),dZ(n,1),t2,u2,L(n,1),alphatap(n,2));
 
@@ -729,7 +729,7 @@ while increment < (ninc/lambda)+1
       [Pbar]=Projection(Zetaavg,Zeta1,Zeta2,Eta1,Eta2,L(n,1));
 
       [e1,e2,e3] = GlobalTransform(e1,e2,e3,alphatap(n,2));
-      [Ge]=CoordTransform(e1,e2,e3); 
+      [Ge]=CoordTransform(e1,e2,e3);
 
       DE=zeros(14,1); SE=zeros(14,1);
       if ~isempty(LUEC)
@@ -760,7 +760,7 @@ while increment < (ninc/lambda)+1
             [ys1(n);ys2(n)],[tw1(n);tw2(n)],[Afillet1(n),Afillet2(n)],L0(n,1),E(n,1),G(n,1),fillet(n,:),...
             hstp(n),hsbp(n),ysp(n),bftp(n),bfbp(n), ...
             theta1xn,theta1zn,theta1yn,theta2xn,theta2zn,theta2yn,...
-            theta1xpn,theta2xpn,qno,FEL(n,:));   
+            theta1xpn,theta2xpn,qno,FEL(n,:));
       end
 
       if ~isempty(SUEC1)
@@ -774,24 +774,24 @@ while increment < (ninc/lambda)+1
          SE(8,1)=SUNCe2(n,1)*L0(n,1)/2;
 
          SE(3,1)=SUNCe1(n,3)*L0(n,1)/2;
-         SE(10,1)=SUNCe2(n,3)*L0(n,1)/2; 
-      end   
-   
+         SE(10,1)=SUNCe2(n,3)*L0(n,1)/2;
+      end
+
       % ------------- Distributed Load & Self weight S
       % Rigid offset for Supports in Element Frame
       Rsd = eye(14);
-%       Rsd(3,4)=rd1(n);  Rsd(10,11)=rd2(n); 
-      Rsd(1,6)=-rxd1(n); Rsd(8,13)=-rxd2(n);  
-      
-      [de1,de2,de3] = GlobalDisTransform(alpharef(n,2));      
+%       Rsd(3,4)=rd1(n);  Rsd(10,11)=rd2(n);
+      Rsd(1,6)=-rxd1(n); Rsd(8,13)=-rxd2(n);
+
+      [de1,de2,de3] = GlobalDisTransform(alpharef(n,2));
       [GDe]=CoordTransform(de1,de2,de3);
       if isequal(increment,1)
-         DG = GDe*Ld'*Rsd'*DE + GDe*Lsd'*Rsd'*SE;           
+         DG = GDe*Ld'*Rsd'*DE + GDe*Lsd'*Rsd'*SE;
       else
-         DG = GDe*Ld'*Rsd'*DE;           
-      end 
+         DG = GDe*Ld'*Rsd'*DE;
+      end
       % ------------- Distributed Load & Self weight E
-      
+
       % Interforce resultants w.r.t Element frame
       Qei = Pbar'*Qino;
 
@@ -812,34 +812,34 @@ while increment < (ninc/lambda)+1
 
       % Total Stiffness
       Kg = Kts + Kggs;
-      
+
       % Assemble
       % Total Stiffness
       [K,Fint,DFG] = assemble(K,Fint,DFG,Kg,Qg,DG,MI,n);
       % Elastic stiffness & Geometric stiffness
       [KtBB,KggBB] = assemble1(KtBB,KggBB,Kts,Kggs,MI,n);
-      
+
    end
 
    KtBB=KtBB+KS+KB;
    % Distributed Load
    ind=(1:nDOF)';
    ind=ind(logical(BC(:,1)));
-   DFG(ind,:)=[];  
+   DFG(ind,:)=[];
 
    Fn = Fn  + dF + lambda*DFG;
- 
+
    % Elastic Tangent Stiffness
    ind=(1:nDOF)';
    ind=ind(logical(BC(:,1)));
    KtBB(ind,:)=[];
-   KtBB(:,ind)=[]; 
+   KtBB(:,ind)=[];
 
    if rcond(KtBB) < (10^(-15))
       Bflag = 1;
       break;
    end
-   
+
    % Calculate the first nodal displacements
    dus = KtBB\(Fn);     % 1st Elastic displacement
 
@@ -847,14 +847,14 @@ while increment < (ninc/lambda)+1
    [du,RTsuppt]=RTDisplacement(dus,nDOF,BC);
 
    [unew]=CurrentDisplacement(du,N,nodedof); % including supports nodes;
-       
+
    unew1 = zeros(xn,7); unew2 = zeros(xn,7);
    for i=1:xn
       for j=1:7
-         unew1(i,j)=unew(MI(i,2),j); 
+         unew1(i,j)=unew(MI(i,2),j);
          unew2(i,j)=unew(MI(i,3),j);
       end
-   end     
+   end
 
    %--------------------------------------------------------------------
    %------------------ Calculate Internal Forces -----------------------
@@ -865,34 +865,34 @@ while increment < (ninc/lambda)+1
    KggBB=zeros(nDOF);      % global geometry stiffness matrix
    Fint=zeros(nDOF,1);     % global internal force vector
    DFG=zeros(nDOF,1);      % global internal force vector
-   
+
    for n = 1:xn
 
       % Rigid offset
       Rd = eye(14);
-      Rd(3,4)=rd1(n,1);Rd(10,11)=rd2(n,1); 
+      Rd(3,4)=rd1(n,1);Rd(10,11)=rd2(n,1);
       Rd(1,6)=-rxd1(n,1)*cos(-angletap(n,2));Rd(8,13)=-rxd2(n,1)*cos(-angletap(n,2));
       Rd(2,6)=-rxd1(n,1)*sin(-angletap(n,2));Rd(9,13)=-rxd2(n,1)*sin(-angletap(n,2));
 
       % Rigid offset for Uniform Loads in Element Frame
       Ld = eye(14);
-      Ld(1,6)=Lud1(n,1); Ld(8,13)=Lud2(n,1);  
+      Ld(1,6)=Lud1(n,1); Ld(8,13)=Lud2(n,1);
       % Rigid offset for Self-weight in Element Frame
       Lsd = eye(14);
-      Lsd(1,6)=CSD1(n,1); Lsd(8,13)=CSD2(n,1);      
+      Lsd(1,6)=CSD1(n,1); Lsd(8,13)=CSD2(n,1);
 
-      % Update Nodal Triads using global solution : Angle between Element frame and CR frame 
+      % Update Nodal Triads using global solution : Angle between Element frame and CR frame
       [t1,t2,t3,u1,u2,u3] = UpdatedElementNodalTriadsTU(beta1x(n,1),beta2x(n,1),beta1y(n,1),beta2y(n,1),beta1z(n,1),beta2z(n,1),alphatap(n,2));
       [e1,e2,e3,Zetaavg,Zeta1,Zeta2,Eta1,Eta2] = ElementBaseVector(dX(n,1),dY(n,1),dZ(n,1),t2,u2,L(n,1),alphatap(n,2));
-      
+
       % Deformation in CR frame
       [theta1xn,theta1zn,theta1yn,theta2xn,theta2zn,theta2yn,theta1xpn,theta2xpn] = NaturalFrame(t1,t2,t3,u1,u2,u3,e1,e2,e3,beta1xp(n,1),beta2xp(n,1));
       [Pbar]=Projection(Zetaavg,Zeta1,Zeta2,Eta1,Eta2,L(n,1));
 
       [e1,e2,e3] = GlobalTransform(e1,e2,e3,alphatap(n,2));
-      [Ge]=CoordTransform(e1,e2,e3); 
+      [Ge]=CoordTransform(e1,e2,e3);
       qno=Pbar*Rd*Ge'*[unew1(n,:)';unew2(n,:)'];
-      
+
       DE=zeros(14,1); SE=zeros(14,1);
       if ~isempty(LUEC)
          [Kt,Kgg,Qino,Kh2,Gn]=StiffnessELEMENT3D([bfb1(n);bfb2(n)],...
@@ -922,9 +922,9 @@ while increment < (ninc/lambda)+1
             [ys1(n);ys2(n)],[tw1(n);tw2(n)],[Afillet1(n),Afillet2(n)],L0(n,1),E(n,1),G(n,1),fillet(n,:),...
             hstp(n),hsbp(n),ysp(n),bftp(n),bfbp(n), ...
             theta1xn,theta1zn,theta1yn,theta2xn,theta2zn,theta2yn,...
-            theta1xpn,theta2xpn,qno,FEL(n,:));   
-      end      
- 
+            theta1xpn,theta2xpn,qno,FEL(n,:));
+      end
+
       if ~isempty(SUEC1)
          % Self Weight
          SE(2,1)=SUNCe1(n,2)*L0(n,1)/2;
@@ -936,24 +936,24 @@ while increment < (ninc/lambda)+1
          SE(8,1)=SUNCe2(n,1)*L0(n,1)/2;
 
          SE(3,1)=SUNCe1(n,3)*L0(n,1)/2;
-         SE(10,1)=SUNCe2(n,3)*L0(n,1)/2; 
-      end   
-      
+         SE(10,1)=SUNCe2(n,3)*L0(n,1)/2;
+      end
+
       % ------------- Distributed Load & Self weight S
       % Rigid offset for Supports in Element Frame
       Rsd = eye(14);
-%       Rsd(3,4)=rd1(n);  Rsd(10,11)=rd2(n); 
-      Rsd(1,6)=-rxd1(n); Rsd(8,13)=-rxd2(n);  
-      
-      [de1,de2,de3] = GlobalDisTransform(alpharef(n,2));      
+%       Rsd(3,4)=rd1(n);  Rsd(10,11)=rd2(n);
+      Rsd(1,6)=-rxd1(n); Rsd(8,13)=-rxd2(n);
+
+      [de1,de2,de3] = GlobalDisTransform(alpharef(n,2));
       [GDe]=CoordTransform(de1,de2,de3);
       if isequal(increment,1)
-         DG = GDe*Ld'*Rsd'*DE + GDe*Lsd'*Rsd'*SE;           
+         DG = GDe*Ld'*Rsd'*DE + GDe*Lsd'*Rsd'*SE;
       else
-         DG = GDe*Ld'*Rsd'*DE;           
-      end 
+         DG = GDe*Ld'*Rsd'*DE;
+      end
       % ------------- Distributed Load & Self weight E
-      
+
       % Interforce resultants w.r.t Element frame
       Qei = Pbar'*Qino;
 
@@ -965,52 +965,52 @@ while increment < (ninc/lambda)+1
 
       % Interforce resultants w.r.t Global frame
       Qg =Ge*Qei;
-      
+
       % -------------------------------------------- Save Internal Force S
       QeiD = Pbar'*Qino;
       % -- Postprocessing for Moment from SC to Centroid S
       [det1,det2,det3] = GlobalDisTransform(angletap(n,2));
-      [GDet]=CoordTransform(det1,det2,det3);          
+      [GDet]=CoordTransform(det1,det2,det3);
       QeiDt = GDet*Pbar'*Qino;
       % -- Postprocessing for Moment from SC to Centroid E
       % Update Internal Moment w.r.t centroidal axis
       QeiD(6,1) = QeiD(6,1) + QeiDt(1,1)*(yc1(n,1)-ys1(n,1));
-      QeiD(13,1) = QeiD(13,1) + QeiDt(8,1)*(yc2(n,1)-ys2(n,1)); 
+      QeiD(13,1) = QeiD(13,1) + QeiDt(8,1)*(yc2(n,1)-ys2(n,1));
       if ~isempty(SUEC1)
          QeiD(2,1)=-SE(2,1)+QeiD(2,1);
          QeiD(9,1)=-SE(9,1)+QeiD(9,1);
-         
+
          QeiD(6,1)=-SE(6,1)+QeiD(6,1);
-         QeiD(13,1)=-SE(13,1)+QeiD(13,1); 
-      end        
+         QeiD(13,1)=-SE(13,1)+QeiD(13,1);
+      end
       if ~isempty(LUEC)
          QeiD(2,1)=-DE(2,1)*(increment*lambda)+QeiD(2,1);
          QeiD(9,1)=-DE(9,1)*(increment*lambda)+QeiD(9,1);
-         
+
          QeiD(6,1)=-DE(6,1)*(increment*lambda)+QeiD(6,1);
-         QeiD(13,1)=-DE(13,1)*(increment*lambda)+QeiD(13,1); 
-      end    
-      QgD =Ge*QeiD;  
-      Qing(n,:) = QgD(:);  
+         QeiD(13,1)=-DE(13,1)*(increment*lambda)+QeiD(13,1);
+      end
+      QgD =Ge*QeiD;
+      Qing(n,:) = QgD(:);
       % Postprocessing for Axial and Shear force from SC to Centroid
       [dec1,dec2,dec3] = GlobalDisTransform(-CSangel(n,2));
-      [GDec]=CoordTransform(dec1,dec2,dec3);          
-      QeiDc = GDec*Pbar'*Qino;     
-      QeiD(1,1)=QeiDc(1,1); 
+      [GDec]=CoordTransform(dec1,dec2,dec3);
+      QeiDc = GDec*Pbar'*Qino;
+      QeiD(1,1)=QeiDc(1,1);
       QeiD(2,1)=QeiDc(2,1);
-      QeiD(8,1)=QeiDc(8,1); 
-      QeiD(9,1)=QeiDc(9,1);  
+      QeiD(8,1)=QeiDc(8,1);
+      QeiD(9,1)=QeiDc(9,1);
       if ~isempty(SUEC1)
-         QeiD(2,1)=-SE(2,1)+QeiD(2,1);       
-         QeiD(9,1)=-SE(9,1)+QeiD(9,1);  
+         QeiD(2,1)=-SE(2,1)+QeiD(2,1);
+         QeiD(9,1)=-SE(9,1)+QeiD(9,1);
       end
       if ~isempty(LUEC)
-         QeiD(2,1)=-DE(2,1)*(increment*lambda)+QeiD(2,1);       
-         QeiD(9,1)=-DE(9,1)*(increment*lambda)+QeiD(9,1);  
-      end        
-      Qin(n,:) = QeiD(:);              
-      % -------------------------------------------- Save Internal Force E 
-      
+         QeiD(2,1)=-DE(2,1)*(increment*lambda)+QeiD(2,1);
+         QeiD(9,1)=-DE(9,1)*(increment*lambda)+QeiD(9,1);
+      end
+      Qin(n,:) = QeiD(:);
+      % -------------------------------------------- Save Internal Force E
+
       % Elastic Tangent Stiffness Matrix
       Kts = Ge*Rd'*(Pbar'*Kt*Pbar)*Rd*Ge';
 
@@ -1019,27 +1019,27 @@ while increment < (ninc/lambda)+1
 
       % Total Stiffness
       Kg = Kts + Kggs;
-      
+
       % Assemble
       % Total Stiffness
       [K,Fint,DFG] = assemble(K,Fint,DFG,Kg,Qg,DG,MI,n);
       % Elastic stiffness & Geometric stiffness
       [KtBB,KggBB] = assemble1(KtBB,KggBB,Kts,Kggs,MI,n);
-      
+
    end
 
    [Funew]=FinalDisplacement(Funew,du,N,nodedof,increment); % including supports nodes;
-   
+
    for i = 1:xn
        for j = 1:nodedof
                Qint1(i,j,increment) = Qing(i,j);
                Qint2(i,j,increment) = Qing(i,j+nodedof);
        end
-   end    
+   end
 
    for i=1:length(RNCc(:,1))
       for j=1:length(MI(:,1))
-         if isequal(i,MI(j,2))  
+         if isequal(i,MI(j,2))
             Qintg(i,1,increment)=Qint1(MI(j,1),1,increment);
             Qintg(i,2,increment)=Qint1(MI(j,1),2,increment);
             Qintg(i,3,increment)=Qint1(MI(j,1),3,increment);
@@ -1057,25 +1057,25 @@ while increment < (ninc/lambda)+1
             Qintg(i,7,increment)=Qint2(MI(j,1),7,increment);
          end
       end
-   end   
-   
+   end
+
    for i = 1:xn
        for j = 1:nodedof*2
                QintfE(i,j,increment) = Qin(i,j);
                Qintf(i,j,increment) = Qin(i,j);
        end
-   end       
+   end
 
    Qintf=round(Qintf*10^6)/10^6;
    QintfE=round(QintfE*10^6)/10^6;
-   Qintg=round(Qintg*10^6)/10^6; 
-   Qint1=round(Qint1*10^6)/10^6; 
-   Qint2=round(Qint2*10^6)/10^6;   
-   
+   Qintg=round(Qintg*10^6)/10^6;
+   Qint1=round(Qint1*10^6)/10^6;
+   Qint2=round(Qint2*10^6)/10^6;
+
    % ************************************** Wait2
    perc = increment;
-   waitbar(perc/((ninc/lambda)+1),wh,sprintf('%d%% along...',perc))   
-   
+   waitbar(perc/((ninc/lambda)+1),wh,sprintf('%d%% along...',perc))
+
    % Repeat increments
    increment = increment + 1;
 end     % increment end
@@ -1087,14 +1087,14 @@ if isequal(Bflag,1)
    Qintf = Qintf*0;
    QintfE = QintfE*0;
    Qintg = Qintg*0;
-   Qint1=Qint1*0;  
-   Qint2=Qint2*0; 
+   Qint1=Qint1*0;
+   Qint2=Qint2*0;
    Funew = Funew*0;
 else
    % ************************************** Wait3
    perc = 100;
    waitbar(perc/((ninc/lambda)+1),wh,sprintf('%d%% along...',perc))
-   delete(wh)   
+   delete(wh)
    set(pt_title_name,'String','1st Order Elastic Analysis is completed.')
    set(pt_title_name,'Visible','on')
 end

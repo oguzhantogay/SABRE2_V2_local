@@ -6,19 +6,25 @@
 % Date : 12/01/2012.
 % ************************************************************************
 % *****************           OPEN AND LOAD FILE      ********************
+<<<<<<< HEAD:SABRE2_V.1.4/Altered/SABRE2.V.1.4/SABRE2OpenCODE_ryan.m
 % ************************************************************************
 file = 'C:\Users\rslein3\Desktop\SABRE2Calculator.V.1.4_Batch_Elastic_mod\input\case errors\rho02.mat'
 data=load(file,'-ascii');
 JNodevalue = data.JNodevalue; 
+=======
+% ************************************************************************ 
+JNodevalue = data.JNodevalue 
+>>>>>>> 6b28822d7139bc6b5a1ae2bd584aacb50f0cca1e:SABRE2_V.1.4/Altered/SABRE2.V.1.4/SABRE2OpenCODE.m
 Massemble = data.Massemble;
-JNodevalue_i = data.JNodevalue_i; 
-JNodevalue_j = data.JNodevalue_j;
-Rval = data.Rval;
-BNodevalue = data.BNodevalue;
-SNodevalue = data.SNodevalue;
-RNCc = data.RNCc;
-NCc = data.NCc;
-Nshe1 = data.Nshe1;
+disp(num2str(Massemble))
+JNodevalue_i = data.JNodevalue_i
+JNodevalue_j = data.JNodevalue_j
+Rval = data.Rval
+BNodevalue = data.BNodevalue
+SNodevalue = data.SNodevalue
+RNCc = data.RNCc
+NCc = data.NCc
+Nshe1 = data.Nshe1
 Nshe2 = data.Nshe2;
 DUP1 = data.DUP1;
 DUP2 = data.DUP2;

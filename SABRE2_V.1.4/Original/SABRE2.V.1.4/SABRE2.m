@@ -2169,6 +2169,7 @@ function file_new_menu_Callback(hObject, eventdata)
          re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel);        
       % reset
       cla(axesm,'reset'); 
+      %% All required variables for problem definition
       filename = []; pathname = []; JNodevalue = []; Massemble = []; 
       JNodevalue_i = []; JNodevalue_j = []; Rval=[]; BNodevalue = []; SNodevalue =[]; 
       RNCc = []; NCc = []; Nshe1 = []; Nshe2 = []; DUP1 = []; DUP2 = []; LNC = [];
@@ -2178,6 +2179,7 @@ function file_new_menu_Callback(hObject, eventdata)
       LTYPE=[]; AR=0; AS=0; AE=0; AI=0; ANE=0; ANI=0; Rpg=[]; Rpc=[]; Rpt=[]; Rh=[]; Myc=[]; My=[]; Jval=[];Phi_Py=[]; UC=[];
       cflag=0; LNCpv=[];LIAType=0; NLIAType=0;HomoType=0; crLTB = 0; LGv=0; Itype=zeros(1,2);Rtype=0; AnalP=[];
       AnalP(1,1)=0;AnalP(2,1)=1;AnalP(3,1)=1;AnalP(4,1)=1;AnalP(5,1)=1;AnalP(6,1)=1; AnalP(7,1)=1;   
+      %% end
       set(vctm, 'Checked', 'off'); set([vmbf,vmbs,vmbg,vmbw,vmbp,vmbu],'Checked','on') ; LabType=zeros(1,10);
       cameratoolbar('Close');
       axis normal;   
@@ -2188,10 +2190,12 @@ function file_new_menu_Callback(hObject, eventdata)
       set([vdum,vtum],'enable','off');set(vtum, 'Checked', 'off'); set(vdum,'Checked','on'); set([vdum_panel,vdum_type_subpanel],'Visible','off')
       set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
       set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off');        
+      
    end
 end % function end
-% --------------------------------------------------------------------
+%% --------------------------------------------------------------------
 function file_open_menu_Callback(hObject, eventdata)
+   %% opening dialog 
    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    set(masterf,'WindowButtonDownFcn',@view_defined_xy_menu_Callback);
    % Visible function
@@ -2220,6 +2224,7 @@ function file_open_menu_Callback(hObject, eventdata)
          end           
       end
    end
+   %% end
    if isequal([filename,pathname],[0,0]) || isempty(filename) || isempty(pathname)
       return
    else

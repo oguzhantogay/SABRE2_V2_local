@@ -68,6 +68,10 @@ function SABRE2A1stFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pd
 % ************************************************************************
 % *****************              VISIBLE              ********************
 % ************************************************************************
+
+%% This file is related with the UI visualization - Oguzhan Togay
+%%
+
 set(pn_panel,'Visible','on')
 % *************** Title
 set(pt_title_name,'Visible','off')

@@ -1,14 +1,17 @@
-function SABRE2
-% Developed by Woo Yong Jeong.
-% Date : 07/01/2013.
-% ************************************************************************
-% *****      Graphical User Interface for General beam/frame FEA     *****
-% *****      General Nonprismatic I & T & Box & Circular Section     *****
-% *****      General Loading & Boundary Conditions & Bracing         *****
-% *****      Linear/Nonlinear Elastic & Linear/Nonlinear Inelastic   *****
-% *****      3D Rendering                                            *****
-% ************************************************************************
-clc; 
+%% --------Only edit the directory--------------------------------------
+inpath='C:\Users\ryan\Desktop\Altered\input\';
+outpath='C:\Users\ryan\Desktop\Altered\output\';
+%% ---------------------------------------------------------------------
+
+inpfilename = ls(fullfile(inpath, '*.mat')); %import all .mat files within a path directory
+numfiles=size(inpfilename,1);
+writeID = fullfile(outpath,'out.txt'); 
+outfile =strcat(writeID);   % Output file name.
+out = fopen(outfile,'wt');  % Output file is opened.  
+for runs=1:1%numfiles
+filename=inpfilename(runs,:);
+
+
 scrsz = get(groot,'ScreenSize'); Sw=scrsz(3); Sd=scrsz(4);% Get ScreenSize
 % Create and then hide the GUI(Master figure) as it is being constructed.
 masterf = figure('Position',[Sw/10,Sd/10,round(Sw*8/10),round(Sd*8/10)],'Units','normalized',...
@@ -19,8 +22,7 @@ else
    Fs = Sw/2050;
 end
 % Global Variables
-global filename; filename = []; 
-global pathname; pathname = [];
+
 global JNodevalue; JNodevalue = [];       % Joint Nodes Information
 global Massemble;  Massemble = [];        % Member assemble Information
 global JNodevalue_i; JNodevalue_i = [];   % Joint Nodes i Information
@@ -61,82 +63,83 @@ global LTYPE; LTYPE=[]; global cflag; cflag=0; global LNCpv; LNCpv=[];
 global LIAType; LIAType=0; global NLIAType; NLIAType=0; global HomoType; HomoType=0; global AnalP; AnalP=[];
 APP=0;AR=0; AS=0; AE=0; AI=0; ANE=0; ANI=0; Buc=0; Rtype=0; crLTB = 0; LGv=0; Itype=zeros(1,2); LabType=zeros(1,10);
 gammma=[]; Funew=[]; FunewP=[]; FunewR=[];QintgP=[];EGunew=[]; Qintf=[];QintfE=[];Qintg1=[];Qintg2=[]; MIE =[];
-% ************************************************************************
+%% ************************************************************************
 % *****************               MENUS              *********************
 % ************************************************************************
 fm = uimenu(masterf,'Label','File');   % File memu
-   fim = uimenu(fm,'Label','About','Callback',{@file_info_menu_Callback});
-   fnm = uimenu(fm,'Label','New','Callback',{@file_new_menu_Callback});
-   fom = uimenu(fm,'Label','Open','Callback',{@file_open_menu_Callback});
-   fsm = uimenu(fm,'Label','Save','Callback',{@file_save_menu_Callback});
-   fsam= uimenu(fm,'Label','Save As','Callback',{@file_saveas_menu_Callback});
-   fprm= uimenu(fm,'Label','Preview','Callback',{@file_preview_menu_Callback});
-   fpm = uimenu(fm,'Label','Print','Callback',{@file_print_menu_Callback});
-   fppm= uimenu(fm,'Label','Print Photo','Callback',{@file_printphoto_menu_Callback});
-   fqm = uimenu(fm,'Label','Quit','Callback',{@file_quit_menu_Callback});   
+fim = uimenu(fm,'Label','About','Callback',{@file_info_menu_Callback});
+fnm = uimenu(fm,'Label','New','Callback',{@file_new_menu_Callback});
+fom = uimenu(fm,'Label','Open','Callback',{@file_open_menu_Callback});
+fsm = uimenu(fm,'Label','Save','Callback',{@file_save_menu_Callback});
+fsam= uimenu(fm,'Label','Save As','Callback',{@file_saveas_menu_Callback});
+fprm= uimenu(fm,'Label','Preview','Callback',{@file_preview_menu_Callback});
+fpm = uimenu(fm,'Label','Print','Callback',{@file_print_menu_Callback});
+fppm= uimenu(fm,'Label','Print Photo','Callback',{@file_printphoto_menu_Callback});
+fqm = uimenu(fm,'Label','Quit','Callback',{@file_quit_menu_Callback}); 
+
 vm = uimenu(masterf,'Label','View');
-   vzm = uimenu(vm,'Label','Zoom','Callback',{@view_zoom_menu_Callback});
-   vrm = uimenu(vm,'Label','Rotate','Callback',{@view_rotate_menu_Callback});
-   vpm = uimenu(vm,'Label','Pan','Callback',{@view_pan_menu_Callback});
-   vctm = uimenu(vm,'Label','Camera Toolbar','Callback',{@view_camera_toolbar_menu_Callback});
-   vdm = uimenu(vm,'Label','Defined Views');   
-      vrom = uimenu(vdm,'Label','Isometric(X-Y-Z) View','Callback',{@view_defined_xyz_menu_Callback});
-      vrxym = uimenu(vdm,'Label','Front(X-Y) View','Callback',{@view_defined_xy_menu_Callback});
-      vrxzm = uimenu(vdm,'Label','Top(X-Z) View','Callback',{@view_defined_xz_menu_Callback});
-      vryzm = uimenu(vdm,'Label','Side(Y-Z) View','Callback',{@view_defined_yz_menu_Callback});
-      vrum = uimenu(vdm,'Label','User Defined View','Callback',{@view_defined_user_menu_Callback});      
-   vfm = uimenu(vm,'Label','Fit','Callback',{@view_fit_menu_Callback});
-   vcm = uimenu(vm,'Label','Screen Center','Callback',{@view_center_menu_Callback});  
-   vdum = uimenu(vm,'enable','off','Label','Diagram Data View','Callback',{@view_diagram_menu_Callback});
-   vtum = uimenu(vm,'enable','off','Label','Data Labels','Callback',{@view_text_menu_Callback});  
-   vlam = uimenu(vm,'Label','Graphic Labels');
-%       vmjn = uimenu(vlam,'Label','Joint Number','Callback',{@view_jn_menu_Callback}); 
-%       vmmn = uimenu(vlam,'Label','Member Number','Callback',{@view_mnum_menu_Callback}); 
-%       vmsn = uimenu(vlam,'Label','Segment Number','Callback',{@view_snum_menu_Callback});
-%       vmfn = uimenu(vlam,'Label','Flange Number','Callback',{@view_fnum_menu_Callback});  
-      vmbf = uimenu(vlam,'Label','Fixities','Callback',{@view_bf_menu_Callback});
-      vmbs = uimenu(vlam,'Label','Shear Panel','Callback',{@view_bs_menu_Callback});
-      vmbg = uimenu(vlam,'Label','Discrete Grounded Spring','Callback',{@view_bg_menu_Callback});
-      vmbw = uimenu(vlam,'Label','Element Flexural & /or Warping Releases','Callback',{@view_bw_menu_Callback});
-      vmbp = uimenu(vlam,'Label','Point Loads','Callback',{@view_bp_menu_Callback});
-      vmbu = uimenu(vlam,'Label','Uniform Loads','Callback',{@view_bu_menu_Callback});      
-   vstm = uimenu(vm,'Label','White Background','Callback',{@view_screenshot_menu_Callback});
+vzm = uimenu(vm,'Label','Zoom','Callback',{@view_zoom_menu_Callback});
+vrm = uimenu(vm,'Label','Rotate','Callback',{@view_rotate_menu_Callback});
+vpm = uimenu(vm,'Label','Pan','Callback',{@view_pan_menu_Callback});
+vctm = uimenu(vm,'Label','Camera Toolbar','Callback',{@view_camera_toolbar_menu_Callback});
+vdm = uimenu(vm,'Label','Defined Views');   
+vrom = uimenu(vdm,'Label','Isometric(X-Y-Z) View','Callback',{@view_defined_xyz_menu_Callback});
+vrxym = uimenu(vdm,'Label','Front(X-Y) View','Callback',{@view_defined_xy_menu_Callback});
+vrxzm = uimenu(vdm,'Label','Top(X-Z) View','Callback',{@view_defined_xz_menu_Callback});
+vryzm = uimenu(vdm,'Label','Side(Y-Z) View','Callback',{@view_defined_yz_menu_Callback});
+vrum = uimenu(vdm,'Label','User Defined View','Callback',{@view_defined_user_menu_Callback});      
+vfm = uimenu(vm,'Label','Fit','Callback',{@view_fit_menu_Callback});
+vcm = uimenu(vm,'Label','Screen Center','Callback',{@view_center_menu_Callback});  
+vdum = uimenu(vm,'enable','off','Label','Diagram Data View','Callback',{@view_diagram_menu_Callback});
+vtum = uimenu(vm,'enable','off','Label','Data Labels','Callback',{@view_text_menu_Callback});  
+vlam = uimenu(vm,'Label','Graphic Labels');
+vmbf = uimenu(vlam,'Label','Fixities','Callback',{@view_bf_menu_Callback});
+vmbs = uimenu(vlam,'Label','Shear Panel','Callback',{@view_bs_menu_Callback});
+vmbg = uimenu(vlam,'Label','Discrete Grounded Spring','Callback',{@view_bg_menu_Callback});
+vmbw = uimenu(vlam,'Label','Element Flexural & /or Warping Releases','Callback',{@view_bw_menu_Callback});
+vmbp = uimenu(vlam,'Label','Point Loads','Callback',{@view_bp_menu_Callback});
+vmbu = uimenu(vlam,'Label','Uniform Loads','Callback',{@view_bu_menu_Callback});      
+vstm = uimenu(vm,'Label','White Background','Callback',{@view_screenshot_menu_Callback});
+
 pm = uimenu(masterf,'Label','Properties');
-   pdm = uimenu(pm,'Label','Define Geometry','Tag','define','Callback',{@property_define_model_menu_Callback});
-      pdnm = uimenu(pdm,'Label','Define Joint(s)','Callback',{@property_define_joint_menu_Callback});
-      pdem = uimenu(pdm,'Label','Define Member(s) & Section(s)','Callback',{@property_define_member_menu_Callback}); 
-      pdbm = uimenu(pdm,'Label','Add node(s)','Callback',{@property_define_segment_menu_Callback});
-      pdmi = uimenu(pdm,'Label','Mirror w.r.t y-axis','Callback',{@property_define_mirror_menu_Callback});
-   pam = uimenu(pm,'Label','Subdivide Segment(s) & Assign Material','Tag','assign','Callback',{@property_assign_menu_Callback});   
-      psm = uimenu(pam,'Label','Homogenous Member(s)','Callback',{@property_homo_material_menu_Callback}); 
-      phm = uimenu(pam,'Label','Hybrid Member(s)','Callback',{@property_hybrid_material_menu_Callback}); 
+pdm = uimenu(pm,'Label','Define Geometry','Tag','define','Callback',{@property_define_model_menu_Callback});
+pdnm = uimenu(pdm,'Label','Define Joint(s)','Callback',{@property_define_joint_menu_Callback});
+pdem = uimenu(pdm,'Label','Define Member(s) & Section(s)','Callback',{@property_define_member_menu_Callback}); 
+pdbm = uimenu(pdm,'Label','Add node(s)','Callback',{@property_define_segment_menu_Callback});
+pdmi = uimenu(pdm,'Label','Mirror w.r.t y-axis','Callback',{@property_define_mirror_menu_Callback});
+pam = uimenu(pm,'Label','Subdivide Segment(s) & Assign Material','Tag','assign','Callback',{@property_assign_menu_Callback});   
+psm = uimenu(pam,'Label','Homogenous Member(s)','Callback',{@property_homo_material_menu_Callback}); 
+phm = uimenu(pam,'Label','Hybrid Member(s)','Callback',{@property_hybrid_material_menu_Callback}); 
+
 cm = uimenu(masterf,'Label','Conditions');      
-   bm = uimenu(cm,'Label','Boundary Conditions','Tag','bcs','Callback',{@bc_menu_Callback});
-      bfm = uimenu(bm,'Label','Define Fixities','Callback',{@bc_fixities_menu_Callback}); 
-      bsm = uimenu(bm,'Label','Define Shear Panel','Callback',{@bc_shear_menu_Callback}); 
-      bgm = uimenu(bm,'Label','Define Discrete Grounded Spring','Callback',{@bc_ground_menu_Callback});    
-      bpm = uimenu(bm,'Label','Define Element Flexural & /or Warping Releases','Callback',{@bc_flexure_menu_Callback}); 
-   lm = uimenu(cm,'Label','Loads','Tag','loads','Callback',{@loads_menu_Callback});
-      lfm = uimenu(lm,'Label','Define Point Loads','Callback',{@loads_force_menu_Callback});
-      lum = uimenu(lm,'Label','Define Uniform Loads','Callback',{@loads_uniform_menu_Callback});       
+bm = uimenu(cm,'Label','Boundary Conditions','Tag','bcs','Callback',{@bc_menu_Callback});
+bfm = uimenu(bm,'Label','Define Fixities','Callback',{@bc_fixities_menu_Callback}); 
+bsm = uimenu(bm,'Label','Define Shear Panel','Callback',{@bc_shear_menu_Callback}); 
+bgm = uimenu(bm,'Label','Define Discrete Grounded Spring','Callback',{@bc_ground_menu_Callback});    
+bpm = uimenu(bm,'Label','Define Element Flexural & /or Warping Releases','Callback',{@bc_flexure_menu_Callback}); 
+lm = uimenu(cm,'Label','Loads','Tag','loads','Callback',{@loads_menu_Callback});
+lfm = uimenu(lm,'Label','Define Point Loads','Callback',{@loads_force_menu_Callback});
+lum = uimenu(lm,'Label','Define Uniform Loads','Callback',{@loads_uniform_menu_Callback}); 
+
 ap = uimenu(masterf,'Label','Analysis Parameters','Tag','Anal','Callback',{@analysis_para_Callback}); 
-   aps = uimenu(ap,'Label','Analysis Parameters','Callback',{@analysis_parasub_menu_Callback});
+aps = uimenu(ap,'Label','Analysis Parameters','Callback',{@analysis_parasub_menu_Callback});
 am = uimenu(masterf,'Label','Analysis','Tag','Anal','Callback',{@analysis_menu_Callback});
-   a1m = uimenu(am,'Label','1st-Order Elastic Analysis','Callback',{@analysis_1stelastic_menu_Callback});
-   a2m = uimenu(am,'Label','2nd-Order Elastic Analysis','Callback',{@analysis_2ndelastic_menu_Callback}); 
-   a3m = uimenu(am,'Label','Elastic Linear Buckling Analysis','Callback',{@analysis_ecba_menu_Callback});     
-   a5m = uimenu(am,'Label','Elastic Nonlinear Buckling Analysis','Callback',{@analysis_nonecba_menu_Callback});    
-   a4m = uimenu(am,'Label','Inelastic Linear Buckling','Callback',{@analysis_icba_menu_Callback});
-      a4md = uimenu(a4m,'Label','Inelastic Linear Buckling Analysis','Callback',{@analysis_icba_Design_menu_Callback});
-      a4mc = uimenu(a4m,'Label','Inelastic Linear Buckling Check','Callback',{@analysis_icba_Check_menu_Callback});
-   a6m = uimenu(am,'Label','Inelastic Nonlinear Buckling','Callback',{@analysis_nonicba_menu_Callback}); 
-      a6md = uimenu(a6m,'Label','Inelastic Nonlinear Buckling Analysis','Callback',{@analysis_nonicba_Design_menu_Callback});
-      a6mc = uimenu(a6m,'Label','Inelastic Nonlinear Buckling Check','Callback',{@analysis_nonicba_Check_menu_Callback});
+a1m = uimenu(am,'Label','1st-Order Elastic Analysis','Callback',{@analysis_1stelastic_menu_Callback});
+a2m = uimenu(am,'Label','2nd-Order Elastic Analysis','Callback',{@analysis_2ndelastic_menu_Callback}); 
+a3m = uimenu(am,'Label','Elastic Linear Buckling Analysis','Callback',{@analysis_ecba_menu_Callback});     
+a5m = uimenu(am,'Label','Elastic Nonlinear Buckling Analysis','Callback',{@analysis_nonecba_menu_Callback});    
+a4m = uimenu(am,'Label','Inelastic Linear Buckling','Callback',{@analysis_icba_menu_Callback});
+a4md = uimenu(a4m,'Label','Inelastic Linear Buckling Analysis','Callback',{@analysis_icba_Design_menu_Callback});
+a4mc = uimenu(a4m,'Label','Inelastic Linear Buckling Check','Callback',{@analysis_icba_Check_menu_Callback});
+a6m = uimenu(am,'Label','Inelastic Nonlinear Buckling','Callback',{@analysis_nonicba_menu_Callback}); 
+a6md = uimenu(a6m,'Label','Inelastic Nonlinear Buckling Analysis','Callback',{@analysis_nonicba_Design_menu_Callback});
+a6mc = uimenu(a6m,'Label','Inelastic Nonlinear Buckling Check','Callback',{@analysis_nonicba_Check_menu_Callback});
+
 rm = uimenu(masterf,'Label','Results','Callback',{@results_menu_Callback},'Tag','res');
-  rim = uimenu(rm,'Label','Diagrams & Deflected Shapes','Callback',{@results_diagram_menu_Callback});  
-  rnm = uimenu(rm,'Label','Nodal Reactions & Displacements','Callback',{@results_nodalrd_menu_Callback});
-  rem = uimenu(rm,'Label','Element Forces','Callback',{@results_elementforces_menu_Callback});  
-  rcv = uimenu(rm,'Label','Plots','Tag','Curve','Callback',{@results_curve_menu_Callback});
+rim = uimenu(rm,'Label','Diagrams & Deflected Shapes','Callback',{@results_diagram_menu_Callback});  
+rnm = uimenu(rm,'Label','Nodal Reactions & Displacements','Callback',{@results_nodalrd_menu_Callback});
+rem = uimenu(rm,'Label','Element Forces','Callback',{@results_elementforces_menu_Callback});  
+rcv = uimenu(rm,'Label','Plots','Tag','Curve','Callback',{@results_curve_menu_Callback});
 % *************************************************************** set menu
 % submenu accelerator : shortcut
 set(fnm,'Accelerator','N'); set(fom,'Accelerator','O');
@@ -151,14 +154,14 @@ set([bm,lm,bfm,bsm,bpm],'Separator','on')
 set([a1m,a3m,a4m],'Separator','on')
 set([rim,rnm,rem,rcv],'Separator','on')
 set(vctm,'Checked','off') ;set(vdum,'Checked','on') ; set([vmbf,vmbs,vmbg,vmbw,vmbp,vmbu],'Checked','on') ; 
-% ************************************************************************
+%% ***********************************************************************
 % *****************                AXES              *********************
 % ************************************************************************  
 axesm = axes('Position',[0,0,round(Sw*(8/10)*(9/10)),round(Sd*(8/10))],...
    'Visible','off','Units','Pixels');
 % Initial View : X-Y View
 az = 0; el = 0; view(az, el);
-% ************************************************************************
+%% ************************************************************************
 % *****************            COMPONENTS            *********************
 % ************************************************************************
 Pw=round(Sw*(8/10)*(1/10));Pd=round(Sd*(8/10));
@@ -2083,211 +2086,69 @@ set([ref_apply,ref_cancel],'Visible','off');
 movegui(masterf,'center')
 set(masterf,'Visible','on')
 set(axesm,'Units','normalized')  
-% ************************************************************************
-% *****************             Callback             *********************
-% ************************************************************************
-% --------------------------------------------------------------------
-function file_info_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   tic
-   set([inf_panel,inf_title_name,inf_name,inf_wj_name,inf_and_name,inf_dw_name,inf_cp_name],'Visible','on') 
-   pause(10)
-   toc
-   set([inf_panel,inf_title_name,inf_name,inf_wj_name,inf_and_name,inf_dw_name,inf_cp_name],'Visible','off') 
-end
-% --------------------------------------------------------------------
-function file_new_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   set(masterf,'WindowButtonDownFcn',@view_defined_xy_menu_Callback);
-   % Callback function run when the menu item is selected         
-   selection = questdlg('Do you want to start over?','New ','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else
-      SABRE2NewFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
-         pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
-         pdn_coordz_text,pdn_coordx_edit,pdn_coordy_edit,pdn_coordz_edit,punit_text,punit_edit,pd_app_subpanel,...
-         pdn_apply,pdn_cancel,pde_type_text,pde_type_name,pde_buttongroup,pde_member_text,...
-         pde_jointi_radiobutton,pde_jointj_radiobutton,pde_jointi_edit,pde_jointj_edit,...
-         pde_reference_text,pde_reference_edit,pde_subpanel,pde_AISC_text,pde_wsection_text,...
-         pde_wsection_edit,pde_set,pde_wsname_edit,pdm_subpanel,pde_section_text,pde_ji_text,...
-         pde_jj_text,pde_bfb_text,pde_tfb_text,pde_bft_text,pde_tft_text,pde_dw_text,pde_tw_text,...
-         pde_bfbi_edit,pde_tfbi_edit,pde_bfti_edit,pde_tfti_edit,pde_dwi_edit,pde_twi_edit,...
-         pde_bfbj_edit,pde_tfbj_edit,pde_bftj_edit,pde_tftj_edit,pde_dwj_edit,pde_twj_edit,...
-         pde_fil_text,pde_fili_edit,pde_filj_edit,pde_apply,pde_cancel,pdb_member_text,pdb_type_text,...
-         pdb_member_name,pdb_type_name,pdb_length_text,pdb_coordx_edit,pdb_coordy_edit,pdb_coordz_edit,...
-         pdb_length_edit,pdb_length_set,pdb_wsection_edit,pdb_set,pdb_step_text,pdb_step_edit,pdstep_subpanel,...
-         pdb_bfb_edit,pdb_tfb_edit,pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit,...
-         pdb_apply,pdb_cancel,pdmi_name,pdmix_edit,pdmiy_edit,pdmiz_edit,pdmi_text,pdmi_type_edit,pdmi_apply,pam_type_text,pam_segmentn_text,pamse_assign_text,pam_segment_edit,...
-         pamse_assign_edit,pam_all,pam_assign_text,pamen_assign_text,pame_assign_text,pamg_assign_text,...
-         pamfy_assign_text,pamrho_assign_text,pamfyfi_assign_text,pamfyw_assign_text,pamfyfo_assign_text,...
-         pamen_assign_edit,pame_assign_edit,pamg_assign_edit,pamfy_assign_edit,pamrho_assign_edit,...
-         pamfyfi_assign_edit,pamfyw_assign_edit,pamfyfo_assign_edit,pam_apply,pam_cancel,lfm_type_text,...
-         lfm_type_name,lfm_coordx_edit,lfm_coordy_edit,lfm_coordz_edit,lfm_ld_text,lfm_ld_edit,lfm_all_apply,...
-         lfm_clc_apply,lfm_height_text,lfm_member_text,lfm_height_edit,lfm_alpha_text,lfm_alpha_edit,...
-         lfm_fc_text,lfm_fx_text,lfm_fy_text,lfm_fz_text,lfm_mx_text,lfm_my_text,lfm_mz_text,...
-         lfm_fx_edit,lfm_fy_edit,lfm_fz_edit,lfm_mx_edit,lfm_my_edit,lfm_mz_edit,lfm_apply,lfm_cancel,...
-         lum_type_text,lum_type_mem,lum_type_seg,lum_clc_apply,lum_height_edit,lum_wx_text,lum_wy_text,...
-         lum_wz_text,lum_wx_edit,lum_wy_edit,lum_wz_edit,lum_apply,lum_cancel,bfm_type_text,bfm_type_name,...
-         bfm_coordx_edit,bfm_coordy_edit,bfm_coordz_edit,bfm_clc_apply,bfm_height_text,bfm_member_text,...
-         bfm_height_edit,bfm_bc_text,bfm_ux_text,bfm_uy_text,bfm_uz_text,bfm_rx_text,bfm_ry_text,bfm_rz_text,...
-         bfm_phix_text,bfm_ux_buttongroup,bfm_ux_on_radiobutton,bfm_ux_off_radiobutton,bfm_uy_buttongroup,...
-         bfm_uy_on_radiobutton,bfm_uy_off_radiobutton,bfm_uz_buttongroup,bfm_uz_on_radiobutton,bfm_uz_off_radiobutton,...
-         bfm_rx_buttongroup,bfm_rx_on_radiobutton,bfm_rx_off_radiobutton,bfm_ry_buttongroup,bfm_ry_on_radiobutton,...
-         bfm_ry_off_radiobutton,bfm_rz_buttongroup,bfm_rz_on_radiobutton,bfm_rz_off_radiobutton,bfm_phix_buttongroup,...
-         bfm_phix_on_radiobutton,bfm_phix_off_radiobutton,bfm_ux_edit,bfm_uy_edit,bfm_uz_edit,bfm_rx_edit,bfm_ry_edit,...
-         bfm_rz_edit,bfm_phix_edit,bfm_apply,bfm_cancel,bsm_type_text,bsm_member_name,bsm_type_name,bsm_buttongroup,...
-         bsm_member_text,bsm_jointi_radiobutton,bsm_jointj_radiobutton,bsm_jointi_edit,bsm_jointj_edit,...
-         bsm_clc_apply,bsm_height_edit,bsm_bc_text,bsm_kv_text,bsm_kv_edit,bsm_apply,bsm_cancel,bgm_type_name,...
-         bgm_coordx_edit,bgm_coordy_edit,bgm_coordz_edit,bgm_clc_apply,bgm_height_edit,bgm_bc_text,...
-         bgm_ux_edit,bgm_uy_edit,bgm_uz_edit,bgm_rx_edit,bgm_ry_edit,bgm_rz_edit,bgm_phix_edit,bgm_apply,...
-         bgm_cancel,bpm_type_text,bpm_type_name,bpm_section_text,bpm_flexure_text,bpm_ni_text,...
-         bpm_nj_text,bpm_ni_edit,bpm_nj_edit,bpm_fr_text,bpm_my_text,bpm_myni_text,bpm_mynj_text,bpm_myni_edit,bpm_mynj_edit,...
-         bpm_mz_text,bpm_mzni_text,bpm_mznj_text,bpm_mzni_edit,bpm_mznj_edit,bpm_warp_text,bpm_wni_text,bpm_wnj_text,bpm_wni_edit,...
-         bpm_wnj_edit,bpm_apply,bpm_cancel,ap_type_text,ap_sw_subpanel,ap_sw_text,ap_sw_buttongroup,...
-         ap_sw_on_radiobutton,ap_sw_off_radiobutton,ap_jval_subpanel,ap_jval_text,ap_jval_buttongroup,...
-         ap_jval_on_radiobutton,ap_jval_off_radiobutton,ap_AISC_subpanel,ap_AISC_text,ap_AISC_buttongroup,...
-         ap_AISC_on_radiobutton,ap_AISC_off_radiobutton,ap_bracket_subpanel,ap_bracket_text,ap_cv_buttongroup,...
-         ap_cv_on_radiobutton,ap_cv_off_radiobutton,ap_jeong_text,ap_brent_text,ap_jeong_edit,ap_brent_edit,...
-         ap_1st_subpanel,ap_1st_text,api_assign_text,apninc_assign_text,api_assign_edit,apninc_assign_edit,...
-         ap_2nd_subpanel,ap_2nd_text,ap_da_text,ap_da_buttongroup,ap_da_on_radiobutton,ap_da_off_radiobutton,...
-         ap_mode_subpanel,ap_mode_text,ap_mode_edit,apninc_mode_edit,ap_apply_subpanel,ap_apply,am1_type_text,am2_type_text,...
-         am3_type_text,am4_type_text,am5_type_text,am6_type_text,ri_type_text,ri_diagram_subpanel,...
-         ri_diagram_text,ri_internal_text,rin_diagram,ria_diagram,risy_diagram,risz_diagram,...
-         rit_diagram,rimy_diagram,rimz_diagram,ribi_diagram,ri_tau_text,ri_tau_diagram,...
-         rd_diagram_subpanel,ri_report_text,ri_report_edit,ri_report,ri_deflect_text,ri_scale_text,...
-         ri_scale_edit,rd3_diagram,rd_buttongroup,rd_undef3d_text,rd_on_radiobutton,rd_off_radiobutton,...
-         ri_apply,ri_cancel,ri_infor_text,ri_infor,rrd_type_text,rrd_type_edit,rr_nodal_subpanel,...
-         rr_nodal_text,rrfx_nodal_text,rrfy_nodal_text,rrfz_nodal_text,rrt_nodal_text,rrmy_nodal_text,...
-         rrmz_nodal_text,rrbi_nodal_text,rrfx_nodal_edit,rrfy_nodal_edit,rrfz_nodal_edit,rrmx_nodal_edit,...
-         rrmy_nodal_edit,rrmz_nodal_edit,rrbi_nodal_edit,rd_nodal_text,rdux_nodal_text,rduy_nodal_text,...
-         rduz_nodal_text,rdrx_nodal_text,rdry_nodal_text,rdrz_nodal_text,rdwqrp_nodal_text,rdux_nodal_edit,...
-         rduy_nodal_edit,rduz_nodal_edit,rdrx_nodal_edit,rdry_nodal_edit,rdrz_nodal_edit,rdwarp_nodal_edit,...
-         rrd_apply,rrd_cancel,ref_type_text,ref_type_edit,re_force_text,refx_force_text,refy_force_text,...
-         refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
-         refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
-         re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel);        
-      % reset
-      cla(axesm,'reset'); 
-      filename = []; pathname = []; JNodevalue = []; Massemble = []; 
-      JNodevalue_i = []; JNodevalue_j = []; Rval=[]; BNodevalue = []; SNodevalue =[]; 
-      RNCc = []; NCc = []; Nshe1 = []; Nshe2 = []; DUP1 = []; DUP2 = []; LNC = [];
-      LNC1 = []; LNC2 = []; LUEC = []; PNC = []; PNC1 = []; PNC2 = []; BNC = []; FEL = [];
-      BNC1 = []; BNC2 = []; t=[]; ULoad=[]; gammma=[]; Funew =[]; FunewP =[]; FunewR =[];QintgP=[];EGunew=[]; Qintf=[];QintfE=[];
-      Qintg1=[]; Qintg2=[]; MIE=[];Sincre=[];Bhe1=[]; Bhe2=[]; The1=[]; The2=[]; Bhg=[]; Thg=[]; CSg=[]; SGhe1=[]; SGhe2=[]; Mhe1=[]; Mhe2=[]; tau=[];
-      LTYPE=[]; AR=0; AS=0; AE=0; AI=0; ANE=0; ANI=0; Rpg=[]; Rpc=[]; Rpt=[]; Rh=[]; Myc=[]; My=[]; Jval=[];Phi_Py=[]; UC=[];
-      cflag=0; LNCpv=[];LIAType=0; NLIAType=0;HomoType=0; crLTB = 0; LGv=0; Itype=zeros(1,2);Rtype=0; AnalP=[];
-      AnalP(1,1)=0;AnalP(2,1)=1;AnalP(3,1)=1;AnalP(4,1)=1;AnalP(5,1)=1;AnalP(6,1)=1; AnalP(7,1)=1;   
-      set(vctm, 'Checked', 'off'); set([vmbf,vmbs,vmbg,vmbw,vmbp,vmbu],'Checked','on') ; LabType=zeros(1,10);
-      cameratoolbar('Close');
-      axis normal;   
-      set(axesm,'Visible','off','Units','normalized','DataAspectRatio',[1 1 1])
-      % Initial View : X-Y View
-      az = 0; el = 0; view(az, el);  
-      set(masterf,'Name',['SABRE2 ',pathname,filename]) 
-      set([vdum,vtum],'enable','off');set(vtum, 'Checked', 'off'); set(vdum,'Checked','on'); set([vdum_panel,vdum_type_subpanel],'Visible','off')
-      set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-      set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off');        
-   end
-end % function end
-% --------------------------------------------------------------------
-function file_open_menu_Callback(hObject, eventdata)
-   %%
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   set(masterf,'WindowButtonDownFcn',@view_defined_xy_menu_Callback);
-   % Visible function
-   if isempty(pathname)   
-      [filename, pathname] = uigetfile({'*.mat','All MAT-Files (*.mat)'; ...
-         '*.*','All Files (*.*)'},'Select File');
-   else
-      filenamep=filename; pathnamep=pathname;
-      if  isequal(pathname,0)
-         [filename, pathname] = uigetfile({'*.mat','All MAT-Files (*.mat)'; ...
-            '*.*','All Files (*.*)'},'Select File');   
-         if isequal(filename,0)
-            filename=filenamep;
-         end
-         if isequal(pathname,0)
-            pathname=pathnamep;
-         end    
-      else
-         [filename, pathname] = uigetfile({'*.mat','All MAT-Files (*.mat)'; ...
-            '*.*','All Files (*.*)'},'Select File',pathname);   
-         if isequal(filename,0)
-            filename=filenamep;
-         end
-         if isequal(pathname,0)
-            pathname=pathnamep;
-         end           
-      end
-   end
-   if isequal([filename,pathname],[0,0]) || isempty(filename) || isempty(pathname)
-      return
-   else
-       %%
-      SABRE2OpenFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
-         pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
-         pdn_coordz_text,pdn_coordx_edit,pdn_coordy_edit,pdn_coordz_edit,punit_text,punit_edit,pd_app_subpanel,...
-         pdn_apply,pdn_cancel,pde_type_text,pde_type_name,pde_buttongroup,pde_member_text,...
-         pde_jointi_radiobutton,pde_jointj_radiobutton,pde_jointi_edit,pde_jointj_edit,...
-         pde_reference_text,pde_reference_edit,pde_subpanel,pde_AISC_text,pde_wsection_text,...
-         pde_wsection_edit,pde_set,pde_wsname_edit,pdm_subpanel,pde_section_text,pde_ji_text,...
-         pde_jj_text,pde_bfb_text,pde_tfb_text,pde_bft_text,pde_tft_text,pde_dw_text,pde_tw_text,...
-         pde_bfbi_edit,pde_tfbi_edit,pde_bfti_edit,pde_tfti_edit,pde_dwi_edit,pde_twi_edit,...
-         pde_bfbj_edit,pde_tfbj_edit,pde_bftj_edit,pde_tftj_edit,pde_dwj_edit,pde_twj_edit,...
-         pde_fil_text,pde_fili_edit,pde_filj_edit,pde_apply,pde_cancel,pdb_member_text,pdb_type_text,...
-         pdb_member_name,pdb_type_name,pdb_length_text,pdb_coordx_edit,pdb_coordy_edit,pdb_coordz_edit,...
-         pdb_length_edit,pdb_length_set,pdb_wsection_edit,pdb_set,pdb_step_text,pdb_step_edit,pdstep_subpanel,...
-         pdb_bfb_edit,pdb_tfb_edit,pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit,...
-         pdb_apply,pdb_cancel,pdmi_name,pdmix_edit,pdmiy_edit,pdmiz_edit,pdmi_text,pdmi_type_edit,pdmi_apply,pam_type_text,pam_segmentn_text,pamse_assign_text,pam_segment_edit,...
-         pamse_assign_edit,pam_all,pam_assign_text,pamen_assign_text,pame_assign_text,pamg_assign_text,...
-         pamfy_assign_text,pamrho_assign_text,pamfyfi_assign_text,pamfyw_assign_text,pamfyfo_assign_text,...
-         pamen_assign_edit,pame_assign_edit,pamg_assign_edit,pamfy_assign_edit,pamrho_assign_edit,...
-         pamfyfi_assign_edit,pamfyw_assign_edit,pamfyfo_assign_edit,pam_apply,pam_cancel,lfm_type_text,...
-         lfm_type_name,lfm_coordx_edit,lfm_coordy_edit,lfm_coordz_edit,lfm_ld_text,lfm_ld_edit,lfm_all_apply,...
-         lfm_clc_apply,lfm_height_text,lfm_member_text,lfm_height_edit,lfm_alpha_text,lfm_alpha_edit,...
-         lfm_fc_text,lfm_fx_text,lfm_fy_text,lfm_fz_text,lfm_mx_text,lfm_my_text,lfm_mz_text,...
-         lfm_fx_edit,lfm_fy_edit,lfm_fz_edit,lfm_mx_edit,lfm_my_edit,lfm_mz_edit,lfm_apply,lfm_cancel,...
-         lum_type_text,lum_type_mem,lum_type_seg,lum_clc_apply,lum_height_edit,lum_wx_text,lum_wy_text,...
-         lum_wz_text,lum_wx_edit,lum_wy_edit,lum_wz_edit,lum_apply,lum_cancel,bfm_type_text,bfm_type_name,...
-         bfm_coordx_edit,bfm_coordy_edit,bfm_coordz_edit,bfm_clc_apply,bfm_height_text,bfm_member_text,...
-         bfm_height_edit,bfm_bc_text,bfm_ux_text,bfm_uy_text,bfm_uz_text,bfm_rx_text,bfm_ry_text,bfm_rz_text,...
-         bfm_phix_text,bfm_ux_buttongroup,bfm_ux_on_radiobutton,bfm_ux_off_radiobutton,bfm_uy_buttongroup,...
-         bfm_uy_on_radiobutton,bfm_uy_off_radiobutton,bfm_uz_buttongroup,bfm_uz_on_radiobutton,bfm_uz_off_radiobutton,...
-         bfm_rx_buttongroup,bfm_rx_on_radiobutton,bfm_rx_off_radiobutton,bfm_ry_buttongroup,bfm_ry_on_radiobutton,...
-         bfm_ry_off_radiobutton,bfm_rz_buttongroup,bfm_rz_on_radiobutton,bfm_rz_off_radiobutton,bfm_phix_buttongroup,...
-         bfm_phix_on_radiobutton,bfm_phix_off_radiobutton,bfm_ux_edit,bfm_uy_edit,bfm_uz_edit,bfm_rx_edit,bfm_ry_edit,...
-         bfm_rz_edit,bfm_phix_edit,bfm_apply,bfm_cancel,bsm_type_text,bsm_member_name,bsm_type_name,bsm_buttongroup,...
-         bsm_member_text,bsm_jointi_radiobutton,bsm_jointj_radiobutton,bsm_jointi_edit,bsm_jointj_edit,...
-         bsm_clc_apply,bsm_height_edit,bsm_bc_text,bsm_kv_text,bsm_kv_edit,bsm_apply,bsm_cancel,bgm_type_name,...
-         bgm_coordx_edit,bgm_coordy_edit,bgm_coordz_edit,bgm_clc_apply,bgm_height_edit,bgm_bc_text,...
-         bgm_ux_edit,bgm_uy_edit,bgm_uz_edit,bgm_rx_edit,bgm_ry_edit,bgm_rz_edit,bgm_phix_edit,bgm_apply,...
-         bgm_cancel,bpm_type_text,bpm_type_name,bpm_section_text,bpm_flexure_text,bpm_ni_text,...
-         bpm_nj_text,bpm_ni_edit,bpm_nj_edit,bpm_fr_text,bpm_my_text,bpm_myni_text,bpm_mynj_text,bpm_myni_edit,bpm_mynj_edit,...
-         bpm_mz_text,bpm_mzni_text,bpm_mznj_text,bpm_mzni_edit,bpm_mznj_edit,bpm_warp_text,bpm_wni_text,bpm_wnj_text,bpm_wni_edit,...
-         bpm_wnj_edit,bpm_apply,bpm_cancel,ap_type_text,ap_sw_subpanel,ap_sw_text,ap_sw_buttongroup,...
-         ap_sw_on_radiobutton,ap_sw_off_radiobutton,ap_jval_subpanel,ap_jval_text,ap_jval_buttongroup,...
-         ap_jval_on_radiobutton,ap_jval_off_radiobutton,ap_AISC_subpanel,ap_AISC_text,ap_AISC_buttongroup,...
-         ap_AISC_on_radiobutton,ap_AISC_off_radiobutton,ap_bracket_subpanel,ap_bracket_text,ap_cv_buttongroup,...
-         ap_cv_on_radiobutton,ap_cv_off_radiobutton,ap_jeong_text,ap_brent_text,ap_jeong_edit,ap_brent_edit,...
-         ap_1st_subpanel,ap_1st_text,api_assign_text,apninc_assign_text,api_assign_edit,apninc_assign_edit,...
-         ap_2nd_subpanel,ap_2nd_text,ap_da_text,ap_da_buttongroup,ap_da_on_radiobutton,ap_da_off_radiobutton,...
-         ap_mode_subpanel,ap_mode_text,ap_mode_edit,apninc_mode_edit,ap_apply_subpanel,ap_apply,am1_type_text,am2_type_text,...
-         am3_type_text,am4_type_text,am5_type_text,am6_type_text,ri_type_text,ri_diagram_subpanel,...
-         ri_diagram_text,ri_internal_text,rin_diagram,ria_diagram,risy_diagram,risz_diagram,...
-         rit_diagram,rimy_diagram,rimz_diagram,ribi_diagram,ri_tau_text,ri_tau_diagram,...
-         rd_diagram_subpanel,ri_report_text,ri_report_edit,ri_report,ri_deflect_text,ri_scale_text,...
-         ri_scale_edit,rd3_diagram,rd_buttongroup,rd_undef3d_text,rd_on_radiobutton,rd_off_radiobutton,...
-         ri_apply,ri_cancel,ri_infor_text,ri_infor,rrd_type_text,rrd_type_edit,rr_nodal_subpanel,...
-         rr_nodal_text,rrfx_nodal_text,rrfy_nodal_text,rrfz_nodal_text,rrt_nodal_text,rrmy_nodal_text,...
-         rrmz_nodal_text,rrbi_nodal_text,rrfx_nodal_edit,rrfy_nodal_edit,rrfz_nodal_edit,rrmx_nodal_edit,...
-         rrmy_nodal_edit,rrmz_nodal_edit,rrbi_nodal_edit,rd_nodal_text,rdux_nodal_text,rduy_nodal_text,...
-         rduz_nodal_text,rdrx_nodal_text,rdry_nodal_text,rdrz_nodal_text,rdwqrp_nodal_text,rdux_nodal_edit,...
-         rduy_nodal_edit,rduz_nodal_edit,rdrx_nodal_edit,rdry_nodal_edit,rdrz_nodal_edit,rdwarp_nodal_edit,...
-         rrd_apply,rrd_cancel,ref_type_text,ref_type_edit,re_force_text,refx_force_text,refy_force_text,...
-         refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
-         refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
-         re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel);    
+  SABRE2OpenFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
+     pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
+     pdn_coordz_text,pdn_coordx_edit,pdn_coordy_edit,pdn_coordz_edit,punit_text,punit_edit,pd_app_subpanel,...
+     pdn_apply,pdn_cancel,pde_type_text,pde_type_name,pde_buttongroup,pde_member_text,...
+     pde_jointi_radiobutton,pde_jointj_radiobutton,pde_jointi_edit,pde_jointj_edit,...
+     pde_reference_text,pde_reference_edit,pde_subpanel,pde_AISC_text,pde_wsection_text,...
+     pde_wsection_edit,pde_set,pde_wsname_edit,pdm_subpanel,pde_section_text,pde_ji_text,...
+     pde_jj_text,pde_bfb_text,pde_tfb_text,pde_bft_text,pde_tft_text,pde_dw_text,pde_tw_text,...
+     pde_bfbi_edit,pde_tfbi_edit,pde_bfti_edit,pde_tfti_edit,pde_dwi_edit,pde_twi_edit,...
+     pde_bfbj_edit,pde_tfbj_edit,pde_bftj_edit,pde_tftj_edit,pde_dwj_edit,pde_twj_edit,...
+     pde_fil_text,pde_fili_edit,pde_filj_edit,pde_apply,pde_cancel,pdb_member_text,pdb_type_text,...
+     pdb_member_name,pdb_type_name,pdb_length_text,pdb_coordx_edit,pdb_coordy_edit,pdb_coordz_edit,...
+     pdb_length_edit,pdb_length_set,pdb_wsection_edit,pdb_set,pdb_step_text,pdb_step_edit,pdstep_subpanel,...
+     pdb_bfb_edit,pdb_tfb_edit,pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit,...
+     pdb_apply,pdb_cancel,pdmi_name,pdmix_edit,pdmiy_edit,pdmiz_edit,pdmi_text,pdmi_type_edit,pdmi_apply,pam_type_text,pam_segmentn_text,pamse_assign_text,pam_segment_edit,...
+     pamse_assign_edit,pam_all,pam_assign_text,pamen_assign_text,pame_assign_text,pamg_assign_text,...
+     pamfy_assign_text,pamrho_assign_text,pamfyfi_assign_text,pamfyw_assign_text,pamfyfo_assign_text,...
+     pamen_assign_edit,pame_assign_edit,pamg_assign_edit,pamfy_assign_edit,pamrho_assign_edit,...
+     pamfyfi_assign_edit,pamfyw_assign_edit,pamfyfo_assign_edit,pam_apply,pam_cancel,lfm_type_text,...
+     lfm_type_name,lfm_coordx_edit,lfm_coordy_edit,lfm_coordz_edit,lfm_ld_text,lfm_ld_edit,lfm_all_apply,...
+     lfm_clc_apply,lfm_height_text,lfm_member_text,lfm_height_edit,lfm_alpha_text,lfm_alpha_edit,...
+     lfm_fc_text,lfm_fx_text,lfm_fy_text,lfm_fz_text,lfm_mx_text,lfm_my_text,lfm_mz_text,...
+     lfm_fx_edit,lfm_fy_edit,lfm_fz_edit,lfm_mx_edit,lfm_my_edit,lfm_mz_edit,lfm_apply,lfm_cancel,...
+     lum_type_text,lum_type_mem,lum_type_seg,lum_clc_apply,lum_height_edit,lum_wx_text,lum_wy_text,...
+     lum_wz_text,lum_wx_edit,lum_wy_edit,lum_wz_edit,lum_apply,lum_cancel,bfm_type_text,bfm_type_name,...
+     bfm_coordx_edit,bfm_coordy_edit,bfm_coordz_edit,bfm_clc_apply,bfm_height_text,bfm_member_text,...
+     bfm_height_edit,bfm_bc_text,bfm_ux_text,bfm_uy_text,bfm_uz_text,bfm_rx_text,bfm_ry_text,bfm_rz_text,...
+     bfm_phix_text,bfm_ux_buttongroup,bfm_ux_on_radiobutton,bfm_ux_off_radiobutton,bfm_uy_buttongroup,...
+     bfm_uy_on_radiobutton,bfm_uy_off_radiobutton,bfm_uz_buttongroup,bfm_uz_on_radiobutton,bfm_uz_off_radiobutton,...
+     bfm_rx_buttongroup,bfm_rx_on_radiobutton,bfm_rx_off_radiobutton,bfm_ry_buttongroup,bfm_ry_on_radiobutton,...
+     bfm_ry_off_radiobutton,bfm_rz_buttongroup,bfm_rz_on_radiobutton,bfm_rz_off_radiobutton,bfm_phix_buttongroup,...
+     bfm_phix_on_radiobutton,bfm_phix_off_radiobutton,bfm_ux_edit,bfm_uy_edit,bfm_uz_edit,bfm_rx_edit,bfm_ry_edit,...
+     bfm_rz_edit,bfm_phix_edit,bfm_apply,bfm_cancel,bsm_type_text,bsm_member_name,bsm_type_name,bsm_buttongroup,...
+     bsm_member_text,bsm_jointi_radiobutton,bsm_jointj_radiobutton,bsm_jointi_edit,bsm_jointj_edit,...
+     bsm_clc_apply,bsm_height_edit,bsm_bc_text,bsm_kv_text,bsm_kv_edit,bsm_apply,bsm_cancel,bgm_type_name,...
+     bgm_coordx_edit,bgm_coordy_edit,bgm_coordz_edit,bgm_clc_apply,bgm_height_edit,bgm_bc_text,...
+     bgm_ux_edit,bgm_uy_edit,bgm_uz_edit,bgm_rx_edit,bgm_ry_edit,bgm_rz_edit,bgm_phix_edit,bgm_apply,...
+     bgm_cancel,bpm_type_text,bpm_type_name,bpm_section_text,bpm_flexure_text,bpm_ni_text,...
+     bpm_nj_text,bpm_ni_edit,bpm_nj_edit,bpm_fr_text,bpm_my_text,bpm_myni_text,bpm_mynj_text,bpm_myni_edit,bpm_mynj_edit,...
+     bpm_mz_text,bpm_mzni_text,bpm_mznj_text,bpm_mzni_edit,bpm_mznj_edit,bpm_warp_text,bpm_wni_text,bpm_wnj_text,bpm_wni_edit,...
+     bpm_wnj_edit,bpm_apply,bpm_cancel,ap_type_text,ap_sw_subpanel,ap_sw_text,ap_sw_buttongroup,...
+     ap_sw_on_radiobutton,ap_sw_off_radiobutton,ap_jval_subpanel,ap_jval_text,ap_jval_buttongroup,...
+     ap_jval_on_radiobutton,ap_jval_off_radiobutton,ap_AISC_subpanel,ap_AISC_text,ap_AISC_buttongroup,...
+     ap_AISC_on_radiobutton,ap_AISC_off_radiobutton,ap_bracket_subpanel,ap_bracket_text,ap_cv_buttongroup,...
+     ap_cv_on_radiobutton,ap_cv_off_radiobutton,ap_jeong_text,ap_brent_text,ap_jeong_edit,ap_brent_edit,...
+     ap_1st_subpanel,ap_1st_text,api_assign_text,apninc_assign_text,api_assign_edit,apninc_assign_edit,...
+     ap_2nd_subpanel,ap_2nd_text,ap_da_text,ap_da_buttongroup,ap_da_on_radiobutton,ap_da_off_radiobutton,...
+     ap_mode_subpanel,ap_mode_text,ap_mode_edit,apninc_mode_edit,ap_apply_subpanel,ap_apply,am1_type_text,am2_type_text,...
+     am3_type_text,am4_type_text,am5_type_text,am6_type_text,ri_type_text,ri_diagram_subpanel,...
+     ri_diagram_text,ri_internal_text,rin_diagram,ria_diagram,risy_diagram,risz_diagram,...
+     rit_diagram,rimy_diagram,rimz_diagram,ribi_diagram,ri_tau_text,ri_tau_diagram,...
+     rd_diagram_subpanel,ri_report_text,ri_report_edit,ri_report,ri_deflect_text,ri_scale_text,...
+     ri_scale_edit,rd3_diagram,rd_buttongroup,rd_undef3d_text,rd_on_radiobutton,rd_off_radiobutton,...
+     ri_apply,ri_cancel,ri_infor_text,ri_infor,rrd_type_text,rrd_type_edit,rr_nodal_subpanel,...
+     rr_nodal_text,rrfx_nodal_text,rrfy_nodal_text,rrfz_nodal_text,rrt_nodal_text,rrmy_nodal_text,...
+     rrmz_nodal_text,rrbi_nodal_text,rrfx_nodal_edit,rrfy_nodal_edit,rrfz_nodal_edit,rrmx_nodal_edit,...
+     rrmy_nodal_edit,rrmz_nodal_edit,rrbi_nodal_edit,rd_nodal_text,rdux_nodal_text,rduy_nodal_text,...
+     rduz_nodal_text,rdrx_nodal_text,rdry_nodal_text,rdrz_nodal_text,rdwqrp_nodal_text,rdux_nodal_edit,...
+     rduy_nodal_edit,rduz_nodal_edit,rdrx_nodal_edit,rdry_nodal_edit,rdrz_nodal_edit,rdwarp_nodal_edit,...
+     rrd_apply,rrd_cancel,ref_type_text,ref_type_edit,re_force_text,refx_force_text,refy_force_text,...
+     refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
+     refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
+     re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel);    
       % reset
       JNodevalue = []; Massemble = []; 
       JNodevalue_i = []; JNodevalue_j = []; Rval=[]; BNodevalue = []; SNodevalue =[]; 
@@ -2303,8 +2164,8 @@ function file_open_menu_Callback(hObject, eventdata)
       % Opened File
       set(vctm, 'Checked', 'off');set([vmbf,vmbs,vmbg,vmbw,vmbp,vmbu],'Checked','on') ;LabType=zeros(1,10);
       cameratoolbar('Close');      
-      set(masterf,'Name',['SABRE2: ',pathname,filename])
-      data=load(fullfile(pathname,filename));
+      set(masterf,'Name',['SABRE2: ',inpath,filename])
+      data=load(fullfile(inpath,filename));
       [JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,...
          SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,LNC,LNC1,LNC2,...
          LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,AnalP]=SABRE2OpenCODE(data,vrum_az_slider,...
@@ -2338,691 +2199,10 @@ function file_open_menu_Callback(hObject, eventdata)
          end
          set(api_assign_edit,'String',num2str(AnalP(5,1)));set(apninc_assign_edit,'String',num2str(AnalP(6,1)));   
       end
-   end
-end % function end
+
 % --------------------------------------------------------------------
-function file_save_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');  
-   if isempty(pathname) || isequal(pathname,0)
-      [filename, pathname] = uiputfile({'*.mat';'*.*'},'Save');	
-      if isequal(filename,0) || isequal(pathname,0)
-      else
-         set(masterf,'Name',['SABRE2: ',pathname,filename])
-         File = fullfile(pathname,filename);
-         save(File,'JNodevalue','Massemble','JNodevalue_i','JNodevalue_j',...
-            'Rval','BNodevalue','SNodevalue','RNCc','NCc','Nshe1','Nshe2',...
-            'DUP1','DUP2','LNC','LNC1','LNC2','LUEC','PNC','PNC1','PNC2',...
-            'BNC','BNC1','BNC2','FEL','AnalP')
-      end
-   else
-      File = fullfile(pathname,filename);
-      save(File,'JNodevalue','Massemble','JNodevalue_i','JNodevalue_j',...
-         'Rval','BNodevalue','SNodevalue','RNCc','NCc','Nshe1','Nshe2',...
-         'DUP1','DUP2','LNC','LNC1','LNC2','LUEC','PNC','PNC1','PNC2',...
-         'BNC','BNC1','BNC2','FEL','AnalP')
-   end
-end % function end
-% --------------------------------------------------------------------
-function file_saveas_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');  
-   if isempty(pathname) || isequal(pathname,0)
-      [filename, pathname] = uiputfile({'*.mat';'*.*'},'Save As');	
-      if isequal(filename,0) || isequal(pathname,0)
-      else
-         set(masterf,'Name',['SABRE2: ',pathname,filename])
-         File = fullfile(pathname,filename);
-         save(File,'JNodevalue','Massemble','JNodevalue_i','JNodevalue_j',...
-            'Rval','BNodevalue','SNodevalue','RNCc','NCc','Nshe1','Nshe2',...
-            'DUP1','DUP2','LNC','LNC1','LNC2','LUEC','PNC','PNC1','PNC2',...
-            'BNC','BNC1','BNC2','FEL','AnalP')
-      end
-   else
-      filenamep=filename; pathnamep=pathname;     
-      [filename, pathname] = uiputfile({'*.mat';'*.*'},'Save As',pathname);	
-      if isequal(filename,0) || isequal(pathname,0)
-         filename=filenamep; pathname=pathnamep;
-      else         
-         set(masterf,'Name',['SABRE2: ',pathname,filename])
-         File = fullfile(pathname,filename);
-         save(File,'JNodevalue','Massemble','JNodevalue_i','JNodevalue_j',...
-            'Rval','BNodevalue','SNodevalue','RNCc','NCc','Nshe1','Nshe2',...
-            'DUP1','DUP2','LNC','LNC1','LNC2','LUEC','PNC','PNC1','PNC2',...
-            'BNC','BNC1','BNC2','FEL','AnalP')
-      end
-   end      
-end % function end
-% --------------------------------------------------------------------
-function file_preview_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   SABRE2PreFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
-      pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
-      pdn_coordz_text,pdn_coordx_edit,pdn_coordy_edit,pdn_coordz_edit,punit_text,punit_edit,pd_app_subpanel,...
-      pdn_apply,pdn_cancel,pde_type_text,pde_type_name,pde_buttongroup,pde_member_text,...
-      pde_jointi_radiobutton,pde_jointj_radiobutton,pde_jointi_edit,pde_jointj_edit,...
-      pde_reference_text,pde_reference_edit,pde_subpanel,pde_AISC_text,pde_wsection_text,...
-      pde_wsection_edit,pde_set,pde_wsname_edit,pdm_subpanel,pde_section_text,pde_ji_text,...
-      pde_jj_text,pde_bfb_text,pde_tfb_text,pde_bft_text,pde_tft_text,pde_dw_text,pde_tw_text,...
-      pde_bfbi_edit,pde_tfbi_edit,pde_bfti_edit,pde_tfti_edit,pde_dwi_edit,pde_twi_edit,...
-      pde_bfbj_edit,pde_tfbj_edit,pde_bftj_edit,pde_tftj_edit,pde_dwj_edit,pde_twj_edit,...
-      pde_fil_text,pde_fili_edit,pde_filj_edit,pde_apply,pde_cancel,pdb_member_text,pdb_type_text,...
-      pdb_member_name,pdb_type_name,pdb_length_text,pdb_coordx_edit,pdb_coordy_edit,pdb_coordz_edit,...
-      pdb_length_edit,pdb_length_set,pdb_wsection_edit,pdb_set,pdb_step_text,pdb_step_edit,pdstep_subpanel,...
-      pdb_bfb_edit,pdb_tfb_edit,pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit,...
-      pdb_apply,pdb_cancel,pdmi_name,pdmix_edit,pdmiy_edit,pdmiz_edit,pdmi_text,pdmi_type_edit,pdmi_apply,pam_type_text,pam_segmentn_text,pamse_assign_text,pam_segment_edit,...
-      pamse_assign_edit,pam_all,pam_assign_text,pamen_assign_text,pame_assign_text,pamg_assign_text,...
-      pamfy_assign_text,pamrho_assign_text,pamfyfi_assign_text,pamfyw_assign_text,pamfyfo_assign_text,...
-      pamen_assign_edit,pame_assign_edit,pamg_assign_edit,pamfy_assign_edit,pamrho_assign_edit,...
-      pamfyfi_assign_edit,pamfyw_assign_edit,pamfyfo_assign_edit,pam_apply,pam_cancel,lfm_type_text,...
-      lfm_type_name,lfm_coordx_edit,lfm_coordy_edit,lfm_coordz_edit,lfm_ld_text,lfm_ld_edit,lfm_all_apply,...
-      lfm_clc_apply,lfm_height_text,lfm_member_text,lfm_height_edit,lfm_alpha_text,lfm_alpha_edit,...
-      lfm_fc_text,lfm_fx_text,lfm_fy_text,lfm_fz_text,lfm_mx_text,lfm_my_text,lfm_mz_text,...
-      lfm_fx_edit,lfm_fy_edit,lfm_fz_edit,lfm_mx_edit,lfm_my_edit,lfm_mz_edit,lfm_apply,lfm_cancel,...
-      lum_type_text,lum_type_mem,lum_type_seg,lum_clc_apply,lum_height_edit,lum_wx_text,lum_wy_text,...
-      lum_wz_text,lum_wx_edit,lum_wy_edit,lum_wz_edit,lum_apply,lum_cancel,bfm_type_text,bfm_type_name,...
-      bfm_coordx_edit,bfm_coordy_edit,bfm_coordz_edit,bfm_clc_apply,bfm_height_text,bfm_member_text,...
-      bfm_height_edit,bfm_bc_text,bfm_ux_text,bfm_uy_text,bfm_uz_text,bfm_rx_text,bfm_ry_text,bfm_rz_text,...
-      bfm_phix_text,bfm_ux_buttongroup,bfm_ux_on_radiobutton,bfm_ux_off_radiobutton,bfm_uy_buttongroup,...
-      bfm_uy_on_radiobutton,bfm_uy_off_radiobutton,bfm_uz_buttongroup,bfm_uz_on_radiobutton,bfm_uz_off_radiobutton,...
-      bfm_rx_buttongroup,bfm_rx_on_radiobutton,bfm_rx_off_radiobutton,bfm_ry_buttongroup,bfm_ry_on_radiobutton,...
-      bfm_ry_off_radiobutton,bfm_rz_buttongroup,bfm_rz_on_radiobutton,bfm_rz_off_radiobutton,bfm_phix_buttongroup,...
-      bfm_phix_on_radiobutton,bfm_phix_off_radiobutton,bfm_ux_edit,bfm_uy_edit,bfm_uz_edit,bfm_rx_edit,bfm_ry_edit,...
-      bfm_rz_edit,bfm_phix_edit,bfm_apply,bfm_cancel,bsm_type_text,bsm_member_name,bsm_type_name,bsm_buttongroup,...
-      bsm_member_text,bsm_jointi_radiobutton,bsm_jointj_radiobutton,bsm_jointi_edit,bsm_jointj_edit,...
-      bsm_clc_apply,bsm_height_edit,bsm_bc_text,bsm_kv_text,bsm_kv_edit,bsm_apply,bsm_cancel,bgm_type_name,...
-      bgm_coordx_edit,bgm_coordy_edit,bgm_coordz_edit,bgm_clc_apply,bgm_height_edit,bgm_bc_text,...
-      bgm_ux_edit,bgm_uy_edit,bgm_uz_edit,bgm_rx_edit,bgm_ry_edit,bgm_rz_edit,bgm_phix_edit,bgm_apply,...
-      bgm_cancel,bpm_type_text,bpm_type_name,bpm_section_text,bpm_flexure_text,bpm_ni_text,...
-      bpm_nj_text,bpm_ni_edit,bpm_nj_edit,bpm_fr_text,bpm_my_text,bpm_myni_text,bpm_mynj_text,bpm_myni_edit,bpm_mynj_edit,...
-      bpm_mz_text,bpm_mzni_text,bpm_mznj_text,bpm_mzni_edit,bpm_mznj_edit,bpm_warp_text,bpm_wni_text,bpm_wnj_text,bpm_wni_edit,...
-      bpm_wnj_edit,bpm_apply,bpm_cancel,ap_type_text,ap_sw_subpanel,ap_sw_text,ap_sw_buttongroup,...
-      ap_sw_on_radiobutton,ap_sw_off_radiobutton,ap_jval_subpanel,ap_jval_text,ap_jval_buttongroup,...
-      ap_jval_on_radiobutton,ap_jval_off_radiobutton,ap_AISC_subpanel,ap_AISC_text,ap_AISC_buttongroup,...
-      ap_AISC_on_radiobutton,ap_AISC_off_radiobutton,ap_bracket_subpanel,ap_bracket_text,ap_cv_buttongroup,...
-      ap_cv_on_radiobutton,ap_cv_off_radiobutton,ap_jeong_text,ap_brent_text,ap_jeong_edit,ap_brent_edit,...
-      ap_1st_subpanel,ap_1st_text,api_assign_text,apninc_assign_text,api_assign_edit,apninc_assign_edit,...
-      ap_2nd_subpanel,ap_2nd_text,ap_da_text,ap_da_buttongroup,ap_da_on_radiobutton,ap_da_off_radiobutton,...
-      ap_mode_subpanel,ap_mode_text,ap_mode_edit,apninc_mode_edit,ap_apply_subpanel,ap_apply,am1_type_text,am2_type_text,...
-      am3_type_text,am4_type_text,am5_type_text,am6_type_text,ri_type_text,ri_diagram_subpanel,...
-      ri_diagram_text,ri_internal_text,rin_diagram,ria_diagram,risy_diagram,risz_diagram,...
-      rit_diagram,rimy_diagram,rimz_diagram,ribi_diagram,ri_tau_text,ri_tau_diagram,...
-      rd_diagram_subpanel,ri_report_text,ri_report_edit,ri_report,ri_deflect_text,ri_scale_text,...
-      ri_scale_edit,rd3_diagram,rd_buttongroup,rd_undef3d_text,rd_on_radiobutton,rd_off_radiobutton,...
-      ri_apply,ri_cancel,ri_infor_text,ri_infor,rrd_type_text,rrd_type_edit,rr_nodal_subpanel,...
-      rr_nodal_text,rrfx_nodal_text,rrfy_nodal_text,rrfz_nodal_text,rrt_nodal_text,rrmy_nodal_text,...
-      rrmz_nodal_text,rrbi_nodal_text,rrfx_nodal_edit,rrfy_nodal_edit,rrfz_nodal_edit,rrmx_nodal_edit,...
-      rrmy_nodal_edit,rrmz_nodal_edit,rrbi_nodal_edit,rd_nodal_text,rdux_nodal_text,rduy_nodal_text,...
-      rduz_nodal_text,rdrx_nodal_text,rdry_nodal_text,rdrz_nodal_text,rdwqrp_nodal_text,rdux_nodal_edit,...
-      rduy_nodal_edit,rduz_nodal_edit,rdrx_nodal_edit,rdry_nodal_edit,rdrz_nodal_edit,rdwarp_nodal_edit,...
-      rrd_apply,rrd_cancel,ref_type_text,ref_type_edit,re_force_text,refx_force_text,refy_force_text,...
-      refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
-      refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
-      re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel);    
-   printpreview
-end % function end
-% --------------------------------------------------------------------
-function file_print_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   printdlg % Printer
-end % function end
-% --------------------------------------------------------------------
-function file_printphoto_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   [filename, pathname] = uiputfile({'*.jpg';'*.png';'*.tif';'*.eps';...
-      '*.bmp';'*.pdf';'*.*'},'Save Photo as File');	 
-   File = fullfile(pathname,filename);
-   % If 'Cancel' was selected then return
-   if isequal(filename,0) || isempty(filename) 
-      return
-   else    
-      saveas(gcf,File)
-   end 
-end % function end
-% --------------------------------------------------------------------
-function file_quit_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   % Callback function run when the Close menu item is selected    
-   selection = questdlg('Do you want to close ?','Close','Yes','No','Yes');
-   if strcmp(selection,'No')
-      return;
-   else
-      delete(masterf)
-   end    
-end % function end
-% --------------------------------------------------------------------
-function view_zoom_menu_Callback(hObject, eventdata)
-   clc; pan off; rotate3d off; 
-   if strcmp(get(gcbo, 'Checked'),'on')
-       set(gcbo, 'Checked', 'off');
-       set([vrm,vpm], 'Checked', 'off');
-       zoom off;
-   else 
-       set(gcbo, 'Checked', 'on');
-       set([vrm,vpm], 'Checked', 'off');
-       zoom on;       
-   end   
-end % function end
-% --------------------------------------------------------------------
-function view_rotate_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off;
-   if strcmp(get(gcbo, 'Checked'),'on')
-       set(gcbo, 'Checked', 'off');
-       set([vzm,vpm], 'Checked', 'off');
-       rotate3d off;
-   else 
-       set(gcbo, 'Checked', 'on');
-       set([vzm,vpm], 'Checked', 'off');
-       rotate3d on;
-      azf=get(gca,'view'); % Get current view     
-      set(vrum_az_slider,'Value',azf(1,1));set(vrum_el_slider,'Value',azf(1,2))
-      set(vrum_az_edit,'String',num2str(azf(1,1)));set(vrum_el_edit,'String',num2str(azf(1,2)));          
-   end         
-end % function end
-% --------------------------------------------------------------------
-function view_pan_menu_Callback(hObject, eventdata)  
-   clc; zoom off; rotate3d off;
-   if strcmp(get(gcbo, 'Checked'),'on')
-       set(gcbo, 'Checked', 'off');
-       set([vzm,vrm], 'Checked', 'off');
-       pan off;
-   else 
-       set(gcbo, 'Checked', 'on');
-       set([vzm,vrm], 'Checked', 'off');
-       pan on;
-   end  
-end % function end
-% --------------------------------------------------------------------
-function view_camera_toolbar_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   if strcmp(get(gcbo, 'Checked'),'on')
-      set(vctm, 'Checked', 'off');
-      cameratoolbar('Close');
-   else
-      set(vctm, 'Checked', 'on');
-      cameratoolbar;
-      set(axesm,'DataAspectRatioMode','manual') 
-      azf=get(gca,'view'); % Get current view     
-      set(vrum_az_slider,'Value',azf(1,1));set(vrum_el_slider,'Value',azf(1,2))
-      set(vrum_az_edit,'String',num2str(azf(1,1)));set(vrum_el_edit,'String',num2str(azf(1,2)));         
-   end             
-end % function end
-% --------------------------------------------------------------------
-function view_defined_xyz_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   % Isometric-View
-   az = -37.5; el = 30; view(az, el); 
-   axis manual;   
-   set(axesm,'Visible','off','Units','normalized','DataAspectRatio',[1 1 1]) 
-   set( gca, 'Units', 'normalized', 'Position', [0 0 1 1] );   
-   set(vrum_az_slider,'Value',az);set(vrum_el_slider,'Value',el)
-   set(vrum_az_edit,'String',num2str(az));set(vrum_el_edit,'String',num2str(el));      
-end % function end
-% --------------------------------------------------------------------
-function view_defined_xy_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   az = 0; el = 0; view(az, el);  
-   set(vrum_az_slider,'Value',az);set(vrum_el_slider,'Value',el)
-   set(vrum_az_edit,'String',num2str(az));set(vrum_el_edit,'String',num2str(el));      
-end % function end
-% --------------------------------------------------------------------
-function view_defined_xz_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   az = 0; el = 90; view(az, el); 
-   set(vrum_az_slider,'Value',az);set(vrum_el_slider,'Value',el)
-   set(vrum_az_edit,'String',num2str(az));set(vrum_el_edit,'String',num2str(el));      
-end % function end
-% --------------------------------------------------------------------
-function view_defined_yz_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   az = 90; el = 0; view(az, el);  
-   set(vrum_az_slider,'Value',az);set(vrum_el_slider,'Value',el)
-   set(vrum_az_edit,'String',num2str(az));set(vrum_el_edit,'String',num2str(el));      
-end % function end
-% --------------------------------------------------------------------
-function view_defined_user_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   if strcmp(get(gcbo, 'Checked'),'on')     
-      set(vrum, 'Checked', 'off');
-      set([vrum_panel,vrum_type_subpanel],'Visible','off')
-      set([vrum_az_slider,vrum_el_slider],'Visible','off')
-      set([vrum_vi_name,vrum_az_name,vrum_el_name],'Visible','off');
-      set([vrum_az_edit,vrum_el_edit],'Visible','off');
-   else
-      set(vrum, 'Checked', 'on');
-      set([vrum_panel,vrum_type_subpanel],'Visible','on')
-      set([vrum_az_slider,vrum_el_slider],'Visible','on')
-      set([vrum_vi_name,vrum_az_name,vrum_el_name],'Visible','on');
-      set([vrum_az_edit,vrum_el_edit],'Visible','on');  
-      azf=get(gca,'view'); % Get current view     
-      set(vrum_az_slider,'Value',azf(1,1));set(vrum_el_slider,'Value',azf(1,2))
-      set(vrum_az_edit,'String',num2str(azf(1,1)));set(vrum_el_edit,'String',num2str(azf(1,2)));
-      Fsize=get(ri_scale_edit,'FontSize');
-      set([vrum_az_edit,vrum_el_edit],'FontSize',Fsize)   
-   end    
-end % function end
-% --------------------------------------------------------------------
-function vrum_az_slider_callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-      set(vrum_az_edit,'String',num2str(get(vrum_az_slider,'Value')));
-      az = str2double(get(vrum_az_edit,'string')); 
-      el = str2double(get(vrum_el_edit,'string')); view(az, el);     
-end % function end
-% --------------------------------------------------------------------
-function vrum_el_slider_callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-      set(vrum_el_edit,'String',num2str(get(vrum_el_slider,'Value')));
-      az = str2double(get(vrum_az_edit,'string')); 
-      el = str2double(get(vrum_el_edit,'string')); view(az, el);     
-end % function end
-% --------------------------------------------------------------------
-function view_fit_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   if strcmp(OBJ,'define') 
-      SABRE2ModelFit(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j, ...
-         Rval,BNodevalue,vrum_az_slider,vrum_el_slider,vrum_az_edit,vrum_el_edit,axesm,vstm);       
-   elseif strcmp(OBJ,'assign')
-      SABRE2AssiModelFit(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
-         Rval,BNodevalue,vrum_az_slider,vrum_el_slider,vrum_az_edit,vrum_el_edit,axesm,vstm);  
-      % Drawing M*S* 
-      SABRE2AssiCODE(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
-         Rval,BNodevalue,SNodevalue,axesm,vstm);
-      if ~isempty(SNodevalue)
-         q = 0; 
-         mem=length(Massemble(:,1));         % Total number of members
-         for i = 1:mem        
-            for j = 1:(max(BNodevalue(i,:,2))+1) 
-               if SNodevalue(i,j,3) > 0 && SNodevalue(i,j,4) > 0 && SNodevalue(i,j,5) > 0 && SNodevalue(i,j,7) > 0 
-                  set(findobj('Tag',['OTFB',num2str(q+j)]),'FaceColor',[1 0.3 0.3])
-                  set(findobj('Tag',['OWEBB',num2str(q+j)]),'FaceColor',[1 0.3 0.3])
-                  set(findobj('Tag',['OBFB',num2str(q+j)]),'FaceColor',[1 0.3 0.3])
-               else
-                  if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background  
-                        set(findobj('Tag',['OTFB',num2str(q+j)]),'FaceColor',[0.6 0.6 0.6])
-                        set(findobj('Tag',['OWEBB',num2str(q+j)]),'FaceColor',[0.7 0.7 0.7])
-                        set(findobj('Tag',['OBFB',num2str(q+j)]),'FaceColor',[0.6 0.6 0.6])         
-                   elseif isequal(strcmp(get(vstm,'Checked'),'on'),0) % black background   
-                        set(findobj('Tag',['OTFB',num2str(q+j)]),'FaceColor',[0.7 0.7 0.7])
-                        set(findobj('Tag',['OWEBB',num2str(q+j)]),'FaceColor',[0.8 0.8 0.8])
-                        set(findobj('Tag',['OBFB',num2str(q+j)]),'FaceColor',[0.7 0.7 0.7])            
-                  end             
-               end
-            end
-            q = max(BNodevalue(i,:,2))+q+1;
-         end
-      end      
-      set(findobj('Tag','S'),'Visible','on');
-   elseif strcmp(OBJ,'res') || strcmp(OBJ,'Anal') 
-      if isequal(Buc,1) 
-        if ~isempty(Funew) 
-            IncreL = get(ri_cancel,'Value');
-            Fscale=str2double(get(ri_scale_edit, 'String')); 
-            if isempty(gammma)
-               SABRE2RBmode(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,...
-                  LNC,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,Fscale,rd_buttongroup,pt_title_name,...
-                  AR,AS,AE,AI,ANE,ANI,gammma,UC,LIAType,NLIAType,crLTB,LGv,IncreL,LabType,axesm,vstm);        
-            else
-               SABRE2RBmode(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,...
-                  LNC,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,Fscale,rd_buttongroup,pt_title_name,...
-                  AR,AS,AE,AI,ANE,ANI,gammma(IncreL,1),UC,LIAType,NLIAType,crLTB,LGv,IncreL,LabType,axesm,vstm); 
-            end
-        end 
-      else 
-         if strcmp(get(vtum, 'Checked'),'on')     
-%             set(vtum, 'Checked', 'off');
-            set(findobj('Type','text'),'Visible','off')
-            set(findobj('Tag','axis'),'Visible','on')
-         else
-%             set(vtum, 'Checked', 'on');
-            set(findobj('Type','text'),'Visible','on')
-            set(findobj('Tag','axis'),'Visible','on')
-            set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-         end          
-         if isequal(Rtype,23)            
-            rin_diagram_pushbutton_Callback; 
-         elseif isequal(Rtype,1)            
-            ria_diagram_pushbutton_Callback;             
-         elseif isequal(Rtype,2)            
-            risy_diagram_pushbutton_Callback;
-         elseif isequal(Rtype,3)            
-            risz_diagram_pushbutton_Callback;
-         elseif isequal(Rtype,4)            
-            rit_diagram_pushbutton_Callback;
-         elseif isequal(Rtype,5)            
-            rimy_diagram_pushbutton_Callback; 
-         elseif isequal(Rtype,6)            
-            rimz_diagram_pushbutton_Callback;
-         elseif isequal(Rtype,7)            
-            ribi_diagram_pushbutton_Callback;            
-         elseif isequal(Rtype,9)
-            if ~isempty(tau)
-                SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                   Nshe1,Nshe2,DUP1,DUP2,tau,Rval,pt_title_name,axesm,vstm);     
-            end
-         elseif isequal(Rtype,10)
-            if ~isempty(Rpg)
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,Rpg,Rval,pt_title_name,axesm,vstm);     
-            end  
-         elseif isequal(Rtype,11)
-            if ~isempty(Rpc)
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,Rpc,Rval,pt_title_name,axesm,vstm);     
-            end  
-         elseif isequal(Rtype,12)
-            if ~isempty(Rpt)
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,Rpt,Rval,pt_title_name,axesm,vstm);     
-            end 
-         elseif isequal(Rtype,13)
-            if ~isempty(Rh)
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,Rh,Rval,pt_title_name,axesm,vstm);     
-            end  
-         elseif isequal(Rtype,14)
-            if ~isempty(Myc)
-               Myc=round(Myc*10^1)/10^1;
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,Myc,Rval,pt_title_name,axesm,vstm);     
-            end 
-         elseif isequal(Rtype,15)
-            if ~isempty(Myt)
-               Myt=round(Myt*10^1)/10^1;
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,Myt,Rval,pt_title_name,axesm,vstm);     
-            end 
-         elseif isequal(Rtype,16)
-            if ~isempty(My)
-               My=round(My*10^1)/10^1;
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,My,Rval,pt_title_name,axesm,vstm);     
-            end 
-         elseif isequal(Rtype,17)
-            if ~isempty(Jval)
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,Jval,Rval,pt_title_name,axesm,vstm);     
-            end        
-         elseif isequal(Rtype,18)
-            if ~isempty(Phi_Mmax)
-               Phi_Mmax=round(Phi_Mmax*10^1)/10^1;
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,Phi_Mmax,Rval,pt_title_name,axesm,vstm);     
-            end 
-         elseif isequal(Rtype,19)
-            if ~isempty(Phi_Py)
-               Phi_Py=round(Phi_Py*10^1)/10^1;
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,Phi_Py,Rval,pt_title_name,axesm,vstm);     
-            end   
-         elseif isequal(Rtype,20)
-            if ~isempty(UC)
-               SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-                Nshe1,Nshe2,DUP1,DUP2,UC,Rval,pt_title_name,axesm,vstm);     
-            end 
-         elseif isequal(Rtype,21)   
-            results_menu_Callback;
-            results_nodalrd_menu_Callback;
-         elseif isequal(Rtype,22)   
-            results_menu_Callback;
-            results_elementforces_menu_Callback;
-         else
-            SABRE2ModelFit(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j, ...
-               Rval,BNodevalue,vrum_az_slider,vrum_el_slider,vrum_az_edit,vrum_el_edit,axesm,vstm);   
-            % Drawing Nodal white points & generate NC
-            [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-               Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-               RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);               
-         end % Rtype
-      end
-   elseif strcmp(OBJ,'loads') || strcmp(OBJ,'bcs') 
-      SABRE2ModelFit(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j, ...
-         Rval,BNodevalue,vrum_az_slider,vrum_el_slider,vrum_az_edit,vrum_el_edit,axesm,vstm);   
-      % Drawing Nodal white points & generate NC
-      [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-         Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-         RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);          
-   end
-end % function end
-% --------------------------------------------------------------------
-function view_center_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   movegui(gcf,'center')
-end % function end
-% --------------------------------------------------------------------
-function view_diagram_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   if strcmp(get(gcbo, 'Checked'),'on')     
-      set(vdum, 'Checked', 'off');
-      set([vdum_panel,vdum_type_subpanel],'Visible','off')
-      set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-      set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')
-   else
-      set(vdum, 'Checked', 'on');
-      set([vdum_panel,vdum_type_subpanel],'Visible','on')
-      set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','on') 
-      set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','on')      
-   end   
-end % function end
-% --------------------------------------------------------------------
-function view_text_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   if strcmp(get(gcbo, 'Checked'),'on')     
-      set(vtum, 'Checked', 'off');
-      set(findobj('Type','text'),'Visible','off')
-      set(findobj('Tag','axis'),'Visible','on')
-   else
-      set(vtum, 'Checked', 'on');
-      set(findobj('Type','text'),'Visible','on')
-      set(findobj('Tag','axis'),'Visible','on')
-      set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-   end   
-end % function end
-% function view_jn_menu_Callback(hObject, eventdata)
-%    clc; 
-%    if strcmp(get(gcbo, 'Checked'),'on')     
-%       set(vmjn, 'Checked', 'off');LabType(1,1)=1;
-%    else
-%       set(vmjn, 'Checked', 'on'); LabType(1,1)=0;
-%    end   
-% end % function end
-% function view_mnum_menu_Callback(hObject, eventdata)
-%    clc; 
-%    if strcmp(get(gcbo, 'Checked'),'on')     
-%       set(vmmn, 'Checked', 'off');LabType(1,2)=1;
-%    else
-%       set(vmmn, 'Checked', 'on');LabType(1,2)=0;
-%    end   
-% end % function end
-% function view_snum_menu_Callback(hObject, eventdata)
-%    clc; 
-%    if strcmp(get(gcbo, 'Checked'),'on')     
-%       set(vmsn, 'Checked', 'off');LabType(1,3)=1;
-%    else
-%       set(vmsn, 'Checked', 'on');LabType(1,3)=0;
-%    end   
-% end % function end
-% function view_fnum_menu_Callback(hObject, eventdata)
-%    clc; 
-%    if strcmp(get(gcbo, 'Checked'),'on')     
-%       set(vmfn, 'Checked', 'off');LabType(1,4)=1;
-%    else
-%       set(vmfn, 'Checked', 'on');LabType(1,4)=0;
-%    end    
-% end % function end
-function view_bf_menu_Callback(hObject, eventdata)
-   clc;
-   if strcmp(get(gcbo, 'Checked'),'on')     
-      set(vmbf, 'Checked', 'off');LabType(1,5)=1;       
-   else
-      set(vmbf, 'Checked', 'on');LabType(1,5)=0;      
-   end
-   [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-      Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-      RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);    
-end % function end
-function view_bs_menu_Callback(hObject, eventdata)
-   clc; 
-   if strcmp(get(gcbo, 'Checked'),'on')     
-      set(vmbs, 'Checked', 'off');LabType(1,6)=1;
-   else
-      set(vmbs, 'Checked', 'on');LabType(1,6)=0;
-   end
-   if strcmp(OBJ,'res') || strcmp(OBJ,'Anal') 
-      if isequal(Buc,1)
-        if ~isempty(Funew) 
-            IncreL = get(ri_cancel,'Value');
-            Fscale=str2double(get(ri_scale_edit, 'String')); 
-            if isempty(gammma)
-               SABRE2RBmode(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,...
-                  LNC,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,Fscale,rd_buttongroup,pt_title_name,...
-                  AR,AS,AE,AI,ANE,ANI,gammma,UC,LIAType,NLIAType,crLTB,LGv,IncreL,LabType,axesm,vstm);        
-            else
-               SABRE2RBmode(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,...
-                  LNC,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,Fscale,rd_buttongroup,pt_title_name,...
-                  AR,AS,AE,AI,ANE,ANI,gammma(IncreL,1),UC,LIAType,NLIAType,crLTB,LGv,IncreL,LabType,axesm,vstm); 
-            end
-        end
-      elseif isequal(Rtype,1) || isequal(Rtype,2) || isequal(Rtype,3) || isequal(Rtype,4) || isequal(Rtype,5) || isequal(Rtype,6) || isequal(Rtype,7) ...
-            || isequal(Rtype,8) || isequal(Rtype,9) || isequal(Rtype,10) || isequal(Rtype,11) || isequal(Rtype,12) || isequal(Rtype,13) || isequal(Rtype,14) ...
-            || isequal(Rtype,15) || isequal(Rtype,16) || isequal(Rtype,17) || isequal(Rtype,18) || isequal(Rtype,19) || isequal(Rtype,20) || isequal(Rtype,21) ...
-            || isequal(Rtype,22) || isequal(Rtype,23) 
-      else
-         [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-            Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-            RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);  
-      end
-   elseif strcmp(OBJ,'define')  || strcmp(OBJ,'assign')
-   else
-         [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-            Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-            RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);        
-   end
-end % function end
-function view_bg_menu_Callback(hObject, eventdata)
-   clc; 
-   if strcmp(get(gcbo, 'Checked'),'on')     
-      set(vmbg, 'Checked', 'off');LabType(1,7)=1;
-   else
-      set(vmbg, 'Checked', 'on');LabType(1,7)=0;
-   end 
-   if strcmp(OBJ,'res') || strcmp(OBJ,'Anal') 
-      if isequal(Buc,1)
-        if ~isempty(Funew) 
-            IncreL = get(ri_cancel,'Value');
-            Fscale=str2double(get(ri_scale_edit, 'String')); 
-            if isempty(gammma)
-               SABRE2RBmode(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,...
-                  LNC,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,Fscale,rd_buttongroup,pt_title_name,...
-                  AR,AS,AE,AI,ANE,ANI,gammma,UC,LIAType,NLIAType,crLTB,LGv,IncreL,LabType,axesm,vstm);        
-            else
-               SABRE2RBmode(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,...
-                  LNC,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,Fscale,rd_buttongroup,pt_title_name,...
-                  AR,AS,AE,AI,ANE,ANI,gammma(IncreL,1),UC,LIAType,NLIAType,crLTB,LGv,IncreL,LabType,axesm,vstm); 
-            end
-        end
-      elseif isequal(Rtype,1) || isequal(Rtype,2) || isequal(Rtype,3) || isequal(Rtype,4) || isequal(Rtype,5) || isequal(Rtype,6) || isequal(Rtype,7) ...
-            || isequal(Rtype,8) || isequal(Rtype,9) || isequal(Rtype,10) || isequal(Rtype,11) || isequal(Rtype,12) || isequal(Rtype,13) || isequal(Rtype,14) ...
-            || isequal(Rtype,15) || isequal(Rtype,16) || isequal(Rtype,17) || isequal(Rtype,18) || isequal(Rtype,19) || isequal(Rtype,20) || isequal(Rtype,21) ...
-            || isequal(Rtype,22) || isequal(Rtype,23) 
-      else
-         [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-            Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-            RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);  
-      end
-   elseif strcmp(OBJ,'define')  || strcmp(OBJ,'assign')
-   else
-         [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-            Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-            RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);        
-   end  
-end % function end
-function view_bw_menu_Callback(hObject, eventdata)
-   clc; 
-   if strcmp(get(gcbo, 'Checked'),'on')     
-      set(vmbw, 'Checked', 'off');LabType(1,8)=1;
-   else
-      set(vmbw, 'Checked', 'on');LabType(1,8)=0;
-   end 
-   [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-      Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-      RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);    
-end % function end
-function view_bp_menu_Callback(hObject, eventdata)
-   clc; 
-   if strcmp(get(gcbo, 'Checked'),'on')     
-      set(vmbp, 'Checked', 'off');LabType(1,9)=1;
-   else
-      set(vmbp, 'Checked', 'on');LabType(1,9)=0;
-   end
-   [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-      Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-      RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);    
-end % function end
-function view_bu_menu_Callback(hObject, eventdata)
-   clc;
-   if strcmp(get(gcbo, 'Checked'),'on')     
-      set(vmbu, 'Checked', 'off');LabType(1,10)=1;
-   else
-      set(vmbu, 'Checked', 'on');LabType(1,10)=0;
-   end 
-   [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-      Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-      RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);    
-end % function end
-% --------------------------------------------------------------------
-function view_screenshot_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   if strcmp(get(gcbo, 'Checked'),'on')     
-      set(vstm, 'Checked', 'off');
-      set(masterf,'Color','k')
-      set(pt_title_name,'BackgroundColor','k','ForegroundColor','r')
-      set(ri_infor_text,'BackgroundColor','k','ForegroundColor','r')
-      set(findobj('Tag','IPanel'),'BackgroundColor',[0.9412 0.9412 0.9412])
-      set(findobj('Tag','ITitle'),'ForegroundColor','b','BackgroundColor',[0.9412 0.9412 0.9412])     
-      set(findobj('Tag','IText'),'ForegroundColor','k','BackgroundColor',[0.9412 0.9412 0.9412])
-      set(findobj('Tag','Text'),'Color','w');set(findobj('Tag','axis'),'Color','w');set(findobj('Tag','S'),'Color','w');
-      set(findobj('Tag','JN'),'Color','w');set(findobj('Tag','M'),'Color','w');set(findobj('Tag','EF'),'Color','w');
-      set(findobj('Tag','OTF'),'FaceColor',[0.7 0.7 0.7],'EdgeColor',[0.3 0.3 0.3]);
-      set(findobj('Tag','OWEB'),'FaceColor',[0.8 0.8 0.8],'EdgeColor',[0.3 0.3 0.3]);
-      set(findobj('Tag','OBF'),'FaceColor',[0.7 0.7 0.7],'EdgeColor',[0.3 0.3 0.3]); 
-      set(findobj('Tag','SRFT'),'Color','w');set(findobj('Tag','DiagramFrame'),'Color','w');set(findobj('Tag','DiagramBi'),'Color','w');
-      set(findobj('Tag','DiagramAi'),'Color','w');set(findobj('Tag','DiagramSy'),'Color','w');set(findobj('Tag','DiagramSz'),'Color','w');
-      set(findobj('Tag','DiagramMt'),'Color','w');set(findobj('Tag','DiagramMy'),'Color','w');set(findobj('Tag','DiagramMz'),'Color','w');
-      if ~isempty(RNCc)
-         for i = 1:length(RNCc(:,1))
-            set(findobj('Tag',['RNCc',num2str(i)]),'Color','w');
-            set(findobj('Tag',['OTFB',num2str(i)]),'FaceColor',[0.7 0.7 0.7],'EdgeColor',[0.3 0.3 0.3]);
-            set(findobj('Tag',['OWEBB',num2str(i)]),'FaceColor',[0.8 0.8 0.8],'EdgeColor',[0.3 0.3 0.3]);
-            set(findobj('Tag',['OBFB',num2str(i)]),'FaceColor',[0.7 0.7 0.7],'EdgeColor',[0.3 0.3 0.3]);
-         end
-      end
-   else
-      set(vstm, 'Checked', 'on');
-      set(masterf,'Color','w')
-      set(pt_title_name,'BackgroundColor','w','ForegroundColor','b')
-      set(ri_infor_text,'BackgroundColor','w','ForegroundColor','b')
-      set(findobj('Tag','IPanel'),'BackgroundColor','k')
-      set(findobj('Tag','ITitle'),'ForegroundColor','y','BackgroundColor','k')
-      set(findobj('Tag','IText'),'ForegroundColor','w','BackgroundColor','k')     
-      set(findobj('Tag','Text'),'Color','k');set(findobj('Tag','axis'),'Color','k');set(findobj('Tag','S'),'Color','k');
-      set(findobj('Tag','JN'),'Color','k');set(findobj('Tag','M'),'Color','k');set(findobj('Tag','EF'),'Color','k');
-      set(findobj('Tag','OTF'),'FaceColor',[0.6 0.6 0.6],'EdgeColor',[0.6 0.6 0.6]);
-      set(findobj('Tag','OWEB'),'FaceColor',[0.7 0.7 0.7],'EdgeColor',[0.6 0.6 0.6]);
-      set(findobj('Tag','OBF'),'FaceColor',[0.6 0.6 0.6],'EdgeColor',[0.6 0.6 0.6]);   
-      set(findobj('Tag','SRFT'),'Color','k');set(findobj('Tag','DiagramFrame'),'Color',[0 0.5 1]);set(findobj('Tag','DiagramBi'),'Color','k');
-      set(findobj('Tag','DiagramAi'),'Color','k');set(findobj('Tag','DiagramSy'),'Color','k');set(findobj('Tag','DiagramSz'),'Color','k');
-      set(findobj('Tag','DiagramMt'),'Color','k');set(findobj('Tag','DiagramMy'),'Color','k');set(findobj('Tag','DiagramMz'),'Color','k');      
-      if ~isempty(RNCc)
-         for i = 1:length(RNCc(:,1))
-            set(findobj('Tag',['RNCc',num2str(i)]),'Color',[0 0.5 1]);
-            set(findobj('Tag',['OTFB',num2str(i)]),'FaceColor',[0.6 0.6 0.6],'EdgeColor',[0.6 0.6 0.6]);
-            set(findobj('Tag',['OWEBB',num2str(i)]),'FaceColor',[0.7 0.7 0.7],'EdgeColor',[0.6 0.6 0.6]);
-            set(findobj('Tag',['OBFB',num2str(i)]),'FaceColor',[0.6 0.6 0.6],'EdgeColor',[0.6 0.6 0.6]);
-         end
-      end      
-   end    
-end % function end
-% --------------------------------------------------------------------
-function property_define_model_menu_Callback(hObject,eventdata)  
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+% function property_define_model_menu_Callback(hObject,eventdata)  
+%    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    if strcmp(get(gcbo,'type'),'uimenu') 
       OBJ=get(gcbo,'Tag');
    end 
@@ -3083,9 +2263,9 @@ function property_define_model_menu_Callback(hObject,eventdata)
    set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
    set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')
    set([pdmi_name,pdmix_edit,pdmiy_edit,pdmiz_edit],'string',''); 
-end
+
 % --------------------------------------------------------------------
-function property_define_joint_menu_Callback(hObject,eventdata) 
+% function property_define_joint_menu_Callback(hObject,eventdata) 
    set(masterf,'WindowButtonDownFcn',@property_define_joint_menu_Callback);
    SABRE2JointFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -3150,9 +2330,9 @@ function property_define_joint_menu_Callback(hObject,eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel,JNodevalue); 
-end % function end
+% end % function end
 % --------------------------------------------------------------------
-function property_define_member_menu_Callback(hObject, eventdata)
+% function property_define_member_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@property_define_member_menu_Callback);
    SABRE2MembFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -3217,9 +2397,9 @@ function property_define_member_menu_Callback(hObject, eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel,Massemble,JNodevalue_i,JNodevalue_j,Rval,vstm);
-end % function end    
+% end % function end    
 % --------------------------------------------------------------------
-function property_define_segment_menu_Callback(hObject, eventdata)
+% function property_define_segment_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@property_define_segment_menu_Callback);
    SABRE2SegmFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -3284,9 +2464,9 @@ function property_define_segment_menu_Callback(hObject, eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel,JNodevalue_i,BNodevalue,vstm);   
-end % function end 
+% end % function end 
 % --------------------------------------------------------------------
-function property_define_mirror_menu_Callback(hObject, eventdata)
+% function property_define_mirror_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@property_define_mirror_menu_Callback);
    SABRE2MirrorFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -3351,11 +2531,11 @@ function property_define_mirror_menu_Callback(hObject, eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel,JNodevalue);   
-end % function end 
+% end % function end 
 % --------------------------------------------------------------------
-function property_assign_menu_Callback(hObject,eventdata) 
+% function property_assign_menu_Callback(hObject,eventdata) 
    set(masterf,'WindowButtonDownFcn',@property_assign_menu_Callback);
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+%    pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    if strcmp(get(gcbo,'type'),'uimenu') 
       OBJ=get(gcbo,'Tag');
    end  
@@ -3476,9 +2656,9 @@ function property_assign_menu_Callback(hObject,eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel);       
-end % function end
+% end % function end
 % --------------------------------------------------------------------
-function property_homo_material_menu_Callback(hObject, eventdata)
+% function property_homo_material_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@property_homo_material_menu_Callback); 
    HomoType=0;
    set([pamfy_assign_text,pamfy_assign_edit],'Visible','on');
@@ -3487,9 +2667,9 @@ function property_homo_material_menu_Callback(hObject, eventdata)
    set(pam_assign_text,'String','Homogeneous Member(s)')
    SABRE2AssiDATA(pam_segment_edit,pamse_assign_edit,pamen_assign_edit,pame_assign_edit,pamg_assign_edit,...
       pamfy_assign_edit,pamrho_assign_edit,pamfyfi_assign_edit,pamfyw_assign_edit,pamfyfo_assign_edit,SNodevalue,punit_edit,vstm);    
-end % function end 
+% end % function end 
 % --------------------------------------------------------------------
-function property_hybrid_material_menu_Callback(hObject, eventdata)
+% function property_hybrid_material_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@property_hybrid_material_menu_Callback);
    HomoType=1;
    set([pamfy_assign_text,pamfy_assign_edit],'Visible','off');
@@ -3498,10 +2678,10 @@ function property_hybrid_material_menu_Callback(hObject, eventdata)
    set(pam_assign_text,'String','Hybrid Member(s)')
    SABRE2AssiDATA(pam_segment_edit,pamse_assign_edit,pamen_assign_edit,pame_assign_edit,pamg_assign_edit,...
       pamfy_assign_edit,pamrho_assign_edit,pamfyfi_assign_edit,pamfyw_assign_edit,pamfyfo_assign_edit,SNodevalue,punit_edit,vstm);   
-end % function end 
+% end % function end 
 % --------------------------------------------------------------------
-function loads_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+% function loads_menu_Callback(hObject, eventdata)
+%    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    if strcmp(get(gcbo,'type'),'uimenu') 
       OBJ=get(gcbo,'Tag');
    end
@@ -3532,9 +2712,9 @@ function loads_menu_Callback(hObject, eventdata)
    set([vdum,vtum],'enable','off');set([vdum_panel,vdum_type_subpanel],'Visible','off')
    set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
    set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')
-end % function end   
+% end % function end   
 % --------------------------------------------------------------------
-function loads_force_menu_Callback(hObject, eventdata)
+% function loads_force_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@loads_force_menu_Callback);
    [LTYPE]=SABRE2ForcFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -3605,9 +2785,9 @@ function loads_force_menu_Callback(hObject, eventdata)
    else
       set(pt_title_name,'Visible','off') 
    end        
-end % function end    
+% end % function end    
 % --------------------------------------------------------------------
-function loads_uniform_menu_Callback(hObject, eventdata)
+% function loads_uniform_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@loads_uniform_menu_Callback);  
    [ULoad,t]=SABRE2UnifFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -3672,9 +2852,9 @@ function loads_uniform_menu_Callback(hObject, eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel,SNodevalue,DUP1,DUP2,LUEC,error,vstm);      
-end % function end 
-% --------------------------------------------------------------------
-function bc_menu_Callback(hObject, eventdata)
+% end % function end 
+% % --------------------------------------------------------------------
+% function bc_menu_Callback(hObject, eventdata)
    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    set(pt_title_name,'Visible','off') ;set(ri_infor_text,'Visible','off') 
    if strcmp(get(gcbo,'type'),'uimenu') 
@@ -3724,9 +2904,9 @@ function bc_menu_Callback(hObject, eventdata)
    set([vdum,vtum],'enable','off');set([vdum_panel,vdum_type_subpanel],'Visible','off')
    set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
    set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')
-end % function end      
-% --------------------------------------------------------------------
-function bc_fixities_menu_Callback(hObject, eventdata)
+% end % function end      
+% % --------------------------------------------------------------------
+% function bc_fixities_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@bc_fixities_menu_Callback);  
    SABRE2BConFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -3797,9 +2977,9 @@ function bc_fixities_menu_Callback(hObject, eventdata)
    else
       set(pt_title_name,'Visible','off') 
    end      
-end % function end 
-% --------------------------------------------------------------------
-function bc_shear_menu_Callback(hObject, eventdata)
+% end % function end 
+% % --------------------------------------------------------------------
+% function bc_shear_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@bc_shear_menu_Callback);  
    SABRE2SheaFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -3870,9 +3050,9 @@ function bc_shear_menu_Callback(hObject, eventdata)
    else
       set(pt_title_name,'Visible','off') 
    end      
-end % function end 
-% --------------------------------------------------------------------
-function bc_ground_menu_Callback(hObject, eventdata)
+% end % function end 
+% % --------------------------------------------------------------------
+% function bc_ground_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@bc_ground_menu_Callback);  
    SABRE2GroundFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -3943,9 +3123,9 @@ function bc_ground_menu_Callback(hObject, eventdata)
    else
       set(pt_title_name,'Visible','off') 
    end      
-end % function end 
-% --------------------------------------------------------------------
-function bc_flexure_menu_Callback(hObject, eventdata)
+% end % function end 
+% % --------------------------------------------------------------------
+% function bc_flexure_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@bc_flexure_menu_Callback);  
    SABRE2FlexureFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -4016,9 +3196,9 @@ function bc_flexure_menu_Callback(hObject, eventdata)
    else
       set(pt_title_name,'Visible','off') 
    end      
-end % function end 
-% --------------------------------------------------------------------
-function analysis_para_Callback(hObject, eventdata)
+% end % function end 
+% % --------------------------------------------------------------------
+% function analysis_para_Callback(hObject, eventdata)
    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    set(pt_title_name,'Visible','off');
    set([vdum,vtum],'enable','off');set([vdum_panel,vdum_type_subpanel],'Visible','off')
@@ -4045,9 +3225,9 @@ function analysis_para_Callback(hObject, eventdata)
       set(ap_da_on_radiobutton,'Value',1);set(ap_da_off_radiobutton,'Value',0); 
    end
    set(api_assign_edit,'String',num2str(AnalP(5,1)));set(apninc_assign_edit,'String',num2str(AnalP(6,1)));
-end % function end
-% --------------------------------------------------------------------
-function analysis_parasub_menu_Callback(hObject, eventdata)
+% end % function end
+% % --------------------------------------------------------------------
+% function analysis_parasub_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_parasub_menu_Callback); 
    AnalP=SABRE2AnalParaFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -4112,10 +3292,10 @@ function analysis_parasub_menu_Callback(hObject, eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel,AnalP);    
-end % function end
-% --------------------------------------------------------------------
-function analysis_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+% end % function end
+% % --------------------------------------------------------------------
+% function analysis_menu_Callback(hObject, eventdata)
+%    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    if strcmp(get(gcbo,'type'),'uimenu') 
       OBJ=get(gcbo,'Tag');
    end 
@@ -4147,9 +3327,9 @@ function analysis_menu_Callback(hObject, eventdata)
       case 'AISC_off'
          LIAType=1; NLIAType=1; 
    end    
-end % function end    
-% --------------------------------------------------------------------
-function analysis_1stelastic_menu_Callback(hObject, eventdata)
+% end % function end    
+% % --------------------------------------------------------------------
+% function analysis_1stelastic_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
    %% This function sets the UI panel properties
    SABRE2A1stFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
@@ -4236,14 +3416,14 @@ function analysis_1stelastic_menu_Callback(hObject, eventdata)
             set(ri_cancel,'Value',length(Funew(1,1,:))); set(rrd_cancel,'Value',length(Funew(1,1,:))); set(ref_cancel,'Value',length(Funew(1,1,:)));
          end         
          if ~isequal( min(min(min(Qintf))), 0)
-            results_diagram_menu_Callback;results_curve_menu_Callback; rd3_diagram_pushbutton_Callback; 
+            %results_diagram_menu_Callback;results_curve_menu_Callback; rd3_diagram_pushbutton_Callback; 
          end
       end
    end 
    set(ri_tau_diagram,'Value',1,'enable','off');set(ri_report_edit,'Value',1,'enable','on')  
-end % function end 
-% --------------------------------------------------------------------
-function analysis_2ndelastic_menu_Callback(hObject, eventdata)
+% end % function end 
+% % --------------------------------------------------------------------
+% function analysis_2ndelastic_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
    SABRE2A2ndFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -4308,7 +3488,7 @@ function analysis_2ndelastic_menu_Callback(hObject, eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel);  
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1);
+  pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1);
    if isempty(RNCc) || isempty(PNC)     
       set(pt_title_name,'String','Modeling is not completed')
       set(pt_title_name,'Visible','on') 
@@ -4329,14 +3509,14 @@ function analysis_2ndelastic_menu_Callback(hObject, eventdata)
             set(ri_cancel,'Value',length(Funew(1,1,:))); set(rrd_cancel,'Value',length(Funew(1,1,:))); set(ref_cancel,'Value',length(Funew(1,1,:)))
          end         
          if ~isequal( min(min(min(Qintf))), 0)
-            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
+            %results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
          end
       end
    end
    set(ri_tau_diagram,'Value',1,'enable','off');set(ri_report_edit,'Value',1,'enable','on')      
-end % function end
-% --------------------------------------------------------------------
-function analysis_ecba_menu_Callback(hObject, eventdata)
+% end % function end
+% % --------------------------------------------------------------------
+% function analysis_ecba_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
    SABRE2ABucFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -4401,7 +3581,7 @@ function analysis_ecba_menu_Callback(hObject, eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel);  
-   clc;pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    if isempty(RNCc) || isempty(PNC)     
       set(pt_title_name,'String','Modeling is not completed')
       set(pt_title_name,'Visible','on') 
@@ -4427,15 +3607,15 @@ function analysis_ecba_menu_Callback(hObject, eventdata)
          set(ri_scale_edit,'String',num2str(1.2*max(max(RNCc(:,5)),max(RNCc(:,7)))));         
          if ~isequal( min(min(min(Qintf))), 0)
             set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1);
-            results_diagram_menu_Callback; results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
+%            results_diagram_menu_Callback; results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
          end
       end
    end
    set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1);
    set(ri_tau_diagram,'Value',1,'enable','off');set(ri_report_edit,'Value',1,'enable','on')   
-end % function end
-% --------------------------------------------------------------------
-function analysis_icba_menu_Callback(hObject, eventdata)
+% end % function end
+% % --------------------------------------------------------------------
+% function analysis_icba_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
    SABRE2AIEBucFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -4500,8 +3680,8 @@ function analysis_icba_menu_Callback(hObject, eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel); 
-end % function end
-function analysis_icba_Design_menu_Callback(hObject, eventdata)
+% end % function end
+% function analysis_icba_Design_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    if isempty(RNCc) || isempty(PNC)     
@@ -4522,14 +3702,14 @@ function analysis_icba_Design_menu_Callback(hObject, eventdata)
          set(ri_scale_edit,'String',num2str(1.2*max(max(RNCc(:,5)),max(RNCc(:,7)))));
          if ~isequal( min(min(min(Qintf))), 0)
             set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1); 
-            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
+%            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
          end
       end
    end
    set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1)   
    set(ri_tau_diagram,'Value',1,'enable','on');set(ri_report_edit,'Value',1,'enable','on')      
-end % function end
-function analysis_icba_Check_menu_Callback(hObject, eventdata)
+% end % function end
+% function analysis_icba_Check_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    if isempty(RNCc) || isempty(PNC)     
@@ -4550,15 +3730,15 @@ function analysis_icba_Check_menu_Callback(hObject, eventdata)
          set(ri_scale_edit,'String',num2str(1.2*max(max(RNCc(:,5)),max(RNCc(:,7)))));
          if ~isequal( min(min(min(Qintf))), 0)
             set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1); 
-            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
+%            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
          end
       end
    end
    set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1)   
    set(ri_tau_diagram,'Value',1,'enable','on');set(ri_report_edit,'Value',1,'enable','on')      
-end % function end
-% --------------------------------------------------------------------
-function analysis_nonecba_menu_Callback(hObject, eventdata)
+% end % function end
+% % --------------------------------------------------------------------
+% function analysis_nonecba_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
    SABRE2ANonBucFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -4651,15 +3831,15 @@ function analysis_nonecba_menu_Callback(hObject, eventdata)
          set(ri_scale_edit,'String',num2str(1.2*max(max(RNCc(:,5)),max(RNCc(:,7)))));
          if ~isequal( min(min(min(Qintf))), 0)
             set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1);
-            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
+%            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
          end
       end
    end
    set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1) 
    set(ri_tau_diagram,'Value',1,'enable','off');set(ri_report_edit,'Value',1,'enable','on')   
-end % function end
-% --------------------------------------------------------------------
-function analysis_nonicba_menu_Callback(hObject, eventdata)
+% end % function end
+% % --------------------------------------------------------------------
+% function analysis_nonicba_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
    SABRE2ANonIEBucFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -4724,10 +3904,10 @@ function analysis_nonicba_menu_Callback(hObject, eventdata)
       refz_force_text,ret_force_text,remy_force_text,remz_force_text,rebi_force_text,refx_force_edit,...
       refy_force_edit,refz_force_edit,remx_force_edit,remy_force_edit,remz_force_edit,rebi_force_edit,...
       re_forcebar_slider,re_forcebar_edit,ref_apply,ref_cancel);  
-end % function end
-function analysis_nonicba_Design_menu_Callback(hObject, eventdata)
+% end % function end
+% function analysis_nonicba_Design_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    if isempty(RNCc) || isempty(PNC)     
       set(pt_title_name,'String','Modeling is not completed')
       set(pt_title_name,'Visible','on') 
@@ -4746,16 +3926,16 @@ function analysis_nonicba_Design_menu_Callback(hObject, eventdata)
          set(ri_scale_edit,'String',num2str(1.2*max(max(RNCc(:,5)),max(RNCc(:,7)))));
          if ~isequal( min(min(min(Qintf))), 0)
             set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1);
-            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
+%            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
          end
       end
    end
    set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1) 
    set(ri_tau_diagram,'Value',1,'enable','on');set(ri_report_edit,'Value',1,'enable','on')     
-end % function end
-function analysis_nonicba_Check_menu_Callback(hObject, eventdata)
+% end % function end
+% function analysis_nonicba_Check_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@analysis_para_Callback);
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    if isempty(RNCc) || isempty(PNC)     
       set(pt_title_name,'String','Modeling is not completed')
       set(pt_title_name,'Visible','on') 
@@ -4774,16 +3954,16 @@ function analysis_nonicba_Check_menu_Callback(hObject, eventdata)
          set(ri_scale_edit,'String',num2str(1.2*max(max(RNCc(:,5)),max(RNCc(:,7)))));
          if ~isequal( min(min(min(Qintf))), 0)
             set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1);
-            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
+%            results_diagram_menu_Callback;results_curve_menu_Callback;rd3_diagram_pushbutton_Callback;
          end
       end
    end
    set(ri_cancel,'Value',1);set(rrd_cancel,'Value',1);set(ref_cancel,'Value',1) 
    set(ri_tau_diagram,'Value',1,'enable','on');set(ri_report_edit,'Value',1,'enable','on')     
-end % function end
-% --------------------------------------------------------------------
-function results_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+% end % function end
+% % --------------------------------------------------------------------
+% function results_menu_Callback(hObject, eventdata)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    set(pt_title_name,'Visible','off') ;set(ri_infor_text,'Visible','off')
    if strcmp(get(gcbo,'type'),'uimenu') 
       OBJ=get(gcbo,'Tag');
@@ -4799,9 +3979,9 @@ function results_menu_Callback(hObject, eventdata)
       Rval,BNodevalue,SNodevalue,axesm,vstm); 
    set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'string',''); 
    Rtype =0; set(ri_tau_diagram,'Value',1);APP=1; set(rrd_type_edit,'string',''); 
-end % function end   
-% --------------------------------------------------------------------
-function results_diagram_menu_Callback(hObject, eventdata)
+% end % function end   
+% % --------------------------------------------------------------------
+% function results_diagram_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@results_diagram_menu_Callback);  
    SABRE2DiagramFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -4873,9 +4053,9 @@ function results_diagram_menu_Callback(hObject, eventdata)
    end 
    Fsize=get(ri_scale_edit,'FontSize');
    set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'FontSize',Fsize)
-end % function end
-% --------------------------------------------------------------------
-function results_nodalrd_menu_Callback(hObject, eventdata)
+% end % function end
+% % --------------------------------------------------------------------
+% function results_nodalrd_menu_Callback(hObject, eventdata)
    set(masterf,'WindowButtonDownFcn',@results_nodalrd_menu_Callback); Rtype=21; Buc=0;
    SABRE2RNProFun(pn_panel,pt_title_name,fim_infor_name,pd_type_subpanel,pdn_type_text,...
       pdn_type_name,pd_coord_subpanel,pdn_coord_text,pdn_coordx_text,pdn_coordy_text,...
@@ -4943,10 +4123,10 @@ function results_nodalrd_menu_Callback(hObject, eventdata)
    set([vdum,vtum],'enable','off');set([vdum_panel,vdum_type_subpanel],'Visible','off')
    set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
    set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')     
-end % function end
-% --------------------------------------------------------------------
-function results_elementforces_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+% end % function end
+% % --------------------------------------------------------------------
+% function results_elementforces_menu_Callback(hObject, eventdata)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    set(masterf,'WindowButtonDownFcn',@results_elementforces_menu_Callback);Rtype=22;Buc=0;
    if isequal(AE,1) || isequal(AI,1) || isequal(AI,2)  || isequal(AI,3) || isequal(AI,4) ...
          || isequal(ANE,1) || isequal(ANI,1) || isequal(ANI,2)  || isequal(ANI,3) || isequal(ANI,4)        
@@ -5019,955 +4199,106 @@ function results_elementforces_menu_Callback(hObject, eventdata)
    set([vdum,vtum],'enable','off');set([vdum_panel,vdum_type_subpanel],'Visible','off')
    set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
    set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')        
-end % function end
-% --------------------------------------------------------------------
-function results_curve_menu_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+% end % function end
+% % --------------------------------------------------------------------
+% function results_curve_menu_Callback(hObject, eventdata)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    figHandles = findall(0,'Type','figure');
    if isequal(length(figHandles(:,1)),1)
       cflag=0;
    end 
    [cflag]=SABRE2Curve(Qintf,FunewP,QintgP,cflag,APP,apninc_assign_edit,api_assign_edit);    
-end % function end
+% end % function end
 % ************************************************************************
 % *****************               STYLE              *********************
 % ************************************************************************
 % *************************************** PROPERTY DEFINE JOINT Callback S
 % --------------------------------------------------------------------
-function pdn_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   dunit=get(punit_edit,'Value');
-   if isequal(dunit,2)
-      AnalP(7,1)=2;
-   else
-      AnalP(7,1)=1;
-   end     
-   [JNodevalue,JNodevalue_i,JNodevalue_j,BNodevalue,SNodevalue]=SABRE2JointApp(JNodevalue,...
-      Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,pdn_type_name,pdn_coordx_edit,...
-      pdn_coordy_edit,pdn_coordz_edit,pt_title_name,axesm,vstm); 
-end % function end
-% --------------------------------------------------------------------
-function pdn_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   selection = questdlg('Do you want to remove the joint? Member properties, Loads and Boundary Conditions will be cleared.','Joint(s)','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else    
-      [JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,...
-      SNodevalue]=SABRE2JointRem(JNodevalue,Massemble,JNodevalue_i,...
-         JNodevalue_j,Rval,BNodevalue,SNodevalue,pdn_type_name,...
-         pdn_coordx_edit,pdn_coordy_edit,pdn_coordz_edit,pt_title_name,axesm,vstm);  
-   end
-end % function end
-% *************************************** PROPERTY DEFINE JOINT Callback E
-% ************************************** PROPERTY DEFINE MEMBER Callback S
-% -------------------------------------------------------------------- 
-function pde_set_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');  
-   wnum = get(pde_wsection_edit,'Value');
-   filename1='AISCSTEEL.mat';
-   Sectiondata=load(fullfile(filename1));
-   SECTION=Sectiondata.SECTION;
-   TYPE=Sectiondata.TYPE;
-   if isequal(wnum,1)
-      set([pde_bfbi_edit,pde_tfbi_edit,pde_bfti_edit],'string','');
-      set([pde_tfti_edit,pde_dwi_edit,pde_twi_edit],'string','');
-      set([pde_bfbj_edit,pde_tfbj_edit,pde_bftj_edit],'string','');
-      set([pde_tftj_edit,pde_dwj_edit,pde_twj_edit,pde_filj_edit,pde_wsname_edit],'string','');  
-      set([pde_fili_edit,pde_filj_edit],'string','0');
-   elseif wnum > 1
-      Ai=(SECTION((wnum-1),1))*(SECTION((wnum-1),2)) ...
-         + (SECTION((wnum-1),3))*(SECTION((wnum-1),4)) ...
-         + (SECTION((wnum-1),5)-2*SECTION((wnum-1),2))*(SECTION((wnum-1),6));
-      Afls = (SECTION((wnum-1),7))- Ai;   
-      if (Afls < 0 )
-          Afls = 0;
-      end        
-      dunit=get(punit_edit,'Value');
-      if isequal(dunit,2)
-         set(pde_bfbi_edit,'String',num2str(SECTION((wnum-1),1)*2.54));
-         set(pde_tfbi_edit,'String',num2str(SECTION((wnum-1),2)*2.54));
-         set(pde_bfti_edit,'String',num2str(SECTION((wnum-1),3)*2.54));          
-         set(pde_tfti_edit,'String',num2str(SECTION((wnum-1),4)*2.54));  
-         set(pde_dwi_edit,'String',num2str( (SECTION((wnum-1),5)-2*SECTION((wnum-1),2))*2.54 ));  
-         set(pde_twi_edit,'String',num2str(SECTION((wnum-1),6)*2.54));
-         set(pde_fili_edit,'String',num2str(Afls*2.54*2.54));
-         set(pde_bfbj_edit,'String',num2str(SECTION((wnum-1),1)*2.54));
-         set(pde_tfbj_edit,'String',num2str(SECTION((wnum-1),2)*2.54));
-         set(pde_bftj_edit,'String',num2str(SECTION((wnum-1),3)*2.54));          
-         set(pde_tftj_edit,'String',num2str(SECTION((wnum-1),4)*2.54)); 
-         set(pde_dwj_edit,'String',num2str((SECTION((wnum-1),5)-2*SECTION((wnum-1),2))*2.54 ));  
-         set(pde_twj_edit,'String',num2str(SECTION((wnum-1),6)));
-         set(pde_wsname_edit,'String',num2str(TYPE((wnum),:)));
-         set(pde_filj_edit,'String',num2str(Afls*2.54*2.54));
-      else
-         set(pde_bfbi_edit,'String',num2str(SECTION((wnum-1),1)));
-         set(pde_tfbi_edit,'String',num2str(SECTION((wnum-1),2)));
-         set(pde_bfti_edit,'String',num2str(SECTION((wnum-1),3)));          
-         set(pde_tfti_edit,'String',num2str(SECTION((wnum-1),4)));  
-         set(pde_dwi_edit,'String',num2str(SECTION((wnum-1),5)-2*SECTION((wnum-1),2)));  
-         set(pde_twi_edit,'String',num2str(SECTION((wnum-1),6)));
-         set(pde_fili_edit,'String',num2str(Afls));
-         set(pde_bfbj_edit,'String',num2str(SECTION((wnum-1),1)));
-         set(pde_tfbj_edit,'String',num2str(SECTION((wnum-1),2)));
-         set(pde_bftj_edit,'String',num2str(SECTION((wnum-1),3)));          
-         set(pde_tftj_edit,'String',num2str(SECTION((wnum-1),4))); 
-         set(pde_dwj_edit,'String',num2str(SECTION((wnum-1),5)-2*SECTION((wnum-1),2)));  
-         set(pde_twj_edit,'String',num2str(SECTION((wnum-1),6)));
-         set(pde_wsname_edit,'String',num2str(TYPE((wnum),:)));
-         set(pde_filj_edit,'String',num2str(Afls));         
-      end
-   end   
- end % function end
-% -------------------------------------------------------------------- 
-function pde_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   [Massemble,JNodevalue_i,JNodevalue_j,Rval,...
-      BNodevalue,SNodevalue]=SABRE2MembApp(JNodevalue,Massemble,JNodevalue_i,...
-      JNodevalue_j,Rval,BNodevalue,SNodevalue,pde_type_name,pt_title_name,...
-      pde_jointi_edit,pde_jointj_edit,pde_bfbi_edit,pde_tfbi_edit,...
-      pde_bfti_edit,pde_tfti_edit,pde_dwi_edit,pde_twi_edit,pde_bfbj_edit,...
-      pde_tfbj_edit,pde_bftj_edit,pde_tftj_edit,pde_dwj_edit,pde_twj_edit,pde_fili_edit,pde_filj_edit,...
-      pde_reference_edit,pde_jointi_radiobutton,pde_jointj_radiobutton,axesm,pde_wsname_edit,vstm);   
- end % function end
- % --------------------------------------------------------------------
-function pde_cancel_pushbutton_Callback(hObject, eventdata) 
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   selection = questdlg('Do you want to remove the member? Member properties, Loads and Boundary Conditions will be cleared.','Member(s)','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else     
-      [Massemble,JNodevalue_i,JNodevalue_j,Rval,...
-      BNodevalue,SNodevalue]=SABRE2MembRem(JNodevalue,Massemble,JNodevalue_i,...
-         JNodevalue_j,Rval,BNodevalue,SNodevalue,pde_type_name,pt_title_name,...
-         pde_jointi_edit,pde_jointj_edit,pde_bfbi_edit,pde_tfbi_edit,...
-         pde_bfti_edit,pde_tfti_edit,pde_dwi_edit,pde_twi_edit,pde_bfbj_edit,...
-         pde_tfbj_edit,pde_bftj_edit,pde_tftj_edit,pde_dwj_edit,pde_twj_edit,pde_fili_edit,pde_filj_edit,...
-         pde_reference_edit,pde_jointi_radiobutton,pde_jointj_radiobutton,axesm,pde_wsname_edit,vstm);   
-   end
-end % function end
-% ************************************** PROPERTY DEFINE MEMBER Callback E
-% ************************************* PROPERTY DEFINE SEGMENT Callback S
-% -------------------------------------------------------------------- 
-function pdb_set_length_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off
-   SABRE2SegmTaper(Massemble,JNodevalue_i,...
-   JNodevalue_j,BNodevalue,pdb_member_name,pdb_type_name,pdb_length_edit,pdb_bfb_edit,...
-   pdb_tfb_edit,pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit) 
- end % function end
-% -------------------------------------------------------------------- 
-function pdb_set_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off   
-   wnum = get(pdb_wsection_edit,'Value');
-   filename1='AISCSTEEL.mat';
-   Sectiondata=load(fullfile(filename1));
-   SECTION=Sectiondata.SECTION;
-   dunit=get(punit_edit,'Value');
-   if isequal(wnum,1)
-      set([pdb_bfb_edit,pdb_tfb_edit,pdb_bft_edit],'string','');
-      set([pdb_tft_edit,pdb_dw_edit,pdb_tw_edit],'string','');  
-      set(pdb_fil_edit,'string','0');
-   elseif wnum > 1
-      if isequal(dunit,2)
-         set(pdb_bfb_edit,'String',num2str(SECTION((wnum-1),1)*2.54));
-         set(pdb_tfb_edit,'String',num2str(SECTION((wnum-1),2)*2.54));
-         set(pdb_bft_edit,'String',num2str(SECTION((wnum-1),3)*2.54));          
-         set(pdb_tft_edit,'String',num2str(SECTION((wnum-1),4)*2.54));  
-         set(pdb_dw_edit,'String',num2str((SECTION((wnum-1),5)-2*SECTION((wnum-1),2))*2.54));  
-         set(pdb_tw_edit,'String',num2str(SECTION((wnum-1),6)*2.54));  
-      else
-         set(pdb_bfb_edit,'String',num2str(SECTION((wnum-1),1)));
-         set(pdb_tfb_edit,'String',num2str(SECTION((wnum-1),2)));
-         set(pdb_bft_edit,'String',num2str(SECTION((wnum-1),3)));          
-         set(pdb_tft_edit,'String',num2str(SECTION((wnum-1),4)));  
-         set(pdb_dw_edit,'String',num2str(SECTION((wnum-1),5)-2*SECTION((wnum-1),2)));  
-         set(pdb_tw_edit,'String',num2str(SECTION((wnum-1),6)));           
-      end
-   end   
- end % function end
-% --------------------------------------------------------------------
-function pdb_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-   [BNodevalue,SNodevalue]=SABRE2SegmApp(JNodevalue,...
-      Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,pt_title_name,...
-      pdb_member_name,pdb_type_name,pdb_coordx_edit,pdb_coordy_edit,...
-      pdb_coordz_edit,pdb_length_edit,pdb_bfb_edit,pdb_tfb_edit,...
-      pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit,pdb_step_edit,axesm,vstm);
-end % function end 
-% --------------------------------------------------------------------
-function pdb_cancel_pushbutton_Callback(hObject, eventdata)  
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-   selection = questdlg('Do you want to remove the node? Member properties, Loads and Boundary Conditions will be cleared.','Segment(s)','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else     
-      [BNodevalue,SNodevalue]=SABRE2SegmRem(JNodevalue,Massemble,...
-         JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,pt_title_name,...
-         pdb_member_name,pdb_type_name,pdb_coordx_edit,pdb_coordy_edit,...
-         pdb_coordz_edit,pdb_length_edit,pdb_bfb_edit,pdb_tfb_edit,...
-         pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit,pdb_step_edit,axesm,vstm);  
-   end
-end % function end
-% --------------------------------------------------------------------
-function pdmi_apply_pushbutton_Callback(hObject, eventdata)  
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-   selection = questdlg('Do you want to mirror the model?','Mirror','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else
-      if isempty(get(pdmi_name,'String')) || isnan(str2double(get(pdmi_name,'String'))) || str2double(get(pdmi_name,'String')) <= 0  
-         set(pt_title_name,'String','No Joints are defined'); set(pt_title_name,'Visible','on');          
-      else
-      RNCc = []; NCc = []; Nshe1 = []; Nshe2 = []; DUP1 = []; DUP2 = []; t=[]; ULoad=[]; 
-      gammma=[]; Funew =[]; FunewP =[];QintgP=[];EGunew=[]; Qintf=[];QintfE=[];
-      Qintg1=[]; Qintg2=[]; MIE =[]; Sincre=[]; Bhe1=[]; Bhe2=[]; The1=[]; The2=[]; Bhg=[]; Thg=[]; CSg=[]; tau=[];SGhe1=[]; SGhe2=[];Mhe1=[]; Mhe2=[];   
-      set([vmbf,vmbs,vmbg,vmbw,vmbp,vmbu],'Checked','on') ; LabType=zeros(1,10);
-      [JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,Rval,...
-         BNodevalue,SNodevalue]=SABRE2Mirror(JNodevalue,Massemble,JNodevalue_i,...
-         JNodevalue_j,Rval,BNodevalue,SNodevalue,pdmi_name,pt_title_name,axesm,vstm);  
-      % Drawing Nodal white points & generate NC
-      [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error,LNC,LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC]=SABRE2MLCODE(JNodevalue,...
-         Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-         RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,pdmi_name,pdmi_type_edit,pt_title_name,axesm,vstm);             
-      end
-   end
-end % function end
-% ************************************* PROPERTY DEFINE SEGMENT Callback E
-% ********************************************* PROPERTY ASSIGN Callback S
-% --------------------------------------------------------------------
-function pam_all_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-   [SNodevalue,RNCc,DUP1,DUP2,LNC,LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,...
-      BNC1,BNC2,FEL]=SABRE2AssiAll(Massemble,BNodevalue,SNodevalue,RNCc,...
-      DUP1,DUP2,LNC,LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,pam_segment_edit,pamse_assign_edit,...
-      pt_title_name,pamen_assign_edit,pame_assign_edit,pamg_assign_edit,pamfy_assign_edit,...
-      pamrho_assign_edit,pamfyfi_assign_edit,pamfyw_assign_edit,pamfyfo_assign_edit,HomoType,punit_edit,vstm);      
-end % function end 
-% --------------------------------------------------------------------
-function pam_apply_pushbutton_Callback(hObject, eventdata)
-   clc;pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-   [SNodevalue,RNCc,DUP1,DUP2,LNC,LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,...
-      BNC1,BNC2,FEL]=SABRE2AssiApp(Massemble,BNodevalue,SNodevalue,RNCc,DUP1,DUP2,LNC,...
-      LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,pam_segment_edit,pamse_assign_edit,...
-      pt_title_name,pamen_assign_edit,pame_assign_edit,pamg_assign_edit,pamfy_assign_edit,...
-      pamrho_assign_edit,pamfyfi_assign_edit,pamfyw_assign_edit,pamfyfo_assign_edit,HomoType,punit_edit,vstm); 
-end % function end 
-% --------------------------------------------------------------------
-function pam_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-   selection = questdlg('Do you want to remove all the Member properties?  Loads and Boundary Conditions will be cleared.','Assign','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else 
-      SNodevalue=[];dunit=get(punit_edit,'Value');
-      set([pam_segment_edit,pamse_assign_edit],'string','');
-      set(pamen_assign_edit,'string','4');
-      if isequal(dunit,2)
-         set(pame_assign_edit,'string','20000');  set(pamg_assign_edit,'string','7720');
-         set(pamfy_assign_edit,'string','34.5'); set(pamrho_assign_edit,'string','0.0000912');
-      else
-         set(pame_assign_edit,'string','29000');  set(pamg_assign_edit,'string','11200');
-         set(pamfy_assign_edit,'string','50'); set(pamrho_assign_edit,'string','0.00034028');         
-      end
-      set(pamfyfi_assign_edit,'string','0'); set(pamfyw_assign_edit,'string','0');set(pamfyfo_assign_edit,'string','0');
-      if ~isempty(BNodevalue)
-         q = 0; 
-         mem=length(Massemble(:,1));         % Total number of members
-         for i = 1:mem        
-            for j = 1:(max(BNodevalue(i,:,2))+1)       
-               if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background  
-                     set(findobj('Tag',['OTFB',num2str(q+j)]),'FaceColor',[0.6 0.6 0.6])
-                     set(findobj('Tag',['OWEBB',num2str(q+j)]),'FaceColor',[0.7 0.7 0.7])
-                     set(findobj('Tag',['OBFB',num2str(q+j)]),'FaceColor',[0.6 0.6 0.6])         
-                elseif isequal(strcmp(get(vstm,'Checked'),'on'),0) % black background   
-                     set(findobj('Tag',['OTFB',num2str(q+j)]),'FaceColor',[0.7 0.7 0.7])
-                     set(findobj('Tag',['OWEBB',num2str(q+j)]),'FaceColor',[0.8 0.8 0.8])
-                     set(findobj('Tag',['OBFB',num2str(q+j)]),'FaceColor',[0.7 0.7 0.7])            
-               end      
-            end
-            q = max(BNodevalue(i,:,2))+q+1;
-         end
-      end      
-      if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background
-         set(findobj('Color','c'),'Color','k')
-      elseif isequal(strcmp(get(vstm,'Checked'),'on'),0) % black background
-         set(findobj('Color','c'),'Color','w')
-      end 
-   end     
-end % function end
-% ********************************************* PROPERTY ASSIGN Callback E
-% ************************************************* FORCE LOADS Callback S
-% --------------------------------------------------------------------
-function lfm_all_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   set(lfm_ld_edit,'string','All');   
-end % function end 
-% --------------------------------------------------------------------
-function lfm_clc_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   set([lfm_type_name,lfm_coordx_edit,lfm_coordy_edit,lfm_coordz_edit,lfm_ld_edit],'String','') 
-end % function end 
-% --------------------------------------------------------------------
-function lfm_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');set(vmbp, 'Checked', 'on');LabType(1,9)=0;
-   [LNC,LNC1,LNC2]=SABRE2ForcApp(JNodevalue,Massemble,Rval,...
-   RNCc,DUP1,DUP2,LNC,LNC1,LNC2,LUEC,Nshe1,Nshe2,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LTYPE,lfm_type_name,...
-      lfm_coordx_edit,lfm_coordy_edit,lfm_coordz_edit,lfm_ld_edit,lfm_fx_edit,...
-      lfm_fy_edit,lfm_fz_edit,lfm_mx_edit,lfm_my_edit,lfm_mz_edit,...
-      lfm_height_edit,lfm_alpha_edit,pt_title_name,axesm,vstm);   
-end % function end 
-% --------------------------------------------------------------------
-function lfm_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   selection = questdlg('Do you want to Reset All the Point Loads?','Point Loads','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else       
-      [LNC,LNC1,LNC2]=SABRE2ForcRes(JNodevalue,Massemble,Rval,...
-         RNCc,DUP1,DUP2,LNC,LNC1,LNC2,LUEC,Nshe1,Nshe2,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,lfm_type_name,...
-         lfm_coordx_edit,lfm_coordy_edit,lfm_coordz_edit,lfm_ld_edit,lfm_fx_edit,...
-         lfm_fy_edit,lfm_fz_edit,lfm_mx_edit,lfm_my_edit,lfm_mz_edit,...
-         lfm_height_edit,pt_title_name,axesm,vstm);   
-   end
-end % function end
-% ************************************************* FORCE LOADS Callback E
-% *********************************************** UNIFORM LOADS Callback S
-% --------------------------------------------------------------------
-function lum_clc_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   set([lum_type_mem,lum_type_seg],'String','')
-end % function end 
-% --------------------------------------------------------------------
-function lum_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); set(vmbu, 'Checked', 'on');LabType(1,10)=0;
-   [LUEC]=SABRE2UnifApp(JNodevalue,Massemble,Rval,...
-      RNCc,DUP1,DUP2,NCc,LNC,LUEC,ULoad,SNodevalue,Nshe1,Nshe2,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,lum_type_mem,lum_type_seg,...
-      lum_height_edit,lum_wx_edit,lum_wy_edit,lum_wz_edit,t,pt_title_name,axesm,vstm); 
-end % function end 
-% --------------------------------------------------------------------
-function lum_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-   selection = questdlg('Do you want to Reset All the Uniform Loads?','Uniform Loads','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else    
-      [LUEC]=SABRE2UnifRes(JNodevalue,Massemble,Rval,...
-         RNCc,DUP1,DUP2,NCc,LNC,LUEC,ULoad,SNodevalue,Nshe1,Nshe2,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,lum_type_mem,lum_type_seg,...
-         lum_height_edit,lum_wx_edit,lum_wy_edit,lum_wz_edit,t,pt_title_name,axesm,vstm); 
-   end
-end % function end
-% *********************************************** UNIFORM LOADS Callback E
-% **************************************************** POINT BC Callback S
-% --------------------------------------------------------------------
-function bfm_clc_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   set([bfm_type_name,bfm_coordx_edit,bfm_coordy_edit,bfm_coordz_edit],'String','')
-end % function end 
-% --------------------------------------------------------------------
-function bfm_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');set(vmbf, 'Checked', 'on');LabType(1,5)=0; 
-   [PNC,PNC1,PNC2]=SABRE2BConApp(JNodevalue,JNodevalue_i,JNodevalue_j,...
-      Massemble,Rval,RNCc,DUP1,DUP2,PNC,PNC1,PNC2,Bhg,Thg,CSg,bfm_type_name,...
-      bfm_coordx_edit,bfm_coordy_edit,bfm_coordz_edit,bfm_ux_edit,...
-      bfm_uy_edit,bfm_uz_edit,bfm_rx_edit,bfm_ry_edit,bfm_rz_edit,...
-      bfm_phix_edit,bfm_height_edit,bfm_ux_buttongroup,...
-      bfm_uy_buttongroup,bfm_uz_buttongroup,bfm_rx_buttongroup,...
-      bfm_ry_buttongroup,bfm_rz_buttongroup,bfm_phix_buttongroup,axesm,vstm);  
-end % function end 
-% --------------------------------------------------------------------
-function bfm_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   selection = questdlg('Do you want to Reset All the Fixities?','Fixities','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else    
-      [PNC,PNC1,PNC2]=SABRE2BConRes(JNodevalue,JNodevalue_i,JNodevalue_j,...
-         Massemble,Rval,RNCc,DUP1,DUP2,PNC,PNC1,PNC2,Bhg,Thg,CSg,bfm_type_name,...
-         bfm_coordx_edit,bfm_coordy_edit,bfm_coordz_edit,bfm_ux_edit,...
-         bfm_uy_edit,bfm_uz_edit,bfm_rx_edit,bfm_ry_edit,bfm_rz_edit,...
-         bfm_phix_edit,bfm_height_edit,bfm_ux_buttongroup,...
-         bfm_uy_buttongroup,bfm_uz_buttongroup,bfm_rx_buttongroup,...
-         bfm_ry_buttongroup,bfm_rz_buttongroup,bfm_phix_buttongroup,axesm,vstm);  
-   end
-end % function end
-% --------------------------------------------------------------------
-function bsm_clc_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   % Automatic Member numbering
-   if isempty(BNC1)
-      nextshnode = 1;
-   else
-      nextshnode = length(BNC1(:,1))+1;
-   end
-   set(bsm_member_name,'string','');set(bsm_type_name,'string',num2str(nextshnode));
-   set([bsm_jointi_edit,bsm_jointj_edit],'String','');
-   set(bsm_jointi_radiobutton,'value',1);set(bsm_jointj_radiobutton,'value',0);    
-end % function end 
-% --------------------------------------------------------------------
-function bsm_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); set(vmbs, 'Checked', 'on');LabType(1,6)=0;
-   [BNC1,BNC2]=SABRE2SheaApp(JNodevalue,Massemble,Rval,SNodevalue,...
-      RNCc,DUP1,DUP2,BNC1,BNC2,Nshe1,Nshe2,Bhe1,Bhe2,The1,The2,bsm_jointi_radiobutton,bsm_jointj_radiobutton,...
-      bsm_jointi_edit,bsm_jointj_edit,bsm_member_name,bsm_type_name,...
-      bsm_height_edit,bsm_kv_edit,pt_title_name,axesm,vstm);     
-end % function end
-% --------------------------------------------------------------------
-function bsm_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   selection = questdlg('Do you want to Reset All the Shear Panels?','Shear Panel','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else    
-      [BNC1,BNC2]=SABRE2SheaRes(JNodevalue,Massemble,Rval,SNodevalue,...
-         RNCc,DUP1,DUP2,BNC1,BNC2,Nshe1,Nshe2,Bhe1,Bhe2,The1,The2,bsm_jointi_radiobutton,bsm_jointj_radiobutton,...
-         bsm_jointi_edit,bsm_jointj_edit,bsm_member_name,bsm_type_name,...
-         bsm_height_edit,bsm_kv_edit,pt_title_name,axesm,vstm); 
-   end
-end % function end
-% --------------------------------------------------------------------
-function bgm_clc_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   set([bgm_type_name,bgm_coordx_edit,bgm_coordy_edit,bgm_coordz_edit],'String','') 
-end % function end 
-% --------------------------------------------------------------------
-function bgm_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); set(vmbg, 'Checked', 'on');LabType(1,7)=0;
-   [BNC]=SABRE2GroundApp(JNodevalue,JNodevalue_i,JNodevalue_j,Massemble,Rval,...
-      RNCc,DUP1,DUP2,BNC,Bhg,Thg,bgm_type_name,bgm_coordx_edit,bgm_coordy_edit,...
-      bgm_coordz_edit,bgm_ux_edit,bgm_uy_edit,bgm_uz_edit,bgm_rx_edit,...
-      bgm_ry_edit,bgm_rz_edit,bgm_phix_edit,bgm_height_edit,pt_title_name,axesm,vstm);   
-end % function end
-% --------------------------------------------------------------------
-function bgm_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-   selection = questdlg('Do you want to Reset All the Discrete Grounded Springs?','Discrete Grounded Spring','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else    
-      [BNC]=SABRE2GroundRes(JNodevalue,JNodevalue_i,JNodevalue_j,Massemble,Rval,...
-         RNCc,DUP1,DUP2,BNC,Bhg,Thg,bgm_type_name,bgm_coordx_edit,bgm_coordy_edit,...
-         bgm_coordz_edit,bgm_ux_edit,bgm_uy_edit,bgm_uz_edit,bgm_rx_edit,...
-         bgm_ry_edit,bgm_rz_edit,bgm_phix_edit,bgm_height_edit,pt_title_name,axesm,vstm);   
-   end
-end % function end
-% --------------------------------------------------------------------
-function bpm_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');  set(vmbw, 'Checked', 'on');LabType(1,8)=0;
-   [FEL]=SABRE2FlexureApp(JNodevalue,JNodevalue_i,JNodevalue_j,Massemble,Rval,...
-      RNCc,DUP1,DUP2,Nshe1,Nshe2,FEL,Bhg,Thg,bpm_type_name,bpm_ni_edit,bpm_nj_edit,...
-      bpm_myni_edit,bpm_mynj_edit,bpm_mzni_edit,bpm_mznj_edit,bpm_wni_edit,bpm_wnj_edit,pt_title_name,axesm,vstm);    
-end % function end
-% --------------------------------------------------------------------
-function bpm_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   selection = questdlg('Do you want to Reset All the Element Flexural & Warping Releases?','Element Flexural & Warping Release ','Yes','No','Yes');     
-   if strcmp(selection,'No')
-      return;
-   else 
-      [FEL]=SABRE2FlexureRes(JNodevalue,JNodevalue_i,JNodevalue_j,Massemble,Rval,...
-         RNCc,DUP1,DUP2,Nshe1,Nshe2,FEL,Bhg,Thg,bpm_type_name,bpm_ni_edit,bpm_nj_edit,...
-         bpm_myni_edit,bpm_mynj_edit,bpm_mzni_edit,bpm_mznj_edit,bpm_wni_edit,bpm_wnj_edit,pt_title_name,axesm,vstm);         
-   end
-end % function end
-% **************************************************** POINT BC Callback E
-function ap_apply_pushbutton_Callback(hObject, eventdata)
-   AnalP(1,1)=get(ap_sw_on_radiobutton,'Value');
-   AnalP(2,1)=get(ap_jval_on_radiobutton,'Value');
-   AnalP(3,1)=get(ap_AISC_on_radiobutton,'Value');
-   AnalP(4,1)=get(ap_da_on_radiobutton,'Value');
-   AnalP(5,1)=str2double(get(api_assign_edit,'String'));
-   AnalP(6,1)=str2double(get(apninc_assign_edit,'String'));
-   set(pt_title_name,'String','Analysis Parameters are changed')
-   set(pt_title_name,'Visible','on')   
-end % function end
-% ***************************** Internal Force Diagram & Deflected Shape S
-% --------------------------------------------------------------------
-function rin_diagram_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off;set(ri_infor_text,'Visible','off'); Buc=0;set(ri_tau_diagram,'Value',1);
-   set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'string','');set([vdum,vtum], 'enable', 'on');
-%    if strcmp(get(vdum, 'Checked'),'on')     
-%       set([vdum_panel,vdum_type_subpanel],'Visible','on')
-%       set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','on') 
-%       set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','on')
+% % function pdn_apply_pushbutton_Callback(hObject, eventdata)
+%    pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+%    dunit=get(punit_edit,'Value');
+%    if isequal(dunit,2)
+%       AnalP(7,1)=2;
 %    else
-%       set([vdum_panel,vdum_type_subpanel],'Visible','off')
-%       set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-%       set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')      
+%       AnalP(7,1)=1;
 %    end     
-   if ~isempty(RNCc)
-      Rtype=23;      
-      SABRE2DiagramNone(JNodevalue,Massemble,SNodevalue,RNCc,NCc,...
-         Nshe1,Nshe2,DUP1,DUP2,Rval,pt_title_name,axesm,vstm);   
-         if strcmp(get(vtum, 'Checked'),'on')  
-            set(findobj('Type','text'),'Visible','on'); set(findobj('Tag','axis'),'Visible','on');
-            set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-         else
-            set(findobj('Type','text'),'Visible','off'); set(findobj('Tag','axis'),'Visible','on');
-            set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-         end        
-   end
-end % function end
-% --------------------------------------------------------------------
-function ria_diagram_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-   IncreL = get(ri_cancel,'Value');Fscale=str2double(get(ri_scale_edit, 'String'));
-   Itype(1,1)=1;Itype(1,2)=IncreL;
-   set(ri_infor_text,'Visible','off');Buc=0;set([ri_tau_diagram,ri_report_edit],'Value',1);  
-   set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'string','');set([vdum,vtum], 'enable', 'on');
-   if ~isempty(Qintf)
-      if strcmp(get(vdum, 'Checked'),'on')     
-         set([vdum_panel,vdum_type_subpanel],'Visible','on')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','on') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','on')
-      else
-         set([vdum_panel,vdum_type_subpanel],'Visible','off')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')      
-      end    
-      Rtype=1;            
-      SABRE2DiagramAi(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
-         SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,Fscale,rd_buttongroup,...
-         pt_title_name,QintfE(:,:,IncreL),axesm,vstm);
-      if strcmp(get(vtum, 'Checked'),'on')  
-         set(findobj('Type','text'),'Visible','on'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      else
-         set(findobj('Type','text'),'Visible','off'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      end  
-      set(pt_title_name,'String','Axial');set(pt_title_name,'Visible','on');
-   end
-end % function end
-% --------------------------------------------------------------------
-function risy_diagram_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   IncreL = get(ri_cancel,'Value');Fscale=str2double(get(ri_scale_edit, 'String'));
-   Itype(1,1)=2;Itype(1,2)=IncreL;
-   set(ri_infor_text,'Visible','off');Buc=0;set([ri_tau_diagram,ri_report_edit],'Value',1);
-   set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'string','');set([vdum,vtum], 'enable', 'on');
-   if ~isempty(Qintf)
-      if strcmp(get(vdum, 'Checked'),'on')     
-         set([vdum_panel,vdum_type_subpanel],'Visible','on')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','on') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','on')
-      else
-         set([vdum_panel,vdum_type_subpanel],'Visible','off')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')      
-      end     
-      Rtype=2;     
-      SABRE2DiagramSy(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
-         SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,Fscale,rd_buttongroup,...
-         pt_title_name,QintfE(:,:,IncreL),axesm,vstm);
-      if strcmp(get(vtum, 'Checked'),'on')  
-         set(findobj('Type','text'),'Visible','on'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      else
-         set(findobj('Type','text'),'Visible','off'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      end 
-      set(pt_title_name,'String','Shear Y');set(pt_title_name,'Visible','on'); 
-   end
-end % function end
-% --------------------------------------------------------------------
-function risz_diagram_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   IncreL = get(ri_cancel,'Value');Fscale=str2double(get(ri_scale_edit, 'String'));
-   Itype(1,1)=3;Itype(1,2)=IncreL;
-   set(ri_infor_text,'Visible','off');Buc=0; set([ri_tau_diagram,ri_report_edit],'Value',1);
-   set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'string','');set([vdum,vtum], 'enable', 'on');
-   if ~isempty(Qintf)
-      if strcmp(get(vdum, 'Checked'),'on')     
-         set([vdum_panel,vdum_type_subpanel],'Visible','on')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','on') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','on')
-      else
-         set([vdum_panel,vdum_type_subpanel],'Visible','off')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')      
-      end     
-      Rtype=3;  
-      SABRE2DiagramSz(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
-         SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,Fscale,rd_buttongroup,...
-         pt_title_name,QintfE(:,:,IncreL),axesm,vstm);
-      if strcmp(get(vtum, 'Checked'),'on')  
-         set(findobj('Type','text'),'Visible','on'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      else
-         set(findobj('Type','text'),'Visible','off'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      end 
-      set(pt_title_name,'String','Shear Z');set(pt_title_name,'Visible','on');
-   end
-end % function end
-% --------------------------------------------------------------------
-function rit_diagram_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   IncreL = get(ri_cancel,'Value');Fscale=str2double(get(ri_scale_edit, 'String'));
-   Itype(1,1)=4;Itype(1,2)=IncreL;
-   set(ri_infor_text,'Visible','off');Buc=0;set([ri_tau_diagram,ri_report_edit],'Value',1);
-   set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'string','');set([vdum,vtum], 'enable', 'on');
-   if ~isempty(Qintf)
-      if strcmp(get(vdum, 'Checked'),'on')     
-         set([vdum_panel,vdum_type_subpanel],'Visible','on')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','on') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','on')
-      else
-         set([vdum_panel,vdum_type_subpanel],'Visible','off')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')      
-      end  
-      Rtype=4;     
-      SABRE2DiagramMt(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
-         SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,Fscale,rd_buttongroup,...
-         pt_title_name,QintfE(:,:,IncreL),axesm,vstm);
-      if strcmp(get(vtum, 'Checked'),'on')  
-         set(findobj('Type','text'),'Visible','on'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      else
-         set(findobj('Type','text'),'Visible','off'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      end    
-      set(pt_title_name,'String','Torque');set(pt_title_name,'Visible','on');
-   end
-end % function end
-% --------------------------------------------------------------------
-function rimy_diagram_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   IncreL = get(ri_cancel,'Value');Fscale=str2double(get(ri_scale_edit, 'String'));
-   Itype(1,1)=5;Itype(1,2)=IncreL;
-   set(ri_infor_text,'Visible','off');Buc=0;set([ri_tau_diagram,ri_report_edit],'Value',1);
-   set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'string','');set([vdum,vtum], 'enable', 'on');
-   if ~isempty(Qintf)
-      if strcmp(get(vdum, 'Checked'),'on')     
-         set([vdum_panel,vdum_type_subpanel],'Visible','on')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','on') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','on')
-      else
-         set([vdum_panel,vdum_type_subpanel],'Visible','off')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')      
-      end   
-      Rtype=5;    
-      SABRE2DiagramMy(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
-         SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,Fscale,rd_buttongroup,...
-         pt_title_name,QintfE(:,:,IncreL),axesm,vstm);
-      if strcmp(get(vtum, 'Checked'),'on')  
-         set(findobj('Type','text'),'Visible','on'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      else
-         set(findobj('Type','text'),'Visible','off'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      end 
-      set(pt_title_name,'String','Moment Y');set(pt_title_name,'Visible','on');
-   end
-end % function end
-% --------------------------------------------------------------------
-function rimz_diagram_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   IncreL = get(ri_cancel,'Value');Fscale=str2double(get(ri_scale_edit, 'String'));
-   Itype(1,1)=6;Itype(1,2)=IncreL;
-   set(ri_infor_text,'Visible','off');Buc=0;set([ri_tau_diagram,ri_report_edit],'Value',1);
-   set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'string','');set([vdum,vtum], 'enable', 'on');
-   if ~isempty(Qintf)
-      if strcmp(get(vdum, 'Checked'),'on')     
-         set([vdum_panel,vdum_type_subpanel],'Visible','on')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','on') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','on')
-      else
-         set([vdum_panel,vdum_type_subpanel],'Visible','off')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')      
-      end     
-      Rtype=6;       
-      SABRE2DiagramMz(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
-         SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,Fscale,rd_buttongroup,...
-         pt_title_name,QintfE(:,:,IncreL),axesm,vstm);
-      if strcmp(get(vtum, 'Checked'),'on')  
-         set(findobj('Type','text'),'Visible','on'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      else
-         set(findobj('Type','text'),'Visible','off'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      end   
-      set(pt_title_name,'String','Moment Z');set(pt_title_name,'Visible','on');
-   end
-end % function end
-% --------------------------------------------------------------------
-function ribi_diagram_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   IncreL = get(ri_cancel,'Value');Fscale=str2double(get(ri_scale_edit, 'String'));
-   Itype(1,1)=7;Itype(1,2)=IncreL;
-   set(ri_infor_text,'Visible','off');Buc=0; set([ri_tau_diagram,ri_report_edit],'Value',1);
-   set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'string','');set([vdum,vtum], 'enable', 'on');
-   if ~isempty(Qintf)
-      if strcmp(get(vdum, 'Checked'),'on')     
-         set([vdum_panel,vdum_type_subpanel],'Visible','on')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','on') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','on')
-      else
-         set([vdum_panel,vdum_type_subpanel],'Visible','off')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')      
-      end    
-      Rtype=7;      
-      SABRE2DiagramBi(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
-         SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,Fscale,rd_buttongroup,...
-         pt_title_name,QintfE(:,:,IncreL),axesm,vstm);
-      if strcmp(get(vtum, 'Checked'),'on')  
-         set(findobj('Type','text'),'Visible','on'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      else
-         set(findobj('Type','text'),'Visible','off'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      end     
-      set(pt_title_name,'String','Bimoment');set(pt_title_name,'Visible','on');
-   end
-end % function end
-% --------------------------------------------------------------------
-function ri_tau_diagram_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   set(ri_infor_text,'Visible','off');Buc=0;   
-   if isequal(get(ri_tau_diagram,'Value'),1)
-      Rtype=8;
-       SABRE2ModelFit(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j, ...
-          Rval,BNodevalue,vrum_az_slider,vrum_el_slider,vrum_az_edit,vrum_el_edit,axesm,vstm);   
-       [RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,BNC1,BNC2,FEL,error]=SABRE2LBCODE(JNodevalue,...
-          Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,...
-          RNCc,Nshe1,Nshe2,DUP1,DUP2,NCc,LNC,LUEC,PNC,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,LabType,pt_title_name,axesm,vstm);    
-       SABRE2AssiCODE(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,axesm,vstm);        
-   elseif isequal(get(ri_tau_diagram,'Value'),2)
-      Rtype=9;
-       if ~isempty(tau)
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,tau,Rval,pt_title_name,axesm,vstm);     
-       end
-   elseif isequal(get(ri_tau_diagram,'Value'),3)
-      Rtype=10;
-       if ~isempty(Rpg)
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,Rpg,Rval,pt_title_name,axesm,vstm);     
-       end  
-   elseif isequal(get(ri_tau_diagram,'Value'),4)
-      Rtype=11;
-       if ~isempty(Rpc)
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,Rpc,Rval,pt_title_name,axesm,vstm);     
-       end  
-   elseif isequal(get(ri_tau_diagram,'Value'),5)
-      Rtype=12;
-       if ~isempty(Rpt)
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,Rpt,Rval,pt_title_name,axesm,vstm);     
-       end 
-   elseif isequal(get(ri_tau_diagram,'Value'),6)
-      Rtype=13;
-       if ~isempty(Rh)
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,Rh,Rval,pt_title_name,axesm,vstm);     
-       end  
-   elseif isequal(get(ri_tau_diagram,'Value'),7)
-      Rtype=14;
-       if ~isempty(Myc)
-          Myc=round(Myc*10^1)/10^1;
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,Myc,Rval,pt_title_name,axesm,vstm);     
-       end 
-   elseif isequal(get(ri_tau_diagram,'Value'),8)
-      Rtype=15;
-       if ~isempty(Myt)
-          Myt=round(Myt*10^1)/10^1;
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,Myt,Rval,pt_title_name,axesm,vstm);     
-       end 
-   elseif isequal(get(ri_tau_diagram,'Value'),9)
-      Rtype=16;
-       if ~isempty(My)
-          My=round(My*10^1)/10^1;
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,My,Rval,pt_title_name,axesm,vstm);     
-       end 
-   elseif isequal(get(ri_tau_diagram,'Value'),10)
-      Rtype=17;
-       if ~isempty(Jval)
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,Jval,Rval,pt_title_name,axesm,vstm);     
-       end        
-   elseif isequal(get(ri_tau_diagram,'Value'),11)
-      Rtype=18;
-       if ~isempty(Phi_Mmax)
-          Phi_Mmax=round(Phi_Mmax*10^1)/10^1;
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,Phi_Mmax,Rval,pt_title_name,axesm,vstm);     
-       end 
-   elseif isequal(get(ri_tau_diagram,'Value'),12)
-      Rtype=19;
-       if ~isempty(Phi_Py)
-          Phi_Py=round(Phi_Py*10^1)/10^1;
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,Phi_Py,Rval,pt_title_name,axesm,vstm);     
-       end   
-   elseif isequal(get(ri_tau_diagram,'Value'),13)
-      Rtype=20;
-       if ~isempty(UC)
-          SABRE2DiagramSRF(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,...
-             Nshe1,Nshe2,DUP1,DUP2,UC,Rval,pt_title_name,axesm,vstm);     
-       end        
-   end
-   if isequal(get(ri_tau_diagram,'Value'),1)
-      set([vdum,vtum], 'enable', 'off'); set([vdum_panel,vdum_type_subpanel],'Visible','off');
-      set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-      set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')        
-   else
-      set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'string','');set([vdum,vtum], 'enable', 'on');
-      if strcmp(get(vdum, 'Checked'),'on')     
-         set([vdum_panel,vdum_type_subpanel],'Visible','on')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','on') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','on')
-      else
-         set([vdum_panel,vdum_type_subpanel],'Visible','off')
-         set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-         set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')      
-      end 
-      if strcmp(get(vtum, 'Checked'),'on')  
-         set(findobj('Type','text'),'Visible','on'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      else
-         set(findobj('Type','text'),'Visible','off'); set(findobj('Tag','axis'),'Visible','on');
-         set(findobj('Tag','EF'),'Visible','off');set(findobj('Tag','S'),'Visible','off');
-      end        
-   end
-   
-end % function end
-% --------------------------------------------------------------------
-function ribi_report_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   IncreL = get(ri_cancel,'Value');set(ri_infor_text,'Visible','off');
-   if ~isempty(Qintf)  
-      if isempty(gammma)
-         SABRE2DiagramReport(JNodevalue,Massemble,SNodevalue,RNCc,NCc,...
-            Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Qintf(:,:,IncreL),tau,Rpg,Rpc,Rpt,Rh,Myc,Myt,My,Jval,Phi_Mmax,Phi_Py,UC,Rval,...
-            ri_report_edit,pt_title_name,axesm,vstm,IncreL,gammma,filename,...
-            AR,AS,AE,AI,ANE,ANI,LIAType,NLIAType,ap_da_buttongroup);   
-      else
-         SABRE2DiagramReport(JNodevalue,Massemble,SNodevalue,RNCc,NCc,...
-            Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Qintf(:,:,IncreL),tau,Rpg,Rpc,Rpt,Rh,Myc,Myt,My,Jval,Phi_Mmax,Phi_Py,UC,Rval,...
-            ri_report_edit,pt_title_name,axesm,vstm,IncreL,gammma(IncreL,1),filename,...
-            AR,AS,AE,AI,ANE,ANI,LIAType,NLIAType,ap_da_buttongroup);            
-      end
-   end
-end % function end
+%    [JNodevalue,JNodevalue_i,JNodevalue_j,BNodevalue,SNodevalue]=SABRE2JointApp(JNodevalue,...
+%       Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,pdn_type_name,pdn_coordx_edit,...
+%       pdn_coordy_edit,pdn_coordz_edit,pt_title_name,axesm,vstm); 
+% % end % function end
+% % --------------------------------------------------------------------
+% % function pdn_cancel_pushbutton_Callback(hObject, eventdata)
+% 
+%    selection = questdlg('Do you want to remove the joint? Member properties, Loads and Boundary Conditions will be cleared.','Joint(s)','Yes','No','Yes');     
+%    if strcmp(selection,'No')
+%       return;
+%    else    
+%       [JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,...
+%       SNodevalue]=SABRE2JointRem(JNodevalue,Massemble,JNodevalue_i,...
+%          JNodevalue_j,Rval,BNodevalue,SNodevalue,pdn_type_name,...
+%          pdn_coordx_edit,pdn_coordy_edit,pdn_coordz_edit,pt_title_name,axesm,vstm);  
+%    end
+% end % function end
+% % *************************************** PROPERTY DEFINE JOINT Callback E
+% % ************************************** PROPERTY DEFINE MEMBER Callback S
+% % -------------------------------------------------------------------- 
+% function pde_set_pushbutton_Callback(hObject, eventdata)
+%    pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');  
+%    wnum = get(pde_wsection_edit,'Value');
+%    filename1='AISCSTEEL.mat';
+%    Sectiondata=load(fullfile(filename1));
+%    SECTION=Sectiondata.SECTION;
+%    TYPE=Sectiondata.TYPE;
+%    if isequal(wnum,1)
+%       set([pde_bfbi_edit,pde_tfbi_edit,pde_bfti_edit],'string','');
+%       set([pde_tfti_edit,pde_dwi_edit,pde_twi_edit],'string','');
+%       set([pde_bfbj_edit,pde_tfbj_edit,pde_bftj_edit],'string','');
+%       set([pde_tftj_edit,pde_dwj_edit,pde_twj_edit,pde_filj_edit,pde_wsname_edit],'string','');  
+%       set([pde_fili_edit,pde_filj_edit],'string','0');
+%    elseif wnum > 1
+%       Ai=(SECTION((wnum-1),1))*(SECTION((wnum-1),2)) ...
+%          + (SECTION((wnum-1),3))*(SECTION((wnum-1),4)) ...
+%          + (SECTION((wnum-1),5)-2*SECTION((wnum-1),2))*(SECTION((wnum-1),6));
+%       Afls = (SECTION((wnum-1),7))- Ai;   
+%       if (Afls < 0 )
+%           Afls = 0;
+%       end        
+%       dunit=get(punit_edit,'Value');
+%       if isequal(dunit,2)
+%          set(pde_bfbi_edit,'String',num2str(SECTION((wnum-1),1)*2.54));
+%          set(pde_tfbi_edit,'String',num2str(SECTION((wnum-1),2)*2.54));
+%          set(pde_bfti_edit,'String',num2str(SECTION((wnum-1),3)*2.54));          
+%          set(pde_tfti_edit,'String',num2str(SECTION((wnum-1),4)*2.54));  
+%          set(pde_dwi_edit,'String',num2str( (SECTION((wnum-1),5)-2*SECTION((wnum-1),2))*2.54 ));  
+%          set(pde_twi_edit,'String',num2str(SECTION((wnum-1),6)*2.54));
+%          set(pde_fili_edit,'String',num2str(Afls*2.54*2.54));
+%          set(pde_bfbj_edit,'String',num2str(SECTION((wnum-1),1)*2.54));
+%          set(pde_tfbj_edit,'String',num2str(SECTION((wnum-1),2)*2.54));
+%          set(pde_bftj_edit,'String',num2str(SECTION((wnum-1),3)*2.54));          
+%          set(pde_tftj_edit,'String',num2str(SECTION((wnum-1),4)*2.54)); 
+%          set(pde_dwj_edit,'String',num2str((SECTION((wnum-1),5)-2*SECTION((wnum-1),2))*2.54 ));  
+%          set(pde_twj_edit,'String',num2str(SECTION((wnum-1),6)));
+%          set(pde_wsname_edit,'String',num2str(TYPE((wnum),:)));
+%          set(pde_filj_edit,'String',num2str(Afls*2.54*2.54));
+%       else
+%          set(pde_bfbi_edit,'String',num2str(SECTION((wnum-1),1)));
+%          set(pde_tfbi_edit,'String',num2str(SECTION((wnum-1),2)));
+%          set(pde_bfti_edit,'String',num2str(SECTION((wnum-1),3)));          
+%          set(pde_tfti_edit,'String',num2str(SECTION((wnum-1),4)));  
+%          set(pde_dwi_edit,'String',num2str(SECTION((wnum-1),5)-2*SECTION((wnum-1),2)));  
+%          set(pde_twi_edit,'String',num2str(SECTION((wnum-1),6)));
+%          set(pde_fili_edit,'String',num2str(Afls));
+%          set(pde_bfbj_edit,'String',num2str(SECTION((wnum-1),1)));
+%          set(pde_tfbj_edit,'String',num2str(SECTION((wnum-1),2)));
+%          set(pde_bftj_edit,'String',num2str(SECTION((wnum-1),3)));          
+%          set(pde_tftj_edit,'String',num2str(SECTION((wnum-1),4))); 
+%          set(pde_dwj_edit,'String',num2str(SECTION((wnum-1),5)-2*SECTION((wnum-1),2)));  
+%          set(pde_twj_edit,'String',num2str(SECTION((wnum-1),6)));
+%          set(pde_wsname_edit,'String',num2str(TYPE((wnum),:)));
+%          set(pde_filj_edit,'String',num2str(Afls));         
+%       end
+%    end   
+close
+end
 
-% --------------------------------------------------------------------
-function rd3_diagram_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-  set(ri_infor_text,'Visible','off'); set([ri_tau_diagram,ri_report_edit],'Value',1);
-  if ~isempty(Funew) 
-      IncreL = get(ri_cancel,'Value');
-      Itype(1,1)=8;Itype(1,2)=IncreL;
-      Fscale=str2double(get(ri_scale_edit, 'String')); 
-      if isempty(gammma)
-         SABRE2RBmode(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,...
-            LNC,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,Fscale,rd_buttongroup,pt_title_name,...
-            AR,AS,AE,AI,ANE,ANI,gammma,UC,LIAType,NLIAType,crLTB,LGv,IncreL,LabType,axesm,vstm);   
-         Buc=1;
-      else
-         SABRE2RBmode(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,Funew(:,:,IncreL),Rval,...
-            LNC,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,Fscale,rd_buttongroup,pt_title_name,...
-            AR,AS,AE,AI,ANE,ANI,gammma(IncreL,1),UC,LIAType,NLIAType,crLTB,LGv,IncreL,LabType,axesm,vstm); 
-         Buc=1;
-      end
-  end  
-   set([vdum,vtum], 'enable', 'off');set([vdum_panel,vdum_type_subpanel],'Visible','off');
-   set([vdum_type_name,v1um_p1_text,v1um_p2_text,v1um_p3_text,v1um_p4_text,v1um_p5_text],'Visible','off') 
-   set([v1um_p1_edit,v1um_p2_edit,v1um_p3_edit,v1um_p4_edit,v1um_p5_edit],'Visible','off')      
-end % function end
-% --------------------------------------------------------------------
-function ri_infor_pushbutton_Callback(hObject, eventdata) 
-   Fscale=str2double(get(ri_scale_edit, 'String'));
-   if ~isempty(Qintf)
-      if isequal(AR,1)
-         set(pt_title_name,'String',['Deflected Shape, Scale Factor = ',num2str(Fscale)]) 
-         set(pt_title_name,'Visible','on')
-      elseif isequal(AS,1)
-         set(pt_title_name,'String',['Deflected Shape, Scale Factor = ',num2str(Fscale)]) 
-         set(pt_title_name,'Visible','on')
-      else
-         IncreL = get(ri_cancel,'Value');
-         if isequal(Itype(1,1),1)            
-            if ~isequal(Itype(1,2),IncreL)
-               ria_diagram_pushbutton_Callback;
-            end 
-         elseif isequal(Itype(1,1),2)            
-            if ~isequal(Itype(1,2),IncreL)
-               risy_diagram_pushbutton_Callback;
-            end 
-         elseif isequal(Itype(1,1),3)            
-            if ~isequal(Itype(1,2),IncreL)
-               risz_diagram_pushbutton_Callback;
-            end 
-         elseif isequal(Itype(1,1),4)            
-            if ~isequal(Itype(1,2),IncreL)
-               rit_diagram_pushbutton_Callback;
-            end 
-         elseif isequal(Itype(1,1),5)            
-            if ~isequal(Itype(1,2),IncreL)
-               rimy_diagram_pushbutton_Callback;
-            end 
-         elseif isequal(Itype(1,1),6)            
-            if ~isequal(Itype(1,2),IncreL)
-               rimz_diagram_pushbutton_Callback;
-            end 
-         elseif isequal(Itype(1,1),7)            
-            if ~isequal(Itype(1,2),IncreL)
-               ribi_diagram_pushbutton_Callback;
-            end            
-         elseif isequal(Itype(1,1),8)
-            if ~isequal(Itype(1,2),IncreL)
-               rd3_diagram_pushbutton_Callback;
-            end 
-         end         
-         SABRE2RInfor(pt_title_name,ri_infor_text,AE,AI,ANE,ANI,gammma(IncreL,1),UC,LIAType,NLIAType,crLTB,LGv,Massemble,SNodevalue,ap_da_buttongroup,IncreL)
-      end
-   end  
-end % function end
-% ***************************** Internal Force Diagram & Deflected Shape E
-% --------------------------------------------------------------------
-function rrd_cancel_callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
-   set(ri_infor_text,'Visible','off');
-   set(rrd_type_edit,'String','');set(rrfx_nodal_edit,'String','');set(rrfy_nodal_edit,'String','');
-   set(rrfz_nodal_edit,'String','');set(rrmx_nodal_edit,'String','');set(rrmy_nodal_edit,'String','');
-   set(rrmz_nodal_edit,'String','');set(rdux_nodal_edit,'String','');set(rduy_nodal_edit,'String','');
-   set(rduz_nodal_edit,'String','');set(rdrx_nodal_edit,'String','');set(rdry_nodal_edit,'String','');
-   set(rdrz_nodal_edit,'String','')   
-end % function end
-% --------------------------------------------------------------------
-function ref_slider_callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');set(ri_infor_text,'Visible','off');
-   incre = get(ref_cancel,'Value');set(re_forcebar_edit,'String',[num2str(round(get(re_forcebar_slider,'Value'))/100),'L']);
-   if ~isempty(Qintf)
-      if ~isempty(get(ref_type_edit,'String'))
-         enum=str2double(get(ref_type_edit,'String'));
-         sval = get(re_forcebar_slider,'Value');
-         set(refx_force_edit,'String',num2str(round((-Qintf(enum,1,incre)+(Qintf(enum,8,incre)+Qintf(enum,1,incre))*sval/100)*10^1)/10^1))
-         set(refy_force_edit,'String',num2str(round((Qintf(enum,2,incre)+(-Qintf(enum,9,incre)-Qintf(enum,2,incre))*sval/100)*10^1)/10^1))
-         set(refz_force_edit,'String',num2str(round((-Qintf(enum,3,incre)+(Qintf(enum,10,incre)+Qintf(enum,3,incre))*sval/100)*10^1)/10^1))
-         set(remx_force_edit,'String',num2str(round((-Qintf(enum,4,incre)+(Qintf(enum,11,incre)+Qintf(enum,4,incre))*sval/100)*10^1)/10^1))
-         set(remy_force_edit,'String',num2str(round((-Qintf(enum,5,incre)+(Qintf(enum,12,incre)+Qintf(enum,5,incre))*sval/100)*10^1)/10^1))
-         set(remz_force_edit,'String',num2str(round((-Qintf(enum,6,incre)+(Qintf(enum,13,incre)+Qintf(enum,6,incre))*sval/100)*10^1)/10^1))
-         set(rebi_force_edit,'String',num2str(round((Qintf(enum,7,incre)+(-Qintf(enum,14,incre)-Qintf(enum,7,incre))*sval/100)*10^1)/10^1))
-      end 
-   end
-end % function end
-% --------------------------------------------------------------------
-function ref_cancel_callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
-   set(ri_infor_text,'Visible','off');
-   set(ref_type_edit,'String','');set(refx_force_edit,'String','');
-   set(refy_force_edit,'String','');set(refz_force_edit,'String','');
-   set(remx_force_edit,'String','');set(remy_force_edit,'String','');
-   set(remz_force_edit,'String','');set(rebi_force_edit,'String','');set(re_forcebar_slider,'Value',0);
-   set(re_forcebar_edit,'String',[num2str(round(get(re_forcebar_slider,'Value'))/100),'L']);   
-end % function end
-end % Main function end
+

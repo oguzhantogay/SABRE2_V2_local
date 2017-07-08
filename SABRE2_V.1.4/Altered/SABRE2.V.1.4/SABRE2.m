@@ -5035,7 +5035,10 @@ end % function end
 % *************************************** PROPERTY DEFINE JOINT Callback S
 % --------------------------------------------------------------------
 function pdn_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   clc
+   x = 'Define Joint';
+   fprintf (x)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    dunit=get(punit_edit,'Value');
    if isequal(dunit,2)
       AnalP(7,1)=2;
@@ -5048,7 +5051,9 @@ function pdn_apply_pushbutton_Callback(hObject, eventdata)
 end % function end
 % --------------------------------------------------------------------
 function pdn_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   clc
+   x = 'Remove Joint';
+   fprintf (x); pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    selection = questdlg('Do you want to remove the joint? Member properties, Loads and Boundary Conditions will be cleared.','Joint(s)','Yes','No','Yes');     
    if strcmp(selection,'No')
       return;
@@ -5059,11 +5064,13 @@ function pdn_cancel_pushbutton_Callback(hObject, eventdata)
          pdn_coordx_edit,pdn_coordy_edit,pdn_coordz_edit,pt_title_name,axesm,vstm);  
    end
 end % function end
-% *************************************** PROPERTY DEFINE JOINT Callback E
 % ************************************** PROPERTY DEFINE MEMBER Callback S
 % -------------------------------------------------------------------- 
 function pde_set_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');  
+   clc;
+   x = 'AISC Section Set Button \n';
+   fprintf (x)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');  
    wnum = get(pde_wsection_edit,'Value');
    filename1='AISCSTEEL.mat';
    Sectiondata=load(fullfile(filename1));
@@ -5121,7 +5128,10 @@ function pde_set_pushbutton_Callback(hObject, eventdata)
  end % function end
 % -------------------------------------------------------------------- 
 function pde_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   clc;
+   x = 'Define Member Apply \n';
+   fprintf (x)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    [Massemble,JNodevalue_i,JNodevalue_j,Rval,...
       BNodevalue,SNodevalue]=SABRE2MembApp(JNodevalue,Massemble,JNodevalue_i,...
       JNodevalue_j,Rval,BNodevalue,SNodevalue,pde_type_name,pt_title_name,...
@@ -5132,7 +5142,10 @@ function pde_apply_pushbutton_Callback(hObject, eventdata)
  end % function end
  % --------------------------------------------------------------------
 function pde_cancel_pushbutton_Callback(hObject, eventdata) 
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   clc;
+   x = 'Define Member Remove \n';
+   fprintf (x)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    selection = questdlg('Do you want to remove the member? Member properties, Loads and Boundary Conditions will be cleared.','Member(s)','Yes','No','Yes');     
    if strcmp(selection,'No')
       return;

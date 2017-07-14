@@ -884,6 +884,20 @@ while increment < 100      % Convergence increments
          [Ge]=CoordTransform(e1,e2,e3); 
          qno=Pbar*Rd*Ge'*[unew1(n,:)';unew2(n,:)'];
 
+theta1xpn
+theta2xpn
+qno
+Fy(n,1)
+Fyfi(n,1)
+Fyw(n,1)
+Fyfo(n,1)
+[ytbar1(n);ytbar2(n)]
+Pbar,FEL(n,:)
+NLIAType=0
+HomoType(n,1)
+angletap(n,2)         
+         
+         
          slender(:,n)=StiffnessELEMENT3DESL([bfb1(n);bfb2(n)],...
             [tfb1(n);tfb2(n)],[bft1(n);bft2(n)],[tft1(n);tft2(n)],...
             [Dg1(n);Dg2(n)],[yc1(n);yc2(n)],[ht1(n);ht2(n)],[hb1(n);hb2(n)], ...
@@ -5031,8 +5045,8 @@ if isequal(Bflag,1)
    ANI=1;
    delete(wh)
 %    set(am_cv_text,'String','Unstable')
-   set(pt_title_name,'String','Inelastic Nonlinear Buckling Analysis did not finish. Please try to check loads and boundry conditions.')
-   set(pt_title_name,'Visible','on')  
+%    set(pt_title_name,'String','Inelastic Nonlinear Buckling Analysis did not finish. Please try to check loads and boundry conditions.')
+%    set(pt_title_name,'Visible','on')  
    gammma=0;   
    Qintf=Qintf(:,:,end)*0;
    QintfE=QintfE(:,:,end)*0;
@@ -5043,8 +5057,8 @@ elseif isequal(Bflag,2)
    ANI=1;
    delete(wh)
 %    set(am_cv_text,'String','Non-converged')
-   set(pt_title_name,'String','Inelastic Nonlinear Buckling Analysis did not finish. Please try to use the other Algorithm or Scaled Parameter.')
-   set(pt_title_name,'Visible','on')  
+%    set(pt_title_name,'String','Inelastic Nonlinear Buckling Analysis did not finish. Please try to use the other Algorithm or Scaled Parameter.')
+%    set(pt_title_name,'Visible','on')  
    gammma=0;   
    Qintf=Qintf(:,:,end)*0;
    QintfE=QintfE(:,:,end)*0;
@@ -5093,23 +5107,23 @@ else  % converged solution
          if isequal(crLTB,1)
             gammma=max(Fn3./Fn0)/max_UC;
             LGv = gammmaIn*gammma;
-            set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (FLB)',...
-               '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
-            set(pt_title_name,'Visible','on')  
+%             set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (FLB)',...
+%                '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
+%             set(pt_title_name,'Visible','on')  
 %             set(am_cv_text,'String','FLB')  
          elseif isequal(crLTB,2)
             gammma=max(Fn3./Fn0)/max_UC;
             LGv = gammmaIn*gammma;
-            set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (TFY)',...
-               '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
-            set(pt_title_name,'Visible','on')  
+%             set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (TFY)',...
+%                '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
+%             set(pt_title_name,'Visible','on')  
 %             set(am_cv_text,'String','TFY')
          elseif isequal(crLTB,3)
             gammma=max(Fn3./Fn0)/max_UC;
             LGv = gammmaIn*gammma;
-            set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (CFY)',...
-               '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
-            set(pt_title_name,'Visible','on')   
+%             set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (CFY)',...
+%                '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
+%             set(pt_title_name,'Visible','on')   
 %             set(am_cv_text,'String','Yielding')
          end
       else
@@ -5120,23 +5134,23 @@ else  % converged solution
          if isequal(crLTB,1)
             gammma=max(Fn3./Fn0)*max_UC;
             LGv = gammmaIn*gammma;
-            set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (FLB)',...
-               '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
-            set(pt_title_name,'Visible','on')  
+%             set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (FLB)',...
+%                '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
+%             set(pt_title_name,'Visible','on')  
 %             set(am_cv_text,'String','FLB')  
          elseif isequal(crLTB,2)
             gammma=max(Fn3./Fn0)*max_UC;
             LGv = gammmaIn*gammma;
-            set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (TFY)',...
-               '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
-            set(pt_title_name,'Visible','on')  
+%             set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (TFY)',...
+%                '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
+%             set(pt_title_name,'Visible','on')  
 %             set(am_cv_text,'String','TFY')
          elseif isequal(crLTB,3)
             gammma=max(Fn3./Fn0)*max_UC;
             LGv = gammmaIn*gammma;
-            set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (CFY)',...
-               '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
-            set(pt_title_name,'Visible','on')   
+%             set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1)),' (CFY)',...
+%                '.  Applied Load Ratio =',num2str(LGv),' (Buckling)'])
+%             set(pt_title_name,'Visible','on')   
 %             set(am_cv_text,'String','Yielding')
          end         
       end
@@ -5152,8 +5166,8 @@ else  % converged solution
             QintfE=QintfE(:,:,end);
             Qint1=Qint1(:,:,end);
             Qint2=Qint2(:,:,end);
-            set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1))])
-            set(pt_title_name,'Visible','on')  
+%             set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1))])
+%             set(pt_title_name,'Visible','on')  
 %             set(am_cv_text,'String','Elastic')               
 
          else
@@ -5164,15 +5178,15 @@ else  % converged solution
              Qint1=Qint1(:,:,end); 
              Qint2=Qint2(:,:,end); 
 %              set(am_cv_text,'String','Converged')
-             set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1))])   
-             set(pt_title_name,'Visible','on')  
+%              set(pt_title_name,'String',['Inelastic Nonlinear Buckling Analysis is completed. Applied Load Ratio = ',num2str(gammma(1,1))])   
+%              set(pt_title_name,'Visible','on')  
          end
 
       else
          ANI =1;
 %          set(am_cv_text,'String','Non-converged')
-         set(pt_title_name,'String','Inelastic Nonlinear Buckling Analysis did not finish. Please try to use the other Algorithm.')
-         set(pt_title_name,'Visible','on')
+%          set(pt_title_name,'String','Inelastic Nonlinear Buckling Analysis did not finish. Please try to use the other Algorithm.')
+%          set(pt_title_name,'Visible','on')
          gammma=0;   
          Qintf=Qintf(:,:,end)*0;
          QintfE=QintfE(:,:,end)*0;

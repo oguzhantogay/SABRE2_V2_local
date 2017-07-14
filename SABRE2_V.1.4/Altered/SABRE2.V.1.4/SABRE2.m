@@ -29,7 +29,7 @@ global Rval; Rval=[];                     % Reference axis
 global BNodevalue; BNodevalue = [];       % Additional Nodes Information
 global SNodevalue; SNodevalue =[];        % Material Properties & # of ele.
 global RNCc;  RNCc = [];   % Total Nodes Information without duplication
-global NCc;  NCc = [];     % Total Nodes Information without duplication
+global NCc;  NCc = [];     % Total Nodes Information without duplication % Duplication in commnet :) 
 global Nshe1;  Nshe1 = []; % Total Nodes SC Information for start nodes
 global Nshe2;  Nshe2 = []; % Total Nodes SC Information for end nodes
 global DUP1; DUP1 = [];    % Total Nodes RA Information for start nodes
@@ -5035,7 +5035,10 @@ end % function end
 % *************************************** PROPERTY DEFINE JOINT Callback S
 % --------------------------------------------------------------------
 function pdn_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   clc
+   x = 'Define Joint';
+   fprintf (x)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    dunit=get(punit_edit,'Value');
    if isequal(dunit,2)
       AnalP(7,1)=2;
@@ -5048,7 +5051,9 @@ function pdn_apply_pushbutton_Callback(hObject, eventdata)
 end % function end
 % --------------------------------------------------------------------
 function pdn_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   clc
+   x = 'Remove Joint';
+   fprintf (x); pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    selection = questdlg('Do you want to remove the joint? Member properties, Loads and Boundary Conditions will be cleared.','Joint(s)','Yes','No','Yes');     
    if strcmp(selection,'No')
       return;
@@ -5059,11 +5064,13 @@ function pdn_cancel_pushbutton_Callback(hObject, eventdata)
          pdn_coordx_edit,pdn_coordy_edit,pdn_coordz_edit,pt_title_name,axesm,vstm);  
    end
 end % function end
-% *************************************** PROPERTY DEFINE JOINT Callback E
 % ************************************** PROPERTY DEFINE MEMBER Callback S
 % -------------------------------------------------------------------- 
 function pde_set_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');  
+   clc;
+   x = 'AISC Section Set Button \n';
+   fprintf (x)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');  
    wnum = get(pde_wsection_edit,'Value');
    filename1='AISCSTEEL.mat';
    Sectiondata=load(fullfile(filename1));
@@ -5121,7 +5128,10 @@ function pde_set_pushbutton_Callback(hObject, eventdata)
  end % function end
 % -------------------------------------------------------------------- 
 function pde_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   clc;
+   x = 'Define Member Apply \n';
+   fprintf (x)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    [Massemble,JNodevalue_i,JNodevalue_j,Rval,...
       BNodevalue,SNodevalue]=SABRE2MembApp(JNodevalue,Massemble,JNodevalue_i,...
       JNodevalue_j,Rval,BNodevalue,SNodevalue,pde_type_name,pt_title_name,...
@@ -5132,7 +5142,10 @@ function pde_apply_pushbutton_Callback(hObject, eventdata)
  end % function end
  % --------------------------------------------------------------------
 function pde_cancel_pushbutton_Callback(hObject, eventdata) 
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
+   clc;
+   x = 'Define Member Remove \n';
+   fprintf (x)
+   pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    selection = questdlg('Do you want to remove the member? Member properties, Loads and Boundary Conditions will be cleared.','Member(s)','Yes','No','Yes');     
    if strcmp(selection,'No')
       return;
@@ -5150,14 +5163,18 @@ end % function end
 % ************************************* PROPERTY DEFINE SEGMENT Callback S
 % -------------------------------------------------------------------- 
 function pdb_set_length_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off
+   clc
+   x = 'Pozition from joint i apply button under add nodes\n';
+   fprintf (x); pan off; zoom off; rotate3d off
    SABRE2SegmTaper(Massemble,JNodevalue_i,...
    JNodevalue_j,BNodevalue,pdb_member_name,pdb_type_name,pdb_length_edit,pdb_bfb_edit,...
    pdb_tfb_edit,pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit) 
  end % function end
 % -------------------------------------------------------------------- 
 function pdb_set_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off   
+   clc
+   x = 'AISC section data base apply button under add nodes\n';
+   fprintf (x); pan off; zoom off; rotate3d off   
    wnum = get(pdb_wsection_edit,'Value');
    filename1='AISCSTEEL.mat';
    Sectiondata=load(fullfile(filename1));
@@ -5187,7 +5204,9 @@ function pdb_set_pushbutton_Callback(hObject, eventdata)
  end % function end
 % --------------------------------------------------------------------
 function pdb_apply_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
+   clc
+   x = 'General apply button under add nodes\n';
+   fprintf (x); pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
    [BNodevalue,SNodevalue]=SABRE2SegmApp(JNodevalue,...
       Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,pt_title_name,...
       pdb_member_name,pdb_type_name,pdb_coordx_edit,pdb_coordy_edit,...
@@ -5196,7 +5215,9 @@ function pdb_apply_pushbutton_Callback(hObject, eventdata)
 end % function end 
 % --------------------------------------------------------------------
 function pdb_cancel_pushbutton_Callback(hObject, eventdata)  
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
+   clc
+   x = 'General remove button under add nodes\n';
+   fprintf (x); pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
    selection = questdlg('Do you want to remove the node? Member properties, Loads and Boundary Conditions will be cleared.','Segment(s)','Yes','No','Yes');     
    if strcmp(selection,'No')
       return;
@@ -5210,7 +5231,9 @@ function pdb_cancel_pushbutton_Callback(hObject, eventdata)
 end % function end
 % --------------------------------------------------------------------
 function pdmi_apply_pushbutton_Callback(hObject, eventdata)  
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
+   clc
+   x = 'General mirror button under mirror options\n';
+   fprintf (x); pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
    selection = questdlg('Do you want to mirror the model?','Mirror','Yes','No','Yes');     
    if strcmp(selection,'No')
       return;
@@ -5236,7 +5259,9 @@ end % function end
 % ********************************************* PROPERTY ASSIGN Callback S
 % --------------------------------------------------------------------
 function pam_all_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
+   clc
+   x = 'Apply all button under homogenous membr definition\n';
+   fprintf (x); pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
    [SNodevalue,RNCc,DUP1,DUP2,LNC,LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,...
       BNC1,BNC2,FEL]=SABRE2AssiAll(Massemble,BNodevalue,SNodevalue,RNCc,...
       DUP1,DUP2,LNC,LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,pam_segment_edit,pamse_assign_edit,...
@@ -5245,7 +5270,9 @@ function pam_all_pushbutton_Callback(hObject, eventdata)
 end % function end 
 % --------------------------------------------------------------------
 function pam_apply_pushbutton_Callback(hObject, eventdata)
-   clc;pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
+   clc
+   x = 'Apply button under homogenous membr definition\n';
+   fprintf (x);pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
    [SNodevalue,RNCc,DUP1,DUP2,LNC,LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,...
       BNC1,BNC2,FEL]=SABRE2AssiApp(Massemble,BNodevalue,SNodevalue,RNCc,DUP1,DUP2,LNC,...
       LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,pam_segment_edit,pamse_assign_edit,...
@@ -5254,7 +5281,9 @@ function pam_apply_pushbutton_Callback(hObject, eventdata)
 end % function end 
 % --------------------------------------------------------------------
 function pam_cancel_pushbutton_Callback(hObject, eventdata)
-   clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
+   clc
+   x = 'Remove button under homogenous membr definition\n';
+   fprintf (x); pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); 
    selection = questdlg('Do you want to remove all the Member properties?  Loads and Boundary Conditions will be cleared.','Assign','Yes','No','Yes');     
    if strcmp(selection,'No')
       return;

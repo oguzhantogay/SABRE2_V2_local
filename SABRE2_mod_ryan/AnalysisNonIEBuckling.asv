@@ -4827,9 +4827,11 @@ end     % iteration end
                         gamA=gamS;
                         FnA = FnS;
                      end
+
                   end
 
                   if gamB <= gamA
+
                      if gamA > gamB
                         if ~isequal(gamA,gamC) && ~isequal(gamB,gamC) % Inverse quadratic interpolation to be converged to 1
                            FnS= (gamB*gamC / ((gamA-gamB)*(gamA-gamC)))*FnA ...
@@ -4885,7 +4887,9 @@ end     % iteration end
                         else
                            mflag = 0;
                         end                    
+
                      end % increment end
+
                   end                  
                   
                   Fn=FnS;
@@ -4911,10 +4915,12 @@ end     % iteration end
                   else
                      gamA=gamS;
                      FnA = FnS;
-                  end                 
+                  end
+                  
                end
 
-               if gamB <= gamA                
+               if gamB <= gamA
+                  
                   if gamA > gamB
                      if ~isequal(gamA,gamC) && ~isequal(gamB,gamC) % Inverse quadratic interpolation to be converged to 1
                         FnS= (gamB*gamC / ((gamA-gamB)*(gamA-gamC)))*FnA ...

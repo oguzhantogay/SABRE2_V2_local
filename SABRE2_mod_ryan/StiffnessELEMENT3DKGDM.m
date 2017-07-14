@@ -135,7 +135,7 @@ end
    
 % Section stiffness matrix
 Ks=zeros(6,6,nip);
-switch get(get(ap_da_buttongroup,'SelectedObject'),'Tag')
+switch ap_da_buttongroup
    case 'da_on'
       Ks(1,1,:)=0.8*E*k11;
       Ks(1,2,:)=0.8*E*k21;

@@ -72,7 +72,7 @@ switch Analysis_type
         lambda=AnalP(5,1);
          [AR,Funew,Qintf,QintfE,QintgP,Qintg1,Qintg2,MIE] = Analysis1st(Massemble,Rval,JNodevalue_i,JNodevalue_j,SNodevalue,...
             RNCc,Nshe1,Nshe2,DUP1,DUP2,LNC,LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,ap_ninc,lambda,ap_sw_buttongroup,pt_title_name); 
-         FunewP =Funew;FunewR =Funew;%set(ri_scale_edit,'String',num2str(1.2*max(max(RNCc(:,5)),max(RNCc(:,7)))));
+         FunewP =Funew;FunewR =Funew;
 
     case 'SecondOrderEigen'
         lambda=AnalP(5,1); tolerance = 0.001;niter = 30;        
@@ -143,7 +143,7 @@ switch Analysis_type
          lambda = 1;ap_nmode = 1;ap_ninc = 1;
          JeongP=5;BrentP=1; 
          NLIAType=0;
-         [ANI,gammma,FunewR,EGunew,Qintf,QintfE,Qintg1,Qintg2,MIE,tau,Rpg,Rpc,Rpt,Rh,Myc,Myt,My,Jval,Phi_Mmax,Phi_Py,UC,crLTB,LGv] = AnalysisNonIEBuckling(Massemble,...
+         [ANI,gammma,EGunew,Qintf,QintfE,Qintg1,Qintg2,MIE,tau,Rpg,Rpc,Rpt,Rh,Myc,Myt,My,Phi_Mmax,Phi_Py,crLTB,LGv] = AnalysisNonIEBuckling(Massemble,...
             Rval,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,Nshe1,Nshe2,DUP1,DUP2,LNC,LNC1,LNC2,...
             LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,ap_nmode,ap_ninc,lambda,...
             ap_sw_buttongroup,ap_da_buttongroup,ap_cv_buttongroup,JeongP,BrentP,NLIAType);   

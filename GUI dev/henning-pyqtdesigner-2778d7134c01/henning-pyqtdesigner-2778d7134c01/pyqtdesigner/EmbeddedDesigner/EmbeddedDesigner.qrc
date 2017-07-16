@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/buddytool.png</file>
+        <file>images/tabordertool.png</file>
+        <file>images/widgettool.png</file>
+    </qresource>
+</RCC>

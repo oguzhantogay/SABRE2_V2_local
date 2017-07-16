@@ -1,0 +1,34 @@
+My collection of useful Qt widgets
+==================================
+
+Some code was ported from C++ which was included in Qt Quarterly,
+Qt Central, KOffice 2, Arora and QtCreator. 
+Some ideas came from Firefox and Eclipse. 
+
+ * dockwidget.py: collapsible dock widget ported from KOffice 2
+ * downloadialog.py: Http download with progress bar
+ * eclipsedocks.py: Tabbable dockwidgets similar to Eclipse
+ * fader.py: Fadding widget effect
+ * findwidget.py: Like the search-widget at the bottom in Firefox 
+   and the replace-widget like in Qt-Creator
+ * flowlayout.py: Flow layout (used by findwidget)
+ * freedesktop.py: For finding the correct icon
+ * lineedit.py: lineedit with clear button, menu, 
+   inside label-text (like search field in firefox)
+ * splitter.py: MiniSplitter from QtCreator
+ * squeezelabel.py: Label which squeezed text if it does not fit
+ * tabwidget.py: Movable tabwidget bar (for <  Qt 4.5)
+ * x11/mplayerwidget.py: Widget which embeds mplayer
+ * x11/terminal.py: Widget which embeds xterm
+ 
+See the tests if you want to know how to use these widgets.
+
+
+
+About the coding style
+======================
+
+Before you ask: The star imports will be refactored. 
+Method names follow the Python style (PEP8) and do not follow the Qt/C++ style. 
+If you see a lower case method name with underscores you can be sure
+it is a new method which is not available in the Qt base class.

@@ -1,0 +1,15 @@
+PyCode - a library to create a decent Python IDE
+================================================
+
+
+
+
+
+Copyright
+---------
+This library heavily depends on the hard work of other authors, mainly of Rope and Jedi
+
+ * function module_completions is taken from Spyder
+ * copies of rope, jedi, pep8, autopep8, pylint, pyflakes and whoosh are included for convenience
+ * indenter is based  on code from rope-ide
+ * stubs for extension modules were collected from various sources. They only contain the signature of stdlib functions.

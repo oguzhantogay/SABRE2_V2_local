@@ -1,0 +1,84 @@
+# encoding: utf-8
+# module matplotlib.ft2font
+# from /usr/lib/pymodules/python2.7/matplotlib/ft2font.so by generator 1.96
+""" The ft2font module """
+# no imports
+
+# Variables with simple values
+
+BOLD = 2
+
+EXTERNAL_STREAM = 1024
+
+FAST_GLYPHS = 128
+
+FIXED_SIZES = 2
+FIXED_WIDTH = 4
+
+GLYPH_NAMES = 512
+
+HORIZONTAL = 16
+
+ITALIC = 1
+
+KERNING = 64
+
+KERNING_DEFAULT = 0
+KERNING_UNFITTED = 1
+KERNING_UNSCALED = 2
+
+LOAD_CROP_BITMAP = 64L
+
+LOAD_DEFAULT = 0L
+
+LOAD_FORCE_AUTOHINT = 32L
+
+LOAD_IGNORE_GLOBAL_ADVANCE_WIDTH = 512L
+
+LOAD_IGNORE_TRANSFORM = 2048L
+
+LOAD_LINEAR_DESIGN = 8192L
+
+LOAD_MONOCHROME = 4096L
+
+LOAD_NO_AUTOHINT = 32768L
+LOAD_NO_BITMAP = 8L
+LOAD_NO_HINTING = 2L
+LOAD_NO_RECURSE = 1024L
+LOAD_NO_SCALE = 1L
+
+LOAD_PEDANTIC = 128L
+LOAD_RENDER = 4L
+
+LOAD_TARGET_LCD = 196608L
+
+LOAD_TARGET_LCD_V = 262144L
+
+LOAD_TARGET_LIGHT = 65536L
+LOAD_TARGET_MONO = 131072L
+LOAD_TARGET_NORMAL = 0L
+
+LOAD_VERTICAL_LAYOUT = 16L
+
+MULTIPLE_MASTERS = 256
+
+SCALABLE = 1
+
+SFNT = 8
+
+VERTICAL = 1
+
+# functions
+
+
+def FT2Font(*args, **kwargs):  # real signature unknown
+    """ FT2Font """
+    pass
+
+
+def FT2Image(*args, **kwargs):  # real signature unknown
+    """ FT2Image """
+    pass
+
+
+# no classes

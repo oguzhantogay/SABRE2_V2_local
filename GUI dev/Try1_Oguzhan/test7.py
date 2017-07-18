@@ -1288,6 +1288,10 @@ class Ui_MainWindow(object):
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(2)
         QtCore.QObject.connect(self.toolButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.DefinitionTabs.show)
+        if self.DefinitionTabs.isVisible():
+            self.tab_to_hide.hide
+        if self.tab_to_hide.isVisible():
+            self.DefinitionTabs.hide
         QtCore.QObject.connect(self.toolButton_2, QtCore.SIGNAL(_fromUtf8("clicked()")), self.DefinitionTabs.hide)
         QtCore.QObject.connect(self.toolButton_3, QtCore.SIGNAL(_fromUtf8("clicked()")), self.tab_to_hide.show)
         QtCore.QObject.connect(self.toolButton_2, QtCore.SIGNAL(_fromUtf8("clicked()")), self.tab_to_hide.hide)
@@ -1667,6 +1671,9 @@ class Ui_MainWindow(object):
         self.actionPrint_Preview.setText(_translate("MainWindow", "Print Preview", None))
         self.actionPrint.setText(_translate("MainWindow", "Print", None))
         self.actionQuit.setText(_translate("MainWindow", "Quit", None))
+    def closeEvent(self, event):
+        QtGui.qApp.quit()
+        event.ignore()
 
 import SABRE2_resources_rc
 

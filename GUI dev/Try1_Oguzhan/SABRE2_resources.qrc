@@ -1,0 +1,14 @@
+<RCC>
+  <qresource prefix="SABRE2_resources">
+    <file>ic_assessment_36pt_2x.png</file>
+    <file>ic_assignment_late_36pt_2x.png</file>
+    <file>ic_assignment_return_36pt_2x.png</file>
+    <file>ic_autorenew_36pt_2x.png</file>
+    <file>ic_camera_enhance_36pt_2x.png</file>
+    <file>ic_done_all_36pt_2x.png</file>
+    <file>ic_exit_to_app_36pt_2x.png</file>
+    <file>ic_find_in_page_36pt_2x.png</file>
+    <file>ic_info_36pt_2x.png</file>
+    <file>ic_list_36pt_2x.png</file>
+  </qresource>
+</RCC>

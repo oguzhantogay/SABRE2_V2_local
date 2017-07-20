@@ -16,15 +16,13 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-
-class MyWidget(object):
+class Ui_MyWidget(object):
     def setupUi(self, MyWidget):
         MyWidget.setObjectName(_fromUtf8("MyWidget"))
         MyWidget.resize(477, 89)
@@ -49,12 +47,3 @@ class MyWidget(object):
         self.pushButton.setText(_translate("MyWidget", "PressMe", None))
         self.pushButton_2.setText(_translate("MyWidget", "Clear", None))
 
-
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    MyWidget = QtGui.QWidget()
-    ui = Ui_MyWidget()
-    ui.setupUi(MyWidget)
-    MyWidget.show()
-    sys.exit(app.exec_())

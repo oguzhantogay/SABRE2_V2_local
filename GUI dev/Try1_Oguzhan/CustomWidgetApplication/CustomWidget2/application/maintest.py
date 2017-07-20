@@ -6,7 +6,9 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+import sys
 from PyQt4 import QtCore, QtGui
+from mywidget import *
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -24,29 +26,22 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 
-class Ui_MainWindow(object):
-    def __init__(self, MyWidget):
-        self.MyWidget = MyWidget(self.centralWidget)
-        self.widget_2 = MyWidget(self.centralWidget)
-        self.widget_3 = MyWidget(self.centralWidget)
+class MainWindow(QtGui.QMainWindow):
+
+    def __init__(self):
+        super(MainWindow, self).__init__()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(408, 230)
-        self.centralWidget = QtGui.QWidget(MainWindow)
-        self.centralWidget.setObjectName(_fromUtf8("centralWidget"))
+        self.centralWidget = QtGui.QWidget()
+        self.setcentralWidget(self.centralWidget)
         self.verticalLayout = QtGui.QVBoxLayout(self.centralWidget)
         self.verticalLayout.setMargin(11)
         self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
-        self.widget = MyWidget(self.centralWidget)
-        self.widget.setObjectName(_fromUtf8("widget"))
         self.verticalLayout.addWidget(self.widget)
-        self.widget_2 = MyWidget(self.centralWidget)
-        self.widget_2.setObjectName(_fromUtf8("widget_2"))
         self.verticalLayout.addWidget(self.widget_2)
-        self.widget_3 = MyWidget(self.centralWidget)
-        self.widget_3.setObjectName(_fromUtf8("widget_3"))
         self.verticalLayout.addWidget(self.widget_3)
         MainWindow.setCentralWidget(self.centralWidget)
         self.menuBar = QtGui.QMenuBar(MainWindow)
@@ -67,13 +62,33 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
 
 
-from mywidget import *
+class MyWidget(QtGui.QWidget):
 
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    MainWindow = QtGui.QMainWindow()
-    ui = Ui_MainWindow()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+    def __init__(self, parent):
+        super(MyWidget, self).__init__(parent)
+        self.widget = MyWidget(self.centralWidget)
+        self.widget.setObjectName(_fromUtf8("widget"))
+
+
+class MyWidget2(QtGui.QWidget):
+
+    def __init__(self, parent):
+        super(MyWidget2, self).__init__(parent)
+        self.widget_2 = MyWidget(self.centralWidget)
+        self.widget_2.setObjectName(_fromUtf8("widget_2"))
+
+
+class MyWidget3(QtGui.QWidget):
+
+    def __init__(self, parent):
+        super(MyWidget3, self).__init__(parent)
+        self.widget_3 = MyWidget(self.centralWidget)
+        self.widget_3.setObjectName(_fromUtf8("widget_3"))
+
+
+app = QtGui.QApplication(sys.argv)
+myapp = MainWindow()
+
+myapp.show()
+# QtCore.QObject.connect(myapp.pushButton)
+sys.exit(app.exec_())

@@ -25,11 +25,6 @@ except AttributeError:
 
 
 class Ui_MainWindow(object):
-    def __init__(self, MyWidget):
-        self.MyWidget = MyWidget(self.centralWidget)
-        self.widget_2 = MyWidget(self.centralWidget)
-        self.widget_3 = MyWidget(self.centralWidget)
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(408, 230)
@@ -66,8 +61,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
 
-
-from mywidget import *
+from mywidget import MyWidget
 
 if __name__ == "__main__":
     import sys

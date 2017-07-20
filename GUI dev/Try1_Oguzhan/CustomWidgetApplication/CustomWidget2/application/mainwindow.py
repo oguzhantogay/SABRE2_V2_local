@@ -62,6 +62,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
 
 from mywidget import Ui_MyWidget
+
 global Ui_MyWidget
 Ui_MyWidget = Ui_MyWidget()
 if __name__ == "__main__":

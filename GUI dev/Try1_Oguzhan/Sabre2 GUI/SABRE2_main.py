@@ -8,6 +8,5 @@ app = QApplication(sys.argv)
 
 window = SABRE2_main_subclass(Ui_SABRE2_V3())
 window.show()
-window.ui.DefinitionTabs.hide()  # to hide problem definition tabs
-window.ui.AnalysisTabs.hide()  # to hide analysis tabs
+
 sys.exit(app.exec_())

@@ -21,7 +21,6 @@ class Actions(QMainWindow):
 
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
-
         self.ui = ui_layout
 
     def AboutAct(ui_layout):

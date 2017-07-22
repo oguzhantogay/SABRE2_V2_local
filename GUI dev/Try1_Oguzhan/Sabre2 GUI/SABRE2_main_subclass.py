@@ -1,6 +1,7 @@
 import PyQt4
 from PyQt4.QtGui import *
 import pickle
+import SABRE2_GUI
 from functools import partial
 
 
@@ -12,108 +13,47 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.setupUi(self)
         ui_layout.DefinitionTabs.hide()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
-
-        #message = "Testing"
-        #self.createActions()  # invoke mouse click actions
-        # ui_layout.createMenus()  # create drop down menu signals
-        ui_layout.retranslateUi(self)
-        #self.statusBar().showMessage(message)  # help message bar
-
-        # MainWindow.setMenuBar(self.menubar)
-        # self.statusbar = PyQt4.QtGui.QStatusBar(QMainWindow)
-        # self.statusbar.setObjectName(_fromUtf8("statusbar"))
-        # MainWindow.setStatusBar(self.statusbar)
-        # # status bar application
-        # self.statusbar.showMessage("Inelastic Nonlinear Buckling Analysis(INBA) is in progress")
-        # self.progressBar = PyQt4.QtGui.QProgressBar()
-        # self.statusbar.addPermanentWidget(self.progressBar)
-        # # This is simply to show the bar
-        # self.progressBar.setValue(40)
-        # self.progressBar.setTextVisible(True)  # to make text not visible
+        ui_layout.actionAbout.triggered.connect(lambda: Actions('uidesign').AboutAct())
 
 
+class Actions(QMainWindow):
+    """docstring for Actions"""
 
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
 
-    def retranslateUi(self, ui_layout):
-        # self.actionAbout.addAction(self.newAct)
-        #self.actionAbout = ui_layout.actionAbout.addAction(self.newAct)
-        #self.fileMenu = self.menuBar().addMenu("&File")
-        ui_layout.actionAbout.addAction(self.AboutAct)
-        ui_layout.connect(ui_layout.actionNew, SIGNAL("clicked()"), partial(self.NewAct, 1))
-        # self.fileMenu.addAction(self.openAct)
-        # self.fileMenu.addAction(self.saveAct)
-        # self.fileMenu.addAction(self.printAct)
-        # self.fileMenu.addSeparator()
-        # self.fileMenu.addAction(self.exitAct)
+        self.ui = ui_layout
 
-        # self.editMenu = self.menuBar().addMenu("&Edit")
-        # self.editMenu.addAction(self.undoAct)
-        # self.editMenu.addAction(self.redoAct)
-        # self.editMenu.addSeparator()
-        # self.editMenu.addAction(self.cutAct)
-        # self.editMenu.addAction(self.copyAct)
-        # self.editMenu.addAction(self.pasteAct)
-        # self.editMenu.addSeparator()
+    def AboutAct(ui_layout):
+        # message = "Learn about Sabre2"
+        # self.statusbar.showMessage(message)
 
-        # self.helpMenu = self.menuBar().addMenu("&Help")
-        # self.helpMenu.addAction(self.aboutAct)
-        # self.helpMenu.addAction(self.aboutQtAct)
+        # Program information
+        version = "3.0"
+        website = "http://www.white.ce.gatech.edu/sabre"
+        email = "fill in data"
+        license_link = "fill in data"
+        license_name = "fill in data"
 
-        # self.formatMenu = self.editMenu.addMenu("&Format")
-        # self.formatMenu.addAction(self.boldAct)
-        # self.formatMenu.addAction(self.italicAct)
-        # self.formatMenu.addSeparator().setText("Alignment")
-        # self.formatMenu.addAction(self.leftAlignAct)
-        # self.formatMenu.addAction(self.rightAlignAct)
-        # self.formatMenu.addAction(self.justifyAct)
-        # self.formatMenu.addAction(self.centerAct)
-        # self.formatMenu.addSeparator()
-        # self.formatMenu.addAction(self.setLineSpacingAct)
-        # self.formatMenu.addAction(self.setParagraphSpacingAct)
-
-    def saveToFile(self):
-        fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(self,
-                                                           "Save Sabre2 File", '',
-                                                           "Sabre2 File (*.mat);;All Files (*)")
-
-        if not fileName:
-            return
-
-        try:
-            out_file = open(str(fileName), 'wb')
-        except IOError:
-            PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
-                                                "There was an error opening \"%s\"" % fileName)
-            return
-
-        pickle.dump(self.contacts, out_file)
-        out_file.close()
-
-    # def loadFromFile(self):
-    #     fileName = PyQt4.QtGui.QFileDialog.getOpenFileName(self,
-    #                                                  "Open Address Book", '',
-    #                                                  "Address Book (*.abk);;All Files (*)")
-
-    #     if not fileName:
-    #         return
-
-    #     try:
-    #         in_file = open(str(fileName), 'rb')
-    #     except IOError:
-    #         PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
-    #                                       "There was an error opening \"%s\"" % fileName)
-    #         return
-
-    #     self.contacts = pickle.load(in_file)
-    #     in_file.close()
-
-    #     if len(self.contacts) == 0:
-    #         PyQt4.QtGui.QMessageBox.information(self, "No contacts in file",
-    #                                       "The file you are attempting to open contains no "
-    #                                       "contacts.")
-    #     else:
-    #         for name, address in self.contacts:
-    #             self.nameLine.setText(name)
-    #             self.addressText.setText(address)
-
-    #     self.updateInterface(self.NavigationMode)
+        # Dialog box
+        about_box = SABRE2_GUI.QtGui.QMessageBox()
+        about_box.setWindowTitle("About Sabre2 Version 3.0")
+        about_box.setTextFormat(SABRE2_GUI.QtCore.Qt.RichText)
+        # about_box.setIconPixmap(QtGui.QPixmap(ComicTaggerSettings.getGraphic('about.png'))) #include image
+        about_box.setText("""
+        <HTML>
+        <p><b>This demo shows use of <c>QTableWidget</c> with custom handling for
+         individual cells.</b></p>
+        <p>Using a customized table item we make it possible to have dynamic
+         output in different cells. The content that is implemented for this
+         particular demo is:
+        <ul>
+        <li>Adding two cells.</li>
+        <li>Subtracting one cell from another.</li>
+        <li>Multiplying two cells.</li>
+        <li>Dividing one cell with another.</li>
+             <li>Summing the contents of an arbitrary number of cells.</li>
+             </HTML>
+         """)
+        about_box.setStandardButtons(SABRE2_GUI.QtGui.QMessageBox.Ok)
+        about_box.exec_()

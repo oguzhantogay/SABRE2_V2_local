@@ -297,8 +297,8 @@ class AddressBook(QtGui.QWidget):
 
     def saveToFile(self):
         fileName = QtGui.QFileDialog.getSaveFileName(self,
-                                                     "Save Address Book", '',
-                                                     "Address Book (*.abk);;All Files (*)")
+                                                     "Save Sabre2 File", '',
+                                                     "Sabre2 File (*.mat);;All Files (*)")
 
         if not fileName:
             return

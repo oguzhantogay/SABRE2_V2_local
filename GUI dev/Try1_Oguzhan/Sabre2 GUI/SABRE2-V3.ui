@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1273</width>
+    <width>1121</width>
     <height>800</height>
    </rect>
   </property>
@@ -30,7 +30,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="AnalysisTypes">
        <attribute name="title">
@@ -77,7 +77,7 @@
          </spacer>
         </item>
         <item row="0" column="2">
-         <widget class="QGroupBox" name="groupBox_10">
+         <widget class="QGroupBox" name="IdealBracingGroup">
           <property name="title">
            <string>Ideal Bracing Calculations</string>
           </property>
@@ -86,7 +86,7 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_21">
            <item>
-            <widget class="QComboBox" name="comboBox">
+            <widget class="QComboBox" name="idealBracingAnalysisTypes">
              <item>
               <property name="text">
                <string>Elastic Linear Buckling Analysis</string>
@@ -110,7 +110,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_7">
+            <widget class="QPushButton" name="idealBracingPushButton">
              <property name="text">
               <string>Analyze!</string>
              </property>
@@ -120,7 +120,7 @@
          </widget>
         </item>
         <item row="0" column="1" rowspan="2">
-         <widget class="QGroupBox" name="groupBox_9">
+         <widget class="QGroupBox" name="InelasticBucklingAnalysisGroup">
           <property name="title">
            <string>Inelastic Buckling Analysis</string>
           </property>
@@ -131,28 +131,28 @@
            <item>
             <layout class="QGridLayout" name="gridLayout_14">
              <item row="0" column="1">
-              <widget class="QPushButton" name="pushButton_4">
+              <widget class="QPushButton" name="inelasticNonlinearBucklingAnalysis">
                <property name="text">
                 <string>Nonlinear</string>
                </property>
               </widget>
              </item>
              <item row="0" column="0">
-              <widget class="QPushButton" name="pushButton_3">
+              <widget class="QPushButton" name="inelasticLinearBucklingAnalysis">
                <property name="text">
                 <string>Linear</string>
                </property>
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QPushButton" name="pushButton_5">
+              <widget class="QPushButton" name="inelasticLinearCheck">
                <property name="text">
                 <string>Linear Check</string>
                </property>
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QPushButton" name="pushButton_6">
+              <widget class="QPushButton" name="inelasticNonlinearCheck">
                <property name="text">
                 <string>Nonlinear Check</string>
                </property>
@@ -164,7 +164,7 @@
          </widget>
         </item>
         <item row="1" column="0">
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="ElasticBucklingAnalysisGroup">
           <property name="title">
            <string>Elastic Buckling Analysis</string>
           </property>
@@ -173,14 +173,14 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_11">
            <item>
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="elasticLinearBucklingAnalysis">
              <property name="text">
               <string>Linear</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="elasticNonlinearBucklingAnalysis">
              <property name="text">
               <string>Nonlinear</string>
              </property>
@@ -189,7 +189,7 @@
           </layout>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="2" column="2">
          <spacer name="verticalSpacer_3">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -212,13 +212,13 @@
         <item>
          <layout class="QGridLayout" name="gridLayout_13">
           <item row="1" column="0">
-           <widget class="QGroupBox" name="groupBox_3">
+           <widget class="QGroupBox" name="SlenderWebJconstant">
             <property name="title">
              <string>J=0 for Slender web\n cross-sections in ELBA and ENBA</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_14">
              <item>
-              <widget class="QRadioButton" name="radioButton_3">
+              <widget class="QRadioButton" name="slenderWebJyes">
                <property name="text">
                 <string>Yes</string>
                </property>
@@ -228,7 +228,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_4">
+              <widget class="QRadioButton" name="slenderWebJno">
                <property name="text">
                 <string>No</string>
                </property>
@@ -238,7 +238,7 @@
            </widget>
           </item>
           <item row="0" column="0">
-           <widget class="QGroupBox" name="groupBox_2">
+           <widget class="QGroupBox" name="SelfWeightGroup">
             <property name="maximumSize">
              <size>
               <width>200</width>
@@ -253,7 +253,7 @@
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_13">
              <item>
-              <widget class="QRadioButton" name="radioButton">
+              <widget class="QRadioButton" name="selfWeightOn">
                <property name="text">
                 <string>On</string>
                </property>
@@ -263,7 +263,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_2">
+              <widget class="QRadioButton" name="selfWeightOff">
                <property name="text">
                 <string>Off</string>
                </property>
@@ -273,13 +273,13 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QGroupBox" name="groupBox_6">
+           <widget class="QGroupBox" name="SecondOrderDM">
             <property name="title">
              <string>2nd-Order Elastic DM Stiffness</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_16">
              <item>
-              <widget class="QRadioButton" name="radioButton_7">
+              <widget class="QRadioButton" name="SecondOrderDMyes">
                <property name="text">
                 <string>Yes</string>
                </property>
@@ -289,7 +289,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_8">
+              <widget class="QRadioButton" name="SecondOrderDMno">
                <property name="text">
                 <string>No</string>
                </property>
@@ -299,7 +299,7 @@
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QGroupBox" name="groupBox_4">
+           <widget class="QGroupBox" name="AISCprovisions">
             <property name="title">
              <string>AISC Provisions</string>
             </property>
@@ -308,7 +308,7 @@
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_15">
              <item>
-              <widget class="QRadioButton" name="radioButton_5">
+              <widget class="QRadioButton" name="AISCcurrent">
                <property name="text">
                 <string>Current</string>
                </property>
@@ -318,7 +318,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_6">
+              <widget class="QRadioButton" name="AISCrecommended">
                <property name="text">
                 <string>Recommended</string>
                </property>
@@ -328,7 +328,7 @@
            </widget>
           </item>
           <item row="0" column="2">
-           <widget class="QGroupBox" name="groupBox_5">
+           <widget class="QGroupBox" name="ElasticAnalysisParameters">
             <property name="maximumSize">
              <size>
               <width>16777215</width>
@@ -340,14 +340,14 @@
             </property>
             <layout class="QGridLayout" name="gridLayout_12">
              <item row="0" column="0">
-              <widget class="QLabel" name="label">
+              <widget class="QLabel" name="IncrementSizeLabel">
                <property name="text">
                 <string>Increment Size</string>
                </property>
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QPlainTextEdit" name="plainTextEdit_2">
+              <widget class="QPlainTextEdit" name="incrementSizeNumber">
                <property name="minimumSize">
                 <size>
                  <width>20</width>
@@ -366,14 +366,14 @@
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="label_2">
+              <widget class="QLabel" name="MAPLLabel">
                <property name="text">
                 <string>Maximum Applied Load Ratio</string>
                </property>
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QPlainTextEdit" name="plainTextEdit_3">
+              <widget class="QPlainTextEdit" name="MAPLRnumber">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -395,13 +395,13 @@
            </widget>
           </item>
           <item row="1" column="2">
-           <widget class="QGroupBox" name="groupBox_7">
+           <widget class="QGroupBox" name="NumberofBucklingGroup">
             <property name="title">
              <string>Number of Buckling Mode(s) for ELBA</string>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_17">
              <item>
-              <widget class="QPlainTextEdit" name="plainTextEdit_4">
+              <widget class="QPlainTextEdit" name="numberBucklingModes">
                <property name="maximumSize">
                 <size>
                  <width>25</width>
@@ -446,7 +446,7 @@
       <property name="maximumSize">
        <size>
         <width>10000000</width>
-        <height>16777215</height>
+        <height>336</height>
        </size>
       </property>
       <property name="font">
@@ -464,7 +464,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>4</number>
       </property>
       <property name="iconSize">
        <size>
@@ -695,9 +695,9 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QTabWidget" name="tabWidget_3">
+         <widget class="QTabWidget" name="Members_tabs">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="Member_Def">
            <attribute name="title">
@@ -1214,7 +1214,7 @@
             </property>
             <property name="sizeHint" stdset="0">
              <size>
-              <width>600</width>
+              <width>800</width>
               <height>20</height>
              </size>
             </property>
@@ -1222,13 +1222,6 @@
           </item>
           <item>
            <layout class="QGridLayout" name="gridLayout_7">
-            <item row="1" column="1">
-             <widget class="QPushButton" name="Delete_last_row_Mem_prop">
-              <property name="text">
-               <string>Delete Last Row</string>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="1">
              <widget class="QPushButton" name="Add_New_Row_Mem_Prop">
               <property name="text">
@@ -1236,52 +1229,12 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="6">
-             <widget class="QLabel" name="label_9">
+            <item row="1" column="1">
+             <widget class="QPushButton" name="Delete_last_row_Mem_prop">
               <property name="text">
-               <string>Insert After</string>
+               <string>Delete Last Row</string>
               </property>
              </widget>
-            </item>
-            <item row="1" column="7">
-             <widget class="QLineEdit" name="lineEdit_8"/>
-            </item>
-            <item row="1" column="5">
-             <widget class="QLineEdit" name="lineEdit_9"/>
-            </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="Delete_Row_Number_Mem_Prop">
-              <property name="text">
-               <string>Delete Row Number</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="4">
-             <widget class="QLabel" name="label_10">
-              <property name="text">
-               <string>Copy From</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="QLineEdit" name="lineEdit_10"/>
-            </item>
-            <item row="0" column="2">
-             <widget class="QPushButton" name="Insert_New_Row_Mem_Prop">
-              <property name="text">
-               <string>Insert a New Row After</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="4" colspan="4">
-             <widget class="QPushButton" name="Copy_Mem_Prop">
-              <property name="text">
-               <string>Copy and Insert</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="QLineEdit" name="lineEdit_11"/>
             </item>
            </layout>
           </item>
@@ -1295,11 +1248,11 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
-         <widget class="QTabWidget" name="tabWidget">
+         <widget class="QTabWidget" name="BoundaryConditionsTabs">
           <property name="currentIndex">
-           <number>0</number>
+           <number>3</number>
           </property>
-          <widget class="QWidget" name="tab">
+          <widget class="QWidget" name="FixitiesTab">
            <attribute name="title">
             <string>Fixities</string>
            </attribute>
@@ -1549,7 +1502,7 @@
             <item>
              <layout class="QGridLayout" name="gridLayout_10">
               <item row="1" column="0">
-               <widget class="QPushButton" name="Delete_last_row_spring_2">
+               <widget class="QPushButton" name="Delete_last_row_fixities">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -1569,7 +1522,7 @@
                </widget>
               </item>
               <item row="3" column="0">
-               <widget class="QPushButton" name="Delete_new_row_button_spring_2">
+               <widget class="QPushButton" name="Delete_new_row_button_fixities">
                 <property name="maximumSize">
                  <size>
                   <width>150</width>
@@ -1583,7 +1536,7 @@ Number</string>
                </widget>
               </item>
               <item row="2" column="0">
-               <widget class="QPushButton" name="Insert_new_row_button_spring_2">
+               <widget class="QPushButton" name="Insert_new_row_button_fixities">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -1600,7 +1553,7 @@ Number</string>
                </widget>
               </item>
               <item row="0" column="0">
-               <widget class="QPushButton" name="Add_new_row_spring_2">
+               <widget class="QPushButton" name="Add_new_row_fixities">
                 <property name="maximumSize">
                  <size>
                   <width>200</width>
@@ -1614,7 +1567,7 @@ Number</string>
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QLineEdit" name="Inser_number_spring_2">
+               <widget class="QLineEdit" name="Inser_number_fixities">
                 <property name="maximumSize">
                  <size>
                   <width>50</width>
@@ -1633,7 +1586,7 @@ Number</string>
                </widget>
               </item>
               <item row="3" column="1">
-               <widget class="QLineEdit" name="Delete_number_spring_2">
+               <widget class="QLineEdit" name="Delete_number_fixities">
                 <property name="maximumSize">
                  <size>
                   <width>50</width>
@@ -1652,7 +1605,7 @@ Number</string>
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_2">
+          <widget class="QWidget" name="ShearPanelsTan">
            <attribute name="title">
             <string>Shear Panels</string>
            </attribute>
@@ -1888,7 +1841,7 @@ Number</string>
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_3">
+          <widget class="QWidget" name="DiscreteSpringsTab">
            <attribute name="title">
             <string>Discrete Grounded Springs</string>
            </attribute>
@@ -2196,7 +2149,7 @@ Number</string>
             </item>
            </layout>
           </widget>
-          <widget class="QWidget" name="tab_4">
+          <widget class="QWidget" name="ReleasesTabs">
            <attribute name="title">
             <string>Flexural and / or Warping Releases</string>
            </attribute>
@@ -2396,9 +2349,9 @@ Number</string>
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_9">
         <item>
-         <widget class="QTabWidget" name="tabWidget_2">
+         <widget class="QTabWidget" name="LC_tabs">
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="Load_Combinations">
            <attribute name="title">
@@ -2407,67 +2360,185 @@ Number</string>
            <layout class="QVBoxLayout" name="verticalLayout_7">
             <item>
              <layout class="QGridLayout" name="gridLayout_2">
-              <item row="0" column="4">
-               <widget class="QPushButton" name="Delete_LC">
-                <property name="text">
-                 <string>Delete</string>
-                </property>
-               </widget>
-              </item>
               <item row="0" column="2">
-               <widget class="QPlainTextEdit" name="plainTextEdit">
-                <property name="maximumSize">
+               <widget class="QComboBox" name="loadTypeDefine">
+                <property name="minimumSize">
                  <size>
-                  <width>16777215</width>
-                  <height>30</height>
+                  <width>600</width>
+                  <height>0</height>
                  </size>
                 </property>
-                <property name="plainText">
-                 <string>Enter Load Combination Name</string>
+                <property name="editable">
+                 <bool>true</bool>
                 </property>
+                <item>
+                 <property name="text">
+                  <string>Select or Enter the Load Type</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Dead Load (DL)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Live Load (LL)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Snow Load (SL)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Wind Load (WL)</string>
+                 </property>
+                </item>
                </widget>
               </item>
               <item row="0" column="3">
-               <widget class="QPushButton" name="Apply_LC_name">
+               <widget class="QPushButton" name="loadTypeApply">
                 <property name="text">
                  <string>Apply</string>
                 </property>
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLabel" name="label_7">
+               <widget class="QLabel" name="loadTypeLabel">
                 <property name="text">
-                 <string>Name of Load Combination:</string>
+                 <string>Name of Load Type:</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="4">
+               <widget class="QPushButton" name="loadTypeDelete">
+                <property name="text">
+                 <string>Delete</string>
                 </property>
                </widget>
               </item>
              </layout>
             </item>
             <item>
-             <widget class="QLabel" name="label_8">
+             <layout class="QHBoxLayout" name="horizontalLayout_22">
+              <item>
+               <widget class="QTableWidget" name="LC_definition_table">
+                <property name="maximumSize">
+                 <size>
+                  <width>998</width>
+                  <height>55</height>
+                 </size>
+                </property>
+                <attribute name="horizontalHeaderDefaultSectionSize">
+                 <number>90</number>
+                </attribute>
+                <row>
+                 <property name="text">
+                  <string> </string>
+                 </property>
+                </row>
+                <column>
+                 <property name="text">
+                  <string>LC Name =</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>+ Scale Factor x</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Load Type</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>+ Scale Factor x</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Load Type </string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>+ Scale Factor x</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Load Type</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>+ Scale Factor x</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Load Type</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>+ Scale Factor x</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Load Type</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="LC_apply_button">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Apply</string>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>50</height>
+                 </size>
+                </property>
+                <property name="autoRaise">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="LoadCobinationNamesLabel">
               <property name="text">
-               <string>Defined Load Combinations:</string>
+               <string>Pre-defined Load Combinations:</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QScrollArea" name="Load_combination_list">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>150</height>
-               </size>
-              </property>
+             <widget class="QScrollArea" name="LoadCombinationNames">
               <property name="widgetResizable">
                <bool>true</bool>
               </property>
-              <widget class="QWidget" name="scrollAreaWidgetContents">
+              <widget class="QWidget" name="LCnamesContext">
                <property name="geometry">
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>1205</width>
-                 <height>148</height>
+                 <width>1053</width>
+                 <height>75</height>
                 </rect>
                </property>
               </widget>
@@ -2482,6 +2553,12 @@ Number</string>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
              <widget class="QTableWidget" name="Uniform_loading_table">
+              <property name="minimumSize">
+               <size>
+                <width>768</width>
+                <height>0</height>
+               </size>
+              </property>
               <property name="dragDropMode">
                <enum>QAbstractItemView::DragDrop</enum>
               </property>
@@ -2594,6 +2671,123 @@ Number</string>
                </property>
               </item>
              </widget>
+            </item>
+            <item>
+             <layout class="QGridLayout" name="gridLayout_16">
+              <item row="1" column="0">
+               <widget class="QPushButton" name="Delete_last_row_uni_load">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Delete Last 
+ Row</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="0">
+               <widget class="QPushButton" name="Delete_new_row_button_uni_load">
+                <property name="maximumSize">
+                 <size>
+                  <width>150</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Delete Row 
+Number</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QPushButton" name="Insert_new_row_button_uni_load">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>150</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Insert a New 
+ Row After</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="Add_new_row_uni_load">
+                <property name="maximumSize">
+                 <size>
+                  <width>200</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Add New
+ Row</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="Inser_number_uni_load">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="layoutDirection">
+                 <enum>Qt::LeftToRight</enum>
+                </property>
+                <property name="text">
+                 <string>2</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="Delete_number_uni_load">
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>2</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_10">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </widget>
@@ -2789,7 +2983,7 @@ Number</string>
             <item>
              <layout class="QGridLayout" name="gridLayout_11">
               <item row="1" column="0">
-               <widget class="QPushButton" name="Delete_last_row_spring_3">
+               <widget class="QPushButton" name="Delete_last_row_point_load">
                 <property name="minimumSize">
                  <size>
                   <width>0</width>
@@ -2809,7 +3003,7 @@ Number</string>
                </widget>
               </item>
               <item row="3" column="0">
-               <widget class="QPushButton" name="Delete_new_row_button_spring_3">
+               <widget class="QPushButton" name="Delete_new_row_button_point_load">
                 <property name="maximumSize">
                  <size>
                   <width>150</width>
@@ -2823,7 +3017,7 @@ Number</string>
                </widget>
               </item>
               <item row="2" column="0">
-               <widget class="QPushButton" name="Insert_new_row_button_spring_3">
+               <widget class="QPushButton" name="Insert_new_row_button_point_load">
                 <property name="enabled">
                  <bool>true</bool>
                 </property>
@@ -2840,7 +3034,7 @@ Number</string>
                </widget>
               </item>
               <item row="0" column="0">
-               <widget class="QPushButton" name="Add_new_row_spring_3">
+               <widget class="QPushButton" name="Add_new_row_point_load">
                 <property name="maximumSize">
                  <size>
                   <width>200</width>
@@ -2854,7 +3048,7 @@ Number</string>
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QLineEdit" name="Inser_number_spring_3">
+               <widget class="QLineEdit" name="Inser_number_point_load">
                 <property name="maximumSize">
                  <size>
                   <width>50</width>
@@ -2873,7 +3067,7 @@ Number</string>
                </widget>
               </item>
               <item row="3" column="1">
-               <widget class="QLineEdit" name="Delete_number_spring_3">
+               <widget class="QLineEdit" name="Delete_number_point_load">
                 <property name="maximumSize">
                  <size>
                   <width>50</width>
@@ -2908,7 +3102,7 @@ Number</string>
     <item>
      <layout class="QGridLayout" name="gridLayout_9">
       <item row="0" column="1">
-       <widget class="QToolButton" name="toolButton">
+       <widget class="QToolButton" name="DefinitionButton">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -2941,7 +3135,7 @@ Number</string>
        </widget>
       </item>
       <item row="0" column="2">
-       <widget class="QToolButton" name="toolButton_3">
+       <widget class="QToolButton" name="AnalysisButton">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -2974,7 +3168,7 @@ Number</string>
        </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QToolButton" name="MainWindow">
+       <widget class="QToolButton" name="MainWindowButton">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
@@ -3019,7 +3213,7 @@ Number</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1273</width>
+     <width>1121</width>
      <height>21</height>
     </rect>
    </property>
@@ -3255,7 +3449,7 @@ Number</string>
  </resources>
  <connections>
   <connection>
-   <sender>toolButton</sender>
+   <sender>DefinitionButton</sender>
    <signal>clicked()</signal>
    <receiver>DefinitionTabs</receiver>
    <slot>show()</slot>
@@ -3271,7 +3465,7 @@ Number</string>
    </hints>
   </connection>
   <connection>
-   <sender>MainWindow</sender>
+   <sender>MainWindowButton</sender>
    <signal>clicked()</signal>
    <receiver>DefinitionTabs</receiver>
    <slot>hide()</slot>
@@ -3287,7 +3481,7 @@ Number</string>
    </hints>
   </connection>
   <connection>
-   <sender>toolButton_3</sender>
+   <sender>AnalysisButton</sender>
    <signal>clicked()</signal>
    <receiver>AnalysisTabs</receiver>
    <slot>show()</slot>
@@ -3303,7 +3497,7 @@ Number</string>
    </hints>
   </connection>
   <connection>
-   <sender>MainWindow</sender>
+   <sender>MainWindowButton</sender>
    <signal>clicked()</signal>
    <receiver>AnalysisTabs</receiver>
    <slot>hide()</slot>

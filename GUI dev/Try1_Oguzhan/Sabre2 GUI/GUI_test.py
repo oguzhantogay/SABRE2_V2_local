@@ -1984,6 +1984,34 @@ class Ui_SABRE2_V3(object):
     def OpenAct(self):
         message = "Open an existing file"
         self.statusbar.showMessage(message)
+
+        fileName = QtGui.QFileDialog.getOpenFileName(None, "Open Sabre2 File", '', "Sabre2 Files (*.mat);;All Files (*)")
+
+        if not fileName:
+            return
+
+        try:
+            in_file = open(str(fileName), 'rb')
+        except IOError:
+            QtGui.QMessageBox.information(self, "Unable to open file",
+                                          "There was an error opening \"%s\"" % fileName)
+            return
+
+        self.contacts = pickle.load(in_file)
+        in_file.close()
+
+        if len(self.contacts) == 0:
+            QtGui.QMessageBox.information(self, "No contacts in file",
+                                          "The file you are attempting to open contains no "
+                                          "contacts.")
+        else:
+            for name, address in self.contacts:
+                self.nameLine.setText(name)
+                self.addressText.setText(address)
+
+        self.updateInterface(self.NavigationMode)
+
+
         # Fill in spread sheet cells
         # update OpenGL screen
         # update messages
@@ -1993,7 +2021,7 @@ class Ui_SABRE2_V3(object):
         message = "Save the model to disk"
         self.statusbar.showMessage(message)
 
-        data="test"
+        data="text test"
 
         # If file already exists skip popup and update save file
         # try:
@@ -2001,23 +2029,21 @@ class Ui_SABRE2_V3(object):
         # except NameError:
 
         # Invoke save popup screen
-        # import pickle
-        # fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(self,
-        #                                                    "Save Sabre2 File", '',
-        #                                                    "Sabre2 File (*.mat);;All Files (*)")
+        import pickle
+        fileName = QtGui.QFileDialog.getSaveFileName(None, "Save Sabre2 File", '', "Sabre2 File (*.mat);;All Files (*)")
 
-        # if not fileName:
-        #     return
+        if not fileName:
+            return
 
-        # try:
-        #     out_file = open(str(fileName), 'wb')
-        # except IOError:
-        #     PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
-        #                                         "There was an error opening \"%s\"" % fileName)
-        #     return
+        try:
+            out_file = open(str(fileName), 'wb')
+        except IOError:
+            PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
+                                                "There was an error opening \"%s\"" % fileName)
+            return
 
-        # pickle.dump(self.contacts, out_file)
-        # out_file.close()
+        pickle.dump(self.data, out_file)
+        out_file.close()
 
     def Save_AsAct(self):
         message = "Name the file saved to disk"

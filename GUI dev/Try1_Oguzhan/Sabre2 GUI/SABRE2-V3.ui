@@ -2436,7 +2436,7 @@ Number</string>
                 </attribute>
                 <row>
                  <property name="text">
-                  <string> </string>
+                  <string/>
                  </property>
                 </row>
                 <column>
@@ -3240,8 +3240,20 @@ Number</string>
      <string>Edit</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuPreferences">
+    <property name="title">
+     <string>Preferences</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
+   <addaction name="menuPreferences"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">

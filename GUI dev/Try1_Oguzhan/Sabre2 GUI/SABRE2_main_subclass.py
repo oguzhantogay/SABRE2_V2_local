@@ -208,3 +208,16 @@ class Actions(QMainWindow):
         #         return False
 
         # return True
+
+
+class DataCollection(QMainWindow):
+    """docstring for Actions"""
+
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
+        self.ui = ui_layout
+
+    def TableReading(ui_layout, tableName):
+        row_count = SABRE2_main_subclass.tableName.rowCount()
+        column_count = SABRE2_main_subclass.tableName.columnCount()
+        data = []

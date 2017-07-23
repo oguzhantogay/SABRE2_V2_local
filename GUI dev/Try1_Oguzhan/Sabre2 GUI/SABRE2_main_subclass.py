@@ -39,22 +39,17 @@ class SABRE2_main_subclass(QMainWindow):
 
         message = "Start creating the model by defining the joints"  # Update message with modeling progress and interupts ***************
         # ui_layout.statusbar.showMessage(message)
-        # ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
-        # ui_layout.statusbar.addPermanentWidget(ui_layout.progressBar)
-        # analysisprogress = 80  # Update this value later by integrating with analysis**********
-        # ui_layout.progressBar.setValue(analysisprogress)
-        # ui_layout.progressBar.setTextVisible(True)  # to make text not visible
 
         # ui_layout.statusbar = PyQt4.QtGui.QStatusBar(None)
         # ui_layout.statusbar.setObjectName(_fromUtf8("statusbar"))
         # QMainWindow.setStatusBar(QMainWindow, ui_layout.statusbar)
         # # status bar application
         # ui_layout.statusbar.showMessage(message)
-        # ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
-        # ui_layout.statusbar.addPermanentWidget(ui_layout.progressBar)
-        # analysisprogress = 80  # Update this value later by integrating with analysis**********
-        # ui_layout.progressBar.setValue(analysisprogress)
-        # ui_layout.progressBar.setTextVisible(True)
+        ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
+        ui_layout.statusbar.addPermanentWidget(ui_layout.progressBar)
+        analysisprogress = 80  # Update this value later by integrating with analysis**********
+        ui_layout.progressBar.setValue(analysisprogress)
+        ui_layout.progressBar.setTextVisible(True)
 
 
 class Actions(QMainWindow):

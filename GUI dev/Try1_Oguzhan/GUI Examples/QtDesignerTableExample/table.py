@@ -75,7 +75,7 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
         x = self.tableWidget.rowCount()
-        print(x)
+        # print(x)
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.printerhelp)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), lambda: self.data_reader([self.tableWidget]))
@@ -84,18 +84,19 @@ class Ui_MainWindow(object):
     def data_reader(self, edit):
         row = self.tableWidget.rowCount()
         column = self.tableWidget.columnCount()
-        print (row, column)
+        print(row, column)
         w, h = row, column
         table_list = [[0 for x in range(w)] for y in range(h)]
         for i in range(row):
             for j in range(column):
-                table_list[i][j] = [self.tableWidget.item(row, column).text()]
-                print(table_list)
+                table_list[i][j] = [self.tableWidget.item(i, j).text()]
+        print(table_list)
 
     def printerhelp(self):
-        print(self.tableWidget.item(1, 2).text())
-        print(self.tableWidget.item(0, 0).text())
-        print(self.tableWidget.item(2, 2).text())
+        print("test")
+        #print(self.tableWidget.item(1, 2).text())
+        #print(self.tableWidget.item(0, 0).text())
+        #print(self.tableWidget.item(2, 2).text())
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))

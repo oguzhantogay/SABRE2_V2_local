@@ -21,30 +21,24 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
 
         # File dropdown actions
-        ui_layout.actionNew.triggered.connect(lambda: Actions('uidesign').NewAct())
-        ui_layout.actionOpen.triggered.connect(lambda: Actions('uidesign').OpenAct())
-        ui_layout.actionSave.triggered.connect(lambda: Actions('uidesign').SaveAct())
-        ui_layout.actionSave_As.triggered.connect(lambda: Actions('uidesign').Save_AsAct())
-        ui_layout.actionPrint.triggered.connect(lambda: Actions('uidesign').PrintAct())
-        ui_layout.actionPrint_Preview.triggered.connect(lambda: Actions('uidesign').Print_PreviewAct())
-        ui_layout.actionQuit.triggered.connect(lambda: Actions('uidesign').QuitAct())
+        ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
+        ui_layout.actionOpen.triggered.connect(lambda: DropDownActions('uidesign').OpenAct())
+        ui_layout.actionSave.triggered.connect(lambda: DropDownActions('uidesign').SaveAct())
+        ui_layout.actionSave_As.triggered.connect(lambda: DropDownActions('uidesign').Save_AsAct())
+        ui_layout.actionPrint.triggered.connect(lambda: DropDownActions('uidesign').PrintAct())
+        ui_layout.actionPrint_Preview.triggered.connect(lambda: DropDownActions('uidesign').Print_PreviewAct())
+        ui_layout.actionQuit.triggered.connect(qApp.quit)
 
         # Help dropdown actions
-        ui_layout.actionAbout.triggered.connect(lambda: Actions('uidesign').AboutAct())
+        ui_layout.actionAbout.triggered.connect(lambda: DropDownActions('uidesign').AboutAct())
 
         # Status/message bar and progress bar
-        # SABRE2_V3.setStatusBar(ui_layout.statusbar)
-        # ui_layout.statusbar = PyQt4.QtGui.QStatusBar(SABRE2_V3)
+        # ui_layout.statusbar = PyQt4.QtGui.QStatusBar()
         # ui_layout.statusbar.setObjectName(_fromUtf8("statusbar"))
-
-        message = "Start creating the model by defining the joints"  # Update message with modeling progress and interupts ***************
+        # message = "Start creating the model by defining the joints"  # Update message with modeling progress and interupts ***************
         # ui_layout.statusbar.showMessage(message)
-
-        # ui_layout.statusbar = PyQt4.QtGui.QStatusBar(None)
-        # ui_layout.statusbar.setObjectName(_fromUtf8("statusbar"))
         # QMainWindow.setStatusBar(QMainWindow, ui_layout.statusbar)
-        # # status bar application
-        # ui_layout.statusbar.showMessage(message)
+
         ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
         ui_layout.statusbar.addPermanentWidget(ui_layout.progressBar)
         analysisprogress = 80  # Update this value later by integrating with analysis**********
@@ -52,7 +46,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.progressBar.setTextVisible(True)
 
 
-class Actions(QMainWindow):
+class DropDownActions(QMainWindow):
     """docstring for Actions"""
 
     def __init__(self, ui_layout):
@@ -96,8 +90,9 @@ class Actions(QMainWindow):
     def NewAct(self):
         # message = "Create a new file"
         # self.statusbar.showMessage(message)
-        print("NewAct")
 
+        fileName = []
+        inpdata = []
         # clear all user inputs
         # reset OpenGL screen
         # reset messages
@@ -107,24 +102,23 @@ class Actions(QMainWindow):
         # self.statusbar.showMessage(message)
 
         fileName = PyQt4.QtGui.QFileDialog.getOpenFileName(None, "Open Sabre2 File", '', "Sabre2 Files (*.mat);;All Files (*)")
-
         if not fileName:
             return
-
         try:
             in_file = open(str(fileName), 'rb')
         except IOError:
-            QtGui.QMessageBox.information(self, "Unable to open file",
-                                          "There was an error opening \"%s\"" % fileName)
+            QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
             return
 
-        self.data = pickle.load(in_file)
+        inpdata = []
+        inpdata = pickle.load(in_file)
         in_file.close()
 
-        if len(self.data) == 0:
+        if len(inpdata) == 0:
             QtGui.QMessageBox.information(self, "File is empty")
         else:
-            for name, address in self.data:
+            # needs to be updated once data structure is determined**************************
+            for name, address in inpdata:
                 self.nameLine.setText(name)
                 self.addressText.setText(address)
 
@@ -139,70 +133,71 @@ class Actions(QMainWindow):
         # message = "Save the model to disk"
         # self.statusbar.showMessage(message)
 
-        data = "text test"
+        inpdata = "text test addon"
+        # fileName = "test1.txt"
 
-        # If file already exists skip popup and update save file
-        # try:
-        #     fileName
-        # except NameError:
+        if len(inpdata) == 0:
+            QtGui.QMessageBox.information(self, "No data has been attributed to the model")
+        else:
+            try:
+                fileName
+            except NameError:  # if data has not been saved to a file yet invoke popup save screen
+                import pickle
+                fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(None, "Save Sabre2 File", '', "Sabre2 File (*.mat);;All Files (*)")
+                if not fileName:
+                    return
+                try:
+                    out_file = open(str(fileName), 'wb')
+                except IOError:
+                    PyQt4.QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
+                    return
 
-        # Invoke save popup screen
-        import pickle
-        fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(None, "Save Sabre2 File", '', "Sabre2 File (*.mat);;All Files (*)")
+                pickle.dump(inpdata, out_file)
+                out_file.close()
+            else:
+                import pickle
+                try:  # if file already exists skip popup and update save file
+                    out_file = open(str(fileName), 'wb')
+                except IOError:
+                    PyQt4.QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
+                    return
 
-        if not fileName:
-            return
-
-        try:
-            out_file = open(str(fileName), 'wb')
-        except IOError:
-            PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
-                                                "There was an error opening \"%s\"" % fileName)
-            return
-
-        pickle.dump(self.data, out_file)
-        out_file.close()
+                pickle.dump(inpdata, out_file)
+                out_file.close()
 
     def Save_AsAct(self):
-        message = "Name the file saved to disk"
-        self.statusbar.showMessage(message)
+        # message = "Name the file saved to disk"
+        # self.statusbar.showMessage(message)
+
+        inpdata = "text test"
+
+        # Invoke save popup screen
+        if len(inpdata) == 0:
+            QtGui.QMessageBox.information(self, "No data has been attributed to the model")
+        else:
+            import pickle
+            fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(None, "Save Sabre2 File As", '', "Sabre2 File (*.mat);;All Files (*)")
+            if not fileName:
+                return
+            try:
+                out_file = open(str(fileName), 'wb')
+            except IOError:
+                PyQt4.QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
+                return
+
+            pickle.dump(inpdata, out_file)
+            out_file.close()
 
     def PrintAct(self):
         message = "Print screen"
         self.statusbar.showMessage(message)
 
+        # not sure what we are printing?
+        # data, results, or just screenshot of OpenGL?
+
     def Print_PreviewAct(self):
         message = "Preview screen print"
         self.statusbar.showMessage(message)
-
-    def QuitAct(self):
-        print("quit")
-        # message = "Quit program"
-        # self.statusbar.showMessage(message)
-
-        # unsaved_files = sum(a.get_num_unsaved_files() for a in self.tagger.albums.itervalues())
-        # QMessageBox = QtGui.QMessageBox
-
-        # if unsaved_files > 0:
-        #     msg = QMessageBox(self)
-        #     msg.setIcon(QMessageBox.Question)
-        #     msg.setWindowModality(QtCore.Qt.WindowModal)
-        #     msg.setWindowTitle(_(u"Unsaved Changes"))
-        #     msg.setText(_(u"Are you sure you want to quit Picard?"))
-        #     txt = ungettext(
-        #         "There is %d unsaved file. Closing Picard will lose all unsaved changes.",
-        #         "There are %d unsaved files. Closing Picard will lose all unsaved changes.",
-        #         unsaved_files) % unsaved_files
-        #     msg.setInformativeText(txt)
-        #     cancel = msg.addButton(QMessageBox.Cancel)
-        #     msg.setDefaultButton(cancel)
-        #     msg.addButton(_(u"&Quit Picard"), QMessageBox.YesRole)
-        #     ret = msg.exec_()
-
-        #     if ret == QMessageBox.Cancel:
-        #         return False
-
-        # return True
 
 
 class DataCollection(QMainWindow):

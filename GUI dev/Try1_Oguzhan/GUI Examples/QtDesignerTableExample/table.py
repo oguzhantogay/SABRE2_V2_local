@@ -7,7 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-
+import numpy
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -74,22 +74,31 @@ class Ui_MainWindow(object):
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
-        x = self.tableWidget.rowCount()
-        # print(x)
+
+
+        self.table_list = [] # initialize table values
+
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.printerhelp)
-        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), lambda: self.data_reader(self.tableWidget))
+        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), lambda: self.data_reader(self.tableWidget, self.table_list))
+        self.table_list = self.data_reader(self.tableWidget,self.table_list)
+        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), lambda: print(self.table_list))
+        self.tableWidget.cellChanged.connect(lambda: self.cell_changed(self.tableWidget, self.table_list))
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def data_reader(self, edit):
+    def data_reader(self, edit, values):
         row = edit.rowCount()
         column = edit.columnCount()
         w, h = row, column
-        table_list = [[0 for x in range(w)] for y in range(h)]
+        self.table_values = [[0 for x in range(w)] for y in range(h)]
         for i in range(row):
             for j in range(column):
-                table_list[i][j] = edit.item(i, j).text()
-        print(table_list)
+                self.table_values[i][j] = edit.item(i, j).text()
+                values = self.table_values
+        return values
+
+    def cell_changed(self, edit, values):
+        self.data_reader(edit, values)
 
     def printerhelp(self):
         print("test")

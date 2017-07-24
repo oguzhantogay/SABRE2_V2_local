@@ -78,18 +78,17 @@ class Ui_MainWindow(object):
         # print(x)
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.printerhelp)
-        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), lambda: self.data_reader([self.tableWidget]))
+        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), lambda: self.data_reader(self.tableWidget))
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def data_reader(self, edit):
-        row = self.tableWidget.rowCount()
-        column = self.tableWidget.columnCount()
-        print(row, column)
+        row = edit.rowCount()
+        column = edit.columnCount()
         w, h = row, column
         table_list = [[0 for x in range(w)] for y in range(h)]
         for i in range(row):
             for j in range(column):
-                table_list[i][j] = [self.tableWidget.item(i, j).text()]
+                table_list[i][j] = edit.item(i, j).text()
         print(table_list)
 
     def printerhelp(self):

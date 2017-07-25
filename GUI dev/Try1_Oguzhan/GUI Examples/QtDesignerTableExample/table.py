@@ -7,6 +7,7 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+from functools import partial
 import numpy
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -74,22 +75,34 @@ class Ui_MainWindow(object):
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
-
-        self.table_list = []  # initialize table values
-
+        row = self.tableWidget.rowCount()
+        column = self.tableWidget.columnCount()
+        w, h = row, column
+        column_location = 1
+        table_list = [[0 for x in range(w)] for y in range(h)]  # initialize table values
+        column_list = [0 for x in range(w)] #initialize combo_box values
         self.retranslateUi(MainWindow)
-        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.printerhelp)
-        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), lambda: self.data_reader(self.tableWidget, self.table_list))
-        self.table_list = self.data_reader(self.tableWidget, self.table_list)
-        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")), lambda: print(self.table_list))
-        self.tableWidget.cellChanged.connect(lambda: self.cell_changed(self.tableWidget, self.table_list))
+        self.tableWidget.itemChanged.connect(lambda: self.data_reader(self.tableWidget, table_list))
+        self.tableWidget.itemChanged.connect(lambda: self.read_combo_box_values(self.tableWidget, column_list, column_location))
+        table_list = self.data_reader(self.tableWidget, table_list)
+        column_list = self.read_combo_box_values(self.tableWidget, column_list, column_location)
+        self.tableWidget.itemChanged.connect(lambda: print(table_list))
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def read_combo_box_values(self, edit, combo_values, combo_column):
+        row = edit.rowCount()
+        for i in range(row):
+            combo_values[i] = edit.item(i,combo_column).text()
+        return combo_values
+
+
+
 
     def data_reader(self, edit, values):
         row = edit.rowCount()
         column = edit.columnCount()
-        w, h = row, column
-        values = [[0 for x in range(w)] for y in range(h)]
+        # w, h = row, column
+        # # values = [[0 for x in range(w)] for y in range(h)]
         for i in range(row):
             for j in range(column):
                 values[i][j] = edit.item(i, j).text()
@@ -97,12 +110,6 @@ class Ui_MainWindow(object):
 
     def cell_changed(self, edit, values):
         self.data_reader(edit, values)
-
-    def printerhelp(self):
-        print("test")
-        #print(self.tableWidget.item(1, 2).text())
-        #print(self.tableWidget.item(0, 0).text())
-        #print(self.tableWidget.item(2, 2).text())
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
@@ -142,6 +149,7 @@ class Ui_MainWindow(object):
         self.tableWidget.setSortingEnabled(__sortingEnabled)
 
 
+
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
@@ -149,4 +157,20 @@ if __name__ == "__main__":
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
-    sys.exit(app.exec_())
+    # this code is to generate combo box inside the table
+    combo_box_options = ["Option 1", "Option 2", "Option 3"]
+    combo_box = QtGui.QComboBox()
+    for t in combo_box_options:
+        combo_box.addItem(t)
+    r = ui.tableWidget.rowCount()
+    c = ui.tableWidget.columnCount()
+    for i in range(r):
+        combo_box_options = ["Option 1", "Option 2", "Option 3"]
+        combo_box = QtGui.QComboBox()
+        for t in combo_box_options:
+            combo_box.addItem(t)
+        ui.tableWidget.setCellWidget(i,1,combo_box)
+
+
+
+sys.exit(app.exec_())

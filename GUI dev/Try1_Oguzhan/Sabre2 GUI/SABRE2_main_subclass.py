@@ -1,6 +1,6 @@
 import PyQt4
 from PyQt4.QtGui import *
-from PyQt4 import QtCore
+from PyQt4 import QtGui, QtCore
 import pickle
 import SABRE2_GUI
 
@@ -19,6 +19,22 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.setupUi(self)
         ui_layout.DefinitionTabs.hide()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
+
+        # Members Table Arrangements
+        Members_table_options = ["Shear Center", "Flange 1", "Flange 2"]
+        Members_table_position = 3
+        DataCollection.Assign_comboBox(self,ui_layout.Members_table, Members_table_options, Members_table_position)
+        row = ui_layout.Members_table.rowCount()
+        column = ui_layout.Members_table.columnCount()
+        w, h = row, column
+        column_location = 1
+        Members_table_values = [[0 for x in range(w)] for y in range(h)]  # initialize table values
+        ui_layout,
+        # column_list = [0 for x in range(w)] #initialize combo_box values
+        ui_layout.Members_table.itemChanged.connect(lambda: DataCollection.data_reader(ui_layout.Members_table, Members_table_values))
+        Members_table_values = DataCollection.data_reader(ui_layout.Members_table, Members_table_values)
+        ui_layout.Members_table.itemChanged.connect(lambda: print(Members_table_values))
+
 
         # File dropdown actions
         ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
@@ -200,14 +216,33 @@ class DropDownActions(QMainWindow):
         self.statusbar.showMessage(message)
 
 
-class DataCollection(QMainWindow):
+class DataCollection(QMainWindow, QtGui.QItemDelegate):
     """docstring for Actions"""
 
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
+        QtGui.QItemDelegate.__init__(self)
         self.ui = ui_layout
 
-    def TableReading(ui_layout, tableName):
-        row_count = SABRE2_main_subclass.tableName.rowCount()
-        column_count = SABRE2_main_subclass.tableName.columnCount()
-        data = []
+    def Assign_comboBox(self, tableName, options, position):
+        combo_box = QtGui.QComboBox()
+        for t in options:
+            combo_box.addItem(t)
+        r = tableName.rowCount()
+        for i in range(r):
+            combo_box = QtGui.QComboBox()
+            for t in options:
+                combo_box.addItem(t)
+            tableName.setCellWidget(i,position,combo_box)
+
+
+    def data_reader(edit, values):
+        row = edit.rowCount()
+        column = edit.columnCount()
+        # w, h = row, column
+        # # values = [[0 for x in range(w)] for y in range(h)]
+        for i in range(row-1):
+            for j in range(column-1):
+                values[i][j] = edit.item(i, j).text()
+                print (i)
+        return values

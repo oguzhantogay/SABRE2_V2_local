@@ -80,7 +80,7 @@ class Ui_MainWindow(object):
         w, h = row, column
         column_location = 1
         table_list = [[0 for x in range(w)] for y in range(h)]  # initialize table values
-        column_list = [0 for x in range(w)] #initialize combo_box values
+        column_list = [0 for x in range(w)]  # initialize combo_box values
         self.retranslateUi(MainWindow)
         self.tableWidget.itemChanged.connect(lambda: self.data_reader(self.tableWidget, table_list))
         self.tableWidget.itemChanged.connect(lambda: self.read_combo_box_values(self.tableWidget, column_list, column_location))
@@ -92,11 +92,8 @@ class Ui_MainWindow(object):
     def read_combo_box_values(self, edit, combo_values, combo_column):
         row = edit.rowCount()
         for i in range(row):
-            combo_values[i] = edit.item(i,combo_column).text()
+            combo_values[i] = edit.item(i, combo_column).text()
         return combo_values
-
-
-
 
     def data_reader(self, edit, values):
         row = edit.rowCount()
@@ -106,6 +103,7 @@ class Ui_MainWindow(object):
         for i in range(row):
             for j in range(column):
                 values[i][j] = edit.item(i, j).text()
+        print(values[0][2])
         return values
 
     def cell_changed(self, edit, values):
@@ -149,7 +147,6 @@ class Ui_MainWindow(object):
         self.tableWidget.setSortingEnabled(__sortingEnabled)
 
 
-
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
@@ -169,8 +166,8 @@ if __name__ == "__main__":
         combo_box = QtGui.QComboBox()
         for t in combo_box_options:
             combo_box.addItem(t)
-        ui.tableWidget.setCellWidget(i,1,combo_box)
-
+        ui.tableWidget.setCellWidget(i, 1, combo_box)
+        combo_box.activated.connect(lambda: DataCollection.update_values(self, tableName, r, c, position))
 
 
 sys.exit(app.exec_())

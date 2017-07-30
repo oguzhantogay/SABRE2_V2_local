@@ -1,6 +1,7 @@
 import PyQt4
 from PyQt4.QtGui import *
 from PyQt4 import QtGui, QtCore
+from ComboBoxGen import CoBoxGen
 import pickle
 import SABRE2_GUI
 
@@ -14,26 +15,27 @@ except AttributeError:
 class SABRE2_main_subclass(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
-
         self.ui = ui_layout
         ui_layout.setupUi(self)
+        ui_layout.statusBar = self.statusBar()
         ui_layout.DefinitionTabs.hide()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
-
         # Members Table Arrangements
-        Members_table_options = ["Shear Center", "Flange 1", "Flange 2"]
-        Members_table_position = 3
-        DataCollection.Assign_comboBox(self,ui_layout.Members_table, Members_table_options, Members_table_position)
-        row = ui_layout.Members_table.rowCount()
-        column = ui_layout.Members_table.columnCount()
-        w, h = row, column
-        column_location = 1
-        Members_table_values = [[0 for x in range(w)] for y in range(h)]  # initialize table values
-        ui_layout,
-        # column_list = [0 for x in range(w)] #initialize combo_box values
-        ui_layout.Members_table.itemChanged.connect(lambda: DataCollection.data_reader(ui_layout.Members_table, Members_table_values))
-        Members_table_values = DataCollection.data_reader(ui_layout.Members_table, Members_table_values)
-        ui_layout.Members_table.itemChanged.connect(lambda: print(Members_table_values))
+        self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
+        self.Members_table_position = 3
+        Members_table_row, Members_table_column, Members_table_values = DataCollection.table_properties(
+            self, ui_layout.Members_table)
+        DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
+                                       self.Members_table_position, Members_table_values)
+        # print(Members_table_row, Members_table_column, Members_table_values)
+        ui_layout.Members_table.itemChanged.connect(lambda: DataCollection.update_values(self,
+            ui_layout.Members_table, Members_table_row, Members_table_column,self.Members_table_position,
+            Members_table_values))
+
+
+
+        # ui_layout.Members_table.itemChanged.connect(lambda: print(Members_table_values))
+
 
 
         # File dropdown actions
@@ -60,6 +62,7 @@ class SABRE2_main_subclass(QMainWindow):
         analysisprogress = 80  # Update this value later by integrating with analysis**********
         ui_layout.progressBar.setValue(analysisprogress)
         ui_layout.progressBar.setTextVisible(True)
+
 
 
 class DropDownActions(QMainWindow):
@@ -117,7 +120,8 @@ class DropDownActions(QMainWindow):
         # message = "Open an existing file"
         # self.statusbar.showMessage(message)
 
-        fileName = PyQt4.QtGui.QFileDialog.getOpenFileName(None, "Open Sabre2 File", '', "Sabre2 Files (*.mat);;All Files (*)")
+        fileName = PyQt4.QtGui.QFileDialog.getOpenFileName(None, "Open Sabre2 File", '',
+                                                           "Sabre2 Files (*.mat);;All Files (*)")
         if not fileName:
             return
         try:
@@ -159,13 +163,15 @@ class DropDownActions(QMainWindow):
                 fileName
             except NameError:  # if data has not been saved to a file yet invoke popup save screen
                 import pickle
-                fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(None, "Save Sabre2 File", '', "Sabre2 File (*.mat);;All Files (*)")
+                fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(None, "Save Sabre2 File", '',
+                                                                   "Sabre2 File (*.mat);;All Files (*)")
                 if not fileName:
                     return
                 try:
                     out_file = open(str(fileName), 'wb')
                 except IOError:
-                    PyQt4.QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
+                    PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
+                                                        "There was an error opening \"%s\"" % fileName)
                     return
 
                 pickle.dump(inpdata, out_file)
@@ -175,7 +181,8 @@ class DropDownActions(QMainWindow):
                 try:  # if file already exists skip popup and update save file
                     out_file = open(str(fileName), 'wb')
                 except IOError:
-                    PyQt4.QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
+                    PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
+                                                        "There was an error opening \"%s\"" % fileName)
                     return
 
                 pickle.dump(inpdata, out_file)
@@ -192,13 +199,15 @@ class DropDownActions(QMainWindow):
             QtGui.QMessageBox.information(self, "No data has been attributed to the model")
         else:
             import pickle
-            fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(None, "Save Sabre2 File As", '', "Sabre2 File (*.mat);;All Files (*)")
+            fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(None, "Save Sabre2 File As", '',
+                                                               "Sabre2 File (*.mat);;All Files (*)")
             if not fileName:
                 return
             try:
                 out_file = open(str(fileName), 'wb')
             except IOError:
-                PyQt4.QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
+                PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
+                                                    "There was an error opening \"%s\"" % fileName)
                 return
 
             pickle.dump(inpdata, out_file)
@@ -215,8 +224,11 @@ class DropDownActions(QMainWindow):
         message = "Preview screen print"
         self.statusbar.showMessage(message)
 
+    def statusMessage(self,message):
+        self.ui.statusBar.showMessage(message)
 
-class DataCollection(QMainWindow, QtGui.QItemDelegate):
+
+class DataCollection(QMainWindow):
     """docstring for Actions"""
 
     def __init__(self, ui_layout):
@@ -224,25 +236,75 @@ class DataCollection(QMainWindow, QtGui.QItemDelegate):
         QtGui.QItemDelegate.__init__(self)
         self.ui = ui_layout
 
-    def Assign_comboBox(self, tableName, options, position):
+    def Assign_comboBox(self, tableName, options, position, values):
         combo_box = QtGui.QComboBox()
         for t in options:
             combo_box.addItem(t)
         r = tableName.rowCount()
+        c = tableName.columnCount()
         for i in range(r):
             combo_box = QtGui.QComboBox()
             for t in options:
                 combo_box.addItem(t)
-            tableName.setCellWidget(i,position,combo_box)
+            tableName.setCellWidget(i, position, combo_box)
+            combo_box.activated.connect(lambda: DataCollection.update_values(self,tableName, r, c, position, values, i))
+        return tableName
 
+    def data_reader(self, edit, values):
+        try:
+            row = edit.rowCount()
+            column = edit.columnCount()
+            for i in range(row):
+                for j in range(column):
+                    values[i][j] = edit.item(i, j).text()
+                    print(i)
+            return values
+        except AttributeError:
+            message = 'Please fill the properties in Definition tab.'
+            ui_layout.statusbar.showMessage(message)
 
-    def data_reader(edit, values):
+    def table_properties(self, edit):
+        "Initializing the table properties"
+
         row = edit.rowCount()
         column = edit.columnCount()
-        # w, h = row, column
-        # # values = [[0 for x in range(w)] for y in range(h)]
-        for i in range(row-1):
-            for j in range(column-1):
-                values[i][j] = edit.item(i, j).text()
-                print (i)
-        return values
+        r, c = row, column
+        table_initiation = [[0 for x in range(r)] for y in range(c)]  # initialize table values
+        return r, c, table_initiation
+
+    def update_values(self, tableName, numberRow, numberCol, position, values, row_count=0):
+        col = tableName.currentColumn()
+        row = tableName.currentRow()
+        row_check = tableName.rowCount()
+        value_combo = tableName.cellWidget(0, position).currentIndex()
+        try:
+            if row_check == 1:
+                if col and row is -1:
+                    values[position] = [value_combo]
+                    DropDownActions.statusMessage(self, message="")
+                else:
+                    values[col] = [float(tableName.item(row, col).text())]
+                    DropDownActions.statusMessage(self, message="")
+            else:
+                if col and row is -1:
+                    values[position] = [value_combo]
+                    DropDownActions.statusMessage(self, message="")
+                else:
+                    values[col] = [float(tableName.item(row,col).text())]
+                    DropDownActions.statusMessage(self, message="")
+        except ValueError:
+            tableName.clearSelection()
+            tableName.item(row,col).setText("")
+            DropDownActions.statusMessage(self,message="Please enter only numbers!")
+
+
+        print(values)
+        # if row_count ==
+        # y = tableName.cellWidget(0, position).currentIndex()
+        # for i in range(numberRow):
+        #     for j in range(numberCol):
+        #         values = DataCollection.data_reader(self,tableName, values)
+        #         if j == position:
+        #             values[row_count, position] = [y]
+
+

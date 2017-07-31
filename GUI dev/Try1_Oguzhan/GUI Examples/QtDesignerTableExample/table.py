@@ -103,11 +103,7 @@ class Ui_MainWindow(object):
         for i in range(row):
             for j in range(column):
                 values[i][j] = edit.item(i, j).text()
-        print(values[0][2])
         return values
-
-    def cell_changed(self, edit, values):
-        self.data_reader(edit, values)
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))

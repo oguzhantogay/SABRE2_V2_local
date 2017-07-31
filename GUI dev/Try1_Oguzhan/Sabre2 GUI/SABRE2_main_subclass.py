@@ -21,6 +21,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.DefinitionTabs.hide()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
         # Members Table Arrangements
+
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
         self.Members_table_position = 3
         Members_table_row, Members_table_column, Members_table_values = DataCollection.table_properties(
@@ -28,11 +29,10 @@ class SABRE2_main_subclass(QMainWindow):
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
                                        self.Members_table_position, Members_table_values)
         # print(Members_table_row, Members_table_column, Members_table_values)
-        ui_layout.Members_table.itemChanged.connect(lambda: DataCollection.update_values(self,
-            ui_layout.Members_table, Members_table_row, Members_table_column,self.Members_table_position,
-            Members_table_values))
-
-
+        self.updated_values = DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
+                                                           Members_table_column, self.Members_table_position,
+                                                           Members_table_values)
+        ui_layout.Members_table.itemChanged.connect(lambda: print(self.updated_values))
 
         # ui_layout.Members_table.itemChanged.connect(lambda: print(Members_table_values))
 
@@ -62,7 +62,6 @@ class SABRE2_main_subclass(QMainWindow):
         analysisprogress = 80  # Update this value later by integrating with analysis**********
         ui_layout.progressBar.setValue(analysisprogress)
         ui_layout.progressBar.setTextVisible(True)
-
 
 
 class DropDownActions(QMainWindow):
@@ -224,7 +223,7 @@ class DropDownActions(QMainWindow):
         message = "Preview screen print"
         self.statusbar.showMessage(message)
 
-    def statusMessage(self,message):
+    def statusMessage(self, message):
         self.ui.statusBar.showMessage(message)
 
 
@@ -238,6 +237,7 @@ class DataCollection(QMainWindow):
 
     def Assign_comboBox(self, tableName, options, position, values):
         combo_box = QtGui.QComboBox()
+        flag_combo = 1
         for t in options:
             combo_box.addItem(t)
         r = tableName.rowCount()
@@ -247,7 +247,8 @@ class DataCollection(QMainWindow):
             for t in options:
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
-            combo_box.activated.connect(lambda: DataCollection.update_values(self,tableName, r, c, position, values, i))
+            combo_box.activated.connect(
+                lambda: DataCollection.update_values(self, tableName, r, c, position, values, i, flag_combo))
         return tableName
 
     def data_reader(self, edit, values):
@@ -272,39 +273,39 @@ class DataCollection(QMainWindow):
         table_initiation = [[0 for x in range(r)] for y in range(c)]  # initialize table values
         return r, c, table_initiation
 
-    def update_values(self, tableName, numberRow, numberCol, position, values, row_count=0):
+    def update_values(self, tableName, numberRow, numberCol, position, val1, row_count=0, flag_combo=0):
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
         value_combo = tableName.cellWidget(0, position).currentIndex()
-        try:
+        if flag_combo == 0:
+            try:
+                if row_check == 1:
+                    if tableName.item(row, col) is None:
+                        print("test")
+                        pass
+                    else:
+                        val1[col] = [float(tableName.item(row, col).text())]
+                        DropDownActions.statusMessage(self, message="")
+                else:
+                    if tableName.item(row, col) is None:
+                        pass
+                    else:
+                        val1[row][col] = [float(tableName.item(row, col).text())]
+                        DropDownActions.statusMessage(self, message="")
+            except ValueError:
+                tableName.clearSelection()
+                tableName.item(row, col).setText("")
+                DropDownActions.statusMessage(self, message="Please enter only numbers!")
+        else:
+            row_check = tableName.rowCount()
+            value_combo = tableName.cellWidget(0, position).currentIndex()
             if row_check == 1:
-                if col and row is -1:
-                    values[position] = [value_combo]
-                    DropDownActions.statusMessage(self, message="")
-                else:
-                    values[col] = [float(tableName.item(row, col).text())]
-                    DropDownActions.statusMessage(self, message="")
+                val1[position] = [value_combo]
+                DropDownActions.statusMessage(self, message="")
             else:
-                if col and row is -1:
-                    values[position] = [value_combo]
-                    DropDownActions.statusMessage(self, message="")
-                else:
-                    values[col] = [float(tableName.item(row,col).text())]
-                    DropDownActions.statusMessage(self, message="")
-        except ValueError:
-            tableName.clearSelection()
-            tableName.item(row,col).setText("")
-            DropDownActions.statusMessage(self,message="Please enter only numbers!")
+                val1[position] = [value_combo]
+                DropDownActions.statusMessage(self, message="")
+        # update_flag = 1
 
-
-        print(values)
-        # if row_count ==
-        # y = tableName.cellWidget(0, position).currentIndex()
-        # for i in range(numberRow):
-        #     for j in range(numberCol):
-        #         values = DataCollection.data_reader(self,tableName, values)
-        #         if j == position:
-        #             values[row_count, position] = [y]
-
-
+        return val1

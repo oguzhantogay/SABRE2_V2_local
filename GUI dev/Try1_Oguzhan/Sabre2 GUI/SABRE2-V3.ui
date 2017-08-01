@@ -464,7 +464,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -697,7 +697,7 @@
         <item>
          <widget class="QTabWidget" name="Members_tabs">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="Member_Def">
            <attribute name="title">
@@ -705,7 +705,7 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
-             <widget class="QTableWidget" name="tableWidget">
+             <widget class="QTableWidget" name="Members_table">
               <attribute name="horizontalHeaderDefaultSectionSize">
                <number>70</number>
               </attribute>
@@ -879,6 +879,11 @@
                 </font>
                </property>
               </column>
+              <item row="0" column="3">
+               <property name="text">
+                <string>0</string>
+               </property>
+              </item>
              </widget>
             </item>
             <item>
@@ -2537,8 +2542,8 @@ Number</string>
                 <rect>
                  <x>0</x>
                  <y>0</y>
-                 <width>1053</width>
-                 <height>75</height>
+                 <width>98</width>
+                 <height>28</height>
                 </rect>
                </property>
               </widget>

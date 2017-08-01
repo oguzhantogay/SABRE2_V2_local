@@ -123,5 +123,21 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>tableWidget</sender>
+   <signal>cellChanged(int,int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>update()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>109</x>
+     <y>106</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>58</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
 </ui>

@@ -105,6 +105,9 @@ class Ui_MainWindow(object):
                 values[i][j] = edit.item(i, j).text()
         return values
 
+    def cell_changed(self, edit, values):
+        self.data_reader(edit, values)
+
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
         self.pushButton.setText(_translate("MainWindow", "Click", None))

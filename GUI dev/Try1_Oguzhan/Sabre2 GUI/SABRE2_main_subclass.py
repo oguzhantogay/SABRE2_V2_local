@@ -26,15 +26,30 @@ class SABRE2_main_subclass(QMainWindow):
         self.Members_table_position = 3
         Members_table_row, Members_table_column, Members_table_values = DataCollection.table_properties(
             self, ui_layout.Members_table)
+        # updated_values = [[0 for x in range(Members_table_row)] for y in range(Members_table_column)]
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
                                        self.Members_table_position, Members_table_values)
-        # print(Members_table_row, Members_table_column, Members_table_values)
-        self.updated_values = DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
-                                                           Members_table_column, self.Members_table_position,
-                                                           Members_table_values)
-        ui_layout.Members_table.itemChanged.connect(lambda: print(self.updated_values))
+        DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
+                                     Members_table_column, Members_table_values,
+                                     self.Members_table_position)
+        ui_layout.Members_table.itemChanged.connect(
+            lambda: DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
+                                                 Members_table_column, Members_table_values,
+                                                 self.Members_table_position))
 
-        # ui_layout.Members_table.itemChanged.connect(lambda: print(Members_table_values))
+        Members_table_values = DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
+                                                            Members_table_column, Members_table_values,
+                                                            self.Members_table_position)
+
+        ui_layout.Members_table.itemChanged.connect(lambda: print(Members_table_values))
+        # ui_layout.Members_table.clicked.connect(lambda: print(updated_values))
+
+        # ui_layout.Members_table.itemChanged.connect(lambda: print(updated_values))
+        # variable = ui_layout.Members_table.itemChanged.connect(lambda: DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
+        #                                               Members_table_column, Members_table_values,
+        #                                               self.Members_table_position))
+        #
+        # ui_layout.Joints_Table.clicked.connect(lambda: print(variable))
 
 
 
@@ -248,24 +263,16 @@ class DataCollection(QMainWindow):
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
             combo_box.activated.connect(
-                lambda: DataCollection.update_values(self, tableName, r, c, position, values, i, flag_combo))
+                lambda: DataCollection.update_values(self, tableName, r, c, values, position, i, flag_combo))
+        text_trigger = tableName.item(0, 3)
+        if text_trigger.text() == "1":
+            tableName.item(0, 3).setText("0")
+        else:
+            tableName.item(0, 3).setText("1")
         return tableName
 
-    def data_reader(self, edit, values):
-        try:
-            row = edit.rowCount()
-            column = edit.columnCount()
-            for i in range(row):
-                for j in range(column):
-                    values[i][j] = edit.item(i, j).text()
-                    print(i)
-            return values
-        except AttributeError:
-            message = 'Please fill the properties in Definition tab.'
-            ui_layout.statusbar.showMessage(message)
-
     def table_properties(self, edit):
-        "Initializing the table properties"
+        """Initializing the table properties"""
 
         row = edit.rowCount()
         column = edit.columnCount()
@@ -273,26 +280,20 @@ class DataCollection(QMainWindow):
         table_initiation = [[0 for x in range(r)] for y in range(c)]  # initialize table values
         return r, c, table_initiation
 
-    def update_values(self, tableName, numberRow, numberCol, position, val1, row_count=0, flag_combo=0):
+    def update_values(self, tableName, numberRow, numberCol, val1, position, row_count=0, flag_combo=0):
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
-        value_combo = tableName.cellWidget(0, position).currentIndex()
-        if flag_combo == 0:
+        if row == -1:
+            pass
+        elif flag_combo == 0:
             try:
                 if row_check == 1:
-                    if tableName.item(row, col) is None:
-                        print("test")
-                        pass
-                    else:
-                        val1[col] = [float(tableName.item(row, col).text())]
-                        DropDownActions.statusMessage(self, message="")
+                    val1[col] = [float(tableName.item(row, col).text())]
+                    DropDownActions.statusMessage(self, message="")
                 else:
-                    if tableName.item(row, col) is None:
-                        pass
-                    else:
-                        val1[row][col] = [float(tableName.item(row, col).text())]
-                        DropDownActions.statusMessage(self, message="")
+                    val1[row][col] = [float(tableName.item(row, col).text())]
+                    DropDownActions.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
@@ -304,8 +305,6 @@ class DataCollection(QMainWindow):
                 val1[position] = [value_combo]
                 DropDownActions.statusMessage(self, message="")
             else:
-                val1[position] = [value_combo]
+                val1[row][position] = [value_combo]
                 DropDownActions.statusMessage(self, message="")
-        # update_flag = 1
-
         return val1

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'SABRE2-V3.ui'
+# Form implementation generated from reading ui file 'try6.ui'
 #
 # Created by: PyQt4 UI code generator 4.11.4
 #
@@ -1135,7 +1135,7 @@ class Ui_SABRE2_V3(object):
         self.LoadCombinationNames.setWidgetResizable(True)
         self.LoadCombinationNames.setObjectName(_fromUtf8("LoadCombinationNames"))
         self.LCnamesContext = QtGui.QWidget()
-        self.LCnamesContext.setGeometry(QtCore.QRect(0, 0, 98, 28))
+        self.LCnamesContext.setGeometry(QtCore.QRect(0, 0, 1053, 75))
         self.LCnamesContext.setObjectName(_fromUtf8("LCnamesContext"))
         self.LoadCombinationNames.setWidget(self.LCnamesContext)
         self.verticalLayout_7.addWidget(self.LoadCombinationNames)
@@ -1559,6 +1559,8 @@ class Ui_SABRE2_V3(object):
         QtCore.QObject.connect(self.MainWindowButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.DefinitionTabs.hide)
         QtCore.QObject.connect(self.AnalysisButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.AnalysisTabs.show)
         QtCore.QObject.connect(self.MainWindowButton, QtCore.SIGNAL(_fromUtf8("clicked()")), self.AnalysisTabs.hide)
+        QtCore.QObject.connect(self.Mem_def_add, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Members_table.update)
+        QtCore.QObject.connect(self.Members_table, QtCore.SIGNAL(_fromUtf8("itemChanged(QTableWidgetItem*)")), self.Insert_row_number_mem_def.update)
         QtCore.QMetaObject.connectSlotsByName(SABRE2_V3)
 
     def retranslateUi(self, SABRE2_V3):
@@ -1655,7 +1657,7 @@ class Ui_SABRE2_V3(object):
         __sortingEnabled = self.Members_table.isSortingEnabled()
         self.Members_table.setSortingEnabled(False)
         item = self.Members_table.item(0, 3)
-        item.setText(_translate("SABRE2_V3", "1", None))
+        item.setText(_translate("SABRE2_V3", "0", None))
         self.Members_table.setSortingEnabled(__sortingEnabled)
         self.AISC_database_button.setItemText(0, _translate("SABRE2_V3", "AISC Database", None))
         self.AISC_assign_button.setText(_translate("SABRE2_V3", "Assign", None))

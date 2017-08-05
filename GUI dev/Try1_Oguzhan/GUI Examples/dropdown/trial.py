@@ -1,64 +1,35 @@
-#!/usr/bin/env python
-#-*- coding:utf-8 -*-
-
-#---------
-# IMPORT
-#---------
-from PyQt4 import QtGui, QtCore
-
-#---------
-# MAIN
-#---------
-
-
-class MyWindow(QtGui.QWidget):
-    def __init__(self, parent=None):
-        super(MyWindow, self).__init__(parent)
-
-        numberRows = 3
-        numberColumns = 3
-
-        self.tableWidget = QtGui.QTableWidget(self)
-        self.tableWidget.setRowCount(numberRows)
-        self.tableWidget.setColumnCount(numberColumns)
-
-        self.signalMapper = QtCore.QSignalMapper(self)
-        self.signalMapper.mapped[QtGui.QWidget].connect(self.on_signalMapper_mapped)
-
-        for rowNumber in range(numberRows):
-            for columnNumber in range(numberColumns):
-                comboBox = QtGui.QComboBox()
-                comboBox.currentIndexChanged.connect(self.signalMapper.map)
-                comboBox.addItems([
-                    "{0}-{1}-{2}".format(rowNumber, columnNumber, itemNumber)
-                    for itemNumber in range(3)
-                ])
-                comboBox.row = rowNumber
-                comboBox.column = columnNumber
-
-                self.tableWidget.setCellWidget(rowNumber, columnNumber, comboBox)
-
-                self.signalMapper.setMapping(comboBox, comboBox)
-
-        self.layoutVertical = QtGui.QVBoxLayout(self)
-        self.layoutVertical.addWidget(self.tableWidget)
-
-    @QtCore.pyqtSlot(QtGui.QWidget)
-    def on_signalMapper_mapped(self, comboBox):
-        print("row: {0} column: {1} text: {2}".format(
-            comboBox.row,
-            comboBox.column,
-            comboBox.currentText()
-        ))
-
-if __name__ == "__main__":
-    import sys
-
-    app = QtGui.QApplication(sys.argv)
-    app.setApplicationName('MyWindow')
-
-    main = MyWindow()
-    main.resize(333, 111)
-    main.show()
-
-    sys.exit(app.exec_())
+    def update_values(self, tableName, numberRow, numberCol, val1, position, row_count=0, flag_combo=0):
+        col = 0
+        row = 0
+        row_check = 1
+        print("testout")
+        if row == -1:
+            pass
+        elif flag_combo == 0:
+            print("test")
+            try:
+                if row_check == 1:
+                    val1[col] = [float(tableName.item(row, col).text())]
+                    DropDownActions.statusMessage(self, message="")
+                    print("test")
+                else:
+                    print("test")
+                    val1[row][col] = [float(tableName.item(row, col).text())]
+                    DropDownActions.statusMessage(self, message="")
+            except ValueError:
+                tableName.clearSelection()
+                tableName.item(row, col).setText("")
+                DropDownActions.statusMessage(self, message="Please enter only numbers!")
+        else:
+            row_check = tableName.rowCount()
+            value_combo = tableName.cellWidget(0, position).currentIndex()
+            if row_check == 1:
+                print("test")
+                val1[position] = [value_combo]
+                DropDownActions.statusMessage(self, message="")
+            else:
+                print("test")
+                val1[row_count][position] = [value_combo]
+                DropDownActions.statusMessage(self, message="")
+                # update_flag = 1
+        return val1

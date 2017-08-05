@@ -21,7 +21,6 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.statusBar = self.statusBar()
         ui_layout.DefinitionTabs.hide()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
-
         # Members Table Arrangements
 
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
@@ -300,21 +299,14 @@ class DataCollection(QMainWindow):
         row = tableName.currentRow()
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
-        # print(row, row_check)
-        # print(val1)
-        print(row, row_check)
-
+        print(row)
         if row == -1:
             pass
         elif flag_combo == 0:
             try:
-                if row_check == 1:
-                    val1[col] = [float(tableName.item(row, col).text())]
-                    DropDownActions.statusMessage(self, message="")
-                else:
-                    print(row, col)
-                    val1[row][col] = [float(tableName.item(row, col).text())]
-                    DropDownActions.statusMessage(self, message="")
+                print("test row 1q")
+                val1[row, col] = float(tableName.item(row, col).text())
+                DropDownActions.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
@@ -322,17 +314,13 @@ class DataCollection(QMainWindow):
         else:
             row_check = tableName.rowCount()
             value_combo = tableName.cellWidget(0, position).currentIndex()
-            if row_check == 1:
-                val1[position] = [value_combo]
-                DropDownActions.statusMessage(self, message="")
-            else:
-                val1[row][position] = [value_combo]
-                DropDownActions.statusMessage(self, message="")
+            val1[row, position] = value_combo
+            DropDownActions.statusMessage(self, message="")
         return val1
 
 
 class TableChanges(QMainWindow):
-    """docstring for Actions"""
+    """This Class is imposing the changes on the Definition Tables"""
 
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
@@ -347,7 +335,8 @@ class TableChanges(QMainWindow):
         table_add = numpy.zeros((1, col_number))
         # table_add = [[0 for x in range(row_check-row)] for y in range(col_check)]
         print("tableadd", table_add)
-        val1 = numpy.append(values, table_add, axis=0)
-        print("val1 = ",val1)
+        for i in range(row_position-numpy.size(values,0)+1):
+            values = numpy.append(values, table_add, axis=0)
+        print("val1 = ", values)
 
         DataCollection.Assign_comboBox(self, tableName, options, position, values)

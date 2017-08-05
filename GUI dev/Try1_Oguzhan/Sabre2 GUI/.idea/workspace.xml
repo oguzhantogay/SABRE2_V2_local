@@ -2,6 +2,70 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3bdc81c-f851-421a-a983-520f479e3ce7" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ComboBoxGen.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/GUI_test.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/GUI_test_backup1.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/SABRE2-V3_signal_test.ui" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/TableCombo.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/box-outline.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/box-outline1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/box-outline2.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_assessment_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_assignment_late_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_assignment_return_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_autorenew_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_camera_enhance_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_crop_rotate_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_delete_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_done_all_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_exit_to_app_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_extension_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_fast_forward_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_fiber_new_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_file_download_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_find_in_page_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_flag_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_folder_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_grid_off_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_grid_on_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_home_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_info_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_info_outline_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_input_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_insert_chart_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_invert_colors_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_keyboard_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_keyboard_arrow_left_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_keyboard_arrow_right_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_keyboard_hide_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_list_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_lock_open_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_lock_outline_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_note_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_note_add_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_open_with_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_pan_tool_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_pause_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_play_arrow_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_power_settings_new_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_print_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_save_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_settings_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_settings_overscan_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_tab_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_thumb_up_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_update_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_verified_user_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_visibility_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_visibility_off_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_warning_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_zoom_in_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_zoom_out_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_zoom_out_map_36pt_2x.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test1.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/text1.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/textrun.txt" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2_main_subclass.py" afterPath="$PROJECT_DIR$/SABRE2_main_subclass.py" />
     </list>
@@ -13,7 +77,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Sabre2_GUI$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1501958895962" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Sabre2_GUI$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1501959741675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -44,8 +108,8 @@
       <file leaf-file-name="SABRE2_main_subclass.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="309" column="30" lean-forward="true" selection-start-line="309" selection-start-column="30" selection-end-line="309" selection-end-column="30" />
+            <state relative-caret-position="160">
+              <caret line="8" column="39" lean-forward="true" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -88,6 +152,7 @@
       <find>hide</find>
       <find>DataCollection</find>
       <find>Mem_def_add</find>
+      <find>CoBoxGen</find>
     </findStrings>
     <replaceStrings>
       <replace>members_table_values</replace>
@@ -113,10 +178,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1426" />
+    <option name="x" value="-1474" />
     <option name="y" value="17" />
     <option name="width" value="998" />
-    <option name="height" value="1057" />
+    <option name="height" value="1031" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -202,6 +267,14 @@
       <option name="presentableId" value="Default" />
       <updated>1501124604734</updated>
     </task>
+    <task id="LOCAL-00001" summary="Github commit from pycharm">
+      <created>1501959361533</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1501959361533</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -221,7 +294,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22977346" sideWeight="0.51875" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901832" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22977346" sideWeight="0.48125" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -241,8 +314,22 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Github commit from pycharm" />
+    <option name="LAST_COMMIT_MESSAGE" value="Github commit from pycharm" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -383,8 +470,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="309" column="30" lean-forward="true" selection-start-line="309" selection-start-column="30" selection-end-line="309" selection-end-column="30" />
+        <state relative-caret-position="160">
+          <caret line="8" column="39" lean-forward="true" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>

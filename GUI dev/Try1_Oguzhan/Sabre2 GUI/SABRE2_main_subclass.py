@@ -1,7 +1,6 @@
 import PyQt4
 from PyQt4.QtGui import *
 from PyQt4 import QtGui, QtCore
-from ComboBoxGen import CoBoxGen
 import pickle
 import SABRE2_GUI
 import numpy

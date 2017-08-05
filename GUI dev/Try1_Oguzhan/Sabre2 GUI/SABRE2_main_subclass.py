@@ -3,6 +3,8 @@ from PyQt4.QtGui import *
 from PyQt4 import QtGui, QtCore
 from ComboBoxGen import CoBoxGen
 import pickle
+import numpy as np
+# np.set_printoptions(threshold=np.nan)
 import SABRE2_GUI
 
 try:
@@ -10,6 +12,35 @@ try:
 except AttributeError:
     def _fromUtf8(s):
         return s
+
+# Preallocate Data
+JNodevalue = np.zeros((2, 4))        # Joint Nodes Information
+Massemble = np.zeros((1, 16))       # Member assemble Information
+JNodevalue_i = np.zeros((1, 14))    # Joint Nodes i Information
+JNodevalue_j = np.zeros((1, 14))    # Joint Nodes j Information
+Rval = np.zeros((1, 2))                   # Reference axis
+BNodevalue = np.zeros((1, 1, 2))    # Additional Nodes Information
+SNodevalue = np.zeros((1, 1, 11))  # Material Properties & # of ele.
+RNCc = np.zeros((11, 13))             # Total Nodes Information without duplication
+NCc = np.zeros((11, 13))               # Total Nodes Information without duplication
+Nshe1 = np.zeros((10, 12))            # Total Nodes SC Information for start nodes
+Nshe2 = np.zeros((10, 12))            # Total Nodes SC Information for end nodes
+DUP1 = np.zeros((10, 14))             # Total Nodes RA Information for start nodes
+DUP2 = np.zeros((10, 14))             # Total Nodes RA Information for end nodes
+LNC = np.zeros((11, 14))               # Point Loading Nodal Information
+LNC1 = np.zeros((10, 14))             # Point Loading Information for start nodes
+LNC2 = np.zeros((10, 14))             # Point Loading Information for end nodes
+LUEC = []                                     # Distributed Loading Information
+PNC = np.zeros((11, 14))              # Fixed Boundary Condition Information
+PNC1 = np.zeros((10, 14))            # Fixed Boundary Condition Information for start nodes
+PNC2 = np.zeros((10, 14))            # Fixed Boundary Condition Information for end nodes
+BNC = []                                      # Ground Spring Information
+BNC1 = []                                    # Shear Panel Information for start nodes
+BNC2 = []                                    # Shear Panel Information for end nodes
+FEL = []                                       # Flexure Information
+
+
+print(JNodevalue)
 
 
 class SABRE2_main_subclass(QMainWindow):
@@ -35,8 +66,6 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Members_table.itemChanged.connect(lambda: print(self.updated_values))
 
         # ui_layout.Members_table.itemChanged.connect(lambda: print(Members_table_values))
-
-
 
         # File dropdown actions
         ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
@@ -225,6 +254,94 @@ class DropDownActions(QMainWindow):
 
     def statusMessage(self, message):
         self.ui.statusBar.showMessage(message)
+
+
+# class Data(object):
+#     """Preallocate and format data"""
+
+#     def __init__(self, ui_layout):
+#         QMainWindow.__init__(self)
+#         self.ui = ui_layout
+
+#     def JNodevalue():       # Joint Nodes Information
+#         JNodevalue = np.ones((2, 4))
+
+#     def Massemble():        # Member assemble Information
+#         Massemble = np.zeros((1, 16))
+
+#     def JNodevalue_i():     # Joint Nodes i Information
+#         JNodevalue_i = np.zeros((1, 14))
+
+#     def JNodevalue_j():     # Joint Nodes j Information
+#         JNodevalue_j = np.zeros((1, 14))
+
+#     def Rval():                  # Reference axis
+#         Rval = np.zeros((1, 2))
+
+#     def BNodevalue():       # Additional Nodes Information
+#         BNodevalue = np.zeros((1, 1, 2))
+
+#     def SNodevalue():       # Material Properties & # of ele.
+#         SNodevalue = np.zeros((1, 1, 11))
+
+#     def RNCc():                # Total Nodes Information without duplication
+#         RNCc = np.zeros((11, 13))
+
+#     def NCc():                   # Total Nodes Information without duplication
+#         NCc = np.zeros((11, 13))
+
+#     def Nshe1():               # Total Nodes SC Information for start nodes
+#         Nshe1 = np.zeros((10, 12))
+
+#     def Nshe2():               # Total Nodes SC Information for end nodes
+#         Nshe2 = np.zeros((10, 12))
+
+#     def DUP1():               # Total Nodes RA Information for start nodes
+#         DUP1 = np.zeros((10, 14))
+
+#     def DUP2():               # Total Nodes RA Information for end nodes
+#         DUP2 = np.zeros((10, 14))
+
+#     def LNC():                 # Point Loading Nodal Information
+#         LNC = np.zeros((11, 14))
+
+#     def LNC1():               # Point Loading Information for start nodes
+#         LNC1 = np.zeros((10, 14))
+
+#     def LNC2():               # Point Loading Information for end nodes
+#         LNC2 = np.zeros((10, 14))
+
+#     def LUEC():              # Distributed Loading Information
+#         LUEC = []
+
+#     def PNC():                # Fixed Boundary Condition Information
+#         PNC = np.zeros((11, 14))
+
+#     def PNC1():               # Fixed Boundary Condition Information for start nodes
+#         PNC1 = np.zeros((10, 14))
+
+#     def PNC2():               # Fixed Boundary Condition Information for end nodes
+#         PNC2 = np.zeros((10, 14))
+
+#     def BNC():                 # Ground Spring Information
+#         BNC = []
+
+#     def BNC1():                # Shear Panel Information for start nodes
+#         BNC1 = []
+
+#     def BNC2():                # Shear Panel Information for end nodes
+#         BNC2 = []
+
+#     def FEL():                  # Flexure Information
+#         FEL = []
+
+#     print(JNodevalue())
+#     print(np.histogram(JNodevalue))
+# print(Data.JNodevalue.shape)
+
+#pprint = Data.JNodevalue.__len__()
+# # print(Data.JNodevalue[1, 1])
+# print(pprint)
 
 
 class DataCollection(QMainWindow):

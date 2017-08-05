@@ -4,14 +4,14 @@ inpath='C:\Users\rslein3\SABRE2-V3\SABRE2_mod_ryan\input\';
 outpath='C:\Users\rslein3\SABRE2-V3\SABRE2_mod_ryan\output\';
 %% ---------------------------------------------------------------------
 
-Analysis_type='INBA';
+Analysis_type='ELBA';
 
 inpfilename = ls(fullfile(inpath, '*.mat')); %import all .mat files within a path directory
 numfiles=size(inpfilename,1);
 writeID = fullfile(outpath,'out.txt'); 
 outfile =strcat(writeID);   % Output file name.
 out = fopen(outfile,'wt');  % Output file is opened.  
-for runs=6:6%numfiles
+for runs=1:1%numfiles
 filename=inpfilename(runs,:);
 
 % ************************************************************************
@@ -23,6 +23,7 @@ data=load(fullfile(inpath,filename));
 [JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,...
  SNodevalue,RNCc,NCc,Nshe1,Nshe2,DUP1,DUP2,LNC,LNC1,LNC2,...
  LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,AnalP]=SABRE2OpenCODE_ryan(data);
+
 % Conditions update
 %Massemble,Rval,JNodevalue_i,JNodevalue_j,SNodevalue,RNCc,Nshe1,Nshe2,DUP1,DUP2,LNC,LNC1,LNC2,...
 %LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL

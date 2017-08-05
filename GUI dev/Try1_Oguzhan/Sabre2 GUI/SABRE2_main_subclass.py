@@ -61,6 +61,47 @@ class SABRE2_main_subclass(QMainWindow):
 
 
 
+
+        self.Fixities_table_options = [0, 1]
+        self.Fixities_table_position = 1
+        Fixities_table_row, Fixities_table_column, Fixities_table_values = DataCollection.table_properties(
+            self, ui_layout.Fixities_table)
+
+        # Add new row button
+        ui_layout.Add_new_row_fixities.clicked.connect(lambda: TableChanges.add_new_row_fixit(self, ui_layout.Fixities_table, self.Fixities_table_options,
+                                                        self.Fixities_table_position, Fixities_table_values))
+        # The data update for Fixities tab
+        DataCollection.Assign_checkBox(self, ui_layout.Fixities_table, self.Fixities_table_options,
+                                       self.Fixities_table_position, Fixities_table_values)
+        DataCollection.update_values(self, ui_layout.Fixities_table, Fixities_table_row,
+                                     Fixities_table_column, Fixities_table_values,
+                                     self.Fixities_table_position)
+        ui_layout.Fixities_table.itemChanged.connect(
+            lambda: DataCollection.update_values(self, ui_layout.Fixities_table, Fixities_table_row,
+                                                 Fixities_table_column, Fixities_table_values,
+                                                 self.Fixities_table_position))
+
+        Fixities_table_values = DataCollection.update_values(self, ui_layout.Fixities_table, Fixities_table_row,
+                                                            Fixities_table_column, Fixities_table_values,
+                                                            self.Fixities_table_position)
+
+        ui_layout.Fixities_table.itemChanged.connect(lambda: print(Fixities_table_values))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         # File dropdown actions
         ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
         ui_layout.actionOpen.triggered.connect(lambda: DropDownActions('uidesign').OpenAct())
@@ -278,6 +319,23 @@ class DataCollection(QMainWindow):
             tableName.item(0, 3).setText("1")
         return tableName
 
+    def Assign_checkBox(self, tableName, options, position, values):
+        check_box = QtGui.QCheckBox()
+        flag_check = 1; flag_uncheck = 0
+        r = tableName.rowCount()
+        c = tableName.columnCount()
+        for i in range(r):
+            check_box = QtGui.QCheckBox()
+            tableName.setCellWidget(i, position, check_box)
+            check_box.clicked.connect(
+                lambda: DataCollection.update_values(self, tableName, r, c, values, position, i, flag_check))
+        text_trigger = tableName.item(0, 1)
+        if text_trigger.text() == "1":
+            tableName.item(0, 1).setText("0")
+        else:
+            tableName.item(0, 1).setText("1")
+        return tableName
+
     def table_properties(self, edit):
         """Initializing the table properties"""
 
@@ -339,3 +397,17 @@ class TableChanges(QMainWindow):
         print("val1 = ", values)
 
         DataCollection.Assign_comboBox(self, tableName, options, position, values)
+
+    def add_new_row_fixit(self, tableName, options, position, values):
+        row_position = tableName.rowCount()
+        col_number = tableName.columnCount()
+
+        tableName.insertRow(row_position)
+        table_add = numpy.zeros((1, col_number))
+        # table_add = [[0 for x in range(row_check-row)] for y in range(col_check)]
+        print("tableadd", table_add)
+        for i in range(row_position-numpy.size(values,0)+1):
+            values = numpy.append(values, table_add, axis=0)
+        print("val1 = ", values)
+
+        DataCollection.Assign_checkBox(self, tableName, options, position, values)

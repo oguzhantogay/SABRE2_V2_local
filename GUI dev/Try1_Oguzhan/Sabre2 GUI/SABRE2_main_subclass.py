@@ -20,13 +20,22 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.statusBar = self.statusBar()
         ui_layout.DefinitionTabs.hide()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
+
         # Members Table Arrangements
 
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
         self.Members_table_position = 3
         Members_table_row, Members_table_column, Members_table_values = DataCollection.table_properties(
             self, ui_layout.Members_table)
-        # updated_values = [[0 for x in range(Members_table_row)] for y in range(Members_table_column)]
+
+        # Add new row button
+        ui_layout.Mem_def_add.clicked.connect(lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
+                                                        self.Members_table_position, Members_table_values))
+        # QtCore.QObject.connect(ui_layout.Mem_def_add, QtCore.SIGNAL(_fromUtf8("clicked()")),
+        #                        TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
+        #                                                 self.Members_table_position, Members_table_values))
+
+        # The data update for members tab
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
                                        self.Members_table_position, Members_table_values)
         DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
@@ -247,7 +256,6 @@ class DataCollection(QMainWindow):
 
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
-        QtGui.QItemDelegate.__init__(self)
         self.ui = ui_layout
 
     def Assign_comboBox(self, tableName, options, position, values):
@@ -284,6 +292,15 @@ class DataCollection(QMainWindow):
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
+        col_check = tableName.columnCount()
+        # print(row, row_check)
+        # print(val1)
+        if row_check > row > 0:
+            table_add = [[0 for x in range(row_check-row)] for y in range(col_check)]
+            print(table_add)
+            val1.append(table_add)
+            # print(val1)
+
         if row == -1:
             pass
         elif flag_combo == 0:
@@ -292,6 +309,7 @@ class DataCollection(QMainWindow):
                     val1[col] = [float(tableName.item(row, col).text())]
                     DropDownActions.statusMessage(self, message="")
                 else:
+                    print(row, col)
                     val1[row][col] = [float(tableName.item(row, col).text())]
                     DropDownActions.statusMessage(self, message="")
             except ValueError:
@@ -308,3 +326,17 @@ class DataCollection(QMainWindow):
                 val1[row][position] = [value_combo]
                 DropDownActions.statusMessage(self, message="")
         return val1
+
+
+class TableChanges(QMainWindow):
+    """docstring for Actions"""
+
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
+        self.ui = ui_layout
+        datacollection = DataCollection()
+
+    def add_new_row(self, tableName, options, position, values):
+        row_position = tableName.rowCount()
+        tableName.insertRow(row_position)
+        DataCollection.Assign_comboBox(self, tableName, options, position, values)

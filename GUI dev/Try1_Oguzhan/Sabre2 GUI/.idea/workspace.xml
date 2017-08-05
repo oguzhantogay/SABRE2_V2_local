@@ -2,70 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3bdc81c-f851-421a-a983-520f479e3ce7" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ComboBoxGen.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GUI_test.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/GUI_test_backup1.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/SABRE2-V3_signal_test.ui" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/TableCombo.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box-outline.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box-outline1.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/box-outline2.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_assessment_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_assignment_late_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_assignment_return_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_autorenew_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_camera_enhance_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_crop_rotate_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_delete_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_done_all_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_exit_to_app_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_extension_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_fast_forward_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_fiber_new_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_file_download_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_find_in_page_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_flag_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_folder_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_grid_off_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_grid_on_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_home_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_info_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_info_outline_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_input_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_insert_chart_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_invert_colors_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_keyboard_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_keyboard_arrow_left_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_keyboard_arrow_right_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_keyboard_hide_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_list_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_lock_open_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_lock_outline_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_note_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_note_add_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_open_with_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_pan_tool_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_pause_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_play_arrow_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_power_settings_new_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_print_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_save_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_settings_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_settings_overscan_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_tab_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_thumb_up_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_update_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_verified_user_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_visibility_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_visibility_off_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_warning_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_zoom_in_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_zoom_out_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/ic_zoom_out_map_36pt_2x.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test1.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/text1.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/textrun.txt" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2_main_subclass.py" afterPath="$PROJECT_DIR$/SABRE2_main_subclass.py" />
     </list>
@@ -77,7 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Sabre2_GUI$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1501959741675" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Sabre2_GUI$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1501967679430" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -90,26 +26,36 @@
     <expand />
     <select />
   </component>
+  <component name="DockManager">
+    <window id="1">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file leaf-file-name="SABRE2_GUI.py" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/SABRE2_GUI.py">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="446">
+                    <caret line="1768" column="14" lean-forward="true" selection-start-line="1768" selection-start-column="14" selection-end-line="1768" selection-end-column="14" />
+                    <folding />
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
+  </component>
   <component name="FavoritesManager">
     <favorites_list name="Sabre2 GUI" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SABRE2_GUI.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/SABRE2_GUI.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="425" column="61" lean-forward="false" selection-start-line="425" selection-start-column="50" selection-end-line="425" selection-end-column="61" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="SABRE2_main_subclass.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="8" column="39" lean-forward="true" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
+            <state relative-caret-position="511">
+              <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -120,7 +66,7 @@
       <file leaf-file-name="SABRE2_main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SABRE2_main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
+            <state relative-caret-position="0">
               <caret line="9" column="12" lean-forward="false" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
@@ -153,9 +99,15 @@
       <find>DataCollection</find>
       <find>Mem_def_add</find>
       <find>CoBoxGen</find>
+      <find>table</find>
+      <find>tablename</find>
+      <find>Member</find>
+      <find>add_new_row</find>
     </findStrings>
     <replaceStrings>
       <replace>members_table_values</replace>
+      <replace>Boundary_Conditions</replace>
+      <replace>Fixities</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -178,8 +130,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-1474" />
-    <option name="y" value="17" />
+    <option name="x" value="1623" />
+    <option name="y" value="20" />
     <option name="width" value="998" />
     <option name="height" value="1031" />
   </component>
@@ -199,6 +151,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -210,14 +164,12 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="settings.github" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -274,7 +226,14 @@
       <option name="project" value="LOCAL" />
       <updated>1501959361533</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Update GUI">
+      <created>1501966266532</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1501966266532</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView">
@@ -287,18 +246,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1288" y="17" width="1296" height="1040" extended-state="6" />
+    <frame x="1272" y="-8" width="1696" height="1026" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22977346" sideWeight="0.51875" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901832" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22977346" sideWeight="0.48125" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22343922" sideWeight="0.48125" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3976915" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -307,7 +267,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24969098" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -329,7 +288,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Github commit from pycharm" />
-    <option name="LAST_COMMIT_MESSAGE" value="Github commit from pycharm" />
+    <MESSAGE value="Update GUI" />
+    <option name="LAST_COMMIT_MESSAGE" value="Update GUI" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -345,6 +305,34 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/SABRE2_GUI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7225">
+          <caret line="425" column="61" lean-forward="false" selection-start-line="425" selection-start-column="50" selection-end-line="425" selection-end-column="61" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SABRE2_main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="12" lean-forward="false" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="39" lean-forward="true" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SABRE2_GUI.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="32840">
@@ -429,30 +417,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/TableCombo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="10" column="50" lean-forward="true" selection-start-line="10" selection-start-column="50" selection-end-line="10" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ComboBoxGen.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TableCombo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="520">
-          <caret line="26" column="0" lean-forward="true" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/TableCombo.py" />
+    <entry file="file://$PROJECT_DIR$/ComboBoxGen.py" />
+    <entry file="file://$PROJECT_DIR$/TableCombo.py" />
     <entry file="file://$PROJECT_DIR$/SABRE2_main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
+        <state relative-caret-position="0">
           <caret line="9" column="12" lean-forward="false" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
@@ -462,16 +432,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SABRE2_GUI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="425" column="61" lean-forward="false" selection-start-line="425" selection-start-column="50" selection-end-line="425" selection-end-column="61" />
+        <state relative-caret-position="446">
+          <caret line="1768" column="14" lean-forward="true" selection-start-line="1768" selection-start-column="14" selection-end-line="1768" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="8" column="39" lean-forward="true" selection-start-line="8" selection-start-column="39" selection-end-line="8" selection-end-column="39" />
+        <state relative-caret-position="511">
+          <caret line="72" column="0" lean-forward="true" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>

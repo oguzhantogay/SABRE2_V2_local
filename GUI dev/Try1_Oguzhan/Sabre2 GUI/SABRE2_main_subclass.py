@@ -24,12 +24,12 @@ class SABRE2_main_subclass(QMainWindow):
 
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
         self.Members_table_position = 3
-        Members_table_row, Members_table_column, Members_table_values = DataCollection.table_properties(
+        Members_table_values = DataCollection.table_properties(
             self, ui_layout.Members_table)
 
         ui_layout.Mem_def_add.clicked.connect(
             lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
-                                             self.Members_table_position, Members_table_values))
+                                             self.Members_table_position))
 
         # QtCore.QObject.connect(ui_layout.Mem_def_add, QtCore.SIGNAL(_fromUtf8("clicked()")),
         #                        TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
@@ -38,16 +38,13 @@ class SABRE2_main_subclass(QMainWindow):
         # The data update for members tab
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
                                        self.Members_table_position, Members_table_values)
-        DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
-                                     Members_table_column, Members_table_values,
+        DataCollection.update_values(self, ui_layout.Members_table, Members_table_values,
                                      self.Members_table_position)
         ui_layout.Members_table.itemChanged.connect(
-            lambda: DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
-                                                 Members_table_column, Members_table_values,
+            lambda: DataCollection.update_values(self, ui_layout.Members_table, Members_table_values,
                                                  self.Members_table_position))
 
-        Members_table_values = DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
-                                                            Members_table_column, Members_table_values,
+        Members_table_values = DataCollection.update_values(self, ui_layout.Members_table, Members_table_values,
                                                             self.Members_table_position)
 
         # Add new row button
@@ -63,8 +60,7 @@ class SABRE2_main_subclass(QMainWindow):
         # ui_layout.Joints_Table.clicked.connect(lambda: print(variable))
 
         ui_layout.Fixities_table.itemChanged.connect(
-            lambda: DataCollection.update_values(self, ui_layout.Fixities_table, Fixities_table_row,
-                                                 Fixities_table_column, Fixities_table_values,
+            lambda: DataCollection.update_values(self, ui_layout.Fixities_table, Fixities_table_values,
                                                  self.Fixities_table_position))
 
         ui_layout.Fixities_table.itemChanged.connect(lambda: print(Fixities_table_values))
@@ -292,14 +288,8 @@ class DataCollection(QMainWindow):
             for t in options:
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
-            combo_box.activated.connect(
-                lambda: DataCollection.update_values(self, tableName, r, c, values, position))
-        text_trigger = tableName.item(0, 3)
-        if text_trigger.text() == "1":
-            tableName.item(0, 3).setText("0")
-        else:
-            tableName.item(0, 3).setText("1")
-        return tableName
+            # combo_box.activated.connect(
+            #     lambda: DataCollection.update_values(self, tableName, r, c, values, position))
 
     def Assign_checkBox(self, tableName, options, position, values):
         check_box = QtGui.QCheckBox()
@@ -324,16 +314,10 @@ class DataCollection(QMainWindow):
         row = edit.rowCount()
         column = edit.columnCount()
         r, c = row, column
-        # table_initiation = [[0 for x in range(r)] for y in range(c)]  # initialize table values
         table_initiation = numpy.zeros((row, column))
-        # print("table initiation  = " , table_initiation)
-        # print("table initiation1  = " , numpy.matrix(table_initiation1))
-        # # Members_table_values = numpy.array(Members_table_values)
-        # # Members_table_values = numpy.transpose(Members_table_values)
-        # # print(Members_table_values)
-        return r, c, table_initiation
+        return table_initiation
 
-    def update_values(self, tableName, numberRow, numberCol, val1, position):
+    def update_values(self, tableName, val1, position):
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
@@ -353,7 +337,7 @@ class DataCollection(QMainWindow):
                         if tableName.item(i, j) is None:
                             pass
                         elif j == position:
-                            value_combo = tableName.cellWidget(i, position).currentIndex()
+                            value_combo = float(tableName.cellWidget(i, position).currentIndex())
                             val1[i, position] = value_combo
                             DropDownActions.statusMessage(self, message="")
                         else:
@@ -375,10 +359,12 @@ class TableChanges(QMainWindow):
         self.ui = ui_layout
         datacollection = DataCollection()
 
-    def add_new_row(self, tableName, options, position, values):
+    def add_new_row(self, tableName, options, position):
         row_position = tableName.rowCount()
         col_number = tableName.columnCount()
+        combo_box = QtGui.QComboBox()
 
         tableName.insertRow(row_position)
-
-        DataCollection.Assign_comboBox(self, tableName, options, position, values)
+        for t in options:
+            combo_box.addItem(t)
+        tableName.setCellWidget(row_position, position, combo_box)

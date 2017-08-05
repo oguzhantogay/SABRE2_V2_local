@@ -27,9 +27,10 @@ class SABRE2_main_subclass(QMainWindow):
         Members_table_row, Members_table_column, Members_table_values = DataCollection.table_properties(
             self, ui_layout.Members_table)
 
-        # Add new row button
-        ui_layout.Mem_def_add.clicked.connect(lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
-                                                        self.Members_table_position, Members_table_values))
+        ui_layout.Mem_def_add.clicked.connect(
+            lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
+                                             self.Members_table_position, Members_table_values))
+
         # QtCore.QObject.connect(ui_layout.Mem_def_add, QtCore.SIGNAL(_fromUtf8("clicked()")),
         #                        TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
         #                                                 self.Members_table_position, Members_table_values))
@@ -49,7 +50,9 @@ class SABRE2_main_subclass(QMainWindow):
                                                             Members_table_column, Members_table_values,
                                                             self.Members_table_position)
 
-        ui_layout.Members_table.itemChanged.connect(lambda: print(Members_table_values))
+        # Add new row button
+
+        ui_layout.Members_table.itemChanged.connect(lambda: print("main_screen",Members_table_values))
         # ui_layout.Members_table.clicked.connect(lambda: print(updated_values))
 
         # ui_layout.Members_table.itemChanged.connect(lambda: print(updated_values))
@@ -290,7 +293,7 @@ class DataCollection(QMainWindow):
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
             combo_box.activated.connect(
-                lambda: DataCollection.update_values(self, tableName, r, c, values, position, i, flag_combo))
+                lambda: DataCollection.update_values(self, tableName, r, c, values, position))
         text_trigger = tableName.item(0, 3)
         if text_trigger.text() == "1":
             tableName.item(0, 3).setText("0")
@@ -330,28 +333,37 @@ class DataCollection(QMainWindow):
         # # print(Members_table_values)
         return r, c, table_initiation
 
-    def update_values(self, tableName, numberRow, numberCol, val1, position, row_count=0, flag_combo=0):
+    def update_values(self, tableName, numberRow, numberCol, val1, position):
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
-        print(row)
+
+        if row_check > (numpy.size(val1, 0)):
+            table_add = numpy.zeros((1, col_check))
+            for i in range(row_check - numpy.size(val1, 0)):
+                val1 = numpy.append(val1, table_add, axis=0)
+
         if row == -1:
             pass
-        elif flag_combo == 0:
+        else:
             try:
-                print("test row 1q")
-                val1[row, col] = float(tableName.item(row, col).text())
-                DropDownActions.statusMessage(self, message="")
+                for i in range(row_check+1):
+                    for j in range(col_check):
+                        if tableName.item(i, j) is None:
+                            pass
+                        elif j == position:
+                            value_combo = tableName.cellWidget(i, position).currentIndex()
+                            val1[i, position] = value_combo
+                            DropDownActions.statusMessage(self, message="")
+                        else:
+                            val1[i, j] = float(tableName.item(i, j).text())
+                            DropDownActions.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
                 DropDownActions.statusMessage(self, message="Please enter only numbers!")
-        else:
-            row_check = tableName.rowCount()
-            value_combo = tableName.cellWidget(0, position).currentIndex()
-            val1[row, position] = value_combo
-            DropDownActions.statusMessage(self, message="")
+        print("val1", val1)
         return val1
 
 
@@ -368,11 +380,5 @@ class TableChanges(QMainWindow):
         col_number = tableName.columnCount()
 
         tableName.insertRow(row_position)
-        table_add = numpy.zeros((1, col_number))
-        # table_add = [[0 for x in range(row_check-row)] for y in range(col_check)]
-        print("tableadd", table_add)
-        for i in range(row_position-numpy.size(values,0)+1):
-            values = numpy.append(values, table_add, axis=0)
-        print("val1 = ", values)
 
         DataCollection.Assign_comboBox(self, tableName, options, position, values)

@@ -3,14 +3,44 @@ from PyQt4.QtGui import *
 from PyQt4 import QtGui, QtCore
 from ComboBoxGen import CoBoxGen
 import pickle
+import numpy as np
+# np.set_printoptions(threshold=np.nan)
 import SABRE2_GUI
-import numpy
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
     def _fromUtf8(s):
         return s
+
+# Preallocate Data
+JNodevalue = np.zeros((2, 4))        # Joint Nodes Information
+Massemble = np.zeros((1, 16))       # Member assemble Information
+JNodevalue_i = np.zeros((1, 14))    # Joint Nodes i Information
+JNodevalue_j = np.zeros((1, 14))    # Joint Nodes j Information
+Rval = np.zeros((1, 2))                   # Reference axis
+BNodevalue = np.zeros((1, 1, 2))    # Additional Nodes Information
+SNodevalue = np.zeros((1, 1, 11))  # Material Properties & # of ele.
+RNCc = np.zeros((11, 13))             # Total Nodes Information without duplication
+NCc = np.zeros((11, 13))               # Total Nodes Information without duplication
+Nshe1 = np.zeros((10, 12))            # Total Nodes SC Information for start nodes
+Nshe2 = np.zeros((10, 12))            # Total Nodes SC Information for end nodes
+DUP1 = np.zeros((10, 14))             # Total Nodes RA Information for start nodes
+DUP2 = np.zeros((10, 14))             # Total Nodes RA Information for end nodes
+LNC = np.zeros((11, 14))               # Point Loading Nodal Information
+LNC1 = np.zeros((10, 14))             # Point Loading Information for start nodes
+LNC2 = np.zeros((10, 14))             # Point Loading Information for end nodes
+LUEC = []                                     # Distributed Loading Information
+PNC = np.zeros((11, 14))              # Fixed Boundary Condition Information
+PNC1 = np.zeros((10, 14))            # Fixed Boundary Condition Information for start nodes
+PNC2 = np.zeros((10, 14))            # Fixed Boundary Condition Information for end nodes
+BNC = []                                      # Ground Spring Information
+BNC1 = []                                    # Shear Panel Information for start nodes
+BNC2 = []                                    # Shear Panel Information for end nodes
+FEL = []                                       # Flexure Information
+
+
+print(JNodevalue)
 
 
 class SABRE2_main_subclass(QMainWindow):
@@ -21,47 +51,21 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.statusBar = self.statusBar()
         ui_layout.DefinitionTabs.hide()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
-
         # Members Table Arrangements
 
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
         self.Members_table_position = 3
         Members_table_row, Members_table_column, Members_table_values = DataCollection.table_properties(
             self, ui_layout.Members_table)
-
-        # Add new row button
-        ui_layout.Mem_def_add.clicked.connect(lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
-                                                        self.Members_table_position, Members_table_values))
-        # QtCore.QObject.connect(ui_layout.Mem_def_add, QtCore.SIGNAL(_fromUtf8("clicked()")),
-        #                        TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
-        #                                                 self.Members_table_position, Members_table_values))
-
-        # The data update for members tab
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
                                        self.Members_table_position, Members_table_values)
-        DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
-                                     Members_table_column, Members_table_values,
-                                     self.Members_table_position)
-        ui_layout.Members_table.itemChanged.connect(
-            lambda: DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
-                                                 Members_table_column, Members_table_values,
-                                                 self.Members_table_position))
+        # print(Members_table_row, Members_table_column, Members_table_values)
+        self.updated_values = DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
+                                                           Members_table_column, self.Members_table_position,
+                                                           Members_table_values)
+        ui_layout.Members_table.itemChanged.connect(lambda: print(self.updated_values))
 
-        Members_table_values = DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
-                                                            Members_table_column, Members_table_values,
-                                                            self.Members_table_position)
-
-        ui_layout.Members_table.itemChanged.connect(lambda: print(Members_table_values))
-        # ui_layout.Members_table.clicked.connect(lambda: print(updated_values))
-
-        # ui_layout.Members_table.itemChanged.connect(lambda: print(updated_values))
-        # variable = ui_layout.Members_table.itemChanged.connect(lambda: DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
-        #                                               Members_table_column, Members_table_values,
-        #                                               self.Members_table_position))
-        #
-        # ui_layout.Joints_Table.clicked.connect(lambda: print(variable))
-
-
+        # ui_layout.Members_table.itemChanged.connect(lambda: print(Members_table_values))
 
         # File dropdown actions
         ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
@@ -252,11 +256,100 @@ class DropDownActions(QMainWindow):
         self.ui.statusBar.showMessage(message)
 
 
+# class Data(object):
+#     """Preallocate and format data"""
+
+#     def __init__(self, ui_layout):
+#         QMainWindow.__init__(self)
+#         self.ui = ui_layout
+
+#     def JNodevalue():       # Joint Nodes Information
+#         JNodevalue = np.ones((2, 4))
+
+#     def Massemble():        # Member assemble Information
+#         Massemble = np.zeros((1, 16))
+
+#     def JNodevalue_i():     # Joint Nodes i Information
+#         JNodevalue_i = np.zeros((1, 14))
+
+#     def JNodevalue_j():     # Joint Nodes j Information
+#         JNodevalue_j = np.zeros((1, 14))
+
+#     def Rval():                  # Reference axis
+#         Rval = np.zeros((1, 2))
+
+#     def BNodevalue():       # Additional Nodes Information
+#         BNodevalue = np.zeros((1, 1, 2))
+
+#     def SNodevalue():       # Material Properties & # of ele.
+#         SNodevalue = np.zeros((1, 1, 11))
+
+#     def RNCc():                # Total Nodes Information without duplication
+#         RNCc = np.zeros((11, 13))
+
+#     def NCc():                   # Total Nodes Information without duplication
+#         NCc = np.zeros((11, 13))
+
+#     def Nshe1():               # Total Nodes SC Information for start nodes
+#         Nshe1 = np.zeros((10, 12))
+
+#     def Nshe2():               # Total Nodes SC Information for end nodes
+#         Nshe2 = np.zeros((10, 12))
+
+#     def DUP1():               # Total Nodes RA Information for start nodes
+#         DUP1 = np.zeros((10, 14))
+
+#     def DUP2():               # Total Nodes RA Information for end nodes
+#         DUP2 = np.zeros((10, 14))
+
+#     def LNC():                 # Point Loading Nodal Information
+#         LNC = np.zeros((11, 14))
+
+#     def LNC1():               # Point Loading Information for start nodes
+#         LNC1 = np.zeros((10, 14))
+
+#     def LNC2():               # Point Loading Information for end nodes
+#         LNC2 = np.zeros((10, 14))
+
+#     def LUEC():              # Distributed Loading Information
+#         LUEC = []
+
+#     def PNC():                # Fixed Boundary Condition Information
+#         PNC = np.zeros((11, 14))
+
+#     def PNC1():               # Fixed Boundary Condition Information for start nodes
+#         PNC1 = np.zeros((10, 14))
+
+#     def PNC2():               # Fixed Boundary Condition Information for end nodes
+#         PNC2 = np.zeros((10, 14))
+
+#     def BNC():                 # Ground Spring Information
+#         BNC = []
+
+#     def BNC1():                # Shear Panel Information for start nodes
+#         BNC1 = []
+
+#     def BNC2():                # Shear Panel Information for end nodes
+#         BNC2 = []
+
+#     def FEL():                  # Flexure Information
+#         FEL = []
+
+#     print(JNodevalue())
+#     print(np.histogram(JNodevalue))
+# print(Data.JNodevalue.shape)
+
+#pprint = Data.JNodevalue.__len__()
+# # print(Data.JNodevalue[1, 1])
+# print(pprint)
+
+
 class DataCollection(QMainWindow):
     """docstring for Actions"""
 
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
+        QtGui.QItemDelegate.__init__(self)
         self.ui = ui_layout
 
     def Assign_comboBox(self, tableName, options, position, values):
@@ -272,49 +365,51 @@ class DataCollection(QMainWindow):
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
             combo_box.activated.connect(
-                lambda: DataCollection.update_values(self, tableName, r, c, values, position, i, flag_combo))
-        text_trigger = tableName.item(0, 3)
-        if text_trigger.text() == "1":
-            tableName.item(0, 3).setText("0")
-        else:
-            tableName.item(0, 3).setText("1")
+                lambda: DataCollection.update_values(self, tableName, r, c, position, values, i, flag_combo))
         return tableName
 
+    def data_reader(self, edit, values):
+        try:
+            row = edit.rowCount()
+            column = edit.columnCount()
+            for i in range(row):
+                for j in range(column):
+                    values[i][j] = edit.item(i, j).text()
+                    print(i)
+            return values
+        except AttributeError:
+            message = 'Please fill the properties in Definition tab.'
+            ui_layout.statusbar.showMessage(message)
+
     def table_properties(self, edit):
-        """Initializing the table properties"""
+        "Initializing the table properties"
 
         row = edit.rowCount()
         column = edit.columnCount()
         r, c = row, column
-        # table_initiation = [[0 for x in range(r)] for y in range(c)]  # initialize table values
-        table_initiation = numpy.zeros((row, column))
-        # print("table initiation  = " , table_initiation)
-        # print("table initiation1  = " , numpy.matrix(table_initiation1))
-        # # Members_table_values = numpy.array(Members_table_values)
-        # # Members_table_values = numpy.transpose(Members_table_values)
-        # # print(Members_table_values)
+        table_initiation = [[0 for x in range(r)] for y in range(c)]  # initialize table values
         return r, c, table_initiation
 
-    def update_values(self, tableName, numberRow, numberCol, val1, position, row_count=0, flag_combo=0):
+    def update_values(self, tableName, numberRow, numberCol, position, val1, row_count=0, flag_combo=0):
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
-        col_check = tableName.columnCount()
-        # print(row, row_check)
-        # print(val1)
-        print(row, row_check)
-
-        if row == -1:
-            pass
-        elif flag_combo == 0:
+        value_combo = tableName.cellWidget(0, position).currentIndex()
+        if flag_combo == 0:
             try:
                 if row_check == 1:
-                    val1[col] = [float(tableName.item(row, col).text())]
-                    DropDownActions.statusMessage(self, message="")
+                    if tableName.item(row, col) is None:
+                        print("test")
+                        pass
+                    else:
+                        val1[col] = [float(tableName.item(row, col).text())]
+                        DropDownActions.statusMessage(self, message="")
                 else:
-                    print(row, col)
-                    val1[row][col] = [float(tableName.item(row, col).text())]
-                    DropDownActions.statusMessage(self, message="")
+                    if tableName.item(row, col) is None:
+                        pass
+                    else:
+                        val1[row][col] = [float(tableName.item(row, col).text())]
+                        DropDownActions.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
@@ -326,28 +421,8 @@ class DataCollection(QMainWindow):
                 val1[position] = [value_combo]
                 DropDownActions.statusMessage(self, message="")
             else:
-                val1[row][position] = [value_combo]
+                val1[position] = [value_combo]
                 DropDownActions.statusMessage(self, message="")
+        # update_flag = 1
+
         return val1
-
-
-class TableChanges(QMainWindow):
-    """docstring for Actions"""
-
-    def __init__(self, ui_layout):
-        QMainWindow.__init__(self)
-        self.ui = ui_layout
-        datacollection = DataCollection()
-
-    def add_new_row(self, tableName, options, position, values):
-        row_position = tableName.rowCount()
-        col_number = tableName.columnCount()
-
-        tableName.insertRow(row_position)
-        table_add = numpy.zeros((1, col_number))
-        # table_add = [[0 for x in range(row_check-row)] for y in range(col_check)]
-        print("tableadd", table_add)
-        val1 = numpy.append(values, table_add, axis=0)
-        print("val1 = ",val1)
-
-        DataCollection.Assign_comboBox(self, tableName, options, position, values)

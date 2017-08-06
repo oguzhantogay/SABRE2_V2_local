@@ -3,7 +3,7 @@ from PyQt4.QtGui import *
 from PyQt4 import QtGui, QtCore
 import pickle
 import SABRE2_GUI
-import numpy
+import numpy as np
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -20,24 +20,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.statusBar = self.statusBar()
         ui_layout.DefinitionTabs.hide()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
-        # Members Table Arrangements
 
-        self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
-        self.Members_table_position = 3
-        # The data update for members tab
-        DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
-                                       self.Members_table_position)
-
-        ui_layout.Members_table.itemChanged.connect(
-            lambda: self.update_members_table(ui_layout.Members_table,
-                                         self.Members_table_position))
-
-        ui_layout.Mem_def_add.clicked.connect(
-            lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
-                                         self.Members_table_position))
-
-        ui_layout.Mem_def_delete.clicked.connect(
-            lambda: TableChanges.delete_last_row(self, ui_layout.Members_table))
         # File dropdown actions
         ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
         ui_layout.actionOpen.triggered.connect(lambda: DropDownActions('uidesign').OpenAct())
@@ -48,7 +31,42 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionQuit.triggered.connect(qApp.quit)
 
         # Help dropdown actions
-        ui_layout.actionAbout.triggered.connect(lambda: DropDownActions('uidesign').AboutAct(self))
+        ui_layout.actionAbout.triggered.connect(lambda: DropDownActions('uidesign').AboutAct())
+
+        # Members Table Arrangements
+        self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
+        self.Members_table_position = 3
+        # The data update for members tab
+        DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
+                                       self.Members_table_position)
+        # Add new row button # self, tableName, options, position
+        ui_layout.Members_table.itemChanged.connect(
+            lambda: self.update_members_table(ui_layout.Members_table,
+                                         self.Members_table_position))
+        ui_layout.Mem_def_add.clicked.connect(
+            lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
+                                         self.Members_table_position))
+
+
+
+
+
+        # Members Table CopyInsert
+        # print(ui_layout.Copy_from_number_mem_def)
+        # print(ui_layout.Insert_after_number_mem_def)
+        self.copyfrom_table_position = 0; self.insertafter_table_position = 0
+        ui_layout.Copy_from_number_mem_def.textChanged.connect(
+            lambda: self.update_members_copyfrom(ui_layout.Copy_from_number_mem_def,
+                                         self.copyfrom_table_position))
+        ui_layout.Insert_after_number_mem_def.textChanged.connect(
+            lambda: self.update_members_copyfrom(ui_layout.Insert_after_number_mem_def,
+                                         self.insertafter_table_position))
+        # ui_layout.Copy_mem_def_button.clicked.connect(
+        #     lambda: TableChanges.copy_insert_row(self, ui_layout.Members_table, self.Members_table_options,
+        #                                  self.Members_table_position))
+
+
+
 
         ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
         ui_layout.statusbar.addPermanentWidget(ui_layout.progressBar)
@@ -58,10 +76,19 @@ class SABRE2_main_subclass(QMainWindow):
 
 
     def update_members_table(self, tableName, position):
-        Members_values = DataCollection.update_values(self, tableName, position)
+        Members_values = DataCollection.update_table_values(self, tableName, position)
         print("main screen", Members_values)
         return Members_values
 
+    def update_members_copyfrom(self, tableName, position):
+        Members_copyfrom_values = DataCollection.update_lineedit_values(self, tableName, position)
+        print("copyfrom", Members_copyfrom_values, position)
+        return Members_copyfrom_values
+
+    def update_members_insertafter(self, tableName, position):
+        Members_insertafter_values = DataCollection.update_lineedit_values(self, tableName, position)
+        print("insertafter", Members_insertafter_values)
+        return Members_insertafter_values
 
 class DropDownActions(QMainWindow):
     """docstring for Actions"""
@@ -70,11 +97,9 @@ class DropDownActions(QMainWindow):
         QMainWindow.__init__(self)
         self.ui = ui_layout
 
-    def statusMessage(self, message):
-        self.ui.statusBar.showMessage(message)
+    def AboutAct(self):
+        #self.statusMessage(self, message="Learn about Sabre2")
 
-
-    def AboutAct(self,ui_layout):
         # Program information
         version = "3.0"
         website = "http://www.white.ce.gatech.edu/sabre"
@@ -106,8 +131,7 @@ class DropDownActions(QMainWindow):
         about_box.exec_()
 
     def NewAct(self):
-        # message = "Create a new file"
-        # self.statusbar.showMessage(message)
+        DropDownActions.statusMessage(self, message="Create a new file")
 
         fileName = []
         inpdata = []
@@ -116,8 +140,7 @@ class DropDownActions(QMainWindow):
         # reset messages
 
     def OpenAct(self):
-        # message = "Open an existing file"
-        # self.statusbar.showMessage(message)
+        DropDownActions.statusMessage(self, message="Open an existing file")
 
         fileName = PyQt4.QtGui.QFileDialog.getOpenFileName(None, "Open Sabre2 File", '',
                                                            "Sabre2 Files (*.mat);;All Files (*)")
@@ -149,11 +172,10 @@ class DropDownActions(QMainWindow):
         # go directly to analysis screen
 
     def SaveAct(self):
-        # message = "Save the model to disk"
-        # self.statusbar.showMessage(message)
+        DropDownActions.statusMessage(self, message="Save the model to disk")
 
         inpdata = "text test addon"
-        # fileName = "test1.txt"
+        fileName = "test1.txt"
 
         if len(inpdata) == 0:
             QtGui.QMessageBox.information(self, "No data has been attributed to the model")
@@ -188,8 +210,7 @@ class DropDownActions(QMainWindow):
                 out_file.close()
 
     def Save_AsAct(self):
-        # message = "Name the file saved to disk"
-        # self.statusbar.showMessage(message)
+        DropDownActions.statusMessage(self, message="Name the file saved to disk")
 
         inpdata = "text test"
 
@@ -213,16 +234,16 @@ class DropDownActions(QMainWindow):
             out_file.close()
 
     def PrintAct(self):
-        message = "Print screen"
-        self.statusbar.showMessage(message)
+        DropDownActions.statusMessage(self, message="Print screen")
 
         # not sure what we are printing?
         # data, results, or just screenshot of OpenGL?
 
     def Print_PreviewAct(self):
-        message = "Preview screen print"
-        self.statusbar.showMessage(message)
+        DropDownActions.statusMessage(self, message="Preview screen print")
 
+    def statusMessage(self, message):
+        self.ui.statusBar.showMessage(message)
 
 
 class DataCollection(QMainWindow):
@@ -240,8 +261,8 @@ class DataCollection(QMainWindow):
             for t in options:
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
-            combo_box.activated.connect(
-                lambda: DataCollection.update_values(self, tableName, position))
+            # combo_box.activated.connect(
+            #     lambda: DataCollection.update_table_values(self, tableName, r, c, values, position))
 
     def Assign_checkBox(self, tableName, options, position, values):
         check_box = QtGui.QCheckBox()
@@ -252,42 +273,42 @@ class DataCollection(QMainWindow):
             check_box = QtGui.QCheckBox()
             tableName.setCellWidget(i, position, check_box)
             check_box.clicked.connect(
-                lambda: DataCollection.update_values(self, tableName, values, position))
+                lambda: DataCollection.update_table_values(self, tableName, values, position))
         text_trigger = tableName.item(0, 1)
         if text_trigger.text() == "1":
             tableName.item(0, 1).setText("0")
         else:
             tableName.item(0, 1).setText("1")
 
-    def update_values(self, tableName, position):
+    def update_table_values(self, tableName, position):
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
-        val1 = numpy.zeros((row_check, col_check))
+        val1 = np.zeros((row_check, col_check))
         if row == -1:
             pass
         else:
             try:
-                for i in range(row_check):
+                for i in range(row_check + 1):
                     for j in range(col_check):
                         if tableName.item(i, j) is None:
                             pass
                         elif j == position:
-                            value_combo = tableName.cellWidget(i, position).currentIndex()
+                            value_combo = float(tableName.cellWidget(i, position).currentIndex())
                             val1[i, position] = value_combo
                             DropDownActions.statusMessage(self, message="")
                         else:
-                            # print("test1")
                             val1[i, j] = float(tableName.item(i, j).text())
                             DropDownActions.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
                 DropDownActions.statusMessage(self, message="Please enter only numbers!")
-        print("val1", val1)
         return val1
 
+    def update_lineedit_values(self, tableName, position):
+        print(tableName)
 
 class TableChanges(QMainWindow):
     """This Class is imposing the changes on the Definition Tables"""
@@ -303,15 +324,12 @@ class TableChanges(QMainWindow):
         combo_box = QtGui.QComboBox()
 
         tableName.insertRow(row_position)
-        val = 0
-        item = QTableWidgetItem(str(val))
-        tableName.setItem(row_position,position,item)
         for t in options:
             combo_box.addItem(t)
-            combo_box.activated.connect(
-                lambda: DataCollection.update_values(self, tableName, position))
         tableName.setCellWidget(row_position, position, combo_box)
 
-    def delete_last_row(self, tableName):
-        row_position = tableName.rowCount()
-        tableName.removeRow(row_position)
+    # def copy_insert_row(self, tableName, options, position):
+    #     r = tableName.rowCount()
+    #     c = tableName.columnCount()
+    #
+    #     tableName.np.insert(Members_table())

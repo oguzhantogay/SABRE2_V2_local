@@ -27,32 +27,17 @@ class SABRE2_main_subclass(QMainWindow):
         # The data update for members tab
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
                                        self.Members_table_position)
-        # DataCollection.update_values(self, ui_layout.Members_table,
-        # #                              self.Members_table_position)
-        # ui_layout.Members_table.itemChanged.connect(
-        #     lambda: DataCollection.update_values(self, ui_layout.Members_table,
-        #                                          self.Members_table_position))
 
-        # Members_table_values = DataCollection.update_values(self, ui_layout.Members_table,
-        #                                                     self.Members_table_position)
-
-        # Add new row button
-        # self, tableName, options, position
         ui_layout.Members_table.itemChanged.connect(
             lambda: self.update_members_table(ui_layout.Members_table,
                                          self.Members_table_position))
-        # ui_layout.Members_table.itemChanged.connect(lambda: TableChanges.check_numpy(self, Members_table_values))
 
         ui_layout.Mem_def_add.clicked.connect(
             lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
                                          self.Members_table_position))
-        #
-        # ui_layout.Fixities_table.itemChanged.connect(
-        #     lambda: DataCollection.update_values(self, ui_layout.Fixities_table,
-        #                                          self.Fixities_table_position))
-        #
-        # ui_layout.Fixities_table.itemChanged.connect(lambda: print(Fixities_table_values))
 
+        ui_layout.Mem_def_delete.clicked.connect(
+            lambda: TableChanges.delete_last_row(self, ui_layout.Members_table))
         # File dropdown actions
         ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
         ui_layout.actionOpen.triggered.connect(lambda: DropDownActions('uidesign').OpenAct())
@@ -63,14 +48,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionQuit.triggered.connect(qApp.quit)
 
         # Help dropdown actions
-        ui_layout.actionAbout.triggered.connect(lambda: DropDownActions('uidesign').AboutAct())
-
-        # Status/message bar and progress bar
-        # ui_layout.statusbar = PyQt4.QtGui.QStatusBar()
-        # ui_layout.statusbar.setObjectName(_fromUtf8("statusbar"))
-        # message = "Start creating the model by defining the joints"  # Update message with modeling progress and interupts ***************
-        # ui_layout.statusbar.showMessage(message)
-        # QMainWindow.setStatusBar(QMainWindow, ui_layout.statusbar)
+        ui_layout.actionAbout.triggered.connect(lambda: DropDownActions('uidesign').AboutAct(self))
 
         ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
         ui_layout.statusbar.addPermanentWidget(ui_layout.progressBar)
@@ -92,10 +70,11 @@ class DropDownActions(QMainWindow):
         QMainWindow.__init__(self)
         self.ui = ui_layout
 
-    def AboutAct(ui_layout):
-        # message = "Learn about Sabre2"
-        # self.statusbar.showMessage(message)
+    def statusMessage(self, message):
+        self.ui.statusBar.showMessage(message)
 
+
+    def AboutAct(self,ui_layout):
         # Program information
         version = "3.0"
         website = "http://www.white.ce.gatech.edu/sabre"
@@ -244,8 +223,6 @@ class DropDownActions(QMainWindow):
         message = "Preview screen print"
         self.statusbar.showMessage(message)
 
-    def statusMessage(self, message):
-        self.ui.statusBar.showMessage(message)
 
 
 class DataCollection(QMainWindow):
@@ -263,8 +240,8 @@ class DataCollection(QMainWindow):
             for t in options:
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
-            # combo_box.activated.connect(
-            #     lambda: DataCollection.update_values(self, tableName, r, c, values, position))
+            combo_box.activated.connect(
+                lambda: DataCollection.update_values(self, tableName, position))
 
     def Assign_checkBox(self, tableName, options, position, values):
         check_box = QtGui.QCheckBox()
@@ -287,22 +264,21 @@ class DataCollection(QMainWindow):
         row = tableName.currentRow()
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
-
         val1 = numpy.zeros((row_check, col_check))
-        print("without initialized", val1)
         if row == -1:
             pass
         else:
             try:
-                for i in range(row_check + 1):
+                for i in range(row_check):
                     for j in range(col_check):
                         if tableName.item(i, j) is None:
                             pass
                         elif j == position:
-                            value_combo = float(tableName.cellWidget(i, position).currentIndex())
+                            value_combo = tableName.cellWidget(i, position).currentIndex()
                             val1[i, position] = value_combo
                             DropDownActions.statusMessage(self, message="")
                         else:
+                            # print("test1")
                             val1[i, j] = float(tableName.item(i, j).text())
                             DropDownActions.statusMessage(self, message="")
             except ValueError:
@@ -327,6 +303,15 @@ class TableChanges(QMainWindow):
         combo_box = QtGui.QComboBox()
 
         tableName.insertRow(row_position)
+        val = 0
+        item = QTableWidgetItem(str(val))
+        tableName.setItem(row_position,position,item)
         for t in options:
             combo_box.addItem(t)
+            combo_box.activated.connect(
+                lambda: DataCollection.update_values(self, tableName, position))
         tableName.setCellWidget(row_position, position, combo_box)
+
+    def delete_last_row(self, tableName):
+        row_position = tableName.rowCount()
+        tableName.removeRow(row_position)

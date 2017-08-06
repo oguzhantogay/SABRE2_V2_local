@@ -83,9 +83,7 @@ class Ui_MainWindow(object):
         column_list = [0 for x in range(w)]  # initialize combo_box values
         self.retranslateUi(MainWindow)
         self.tableWidget.itemChanged.connect(lambda: self.data_reader(self.tableWidget, table_list))
-        self.tableWidget.itemChanged.connect(lambda: self.read_combo_box_values(self.tableWidget, column_list, column_location))
         table_list = self.data_reader(self.tableWidget, table_list)
-        column_list = self.read_combo_box_values(self.tableWidget, column_list, column_location)
         self.tableWidget.itemChanged.connect(lambda: print(table_list))
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 

@@ -76,13 +76,13 @@ class SABRE2_main_subclass(QMainWindow):
 
 
     def update_members_table(self, tableName, position):
-        Members_values = DataCollection.update_table_values(DataCollection, tableName, position)
+        Members_values = DataCollection.update_table_values(self, tableName, position)
         print("main screen", Members_values)
         return Members_values
 
     def update_members_copyfrom(self, tableName, position):
         Members_copyfrom_values = DataCollection.update_lineedit_values(self, tableName, position)
-        print("copyfrom", Members_copyfrom_values, position)
+        print("copyfrom", Members_copyfrom_values)
         return Members_copyfrom_values
 
     def update_members_insertafter(self, tableName, position):
@@ -297,20 +297,20 @@ class DataCollection(QMainWindow):
                         elif j == position:
                             value_combo = tableName.cellWidget(i, position).currentIndex()
                             val1[i, position] = value_combo
-                            #DropDownActions.statusMessage(self, message="")
+                            DropDownActions.statusMessage(self, message="")
                         else:
                             # print("test1")
                             val1[i, j] = float(tableName.item(i, j).text())
-                            #DropDownActions.statusMessage(self, message="")
+                            DropDownActions.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
-                #DropDownActions.statusMessage(self, message="Please enter only numbers!")
+                DropDownActions.statusMessage(self, message="Please enter only numbers!")
         #print("val1", val1)
         return val1
 
     def update_lineedit_values(self, tableName, position):
-        print(tableName)
+        val2 = []; val2 = int(tableName.text())
 
 class TableChanges(QMainWindow):
     """This Class is imposing the changes on the Definition Tables"""

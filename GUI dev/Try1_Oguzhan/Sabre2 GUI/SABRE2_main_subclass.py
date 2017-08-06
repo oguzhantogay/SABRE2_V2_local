@@ -24,49 +24,34 @@ class SABRE2_main_subclass(QMainWindow):
 
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
         self.Members_table_position = 3
-        Members_table_values_int = DataCollection.table_properties(
-            self, ui_layout.Members_table)
-
         # The data update for members tab
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
-                                       self.Members_table_position, Members_table_values_int)
-        DataCollection.update_values(self, ui_layout.Members_table, Members_table_values_int,
-                                     self.Members_table_position)
-        ui_layout.Members_table.itemChanged.connect(
-            lambda: DataCollection.update_values(self, ui_layout.Members_table, Members_table_values,
-                                                 self.Members_table_position))
+                                       self.Members_table_position)
+        # DataCollection.update_values(self, ui_layout.Members_table,
+        # #                              self.Members_table_position)
+        # ui_layout.Members_table.itemChanged.connect(
+        #     lambda: DataCollection.update_values(self, ui_layout.Members_table,
+        #                                          self.Members_table_position))
 
-        Members_table_values = DataCollection.update_values(self, ui_layout.Members_table, Members_table_values_int,
-                                                            self.Members_table_position)
+        # Members_table_values = DataCollection.update_values(self, ui_layout.Members_table,
+        #                                                     self.Members_table_position)
 
         # Add new row button
-
-        ui_layout.Members_table.itemChanged.connect(lambda: print("main_screen",Members_table_values))
+        # self, tableName, options, position
+        ui_layout.Members_table.itemChanged.connect(
+            lambda: self.update_members_table(ui_layout.Members_table,
+                                         self.Members_table_position))
+        # ui_layout.Members_table.itemChanged.connect(lambda: TableChanges.check_numpy(self, Members_table_values))
 
         ui_layout.Mem_def_add.clicked.connect(
             lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
-                                             self.Members_table_position))
-
-        ui_layout.Fixities_table.itemChanged.connect(
-            lambda: DataCollection.update_values(self, ui_layout.Fixities_table, Fixities_table_values,
-                                                 self.Fixities_table_position))
-
-        ui_layout.Fixities_table.itemChanged.connect(lambda: print(Fixities_table_values))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                                         self.Members_table_position))
+        #
+        # ui_layout.Fixities_table.itemChanged.connect(
+        #     lambda: DataCollection.update_values(self, ui_layout.Fixities_table,
+        #                                          self.Fixities_table_position))
+        #
+        # ui_layout.Fixities_table.itemChanged.connect(lambda: print(Fixities_table_values))
 
         # File dropdown actions
         ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
@@ -92,6 +77,12 @@ class SABRE2_main_subclass(QMainWindow):
         analysisprogress = 0  # Update this value later by integrating with analysis**********
         ui_layout.progressBar.setValue(analysisprogress)
         ui_layout.progressBar.setTextVisible(True)
+
+
+    def update_members_table(self, tableName, position):
+        Members_values = DataCollection.update_values(self, tableName, position)
+        print("main screen", Members_values)
+        return Members_values
 
 
 class DropDownActions(QMainWindow):
@@ -264,11 +255,7 @@ class DataCollection(QMainWindow):
         QMainWindow.__init__(self)
         self.ui = ui_layout
 
-    def Assign_comboBox(self, tableName, options, position, values):
-        combo_box = QtGui.QComboBox()
-        flag_combo = 1
-        for t in options:
-            combo_box.addItem(t)
+    def Assign_comboBox(self, tableName, options, position):
         r = tableName.rowCount()
         c = tableName.columnCount()
         for i in range(r):
@@ -294,33 +281,20 @@ class DataCollection(QMainWindow):
             tableName.item(0, 1).setText("0")
         else:
             tableName.item(0, 1).setText("1")
-        return tableName
 
-    def table_properties(self, edit):
-        """Initializing the table properties"""
-
-        row = edit.rowCount()
-        column = edit.columnCount()
-        r, c = row, column
-        table_initiation = numpy.zeros((row, column))
-        return table_initiation
-
-    def update_values(self, tableName, val1, position):
+    def update_values(self, tableName, position):
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
 
-        if row_check > (numpy.size(val1, 0)):
-            table_add = numpy.zeros((1, col_check))
-            for i in range(row_check - numpy.size(val1, 0)):
-                val1 = numpy.append(val1, table_add, axis=0)
-
+        val1 = numpy.zeros((row_check, col_check))
+        print("without initialized", val1)
         if row == -1:
             pass
         else:
             try:
-                for i in range(row_check+1):
+                for i in range(row_check + 1):
                     for j in range(col_check):
                         if tableName.item(i, j) is None:
                             pass

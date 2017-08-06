@@ -24,40 +24,28 @@ class SABRE2_main_subclass(QMainWindow):
 
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
         self.Members_table_position = 3
-        Members_table_values = DataCollection.table_properties(
+        Members_table_values_int = DataCollection.table_properties(
             self, ui_layout.Members_table)
-
-        ui_layout.Mem_def_add.clicked.connect(
-            lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
-                                             self.Members_table_position))
-
-        # QtCore.QObject.connect(ui_layout.Mem_def_add, QtCore.SIGNAL(_fromUtf8("clicked()")),
-        #                        TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
-        #                                                 self.Members_table_position, Members_table_values))
 
         # The data update for members tab
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
-                                       self.Members_table_position, Members_table_values)
-        DataCollection.update_values(self, ui_layout.Members_table, Members_table_values,
+                                       self.Members_table_position, Members_table_values_int)
+        DataCollection.update_values(self, ui_layout.Members_table, Members_table_values_int,
                                      self.Members_table_position)
         ui_layout.Members_table.itemChanged.connect(
             lambda: DataCollection.update_values(self, ui_layout.Members_table, Members_table_values,
                                                  self.Members_table_position))
 
-        Members_table_values = DataCollection.update_values(self, ui_layout.Members_table, Members_table_values,
+        Members_table_values = DataCollection.update_values(self, ui_layout.Members_table, Members_table_values_int,
                                                             self.Members_table_position)
 
         # Add new row button
 
         ui_layout.Members_table.itemChanged.connect(lambda: print("main_screen",Members_table_values))
-        # ui_layout.Members_table.clicked.connect(lambda: print(updated_values))
 
-        # ui_layout.Members_table.itemChanged.connect(lambda: print(updated_values))
-        # variable = ui_layout.Members_table.itemChanged.connect(lambda: DataCollection.update_values(self, ui_layout.Members_table, Members_table_row,
-        #                                               Members_table_column, Members_table_values,
-        #                                               self.Members_table_position))
-        #
-        # ui_layout.Joints_Table.clicked.connect(lambda: print(variable))
+        ui_layout.Mem_def_add.clicked.connect(
+            lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
+                                             self.Members_table_position))
 
         ui_layout.Fixities_table.itemChanged.connect(
             lambda: DataCollection.update_values(self, ui_layout.Fixities_table, Fixities_table_values,
@@ -300,7 +288,7 @@ class DataCollection(QMainWindow):
             check_box = QtGui.QCheckBox()
             tableName.setCellWidget(i, position, check_box)
             check_box.clicked.connect(
-                lambda: DataCollection.update_values(self, tableName, r, c, values, position, i, flag_check))
+                lambda: DataCollection.update_values(self, tableName, values, position))
         text_trigger = tableName.item(0, 1)
         if text_trigger.text() == "1":
             tableName.item(0, 1).setText("0")

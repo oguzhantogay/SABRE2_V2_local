@@ -33,7 +33,7 @@ class SABRE2_main_subclass(QMainWindow):
         # Help dropdown actions
         ui_layout.actionAbout.triggered.connect(lambda: DropDownActions('uidesign').AboutAct())
 
-        # Members Table Arrangements
+        # Members line Arrangements
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
         self.Members_table_position = 3
         # The data update for members tab
@@ -51,19 +51,20 @@ class SABRE2_main_subclass(QMainWindow):
 
 
 
-        # Members Table CopyInsert
-        # print(ui_layout.Copy_from_number_mem_def)
-        # print(ui_layout.Insert_after_number_mem_def)
-        self.copyfrom_table_position = 0; self.insertafter_table_position = 0
+        # Members line CopyInsert
+
+        # need DataCollection to be initialized?
+
+        self.copyfrom_line_position = 0; self.insertafter_line_position = 0
         ui_layout.Copy_from_number_mem_def.textChanged.connect(
             lambda: self.update_members_copyfrom(ui_layout.Copy_from_number_mem_def,
-                                         self.copyfrom_table_position))
+                                         self.copyfrom_line_position))
         ui_layout.Insert_after_number_mem_def.textChanged.connect(
-            lambda: self.update_members_copyfrom(ui_layout.Insert_after_number_mem_def,
-                                         self.insertafter_table_position))
+            lambda: self.update_members_insertafter(ui_layout.Insert_after_number_mem_def,
+                                         self.insertafter_line_position))
         # ui_layout.Copy_mem_def_button.clicked.connect(
-        #     lambda: TableChanges.copy_insert_row(self, ui_layout.Members_table, self.Members_table_options,
-        #                                  self.Members_table_position))
+        #     lambda: lineChanges.copy_insert_row(self, ui_layout.Members_line, self.Members_line_options,
+        #                                  self.Members_line_position))
 
 
 
@@ -80,13 +81,13 @@ class SABRE2_main_subclass(QMainWindow):
         print("main screen", Members_values)
         return Members_values
 
-    def update_members_copyfrom(self, tableName, position):
-        Members_copyfrom_values = DataCollection.update_lineedit_values(self, tableName, position)
+    def update_members_copyfrom(self, lineName, position):
+        Members_copyfrom_values = DataCollection.update_lineedit_values(self, lineName, position)
         print("copyfrom", Members_copyfrom_values)
         return Members_copyfrom_values
 
-    def update_members_insertafter(self, tableName, position):
-        Members_insertafter_values = DataCollection.update_lineedit_values(self, tableName, position)
+    def update_members_insertafter(self, lineName, position):
+        Members_insertafter_values = DataCollection.update_lineedit_values(self, lineName, position)
         print("insertafter", Members_insertafter_values)
         return Members_insertafter_values
 
@@ -305,12 +306,19 @@ class DataCollection(QMainWindow):
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
-                DropDownActions.statusMessage(self, message="Please enter only numbers!")
+                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
         #print("val1", val1)
         return val1
 
-    def update_lineedit_values(self, tableName, position):
-        val2 = []; val2 = int(tableName.text())
+    def update_lineedit_values(self, lineName, position):
+        try:
+            val2 = []; val2 = int(lineName.text())
+            # print("val2", val2)
+        except ValueError:
+            lineName.setText("")
+            DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+        return val2
+
 
 class TableChanges(QMainWindow):
     """This Class is imposing the changes on the Definition Tables"""

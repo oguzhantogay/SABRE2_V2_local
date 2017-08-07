@@ -33,7 +33,7 @@ class SABRE2_main_subclass(QMainWindow):
         # Help dropdown actions
         ui_layout.actionAbout.triggered.connect(lambda: DropDownActions('uidesign').AboutAct())
 
-        # Members line Arrangements
+        # Members Table Arrangements
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
         self.Members_table_position = 3
         # The data update for members tab
@@ -56,17 +56,16 @@ class SABRE2_main_subclass(QMainWindow):
         # need DataCollection to be initialized?
 
         self.copyfrom_line_position = 0; self.insertafter_line_position = 0
+
         ui_layout.Copy_from_number_mem_def.textChanged.connect(
             lambda: self.update_members_copyfrom(ui_layout.Copy_from_number_mem_def,
-                                         self.copyfrom_line_position))
+                                         self.copyfrom_line_position, ui_layout))
         ui_layout.Insert_after_number_mem_def.textChanged.connect(
             lambda: self.update_members_insertafter(ui_layout.Insert_after_number_mem_def,
-                                         self.insertafter_line_position))
+                                         self.insertafter_line_position, ui_layout))
         # ui_layout.Copy_mem_def_button.clicked.connect(
         #     lambda: lineChanges.copy_insert_row(self, ui_layout.Members_line, self.Members_line_options,
         #                                  self.Members_line_position))
-
-
 
 
         ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
@@ -81,15 +80,29 @@ class SABRE2_main_subclass(QMainWindow):
         print("main screen", Members_values)
         return Members_values
 
-    def update_members_copyfrom(self, lineName, position):
-        Members_copyfrom_values = DataCollection.update_lineedit_values(self, lineName, position)
-        print("copyfrom", Members_copyfrom_values)
-        return Members_copyfrom_values
+    def update_members_copyfrom(self, lineName, position, ui_layout):
+        copyfrom_value = DataCollection.update_lineedit_values(self, lineName, position, ui_layout.Members_table)
+        copyfrom_value = copyfrom_value - 1
+        tableName = ui_layout.Members_table; r = tableName.rowCount(); c = tableName.columnCount();
+        try:
+            if copyfrom_value <= r - 1:
+                Members_values = DataCollection.update_table_values(self, tableName, position)
+                ui_layout.Members_table.selectRow(copyfrom_value)
+                DropDownActions.statusMessage(self, message="")
+        except TypeError:
+                DropDownActions.statusMessage(self, message="Row not defined")
+        return copyfrom_value
 
-    def update_members_insertafter(self, lineName, position):
-        Members_insertafter_values = DataCollection.update_lineedit_values(self, lineName, position)
-        print("insertafter", Members_insertafter_values)
-        return Members_insertafter_values
+    def update_members_insertafter(self, lineName, position, ui_layout):
+        insertafter_values = DataCollection.update_lineedit_values(self, lineName, position, ui_layout.Members_table)
+        insertafter_values = insertafter_values - 1
+        tableName = ui_layout.Members_table
+        Members_values = DataCollection.update_table_values(self, tableName, position)
+
+        # if insert row > num of rows then add to end
+        print("insertafter", insertafter_values)
+        print("main screen", Members_values)
+        return insertafter_values
 
 class DropDownActions(QMainWindow):
     """docstring for Actions"""
@@ -310,7 +323,7 @@ class DataCollection(QMainWindow):
         #print("val1", val1)
         return val1
 
-    def update_lineedit_values(self, lineName, position):
+    def update_lineedit_values(self, lineName, position, Tablename):
         try:
             val2 = []; val2 = int(lineName.text())
             # print("val2", val2)
@@ -351,4 +364,5 @@ class TableChanges(QMainWindow):
     #     r = tableName.rowCount()
     #     c = tableName.columnCount()
     #
-    #     tableName.np.insert(Members_table())
+    #     tableName.np.insert()
+    #use this np function ^^^

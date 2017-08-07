@@ -59,7 +59,7 @@ class SABRE2_main_subclass(QMainWindow):
 
         ui_layout.Copy_from_number_mem_def.textChanged.connect(
             lambda: self.update_members_copyfrom(ui_layout.Copy_from_number_mem_def,
-                                         self.copyfrom_line_position, ui_layout))
+                                         self.copyfrom_line_position, ui_layout.Members_table))
         ui_layout.Insert_after_number_mem_def.textChanged.connect(
             lambda: self.update_members_insertafter(ui_layout.Insert_after_number_mem_def,
                                          self.insertafter_line_position, ui_layout))
@@ -80,14 +80,14 @@ class SABRE2_main_subclass(QMainWindow):
         print("main screen", Members_values)
         return Members_values
 
-    def update_members_copyfrom(self, lineName, position, ui_layout):
-        copyfrom_value = DataCollection.update_lineedit_values(self, lineName, position, ui_layout.Members_table)
+    def update_members_copyfrom(self, lineName, position, tableName):
+        copyfrom_value = DataCollection.update_lineedit_values(self, lineName, position, tableName)
         copyfrom_value = copyfrom_value - 1
-        tableName = ui_layout.Members_table; r = tableName.rowCount(); c = tableName.columnCount();
+        r = tableName.rowCount()
         try:
             if copyfrom_value <= r - 1:
                 Members_values = DataCollection.update_table_values(self, tableName, position)
-                ui_layout.Members_table.selectRow(copyfrom_value)
+                tableName.selectRow(copyfrom_value)
                 DropDownActions.statusMessage(self, message="")
         except TypeError:
                 DropDownActions.statusMessage(self, message="Row not defined")
@@ -300,7 +300,30 @@ class DataCollection(QMainWindow):
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
         val1 = np.zeros((row_check, col_check))
-        if row == -1:
+        if tableName.cellWidget(row_check-1, position) is None:
+            DropDownActions.statusMessage(self, message="New row added!")
+            try:
+                for i in range(row_check):
+                    for j in range(col_check):
+                        if tableName.item(i, j) is None:
+                            pass
+                        elif j == position:
+                            if i == (row_check-1):
+                                val1[i, position] = 0
+                                DropDownActions.statusMessage(self, message="")
+                            else:
+                                value_combo = tableName.cellWidget(i, position).currentIndex()
+                                val1[i, position] = value_combo
+                                DropDownActions.statusMessage(self, message="")
+                        else:
+                            # print("test1")
+                            val1[i, j] = float(tableName.item(i, j).text())
+                            DropDownActions.statusMessage(self, message="")
+            except ValueError:
+                tableName.clearSelection()
+                tableName.item(row, col).setText("")
+                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+        elif row == -1:
             pass
         else:
             try:
@@ -339,7 +362,6 @@ class TableChanges(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
-        datacollection = DataCollection()
 
     def add_new_row(self, tableName, options, position):
         row_position = tableName.rowCount()
@@ -352,8 +374,7 @@ class TableChanges(QMainWindow):
         tableName.setItem(row_position,position,item)
         for t in options:
             combo_box.addItem(t)
-            combo_box.activated.connect(
-                lambda: DataCollection.update_table_values(self, tableName, position))
+
         tableName.setCellWidget(row_position, position, combo_box)
 
     def delete_last_row(self, tableName):

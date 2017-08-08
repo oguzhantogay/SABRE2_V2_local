@@ -43,12 +43,20 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Members_table.itemChanged.connect(
             lambda: self.update_members_table(ui_layout.Members_table,
                                          self.Members_table_position))
+
         ui_layout.Mem_def_add.clicked.connect(
-            lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,                                         self.Members_table_position))
+            lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
+                                             self.Members_table_position, ui_layout.Insert_row_number_mem_def, "last"))
+
+        ui_layout.Insert_row_mem_def_button.clicked.connect(
+            lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
+                                             self.Members_table_position, ui_layout.Insert_row_number_mem_def, "arbitrary"))
 
         ui_layout.Mem_def_delete.clicked.connect(
-            lambda: TableChanges.delete_last_row(self, ui_layout.Members_table))
+            lambda: TableChanges.delete_row(self, ui_layout.Members_table, ui_layout.Delete_row_number_mem_def, "last"))
 
+        ui_layout.Delete_row_mem_def_button.clicked.connect(
+            lambda: TableChanges.delete_row(self, ui_layout.Members_table, ui_layout.Delete_row_number_mem_def, "arbitrary"))
 
 
         # Members line CopyInsert
@@ -298,6 +306,7 @@ class DataCollection(QMainWindow):
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
         val1 = np.zeros((row_check, col_check))
+        print(row_check)
         if row == -1:
             pass
         else:
@@ -307,7 +316,8 @@ class DataCollection(QMainWindow):
                         if tableName.item(i, j) is None:
                             pass
                         elif j == position:
-                            if tableName.cellWidget(row_check - 1, position) is None and i==row_check-1:
+                            print(i)
+                            if tableName.cellWidget(i, position) is None:
                                 val1[i, position] = 0
                                 DropDownActions.statusMessage(self, message="New row added!")
                             else:
@@ -342,23 +352,39 @@ class TableChanges(QMainWindow):
         QMainWindow.__init__(self)
         self.ui = ui_layout
 
-    def add_new_row(self, tableName, options, position):
+    def add_new_row(self, tableName, options, position, lineName, flag):
         row_position = tableName.rowCount()
         col_number = tableName.columnCount()
         combo_box = QtGui.QComboBox()
+        if flag == "last":
+            tableName.insertRow(row_position)
+            val = 0
+            item = QTableWidgetItem(str(val))
+            tableName.setItem(row_position,position,item)
+            for t in options:
+                combo_box.addItem(t)
 
-        tableName.insertRow(row_position)
-        val = 0
-        item = QTableWidgetItem(str(val))
-        tableName.setItem(row_position,position,item)
-        for t in options:
-            combo_box.addItem(t)
+            tableName.setCellWidget(row_position, position, combo_box)
+        else:
+            row_number = DataCollection.update_lineedit_values(self, lineName)
+            tableName.insertRow(row_number)
+            val = 0
+            item = QTableWidgetItem(str(val))
+            tableName.setItem(row_number, position, item)
+            for t in options:
+                combo_box.addItem(t)
 
-        tableName.setCellWidget(row_position, position, combo_box)
+            tableName.setCellWidget(row_number, position, combo_box)
 
-    def delete_last_row(self, tableName):
-        row_position = tableName.rowCount()
-        tableName.removeRow(row_position-1)
+
+    def delete_row(self, tableName, lineName, flag):
+        if flag == "last":
+            row_position = tableName.rowCount()
+            tableName.removeRow(row_position-1)
+        else:
+            row_number = DataCollection.update_lineedit_values(self, lineName)
+            tableName.removeRow(row_number-1)
+
 
     # def copy_insert_row(self, tableName, options, position):
     #     r = tableName.rowCount()

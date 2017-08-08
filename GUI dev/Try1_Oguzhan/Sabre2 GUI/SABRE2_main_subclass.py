@@ -44,10 +44,10 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: self.update_members_table(ui_layout.Members_table,
                                          self.Members_table_position))
         ui_layout.Mem_def_add.clicked.connect(
-            lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
-                                         self.Members_table_position))
+            lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,                                         self.Members_table_position))
 
-
+        ui_layout.Mem_def_delete.clicked.connect(
+            lambda: TableChanges.delete_last_row(self, ui_layout.Members_table))
 
 
 
@@ -55,14 +55,13 @@ class SABRE2_main_subclass(QMainWindow):
 
         # need DataCollection to be initialized?
 
-        self.copyfrom_line_position = 0; self.insertafter_line_position = 0
-
         ui_layout.Copy_from_number_mem_def.textChanged.connect(
             lambda: self.update_members_copyfrom(ui_layout.Copy_from_number_mem_def,
-                                         self.copyfrom_line_position, ui_layout.Members_table))
+                                                 self.Members_table_position, ui_layout.Members_table))
+
         ui_layout.Insert_after_number_mem_def.textChanged.connect(
             lambda: self.update_members_insertafter(ui_layout.Insert_after_number_mem_def,
-                                         self.insertafter_line_position, ui_layout))
+                                                    self.Members_table_position, ui_layout.Members_table))
         # ui_layout.Copy_mem_def_button.clicked.connect(
         #     lambda: lineChanges.copy_insert_row(self, ui_layout.Members_line, self.Members_line_options,
         #                                  self.Members_line_position))
@@ -81,7 +80,7 @@ class SABRE2_main_subclass(QMainWindow):
         return Members_values
 
     def update_members_copyfrom(self, lineName, position, tableName):
-        copyfrom_value = DataCollection.update_lineedit_values(self, lineName, position, tableName)
+        copyfrom_value = DataCollection.update_lineedit_values(self, lineName)
         copyfrom_value = copyfrom_value - 1
         r = tableName.rowCount()
         try:
@@ -93,10 +92,9 @@ class SABRE2_main_subclass(QMainWindow):
                 DropDownActions.statusMessage(self, message="Row not defined")
         return copyfrom_value
 
-    def update_members_insertafter(self, lineName, position, ui_layout):
-        insertafter_values = DataCollection.update_lineedit_values(self, lineName, position, ui_layout.Members_table)
+    def update_members_insertafter(self, lineName, position, tableName):
+        insertafter_values = DataCollection.update_lineedit_values(self, lineName)
         insertafter_values = insertafter_values - 1
-        tableName = ui_layout.Members_table
         Members_values = DataCollection.update_table_values(self, tableName, position)
 
         # if insert row > num of rows then add to end
@@ -327,7 +325,7 @@ class DataCollection(QMainWindow):
         # print("val1", val1)
         return val1
 
-    def update_lineedit_values(self, lineName, position, Tablename):
+    def update_lineedit_values(self, lineName):
         try:
             val2 = []; val2 = int(lineName.text())
             # print("val2", val2)
@@ -360,7 +358,7 @@ class TableChanges(QMainWindow):
 
     def delete_last_row(self, tableName):
         row_position = tableName.rowCount()
-        tableName.removeRow(row_position)
+        tableName.removeRow(row_position-1)
 
     # def copy_insert_row(self, tableName, options, position):
     #     r = tableName.rowCount()

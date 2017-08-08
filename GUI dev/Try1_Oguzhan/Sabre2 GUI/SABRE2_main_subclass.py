@@ -300,17 +300,18 @@ class DataCollection(QMainWindow):
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
         val1 = np.zeros((row_check, col_check))
-        if tableName.cellWidget(row_check-1, position) is None:
-            DropDownActions.statusMessage(self, message="New row added!")
+        if row == -1:
+            pass
+        else:
             try:
                 for i in range(row_check):
                     for j in range(col_check):
                         if tableName.item(i, j) is None:
                             pass
                         elif j == position:
-                            if i == (row_check-1):
+                            if tableName.cellWidget(row_check - 1, position) is None and i==row_check-1:
                                 val1[i, position] = 0
-                                DropDownActions.statusMessage(self, message="")
+                                DropDownActions.statusMessage(self, message="New row added!")
                             else:
                                 value_combo = tableName.cellWidget(i, position).currentIndex()
                                 val1[i, position] = value_combo
@@ -323,27 +324,7 @@ class DataCollection(QMainWindow):
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
                 DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
-        elif row == -1:
-            pass
-        else:
-            try:
-                for i in range(row_check):
-                    for j in range(col_check):
-                        if tableName.item(i, j) is None:
-                            pass
-                        elif j == position:
-                            value_combo = tableName.cellWidget(i, position).currentIndex()
-                            val1[i, position] = value_combo
-                            DropDownActions.statusMessage(self, message="")
-                        else:
-                            # print("test1")
-                            val1[i, j] = float(tableName.item(i, j).text())
-                            DropDownActions.statusMessage(self, message="")
-            except ValueError:
-                tableName.clearSelection()
-                tableName.item(row, col).setText("")
-                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
-        #print("val1", val1)
+        # print("val1", val1)
         return val1
 
     def update_lineedit_values(self, lineName, position, Tablename):

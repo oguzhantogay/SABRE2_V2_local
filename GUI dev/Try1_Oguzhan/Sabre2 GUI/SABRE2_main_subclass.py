@@ -58,11 +58,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Delete_row_mem_def_button.clicked.connect(
             lambda: TableChanges.delete_row(self, ui_layout.Members_table, ui_layout.Delete_row_number_mem_def, "arbitrary"))
 
-
         # Members line CopyInsert
-
-        # need DataCollection to be initialized?
-
         ui_layout.Copy_from_number_mem_def.textChanged.connect(
             lambda: self.update_members_copyfrom(ui_layout.Copy_from_number_mem_def,
                                                  self.Members_table_position, ui_layout.Members_table))
@@ -70,17 +66,18 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Insert_after_number_mem_def.textChanged.connect(
             lambda: self.update_members_insertafter(ui_layout.Insert_after_number_mem_def,
                                                     self.Members_table_position, ui_layout.Members_table))
-        # ui_layout.Copy_mem_def_button.clicked.connect(
-        #     lambda: lineChanges.copy_insert_row(self, ui_layout.Members_line, self.Members_line_options,
-        #                                  self.Members_line_position))
 
+        ui_layout.Copy_mem_def_button.clicked.connect(
+            lambda: LineChanges.copy_insert_row(self, ui_layout.Members_table, self.Members_table_options,
+                                         self.Members_table_position, ui_layout.Copy_from_number_mem_def, ui_layout.Insert_after_number_mem_def))
 
+        # Progress bar
+        # put me in analysis section
         ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
         ui_layout.statusbar.addPermanentWidget(ui_layout.progressBar)
         analysisprogress = 0  # Update this value later by integrating with analysis**********
         ui_layout.progressBar.setValue(analysisprogress)
         ui_layout.progressBar.setTextVisible(True)
-
 
     def update_members_table(self, tableName, position):
         Members_values = DataCollection.update_table_values(self, tableName, position)
@@ -106,8 +103,8 @@ class SABRE2_main_subclass(QMainWindow):
         Members_values = DataCollection.update_table_values(self, tableName, position)
 
         # if insert row > num of rows then add to end
-        print("insertafter", insertafter_values)
-        print("main screen", Members_values)
+        # print("insertafter", insertafter_values)
+        # print("main screen", Members_values)
         return insertafter_values
 
 class DropDownActions(QMainWindow):
@@ -306,7 +303,7 @@ class DataCollection(QMainWindow):
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
         val1 = np.zeros((row_check, col_check))
-        print(row_check)
+        # print(row_check)
         if row == -1:
             pass
         else:
@@ -316,7 +313,7 @@ class DataCollection(QMainWindow):
                         if tableName.item(i, j) is None:
                             pass
                         elif j == position:
-                            print(i)
+                            # print(i)
                             if tableName.cellWidget(i, position) is None:
                                 val1[i, position] = 0
                                 DropDownActions.statusMessage(self, message="New row added!")
@@ -385,10 +382,25 @@ class TableChanges(QMainWindow):
             row_number = DataCollection.update_lineedit_values(self, lineName)
             tableName.removeRow(row_number-1)
 
+class LineChanges(QMainWindow):
+    """This Class is imposing the changes on the QLineEdit cells"""
 
-    # def copy_insert_row(self, tableName, options, position):
-    #     r = tableName.rowCount()
-    #     c = tableName.columnCount()
-    #
-    #     tableName.np.insert()
-    #use this np function ^^^
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
+        self.ui = ui_layout
+
+    def copy_insert_row(self, tableName, options, position, Copy_from_number, Insert_after_number):
+        Members_values = DataCollection.update_table_values(self, tableName, position)
+        row = tableName.currentRow()
+        copyfrom_values = DataCollection.update_lineedit_values(self, Copy_from_number)
+        insertafter_values = DataCollection.update_lineedit_values(self, Insert_after_number)
+        print("insert button", Members_values)
+        print("copy from", copyfrom_values)
+        print("insert after", insertafter_values)
+        # if insertafter_values <= row:
+        Members_values_update = Members_values.np.insert(Members_values, Members_values[copyfrom_values,:], insertafter_values, axis=1)
+        # else:
+        #     print("add to end")
+
+
+

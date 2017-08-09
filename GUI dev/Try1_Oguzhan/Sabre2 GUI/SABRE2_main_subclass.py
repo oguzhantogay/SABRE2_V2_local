@@ -351,7 +351,6 @@ class TableChanges(QMainWindow):
 
     def add_new_row(self, tableName, options, position, lineName, flag):
         row_position = tableName.rowCount()
-        col_number = tableName.columnCount()
         combo_box = QtGui.QComboBox()
         if flag == "last":
             tableName.insertRow(row_position)
@@ -391,16 +390,25 @@ class LineChanges(QMainWindow):
 
     def copy_insert_row(self, tableName, options, position, Copy_from_number, Insert_after_number):
         Members_values = DataCollection.update_table_values(self, tableName, position)
-        row = tableName.currentRow()
         copyfrom_values = DataCollection.update_lineedit_values(self, Copy_from_number)
         insertafter_values = DataCollection.update_lineedit_values(self, Insert_after_number)
-        print("insert button", Members_values)
-        print("copy from", copyfrom_values)
-        print("insert after", insertafter_values)
-        # if insertafter_values <= row:
-        Members_values_update = Members_values.np.insert(Members_values, Members_values[copyfrom_values,:], insertafter_values, axis=1)
-        # else:
-        #     print("add to end")
 
+        np.insert(Members_values, insertafter_values, Members_values[(copyfrom_values-1),:], axis=0)
 
-
+        column_count = tableName.columnCount()
+        tableName.insertRow(insertafter_values)
+        for j in range(column_count):
+            if j==0 or j==1 or j==2:
+                pass
+            elif j == position:
+                combo_box = QtGui.QComboBox()
+                for t in options:
+                    combo_box.addItem(t)
+                tableName.setCellWidget(insertafter_values, position, combo_box)
+                copied_index = tableName.cellWidget(copyfrom_values, position).currentIndex()
+                print(copied_index)
+                tableName.cellWidget(insertafter_values, position).setCurrentIndex(copied_index)
+            else:
+                val = Members_values[copyfrom_values - 1, j]
+                item = QTableWidgetItem(str(val))
+                tableName.setItem(insertafter_values, j, item)

@@ -4,6 +4,7 @@ from PyQt4 import QtGui, QtCore
 import pickle
 import SABRE2_GUI
 import numpy as np
+import sqlite3 as sq
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -70,6 +71,12 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Copy_mem_def_button.clicked.connect(
             lambda: LineChanges.copy_insert_row(self, ui_layout.Members_table, self.Members_table_options,
                                          self.Members_table_position, ui_layout.Copy_from_number_mem_def, ui_layout.Insert_after_number_mem_def))
+
+        ui_layout.AISC_assign_button.clicked.connect(
+            lambda: LineChanges.sql_trial(self))
+
+        ui_layout.Apply_all_member_properties.clicked.connect(
+            lambda: LineChanges.sql_print(self))
 
         # Progress bar
         # put me in analysis section
@@ -412,3 +419,32 @@ class LineChanges(QMainWindow):
                 val = Members_values[copyfrom_values - 1, j]
                 item = QTableWidgetItem(str(val))
                 tableName.setItem(insertafter_values, j, item)
+
+    def sql_trial(self, col_count = 3):
+        conn = sq.connect('example.db')
+        c = conn.cursor()
+
+        c.execute('''CREATE TABLE variables
+                      (name section, web depth)''')
+
+        c.execute('''INSERT INTO variables VALUES 
+                      ('W21x44', 20)''')
+        conn.commit()
+
+        conn.close()
+
+    def sql_print(self):
+        conn =sq.connect('example.db')
+        c = conn.cursor()
+
+        c.execute('SELECT "web" FROM variables WHERE "name" = "W21x44"')
+
+        variable1 = float(c.fetchall())
+
+        # variable1 = variable1[0]
+        #
+        # variable1 = variable1[0]
+
+        print('W21x44 web depth = ', variable1)
+
+

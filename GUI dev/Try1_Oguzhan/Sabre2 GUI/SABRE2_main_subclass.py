@@ -73,9 +73,6 @@ class SABRE2_main_subclass(QMainWindow):
                                          self.Members_table_position, ui_layout.Copy_from_number_mem_def, ui_layout.Insert_after_number_mem_def))
 
         ui_layout.AISC_assign_button.clicked.connect(
-            lambda: LineChanges.sql_trial(self))
-
-        ui_layout.Apply_all_member_properties.clicked.connect(
             lambda: LineChanges.sql_print(self))
 
         # Progress bar
@@ -420,30 +417,17 @@ class LineChanges(QMainWindow):
                 item = QTableWidgetItem(str(val))
                 tableName.setItem(insertafter_values, j, item)
 
-    def sql_trial(self, col_count = 3):
-        conn = sq.connect('example.db')
-        c = conn.cursor()
-
-        c.execute('''CREATE TABLE variables
-                      (name section, web depth)''')
-
-        c.execute('''INSERT INTO variables VALUES 
-                      ('W21x44', 20)''')
-        conn.commit()
-
-        conn.close()
-
     def sql_print(self):
-        conn =sq.connect('example.db')
+        conn =sq.connect('AISC_data.db')
         c = conn.cursor()
 
-        c.execute('SELECT "web" FROM variables WHERE "name" = "W21x44"')
+        c.execute('SELECT "d" FROM records WHERE "AISC_Manual_Label" = "W21X44"')
 
-        variable1 = float(c.fetchall())
+        variable1 = c.fetchall()
 
-        # variable1 = variable1[0]
-        #
-        # variable1 = variable1[0]
+        variable1 = variable1[0]
+
+        variable1 = variable1[0]
 
         print('W21x44 web depth = ', variable1)
 

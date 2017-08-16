@@ -35,6 +35,24 @@ class SABRE2_main_subclass(QMainWindow):
         # Help dropdown actions
         ui_layout.actionAbout.triggered.connect(lambda: DropDownActions('uidesign').AboutAct())
 
+        # Joint Table Arrangements
+
+        ui_layout.Joints_Table.itemChanged.connect(
+            lambda: self.update_joints_table(ui_layout.Joints_Table))
+
+        ui_layout.Add_new_row_joint.clicked.connect(
+            lambda: JointTable.add_new_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint, "last"))
+
+        ui_layout.Insert_row_button_Joint.clicked.connect(
+            lambda: JointTable.add_new_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint, "arbitrary"))
+
+        ui_layout.Delete_last_row_Joint.clicked.connect(
+            lambda: JointTable.delete_row(self, ui_layout.Joints_Table, ui_layout.Delete_row_number_mem_def, "last"))
+
+        ui_layout.Delete_row_button_Joint.clicked.connect(
+            lambda: JointTable.delete_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint_2,
+                                            "arbitrary"))
+
         # Members Table Arrangements
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
         self.Members_table_position = 3
@@ -77,7 +95,7 @@ class SABRE2_main_subclass(QMainWindow):
                                                 ui_layout.Insert_after_number_mem_def))
 
         ui_layout.AISC_assign_button.clicked.connect(
-            lambda: LineChanges.sql_print(self, ui_layout))
+            lambda: LineChanges.sql_print(self, ui_layout, ui_layout.Members_table))
 
         # Progress bar
         # put me in analysis section
@@ -87,6 +105,13 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.progressBar.setValue(analysisprogress)
         ui_layout.progressBar.setTextVisible(True)
 
+    # Joints table functions
+    def update_joints_table(self, tableName):
+        Joint_values = JointTable.tableValues(self, tableName)
+        print("main screen Joint values", Joint_values)
+        return Joint_values
+
+    # Members tab, Member definition functions
     def update_members_table(self, tableName, position):
         Members_values = DataCollection.update_table_values(self, tableName, position)
         print("main screen", Members_values)
@@ -389,6 +414,7 @@ class TableChanges(QMainWindow):
             tableName.removeRow(row_position - 1)
         else:
             row_number = DataCollection.update_lineedit_values(self, lineName)
+            print(row_number)
             tableName.removeRow(row_number - 1)
 
 
@@ -464,27 +490,119 @@ class LineChanges(QMainWindow):
         for t in cross_sections:
             ui_layout.AISC_database_button.addItem(t)
 
-    def sql_print(self, ui_layout):
+    def sql_print(self, ui_layout, tableName):
         conn = sq.connect('AISC_data.db')
         c = conn.cursor()
 
+        row = tableName.currentRow()
+        print(row)
         cross_section = str(ui_layout.AISC_database_button.currentText())
+        if row == -1:
+            DropDownActions.statusMessage(self, message="Select the row before assignment")
+        else:
+            try:
+                variable_names = ["bf", "tf", "d", "tw", "A", "W", "Ix", "Zx", "Sx", "rx", "Iy", "Zy", "Sy", "ry", "J",
+                                  "Cw", "dw", "Afillet"]
+
+                table_prop = np.zeros((1, 18))
+
+                for i in range(len(variable_names)):
+                    c.execute('SELECT ' + variable_names[i] + ' FROM records WHERE "AISC_Manual_Label" = ?',
+                              (cross_section,))
+                    var1 = c.fetchall()
+                    var1 = var1[0]
+                    table_prop[0, i] = var1[0]
+                print(cross_section, 'cs_properties = ', table_prop)
+                # table values assignment
+                tableName.setItem(row,4,QTableWidgetItem(str(table_prop[0,0])))
+                tableName.setItem(row,5,QTableWidgetItem(str(table_prop[0,1])))
+                tableName.setItem(row,6,QTableWidgetItem(str(table_prop[0,0])))
+                tableName.setItem(row,7,QTableWidgetItem(str(table_prop[0,1])))
+                tableName.setItem(row,8,QTableWidgetItem(str(table_prop[0,0])))
+                tableName.setItem(row,9,QTableWidgetItem(str(table_prop[0,1])))
+                tableName.setItem(row,10,QTableWidgetItem(str(table_prop[0,0])))
+                tableName.setItem(row,11,QTableWidgetItem(str(table_prop[0,1])))
+                tableName.setItem(row,12,QTableWidgetItem(str(table_prop[0,16])))
+                tableName.setItem(row,13,QTableWidgetItem(str(table_prop[0,3])))
+                tableName.setItem(row,14,QTableWidgetItem(str(table_prop[0,16])))
+                tableName.setItem(row,15,QTableWidgetItem(str(table_prop[0,3])))
+                tableName.setItem(row,16,QTableWidgetItem(str(table_prop[0,17])))
+                tableName.setItem(row,17,QTableWidgetItem(str(table_prop[0,17])))
+
+            except IndexError:
+                DropDownActions.statusMessage(self, message="Please select the cross-section name!")
+
+class JointTable(QMainWindow):
+    """This Class is imposing the changes on the QLineEdit cells"""
+
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
+        self.ui = ui_layout
+
+    def tableValues(self, tableName):
+        col = tableName.currentColumn()
+        row = tableName.currentRow()
+        row_check = tableName.rowCount()
+        col_check = tableName.columnCount()
+        val1 = np.zeros((row_check, col_check))
+        # print(row_check)
         try:
-            print(cross_section)
+            for i in range(row_check):
+                for j in range(col_check):
+                    if tableName.item(i, j) is None:
+                        tableName.setItem(i, j, QTableWidgetItem("0"))
+                        val1[i, j] = 0
+                    else:
+                        val1[i, j] = float(tableName.item(i, j).text())
+                        DropDownActions.statusMessage(self, message="")
+        except ValueError:
+            tableName.clearSelection()
+            tableName.item(row, col).setText("")
+            DropDownActions.statusMessage(self, message="Please enter only numbers in the cell!")
+        # print("val1", val1)
+        return val1
 
-            variable_names = ["bf", "tf", "d", "tw", "A", "W", "Ix", "Zx", "Sx", "rx", "Iy", "Zy", "Sy", "ry", "J", "Cw"]
+    def add_new_row(self, tableName, lineName, flag):
+        row_position = tableName.rowCount()
+        print(row_position)
+        if flag == "last":
+            tableName.insertRow(row_position)
+            item = QTableWidgetItem(str(row_position+1))
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+            tableName.setItem(row_position, 0, item)
 
-            table_prop = np.zeros((1, 16))
+            item1 = QTableWidgetItem("0")
+            item1.setTextAlignment(QtCore.Qt.AlignCenter)
+            item1.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+            tableName.setItem(row_position, 3, item1)
 
-            for i in range(len(variable_names)):
-                print (i)
-                c.execute('SELECT ' + variable_names[i] + ' FROM records WHERE "AISC_Manual_Label" = ?', (cross_section,))
-                var1 = c.fetchall()
-                var1 = var1[0]
-                table_prop[0,i] = var1[0]
-            print(cross_section, 'cs_properties = ', table_prop)
+        else:
+            row_number = DataCollection.update_lineedit_values(self, lineName)
+            tableName.insertRow(row_number)
+            for i in range(row_position+2):
+                item = QTableWidgetItem(str(i + 1))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                tableName.setItem(i, 0, item)
 
+                item1 = QTableWidgetItem("0")
+                item1.setTextAlignment(QtCore.Qt.AlignCenter)
+                item1.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                tableName.setItem(i, 3, item1)
 
-        except IndexError:
-            DropDownActions.statusMessage(self, message="Please select the cross-section name!")
-
+    def delete_row(self, tableName, lineName, flag):
+        row_position = tableName.rowCount()
+        print(row_position)
+        if row_position == 1:
+            DropDownActions.statusMessage(self, message="First row cannot be deleted!")
+        elif flag == "last":
+            tableName.removeRow(row_position - 1)
+        else:
+            row_number = DataCollection.update_lineedit_values(self, lineName)
+            tableName.removeRow(row_number - 1)
+            for i in range(row_position + 2):
+                item = QTableWidgetItem(str(i + 1))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                tableName.setItem(i, 0, item)

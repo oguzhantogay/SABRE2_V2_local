@@ -464,7 +464,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
@@ -491,11 +491,6 @@
           <row>
            <property name="text">
             <string>1</string>
-           </property>
-          </row>
-          <row>
-           <property name="text">
-            <string>2</string>
            </property>
           </row>
           <column>
@@ -542,6 +537,28 @@
             </font>
            </property>
           </column>
+          <item row="0" column="0">
+           <property name="text">
+            <string>1</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignCenter</set>
+           </property>
+           <property name="flags">
+            <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+           </property>
+          </item>
+          <item row="0" column="3">
+           <property name="text">
+            <string>0</string>
+           </property>
+           <property name="textAlignment">
+            <set>AlignCenter</set>
+           </property>
+           <property name="flags">
+            <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+           </property>
+          </item>
          </widget>
         </item>
         <item>
@@ -804,6 +821,28 @@
               </column>
               <column>
                <property name="text">
+                <string>bf1_j</string>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>tf1_j</string>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+              </column>
+              <column>
+               <property name="text">
                 <string>bf2_j</string>
                </property>
                <property name="font">
@@ -816,17 +855,6 @@
               <column>
                <property name="text">
                 <string>tf2_j</string>
-               </property>
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-              </column>
-              <column>
-               <property name="text">
-                <string>bf1_j</string>
                </property>
                <property name="font">
                 <font>
@@ -871,6 +899,28 @@
               <column>
                <property name="text">
                 <string>tw_j</string>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>A_fil1</string>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>A_fil2</string>
                </property>
                <property name="font">
                 <font>

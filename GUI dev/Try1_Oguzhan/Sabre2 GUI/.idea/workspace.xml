@@ -3,9 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e3bdc81c-f851-421a-a983-520f479e3ce7" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2-V3.ui" afterPath="$PROJECT_DIR$/SABRE2-V3.ui" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2_GUI.py" afterPath="$PROJECT_DIR$/SABRE2_GUI.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2_main_subclass.py" afterPath="$PROJECT_DIR$/SABRE2_main_subclass.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -561,7 +558,14 @@
       <option name="project" value="LOCAL" />
       <updated>1502853286358</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="Member Properties table works, working on the Boundary conditions tabs">
+      <created>1503101354563</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1503101354563</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TodoView">
@@ -626,7 +630,8 @@
     <MESSAGE value="SQL database is selected for AISC W shapes" />
     <MESSAGE value="SQL Database is generated" />
     <MESSAGE value="All attributes of Members and Joints table are working now" />
-    <option name="LAST_COMMIT_MESSAGE" value="All attributes of Members and Joints table are working now" />
+    <MESSAGE value="Member Properties table works, working on the Boundary conditions tabs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Member Properties table works, working on the Boundary conditions tabs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -19,10 +19,15 @@ class SABRE2_main_subclass(QMainWindow):
         self.ui = ui_layout
         ui_layout.setupUi(self)
         ui_layout.statusBar = self.statusBar()
-        ui_layout.DefinitionTabs.hide()  # to hide problem definition tabs
-        ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
+        ui_layout.DefinitionTabs.close()  # to hide problem definition tabs
+        ui_layout.AnalysisTabs.close()  # to hide analysis tabs
+
+        # main buttons actions
+        ui_layout.DefinitionButton.clicked.connect(lambda: ui_layout.AnalysisTabs.close())
+        ui_layout.AnalysisButton.clicked.connect(lambda: ui_layout.DefinitionTabs.close())
         LineChanges.set_member_definition_AISC_combobox(self, ui_layout)  # set AISC database combobox values
-        ui_layout.Fixities_table.itemClicked.connect(lambda: Boundary_Conditions.get_checkbox_values(self,ui_layout.Fixities_table))
+        ui_layout.Fixities_table.itemClicked.connect(
+            lambda: Boundary_Conditions.get_checkbox_values(self, ui_layout.Fixities_table))
 
         # File dropdown actions
         ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
@@ -106,8 +111,14 @@ class SABRE2_main_subclass(QMainWindow):
 
         # Member Properties Table
         ui_layout.Apply_all_member_properties.clicked.connect(
-            lambda: MemberPropertiesTable.set_number_of_rows(self, ui_layout.Members_table,
-                                                             ui_layout.Member_Properties_Table))
+            lambda: MemberPropertiesTable.set_values_with_row(self, ui_layout.Member_Properties_Table,
+                                                              ui_layout.Member_prop_line_edit))
+
+        ui_layout.Member_Properties_Table.itemChanged.connect(
+            lambda: MemberPropertiesTable.check_values(self, ui_layout.Member_Properties_Table))
+
+        ui_layout.Member_Properties_Table.itemChanged.connect(
+            lambda: self.update_member_properties_table(ui_layout.Member_Properties_Table))
 
         # Progress bar
         # put me in analysis section
@@ -152,6 +163,11 @@ class SABRE2_main_subclass(QMainWindow):
         # print("main screen", Members_values)
         return insertafter_values
 
+    #Member Properties table update
+    def update_member_properties_table(self, tableName):
+        prop_values = JointTable.tableValues(self, tableName)
+        print("main screen Properties Table values", prop_values)
+        return prop_values
 
 class DropDownActions(QMainWindow):
     """docstring for Actions"""
@@ -393,7 +409,7 @@ class TableChanges(QMainWindow):
 
             tableName.setCellWidget(row_position, position, combo_box)
 
-            item1 = QTableWidgetItem(str(row_position+1))
+            item1 = QTableWidgetItem(str(row_position + 1))
             item1.setTextAlignment(QtCore.Qt.AlignCenter)
             item1.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
             tableName.setItem(row_position, 0, item1)
@@ -430,7 +446,6 @@ class TableChanges(QMainWindow):
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
                 tableName.setItem(i, 0, item)
-
 
 
 class LineChanges(QMainWindow):
@@ -471,7 +486,6 @@ class LineChanges(QMainWindow):
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
             tableName.setItem(i, 0, item)
-
 
     def set_member_definition_AISC_combobox(self, ui_layout):
         ''' This function sets the combobox for the AISC database'''
@@ -655,11 +669,48 @@ class MemberPropertiesTable(QMainWindow):
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     memberPropertiesTable.setItem(j, i, item)
                 else:
-                    item = QTableWidgetItem(str(int(initial_values[0,i])))
+                    item = QTableWidgetItem(str(int(initial_values[0, i])))
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     memberPropertiesTable.setItem(j, i, item)
 
-class Boundary_Conditions (QMainWindow):
+    def set_values_with_row(self, memberPropertiesTable, member_prop_line_edit):
+        row_count = memberPropertiesTable.rowCount()
+        copyfrom_values = DataCollection.update_lineedit_values(self, member_prop_line_edit)
+        initial_values = np.zeros((1, 8))
+        for k in range(8):
+            initial_values[0, k] = float(memberPropertiesTable.item(copyfrom_values - 1, k).text())
+        for i in range(8):
+            for j in range(row_count):
+                if i == 0:
+                    item = QTableWidgetItem(str(j + 1))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                    memberPropertiesTable.setItem(j, i, item)
+                elif i == 4:
+                    item = QTableWidgetItem(str(initial_values[0, i]))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    memberPropertiesTable.setItem(j, i, item)
+                else:
+                    item = QTableWidgetItem(str(int(initial_values[0, i])))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    memberPropertiesTable.setItem(j, i, item)
+
+    def check_values(self, memberPropertiesTable):
+        col = memberPropertiesTable.currentColumn()
+        row = memberPropertiesTable.currentRow()
+        try:
+            float(memberPropertiesTable.item(row, col).text())
+
+        except ValueError:
+            memberPropertiesTable.clearSelection()
+            memberPropertiesTable.item(row, col).setText("")
+            DropDownActions.statusMessage(self, message="Please enter only numbers in the cell!")
+
+        except AttributeError:
+            pass
+
+
+class Boundary_Conditions(QMainWindow):
     """This Class is imposing the changes on the Boundary Conditions tab cells"""
 
     def __init__(self, ui_layout):
@@ -667,14 +718,18 @@ class Boundary_Conditions (QMainWindow):
         self.ui = ui_layout
 
     def get_checkbox_values(self, table_for_checkbox):
-        print("checked")
         column_count = table_for_checkbox.columnCount()
         row_count = table_for_checkbox.rowCount()
-
+        fixities_vals = np.zeros((row_count, column_count))
         for j in range(row_count):
-            for i in range(1, column_count):
+            for i in range(column_count):
+                if i == 0:
+                    fixities_vals[j, i] = (j + 1)
+                else:
+                    fixities_vals[j, i] = table_for_checkbox.item(j, i).checkState()
+        print(fixities_vals)
 
-                print("j = ", j)
-                print("i = ", i)
-                state = table_for_checkbox.cellWidget(j,i).checkState()
-                print("state = ", state)
+    def shear_panel_application(self, table_for_shear_panel):
+
+        "Shear_panel_table"
+

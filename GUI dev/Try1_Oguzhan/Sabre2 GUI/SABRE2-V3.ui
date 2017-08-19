@@ -464,7 +464,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="iconSize">
        <size>
@@ -929,6 +929,17 @@
                 </font>
                </property>
               </column>
+              <item row="0" column="0">
+               <property name="text">
+                <string>1</string>
+               </property>
+               <property name="textAlignment">
+                <set>AlignCenter</set>
+               </property>
+               <property name="flags">
+                <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+               </property>
+              </item>
               <item row="0" column="3">
                <property name="text">
                 <string>0</string>
@@ -1174,6 +1185,9 @@
            <property name="textAlignment">
             <set>AlignCenter</set>
            </property>
+           <property name="flags">
+            <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+           </property>
           </item>
           <item row="0" column="1">
            <property name="text">
@@ -1236,30 +1250,6 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_12">
           <item>
-           <layout class="QVBoxLayout" name="verticalLayout_3">
-            <item>
-             <widget class="QPushButton" name="Apply_all_member_properties">
-              <property name="text">
-               <string>Apply All</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
            <spacer name="horizontalSpacer_5">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1276,18 +1266,32 @@
            </spacer>
           </item>
           <item>
-           <layout class="QGridLayout" name="gridLayout_7">
-            <item row="0" column="1">
-             <widget class="QPushButton" name="Add_New_Row_Mem_Prop">
-              <property name="text">
-               <string>Add New Row</string>
-              </property>
-             </widget>
+           <layout class="QVBoxLayout" name="verticalLayout_3">
+            <item>
+             <layout class="QGridLayout" name="gridLayout_10">
+              <item row="0" column="0">
+               <widget class="QLabel" name="Member_prop_copy">
+                <property name="text">
+                 <string>Copy properties from</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QLineEdit" name="Member_prop_line_edit">
+                <property name="text">
+                 <string>1</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignCenter</set>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="Delete_last_row_Mem_prop">
+            <item>
+             <widget class="QPushButton" name="Apply_all_member_properties">
               <property name="text">
-               <string>Delete Last Row</string>
+               <string>Apply to all members</string>
               </property>
              </widget>
             </item>
@@ -1316,21 +1320,19 @@
              <widget class="QTableWidget" name="Fixities_table">
               <property name="minimumSize">
                <size>
-                <width>818</width>
+                <width>540</width>
                 <height>0</height>
                </size>
               </property>
-              <property name="alternatingRowColors">
-               <bool>true</bool>
+              <property name="dragDropOverwriteMode">
+               <bool>false</bool>
               </property>
+              <attribute name="horizontalHeaderDefaultSectionSize">
+               <number>65</number>
+              </attribute>
               <row>
                <property name="text">
                 <string>1</string>
-               </property>
-              </row>
-              <row>
-               <property name="text">
-                <string>2</string>
                </property>
               </row>
               <column>
@@ -1428,16 +1430,16 @@
                <property name="textAlignment">
                 <set>AlignCenter</set>
                </property>
+               <property name="flags">
+                <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+               </property>
               </item>
               <item row="0" column="1">
                <property name="text">
                 <string/>
                </property>
-               <property name="textAlignment">
-                <set>AlignCenter</set>
-               </property>
                <property name="checkState">
-                <enum>Checked</enum>
+                <enum>Unchecked</enum>
                </property>
               </item>
               <item row="0" column="2">
@@ -1445,111 +1447,32 @@
                 <string/>
                </property>
                <property name="checkState">
-                <enum>Checked</enum>
+                <enum>Unchecked</enum>
                </property>
               </item>
               <item row="0" column="3">
-               <property name="text">
-                <string/>
-               </property>
                <property name="checkState">
-                <enum>Checked</enum>
+                <enum>Unchecked</enum>
                </property>
               </item>
               <item row="0" column="4">
-               <property name="text">
-                <string/>
-               </property>
                <property name="checkState">
-                <enum>Checked</enum>
+                <enum>Unchecked</enum>
                </property>
               </item>
               <item row="0" column="5">
-               <property name="text">
-                <string/>
-               </property>
                <property name="checkState">
-                <enum>Checked</enum>
+                <enum>Unchecked</enum>
                </property>
               </item>
               <item row="0" column="6">
-               <property name="text">
-                <string/>
-               </property>
                <property name="checkState">
-                <enum>Checked</enum>
+                <enum>Unchecked</enum>
                </property>
               </item>
               <item row="0" column="7">
-               <property name="text">
-                <string/>
-               </property>
                <property name="checkState">
-                <enum>Checked</enum>
-               </property>
-              </item>
-              <item row="1" column="0">
-               <property name="text">
-                <string>2</string>
-               </property>
-               <property name="textAlignment">
-                <set>AlignCenter</set>
-               </property>
-              </item>
-              <item row="1" column="1">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="checkState">
-                <enum>Checked</enum>
-               </property>
-              </item>
-              <item row="1" column="2">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="checkState">
-                <enum>Checked</enum>
-               </property>
-              </item>
-              <item row="1" column="3">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="checkState">
-                <enum>Checked</enum>
-               </property>
-              </item>
-              <item row="1" column="4">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="checkState">
-                <enum>Checked</enum>
-               </property>
-              </item>
-              <item row="1" column="5">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="checkState">
-                <enum>Checked</enum>
-               </property>
-              </item>
-              <item row="1" column="6">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="checkState">
-                <enum>Checked</enum>
-               </property>
-              </item>
-              <item row="1" column="7">
-               <property name="text">
-                <string/>
-               </property>
-               <property name="checkState">
-                <enum>Checked</enum>
+                <enum>Unchecked</enum>
                </property>
               </item>
              </widget>

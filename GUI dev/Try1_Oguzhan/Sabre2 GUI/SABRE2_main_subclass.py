@@ -22,6 +22,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.DefinitionTabs.hide()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.hide()  # to hide analysis tabs
         LineChanges.set_member_definition_AISC_combobox(self, ui_layout)  # set AISC database combobox values
+        ui_layout.Fixities_table.itemClicked.connect(lambda: Boundary_Conditions.get_checkbox_values(self,ui_layout.Fixities_table))
 
         # File dropdown actions
         ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
@@ -44,14 +45,15 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: JointTable.add_new_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint, "last"))
 
         ui_layout.Insert_row_button_Joint.clicked.connect(
-            lambda: JointTable.add_new_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint, "arbitrary"))
+            lambda: JointTable.add_new_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint,
+                                           "arbitrary"))
 
         ui_layout.Delete_last_row_Joint.clicked.connect(
             lambda: JointTable.delete_row(self, ui_layout.Joints_Table, ui_layout.Delete_row_number_mem_def, "last"))
 
         ui_layout.Delete_row_button_Joint.clicked.connect(
             lambda: JointTable.delete_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint_2,
-                                            "arbitrary"))
+                                          "arbitrary"))
 
         # Members Table Arrangements
         self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
@@ -59,10 +61,15 @@ class SABRE2_main_subclass(QMainWindow):
         # The data update for members tab
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
                                        self.Members_table_position)
+
         # Add new row button # self, tableName, options, position
         ui_layout.Members_table.itemChanged.connect(
             lambda: self.update_members_table(ui_layout.Members_table,
                                               self.Members_table_position))
+
+        ui_layout.Members_table.itemChanged.connect(
+            lambda: MemberPropertiesTable.set_number_of_rows(self, ui_layout.Members_table,
+                                                             ui_layout.Member_Properties_Table))
 
         ui_layout.Mem_def_add.clicked.connect(
             lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
@@ -96,6 +103,11 @@ class SABRE2_main_subclass(QMainWindow):
 
         ui_layout.AISC_assign_button.clicked.connect(
             lambda: LineChanges.sql_print(self, ui_layout, ui_layout.Members_table))
+
+        # Member Properties Table
+        ui_layout.Apply_all_member_properties.clicked.connect(
+            lambda: MemberPropertiesTable.set_number_of_rows(self, ui_layout.Members_table,
+                                                             ui_layout.Member_Properties_Table))
 
         # Progress bar
         # put me in analysis section
@@ -315,23 +327,6 @@ class DataCollection(QMainWindow):
             # combo_box.activated.connect(
             #     lambda: DataCollection.update_table_values(self, tableName, r, c, values, position))
 
-    def Assign_checkBox(self, tableName, options, position, values):
-        check_box = QtGui.QCheckBox()
-        flag_check = 1;
-        flag_uncheck = 0
-        r = tableName.rowCount()
-        c = tableName.columnCount()
-        for i in range(r):
-            check_box = QtGui.QCheckBox()
-            tableName.setCellWidget(i, position, check_box)
-            check_box.clicked.connect(
-                lambda: DataCollection.update_table_values(self, tableName, values, position))
-        text_trigger = tableName.item(0, 1)
-        if text_trigger.text() == "1":
-            tableName.item(0, 1).setText("0")
-        else:
-            tableName.item(0, 1).setText("1")
-
     def update_table_values(self, tableName, position):
         col = tableName.currentColumn()
         row = tableName.currentRow()
@@ -397,25 +392,45 @@ class TableChanges(QMainWindow):
                 combo_box.addItem(t)
 
             tableName.setCellWidget(row_position, position, combo_box)
+
+            item1 = QTableWidgetItem(str(row_position+1))
+            item1.setTextAlignment(QtCore.Qt.AlignCenter)
+            item1.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+            tableName.setItem(row_position, 0, item1)
         else:
             row_number = DataCollection.update_lineedit_values(self, lineName)
             tableName.insertRow(row_number)
             val = 0
             item = QTableWidgetItem(str(val))
             tableName.setItem(row_number, position, item)
+
+            for i in range(row_position + 2):
+                item = QTableWidgetItem(str(i + 1))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                tableName.setItem(i, 0, item)
+
             for t in options:
                 combo_box.addItem(t)
 
             tableName.setCellWidget(row_number, position, combo_box)
 
     def delete_row(self, tableName, lineName, flag):
+        row_position = tableName.rowCount()
         if flag == "last":
-            row_position = tableName.rowCount()
+
             tableName.removeRow(row_position - 1)
         else:
             row_number = DataCollection.update_lineedit_values(self, lineName)
             print(row_number)
             tableName.removeRow(row_number - 1)
+
+            for i in range(row_position + 2):
+                item = QTableWidgetItem(str(i + 1))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                tableName.setItem(i, 0, item)
+
 
 
 class LineChanges(QMainWindow):
@@ -429,6 +444,7 @@ class LineChanges(QMainWindow):
         Members_values = DataCollection.update_table_values(self, tableName, position)
         copyfrom_values = DataCollection.update_lineedit_values(self, Copy_from_number)
         insertafter_values = DataCollection.update_lineedit_values(self, Insert_after_number)
+        row_position = tableName.rowCount()
 
         np.insert(Members_values, insertafter_values, Members_values[(copyfrom_values - 1), :], axis=0)
 
@@ -449,6 +465,13 @@ class LineChanges(QMainWindow):
                 val = Members_values[copyfrom_values - 1, j]
                 item = QTableWidgetItem(str(val))
                 tableName.setItem(insertafter_values, j, item)
+
+        for i in range(row_position + 2):
+            item = QTableWidgetItem(str(i + 1))
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+            tableName.setItem(i, 0, item)
+
 
     def set_member_definition_AISC_combobox(self, ui_layout):
         ''' This function sets the combobox for the AISC database'''
@@ -514,23 +537,24 @@ class LineChanges(QMainWindow):
                     table_prop[0, i] = var1[0]
                 print(cross_section, 'cs_properties = ', table_prop)
                 # table values assignment
-                tableName.setItem(row,4,QTableWidgetItem(str(table_prop[0,0])))
-                tableName.setItem(row,5,QTableWidgetItem(str(table_prop[0,1])))
-                tableName.setItem(row,6,QTableWidgetItem(str(table_prop[0,0])))
-                tableName.setItem(row,7,QTableWidgetItem(str(table_prop[0,1])))
-                tableName.setItem(row,8,QTableWidgetItem(str(table_prop[0,0])))
-                tableName.setItem(row,9,QTableWidgetItem(str(table_prop[0,1])))
-                tableName.setItem(row,10,QTableWidgetItem(str(table_prop[0,0])))
-                tableName.setItem(row,11,QTableWidgetItem(str(table_prop[0,1])))
-                tableName.setItem(row,12,QTableWidgetItem(str(table_prop[0,16])))
-                tableName.setItem(row,13,QTableWidgetItem(str(table_prop[0,3])))
-                tableName.setItem(row,14,QTableWidgetItem(str(table_prop[0,16])))
-                tableName.setItem(row,15,QTableWidgetItem(str(table_prop[0,3])))
-                tableName.setItem(row,16,QTableWidgetItem(str(table_prop[0,17])))
-                tableName.setItem(row,17,QTableWidgetItem(str(table_prop[0,17])))
+                tableName.setItem(row, 4, QTableWidgetItem(str(table_prop[0, 0])))
+                tableName.setItem(row, 5, QTableWidgetItem(str(table_prop[0, 1])))
+                tableName.setItem(row, 6, QTableWidgetItem(str(table_prop[0, 0])))
+                tableName.setItem(row, 7, QTableWidgetItem(str(table_prop[0, 1])))
+                tableName.setItem(row, 8, QTableWidgetItem(str(table_prop[0, 0])))
+                tableName.setItem(row, 9, QTableWidgetItem(str(table_prop[0, 1])))
+                tableName.setItem(row, 10, QTableWidgetItem(str(table_prop[0, 0])))
+                tableName.setItem(row, 11, QTableWidgetItem(str(table_prop[0, 1])))
+                tableName.setItem(row, 12, QTableWidgetItem(str(table_prop[0, 16])))
+                tableName.setItem(row, 13, QTableWidgetItem(str(table_prop[0, 3])))
+                tableName.setItem(row, 14, QTableWidgetItem(str(table_prop[0, 16])))
+                tableName.setItem(row, 15, QTableWidgetItem(str(table_prop[0, 3])))
+                tableName.setItem(row, 16, QTableWidgetItem(str(table_prop[0, 17])))
+                tableName.setItem(row, 17, QTableWidgetItem(str(table_prop[0, 17])))
 
             except IndexError:
                 DropDownActions.statusMessage(self, message="Please select the cross-section name!")
+
 
 class JointTable(QMainWindow):
     """This Class is imposing the changes on the QLineEdit cells"""
@@ -567,7 +591,7 @@ class JointTable(QMainWindow):
         print(row_position)
         if flag == "last":
             tableName.insertRow(row_position)
-            item = QTableWidgetItem(str(row_position+1))
+            item = QTableWidgetItem(str(row_position + 1))
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
             tableName.setItem(row_position, 0, item)
@@ -580,7 +604,7 @@ class JointTable(QMainWindow):
         else:
             row_number = DataCollection.update_lineedit_values(self, lineName)
             tableName.insertRow(row_number)
-            for i in range(row_position+2):
+            for i in range(row_position + 2):
                 item = QTableWidgetItem(str(i + 1))
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
@@ -606,3 +630,51 @@ class JointTable(QMainWindow):
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
                 tableName.setItem(i, 0, item)
+
+
+class MemberPropertiesTable(QMainWindow):
+    ''' This class is for setting the properties of Member Properties Table '''
+
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
+        self.ui = ui_layout
+
+    def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable):
+        row_def = memberDefinitionTable.rowCount()
+        initial_values = JointTable.tableValues(self, memberPropertiesTable)
+        memberPropertiesTable.setRowCount(row_def)
+        for i in range(8):
+            for j in range(1, row_def):
+                if i == 0:
+                    item = QTableWidgetItem(str(j + 1))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                    memberPropertiesTable.setItem(j, i, item)
+                elif i == 4:
+                    item = QTableWidgetItem(str(initial_values[0, i]))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    memberPropertiesTable.setItem(j, i, item)
+                else:
+                    item = QTableWidgetItem(str(int(initial_values[0,i])))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    memberPropertiesTable.setItem(j, i, item)
+
+class Boundary_Conditions (QMainWindow):
+    """This Class is imposing the changes on the Boundary Conditions tab cells"""
+
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
+        self.ui = ui_layout
+
+    def get_checkbox_values(self, table_for_checkbox):
+        print("checked")
+        column_count = table_for_checkbox.columnCount()
+        row_count = table_for_checkbox.rowCount()
+
+        for j in range(row_count):
+            for i in range(1, column_count):
+
+                print("j = ", j)
+                print("i = ", i)
+                state = table_for_checkbox.cellWidget(j,i).checkState()
+                print("state = ", state)

@@ -67,14 +67,28 @@ class SABRE2_main_subclass(QMainWindow):
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
                                        self.Members_table_position)
 
+        # Boundary conditions tab - shear panel settings
+        shear_panel_options = ["Flange 2", "Shear Center", "Flange 1"]
+        shear_panel_position = 1
+
+        DataCollection.Assign_comboBox(self, ui_layout.Shear_panel_table, shear_panel_options,
+                                       shear_panel_position)
+
         # Add new row button # self, tableName, options, position
         ui_layout.Members_table.itemChanged.connect(
             lambda: self.update_members_table(ui_layout.Members_table,
                                               self.Members_table_position))
 
+        # change number of rows of Member Properties table
         ui_layout.Members_table.itemChanged.connect(
             lambda: MemberPropertiesTable.set_number_of_rows(self, ui_layout.Members_table,
                                                              ui_layout.Member_Properties_Table))
+
+        # change number of rows of Shear Panel Table
+        ui_layout.Members_table.itemChanged.connect(
+            lambda: Boundary_Conditions.shear_panel_application(self, ui_layout.Shear_panel_table,
+                                                                ui_layout.Members_table,
+                                                                shear_panel_options, shear_panel_position))
 
         ui_layout.Mem_def_add.clicked.connect(
             lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
@@ -120,6 +134,14 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Member_Properties_Table.itemChanged.connect(
             lambda: self.update_member_properties_table(ui_layout.Member_Properties_Table))
 
+        # ui_layout.Delete_new_row_button_shear_panel.clicked.connect(
+        #     lambda: Boundary_Conditions.set_active(self, ui_layout.Shear_panel_table,
+        #                                            ui_layout.Delete_number_shear_panel))
+
+        # Boundary conditions tab - shear panel settings
+        ui_layout.Shear_panel_table.itemChanged.connect(
+            lambda: Boundary_Conditions.shear_panel_nodes(self, ui_layout.Shear_panel_table, [0, 1]))
+
         # Progress bar
         # put me in analysis section
         ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
@@ -163,11 +185,12 @@ class SABRE2_main_subclass(QMainWindow):
         # print("main screen", Members_values)
         return insertafter_values
 
-    #Member Properties table update
+    # Member Properties table update
     def update_member_properties_table(self, tableName):
         prop_values = JointTable.tableValues(self, tableName)
         print("main screen Properties Table values", prop_values)
         return prop_values
+
 
 class DropDownActions(QMainWindow):
     """docstring for Actions"""
@@ -334,7 +357,6 @@ class DataCollection(QMainWindow):
 
     def Assign_comboBox(self, tableName, options, position):
         r = tableName.rowCount()
-        c = tableName.columnCount()
         for i in range(r):
             combo_box = QtGui.QComboBox()
             for t in options:
@@ -368,7 +390,6 @@ class DataCollection(QMainWindow):
                                 val1[i, position] = value_combo
                                 DropDownActions.statusMessage(self, message="")
                         else:
-                            # print("test1")
                             val1[i, j] = float(tableName.item(i, j).text())
                             DropDownActions.statusMessage(self, message="")
             except ValueError:
@@ -655,23 +676,27 @@ class MemberPropertiesTable(QMainWindow):
 
     def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable):
         row_def = memberDefinitionTable.rowCount()
-        initial_values = JointTable.tableValues(self, memberPropertiesTable)
-        memberPropertiesTable.setRowCount(row_def)
-        for i in range(8):
-            for j in range(1, row_def):
-                if i == 0:
-                    item = QTableWidgetItem(str(j + 1))
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
-                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                    memberPropertiesTable.setItem(j, i, item)
-                elif i == 4:
-                    item = QTableWidgetItem(str(initial_values[0, i]))
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
-                    memberPropertiesTable.setItem(j, i, item)
-                else:
-                    item = QTableWidgetItem(str(int(initial_values[0, i])))
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
-                    memberPropertiesTable.setItem(j, i, item)
+
+        if row_def == 1:
+            pass
+        else:
+            initial_values = JointTable.tableValues(self, memberPropertiesTable)
+            memberPropertiesTable.setRowCount(row_def)
+            for i in range(8):
+                for j in range(1, row_def):
+                    if i == 0:
+                        item = QTableWidgetItem(str(j + 1))
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                        memberPropertiesTable.setItem(j, i, item)
+                    elif i == 4:
+                        item = QTableWidgetItem(str(initial_values[0, i]))
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        memberPropertiesTable.setItem(j, i, item)
+                    else:
+                        item = QTableWidgetItem(str(int(initial_values[0, i])))
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        memberPropertiesTable.setItem(j, i, item)
 
     def set_values_with_row(self, memberPropertiesTable, member_prop_line_edit):
         row_count = memberPropertiesTable.rowCount()
@@ -729,7 +754,76 @@ class Boundary_Conditions(QMainWindow):
                     fixities_vals[j, i] = table_for_checkbox.item(j, i).checkState()
         print(fixities_vals)
 
-    def shear_panel_application(self, table_for_shear_panel):
+    def set_active(self, table_name, line_edit):
+
+        active_values = DataCollection.update_lineedit_values(self, line_edit) - 1
+
+        selRange = PyQt4.QtGui.QTableWidgetSelectionRange(active_values, 0, active_values, 5)
+
+        table_name.setRangeSelected(selRange, True)
+
+        table_name.scrollToItem(table_name.item(active_values, 0))
+
+    def shear_panel_application(self, table_for_shear_panel, members_table, options, position):
 
         "Shear_panel_table"
 
+        row_def = members_table.rowCount()
+
+        if row_def == 1:
+            pass
+        else:
+            table_for_shear_panel.setRowCount(row_def)
+
+            for i in range(1, row_def):
+                combo_box = QtGui.QComboBox()
+                combo_box.setEditable(True)
+                for t in options:
+                    combo_box.addItem(t)
+                table_for_shear_panel.setCellWidget(i, position, combo_box)
+
+    def shear_panel_nodes(self, table_for_shear_panel, member_ranges):
+        " This function checks the values of the shear panel table"
+
+        current_row = table_for_shear_panel.currentRow()
+        current_col = table_for_shear_panel.currentColumn()
+
+        member_ranges = [8, 12]
+
+        max_number = max(member_ranges)
+        min_number = min(member_ranges)
+
+        if current_col == 2 or current_col == 3:
+            try:
+                if float(table_for_shear_panel.item(current_row, current_col).text()) % 1 == 0:
+                    DropDownActions.statusMessage(self, message="")
+                    print("test 1")
+                    pass
+                else:
+                    print("test 2")
+                    table_for_shear_panel.item(current_row, current_col).setText("")
+                    DropDownActions.statusMessage(self, message="Please enter only integers in the cell!")
+
+                if table_for_shear_panel.item(current_row, current_col) is None:
+                    print("test 6")
+                    pass
+                elif table_for_shear_panel.item(current_row, current_col).text() == "":
+                    print("test 5")
+                    pass
+                elif min_number <= float(table_for_shear_panel.item(current_row, current_col).text()) <= max_number:
+                    pass
+                else:
+                    table_for_shear_panel.item(current_row, current_col).setText("")
+                    DropDownActions.statusMessage(self,
+                                                  message=(
+                                                      "Please define the joint within the member " + table_for_shear_panel.item(
+                                                          current_row, 0).text()))
+
+
+            except ValueError:
+                table_for_shear_panel.item(current_row, current_col).setText("")
+                DropDownActions.statusMessage(self, message="Please enter only integers in the cell!")
+
+
+        else:
+            pass

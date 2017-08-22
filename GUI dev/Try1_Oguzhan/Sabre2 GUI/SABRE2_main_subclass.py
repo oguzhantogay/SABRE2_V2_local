@@ -142,6 +142,14 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Shear_panel_table.itemChanged.connect(
             lambda: Boundary_Conditions.shear_panel_nodes(self, ui_layout.Shear_panel_table, [0, 1]))
 
+        ui_layout.Shear_Panel_Add.clicked.connect(
+            lambda: Boundary_Conditions.shear_panel_additional(self, ui_layout.Shear_panel_table,
+                                                               ui_layout.Members_table, shear_panel_options,
+                                                               shear_panel_position, ui_layout.Add_Shear_Panel_Line))
+
+        ui_layout.Shear_panel_table.itemChanged.connect(
+            lambda: self.update_shear_panel_table(ui_layout.Shear_panel_table))
+
         # Progress bar
         # put me in analysis section
         ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
@@ -190,6 +198,11 @@ class SABRE2_main_subclass(QMainWindow):
         prop_values = JointTable.tableValues(self, tableName)
         print("main screen Properties Table values", prop_values)
         return prop_values
+
+    def update_shear_panel_table(self, tableName):
+        shear_values = Boundary_Conditions.shear_panel_values(self, tableName)
+        print("main screen Shear Table Values", shear_values)
+        return shear_values
 
 
 class DropDownActions(QMainWindow):
@@ -774,13 +787,30 @@ class Boundary_Conditions(QMainWindow):
             pass
         else:
             table_for_shear_panel.setRowCount(row_def)
+            # First Column Member numbers
+            for j in range(row_def):
+                item = QTableWidgetItem(str(j + 1))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                table_for_shear_panel.setItem(j, 0, item)
+
+                item1 = QTableWidgetItem("Constant")
+                item1.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                item1.setCheckState(QtCore.Qt.Checked)
+                table_for_shear_panel.setItem(j, 5, item1)
+
+                item2 = QTableWidgetItem("0")
+                item2.setTextAlignment(QtCore.Qt.AlignCenter)
+                item2.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                table_for_shear_panel.setItem(j, 1, item2)
 
             for i in range(1, row_def):
                 combo_box = QtGui.QComboBox()
-                combo_box.setEditable(True)
                 for t in options:
                     combo_box.addItem(t)
                 table_for_shear_panel.setCellWidget(i, position, combo_box)
+                combo_box.activated.connect(
+                    lambda: SABRE2_main_subclass.update_shear_panel_table(self, table_for_shear_panel))
 
     def shear_panel_nodes(self, table_for_shear_panel, member_ranges):
         " This function checks the values of the shear panel table"
@@ -797,18 +827,14 @@ class Boundary_Conditions(QMainWindow):
             try:
                 if float(table_for_shear_panel.item(current_row, current_col).text()) % 1 == 0:
                     DropDownActions.statusMessage(self, message="")
-                    print("test 1")
                     pass
                 else:
-                    print("test 2")
                     table_for_shear_panel.item(current_row, current_col).setText("")
                     DropDownActions.statusMessage(self, message="Please enter only integers in the cell!")
 
                 if table_for_shear_panel.item(current_row, current_col) is None:
-                    print("test 6")
                     pass
                 elif table_for_shear_panel.item(current_row, current_col).text() == "":
-                    print("test 5")
                     pass
                 elif min_number <= float(table_for_shear_panel.item(current_row, current_col).text()) <= max_number:
                     pass
@@ -819,11 +845,80 @@ class Boundary_Conditions(QMainWindow):
                                                       "Please define the joint within the member " + table_for_shear_panel.item(
                                                           current_row, 0).text()))
 
-
             except ValueError:
                 table_for_shear_panel.item(current_row, current_col).setText("")
                 DropDownActions.statusMessage(self, message="Please enter only integers in the cell!")
-
-
         else:
             pass
+
+    def shear_panel_additional(self, table_for_shear_panel, memberDefinitionTable, options, position, lineName):
+        row_def = memberDefinitionTable.rowCount()
+
+        try:
+            extra_shear = DataCollection.update_lineedit_values(self, lineName)
+            if extra_shear > row_def:
+                lineName.setText("")
+                DropDownActions.statusMessage(self, message="Please enter member number within the range!")
+            else:
+                table_for_shear_panel.insertRow(extra_shear)
+
+
+                item = QTableWidgetItem(str(extra_shear))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                table_for_shear_panel.setItem(extra_shear, 0, item)
+
+                item1 = QTableWidgetItem("Constant")
+                item1.setFlags(
+                    QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                item1.setCheckState(QtCore.Qt.Checked)
+                table_for_shear_panel.setItem(extra_shear, 5, item1)
+
+                item2 = QTableWidgetItem("0")
+                item2.setTextAlignment(QtCore.Qt.AlignCenter)
+                item2.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                table_for_shear_panel.setItem(extra_shear, 1, item2)
+
+                combo_box = QtGui.QComboBox()
+                for t in options:
+                    combo_box.addItem(t)
+                table_for_shear_panel.setCellWidget(extra_shear, position, combo_box)
+
+        except ValueError and TypeError:
+            pass
+
+    def shear_panel_values(self, tableName):
+        col = tableName.currentColumn()
+        row = tableName.currentRow()
+        row_check = tableName.rowCount()
+        col_check = tableName.columnCount()
+        val1 = np.zeros((row_check, col_check))
+
+        if row == -1:
+            pass
+        else:
+            try:
+                for i in range(row_check):
+                    for j in range(col_check):
+                        if tableName.item(i, j) is None:
+                            pass
+                        elif j == 1:
+                            if tableName.cellWidget(i, j) is None:
+                                pass
+                            else:
+                                value_combo = tableName.cellWidget(i, j).currentIndex()
+                                val1[i, j] = value_combo
+                                DropDownActions.statusMessage(self, message="")
+
+                        elif j ==5:
+                            val1[i, j] = tableName.item(i, j).checkState()
+                            DropDownActions.statusMessage(self, message="")
+                        else:
+                            val1[i, j] = float(tableName.item(i, j).text())
+                            DropDownActions.statusMessage(self, message="")
+            except ValueError:
+                tableName.clearSelection()
+                tableName.item(row, col).setText("")
+                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+        # print("val1", val1)
+        return val1

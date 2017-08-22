@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e3bdc81c-f851-421a-a983-520f479e3ce7" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../../../AISC/.idea/workspace.xml" afterPath="$PROJECT_DIR$/../../../AISC/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2-V3.ui" afterPath="$PROJECT_DIR$/SABRE2-V3.ui" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2_GUI.py" afterPath="$PROJECT_DIR$/SABRE2_GUI.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2_main_subclass.py" afterPath="$PROJECT_DIR$/SABRE2_main_subclass.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -15,9 +15,9 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/Sabre2_GUI$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1503375818627" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Sabre2_GUI$test.coverage" NAME="test Coverage Results" MODIFIED="1502125644592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Sabre2_GUI$qlineedit.coverage" NAME="qlineedit Coverage Results" MODIFIED="1502125612665" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Sabre2_GUI$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1503208404336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -38,26 +38,9 @@
       <file leaf-file-name="SABRE2_GUI.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SABRE2_GUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="165" column="69" lean-forward="true" selection-start-line="165" selection-start-column="69" selection-end-line="165" selection-end-column="69" />
-              <folding>
-                <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-                <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-                <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-                <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-                <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-              </folding>
+            <state relative-caret-position="206">
+              <caret line="706" column="13" lean-forward="false" selection-start-line="706" selection-start-column="13" selection-end-line="706" selection-end-column="13" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -65,8 +48,8 @@
       <file leaf-file-name="SABRE2_main_subclass.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="328">
-              <caret line="725" column="0" lean-forward="false" selection-start-line="725" selection-start-column="0" selection-end-line="725" selection-end-column="0" />
+            <state relative-caret-position="338">
+              <caret line="877" column="56" lean-forward="true" selection-start-line="877" selection-start-column="56" selection-end-line="877" selection-end-column="56" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -77,8 +60,8 @@
       <file leaf-file-name="SABRE2_main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SABRE2_main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+            <state relative-caret-position="88">
+              <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
               </folding>
@@ -97,13 +80,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>tablename</find>
-      <find>Member</find>
-      <find>add_new_row</find>
-      <find>mem_def_add</find>
-      <find>table_initiation</find>
-      <find>table_properties</find>
-      <find>array</find>
       <find>main_sc</find>
       <find>numpy</find>
       <find>table</find>
@@ -121,12 +97,19 @@
       <find>joints</find>
       <find>update_members_table</find>
       <find>row de</find>
-      <find>Member_Properties_Table</find>
       <find>fixiti</find>
-      <find>checked</find>
       <find>check_bo</find>
       <find>bounda</find>
       <find>center</find>
+      <find>Member_Properties_Table</find>
+      <find>loadTypeDefine</find>
+      <find>constant</find>
+      <find>selectable</find>
+      <find>update_lineedit_values</find>
+      <find>insertRow</find>
+      <find>itemc</find>
+      <find>checked</find>
+      <find>combo</find>
     </findStrings>
     <replaceStrings>
       <replace>members_table_values</replace>
@@ -184,8 +167,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -197,6 +178,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -208,117 +191,6 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\rslein3\SABRE2-V3\GUI dev\Try1_Oguzhan\Sabre2 GUI" />
     </key>
-  </component>
-  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
-    <UpdatedFiles>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Updated from server" />
-        <option name="myStatusName" value="Changed on server" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="CHANGED_ON_SERVER" />
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Updated" />
-          <option name="myStatusName" value="Changed" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="UPDATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/SABRE2_main_subclass.py</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Created" />
-          <option name="myStatusName" value="Created" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="CREATED" />
-          <PATH vcs="Git" revision="">$PROJECT_DIR$/AISCdata.py</PATH>
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Deleted" />
-          <option name="myStatusName" value="Deleted" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="true" />
-          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
-        </FILE-GROUP>
-        <FILE-GROUP>
-          <option name="myUpdateName" value="Restored" />
-          <option name="myStatusName" value="Will be restored" />
-          <option name="mySupportsDeletion" value="false" />
-          <option name="myCanBeAbsent" value="false" />
-          <option name="myId" value="RESTORED" />
-        </FILE-GROUP>
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Modified" />
-        <option name="myStatusName" value="Modified" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MODIFIED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Skipped" />
-        <option name="myStatusName" value="Skipped" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="SKIPPED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with conflicts" />
-        <option name="myStatusName" value="Will be merged with conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_CONFLICTS" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with tree conflicts" />
-        <option name="myStatusName" value="Merged with tree conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged with property conflicts" />
-        <option name="myStatusName" value="Will be merged with property conflicts" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Merged" />
-        <option name="myStatusName" value="Will be merged" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="MERGED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Not in repository" />
-        <option name="myStatusName" value="Not in repository" />
-        <option name="mySupportsDeletion" value="true" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="UNKNOWN" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Locally added" />
-        <option name="myStatusName" value="Locally added" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="LOCALLY_ADDED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Locally removed" />
-        <option name="myStatusName" value="Locally removed" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="LOCALLY_REMOVED" />
-      </FILE-GROUP>
-      <FILE-GROUP>
-        <option name="myUpdateName" value="Switched" />
-        <option name="myStatusName" value="Switched" />
-        <option name="mySupportsDeletion" value="false" />
-        <option name="myCanBeAbsent" value="false" />
-        <option name="myId" value="SWITCHED" />
-      </FILE-GROUP>
-    </UpdatedFiles>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -581,7 +453,14 @@
       <option name="project" value="LOCAL" />
       <updated>1503208441634</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="shear panel table works with the checks">
+      <created>1503293745717</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1503293745717</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TodoView">
@@ -594,20 +473,20 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1634" height="1066" extended-state="6" />
+    <frame x="59" y="-8" width="1629" height="1066" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.084672436" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08431494" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.27224576" sideWeight="0.4151177" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26967472" sideWeight="0.41785493" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26967472" sideWeight="0.5821451" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32901832" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26967472" sideWeight="0.58488226" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39664218" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -649,7 +528,8 @@
     <MESSAGE value="Member Properties table works, working on the Boundary conditions tabs" />
     <MESSAGE value="update on fixities table" />
     <MESSAGE value="update on GUI" />
-    <option name="LAST_COMMIT_MESSAGE" value="update on GUI" />
+    <MESSAGE value="shear panel table works with the checks" />
+    <option name="LAST_COMMIT_MESSAGE" value="shear panel table works with the checks" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -700,24 +580,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7225">
           <caret line="425" column="61" lean-forward="false" selection-start-line="425" selection-start-column="50" selection-end-line="425" selection-end-column="61" />
-          <folding>
-            <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -745,24 +608,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="32840">
           <caret line="1642" column="57" lean-forward="false" selection-start-line="1642" selection-start-column="57" selection-end-line="1642" selection-end-column="57" />
-          <folding>
-            <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -790,24 +636,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="32840">
           <caret line="1642" column="57" lean-forward="true" selection-start-line="1642" selection-start-column="57" selection-end-line="1642" selection-end-column="57" />
-          <folding>
-            <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -835,24 +664,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="462">
           <caret line="21" column="8" lean-forward="false" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="8" />
-          <folding>
-            <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -893,24 +705,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="446">
           <caret line="1768" column="14" lean-forward="true" selection-start-line="1768" selection-start-column="14" selection-end-line="1768" selection-end-column="14" />
-          <folding>
-            <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -928,24 +723,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="7225">
           <caret line="425" column="61" lean-forward="false" selection-start-line="425" selection-start-column="50" selection-end-line="425" selection-end-column="61" />
-          <folding>
-            <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -973,24 +751,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="32840">
           <caret line="1642" column="57" lean-forward="false" selection-start-line="1642" selection-start-column="57" selection-end-line="1642" selection-end-column="57" />
-          <folding>
-            <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1018,24 +779,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="32840">
           <caret line="1642" column="57" lean-forward="true" selection-start-line="1642" selection-start-column="57" selection-end-line="1642" selection-end-column="57" />
-          <folding>
-            <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1063,24 +807,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="462">
           <caret line="21" column="8" lean-forward="false" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="8" />
-          <folding>
-            <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1147,53 +874,36 @@
     <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass_test.py" />
     <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass_backup2.py" />
     <entry file="file://$PROJECT_DIR$/test.py" />
-    <entry file="file://$USER_HOME$/.PyCharm2017.2/system/python_stubs/164743371/PyQt4/QtCore/Qt.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="51" column="4" lean-forward="false" selection-start-line="51" selection-start-column="4" selection-end-line="51" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SABRE2_main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
-          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+        <state relative-caret-position="88">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2017.2/system/python_stubs/164743371/PyQt4/QtCore/Qt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="421">
+          <caret line="220" column="4" lean-forward="false" selection-start-line="220" selection-start-column="4" selection-end-line="220" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SABRE2_GUI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="165" column="69" lean-forward="true" selection-start-line="165" selection-start-column="69" selection-end-line="165" selection-end-column="69" />
-          <folding>
-            <marker date="1503253298601" expanded="true" signature="681:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="715:40307" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="99137:116338" ph="..." />
-            <marker date="1503253298601" expanded="true" signature="101665:101688" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101771:101795" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101878:101908" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="101981:101999" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109786:109809" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="109894:109918" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110003:110033" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="110108:110126" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112557:112580" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112667:112691" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112778:112808" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="112885:112903" ph="&quot;...&quot;" />
-            <marker date="1503253298601" expanded="true" signature="116394:116581" ph="..." />
-          </folding>
+        <state relative-caret-position="206">
+          <caret line="706" column="13" lean-forward="false" selection-start-line="706" selection-start-column="13" selection-end-line="706" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="328">
-          <caret line="725" column="0" lean-forward="false" selection-start-line="725" selection-start-column="0" selection-end-line="725" selection-end-column="0" />
+        <state relative-caret-position="338">
+          <caret line="877" column="56" lean-forward="true" selection-start-line="877" selection-start-column="56" selection-end-line="877" selection-end-column="56" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>

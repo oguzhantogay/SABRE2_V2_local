@@ -14,9 +14,14 @@ except AttributeError:
 
 
 class SABRE2_main_subclass(QMainWindow):
+
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+        QtCore.QObject.__init__(self)
+        self.signalMapper = QtCore.QSignalMapper()
+        self.signalMapper.mapped[QtGui.QWidget].connect(Boundary_Conditions.on_signalMapper_mapped)
+
         ui_layout.setupUi(self)
         ui_layout.statusBar = self.statusBar()
         ui_layout.DefinitionTabs.close()  # to hide problem definition tabs
@@ -150,6 +155,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Shear_panel_table.itemChanged.connect(
             lambda: self.update_shear_panel_table(ui_layout.Shear_panel_table))
 
+
         # Progress bar
         # put me in analysis section
         ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
@@ -203,6 +209,10 @@ class SABRE2_main_subclass(QMainWindow):
         shear_values = Boundary_Conditions.shear_panel_values(self, tableName)
         print("main screen Shear Table Values", shear_values)
         return shear_values
+
+    @QtCore.pyqtSlot(QtGui.QWidget)
+    def cb_index_changed_signal(self, cb):
+        print("row: " + str(cb.row) + " column: " + str(cb.column) + " text: " + cb.currentText())
 
 
 class DropDownActions(QMainWindow):
@@ -375,8 +385,8 @@ class DataCollection(QMainWindow):
             for t in options:
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
-            # combo_box.activated.connect(
-            #     lambda: DataCollection.update_table_values(self, tableName, r, c, values, position))
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
 
     def update_table_values(self, tableName, position):
         col = tableName.currentColumn()
@@ -442,6 +452,8 @@ class TableChanges(QMainWindow):
                 combo_box.addItem(t)
 
             tableName.setCellWidget(row_position, position, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
 
             item1 = QTableWidgetItem(str(row_position + 1))
             item1.setTextAlignment(QtCore.Qt.AlignCenter)
@@ -464,6 +476,8 @@ class TableChanges(QMainWindow):
                 combo_box.addItem(t)
 
             tableName.setCellWidget(row_number, position, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
 
     def delete_row(self, tableName, lineName, flag):
         row_position = tableName.rowCount()
@@ -751,6 +765,7 @@ class MemberPropertiesTable(QMainWindow):
 class Boundary_Conditions(QMainWindow):
     """This Class is imposing the changes on the Boundary Conditions tab cells"""
 
+    cb_index_changed_signal = QtCore.pyqtSignal(QtGui.QWidget)
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
@@ -806,11 +821,14 @@ class Boundary_Conditions(QMainWindow):
 
             for i in range(1, row_def):
                 combo_box = QtGui.QComboBox()
+                combo_box.currentIndexChanged.connect(lambda: self.signalMapper.map)
                 for t in options:
                     combo_box.addItem(t)
                 table_for_shear_panel.setCellWidget(i, position, combo_box)
-                combo_box.activated.connect(
-                    lambda: SABRE2_main_subclass.update_shear_panel_table(self, table_for_shear_panel))
+                self.signalMapper.setMapping(combo_box, combo_box)
+
+    def on_signalMapper_mapped(self, cb):
+        Boundary_Conditions.cb_index_changed_signal.emit(cb)
 
     def shear_panel_nodes(self, table_for_shear_panel, member_ranges):
         " This function checks the values of the shear panel table"
@@ -920,5 +938,4 @@ class Boundary_Conditions(QMainWindow):
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
                 DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
-        # print("val1", val1)
         return val1

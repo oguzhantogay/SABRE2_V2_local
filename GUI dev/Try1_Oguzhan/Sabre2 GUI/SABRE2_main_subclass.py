@@ -14,14 +14,9 @@ except AttributeError:
 
 
 class SABRE2_main_subclass(QMainWindow):
-
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
-        QtCore.QObject.__init__(self)
-        self.signalMapper = QtCore.QSignalMapper()
-        self.signalMapper.mapped[QtGui.QWidget].connect(Boundary_Conditions.on_signalMapper_mapped)
-
         ui_layout.setupUi(self)
         ui_layout.statusBar = self.statusBar()
         ui_layout.DefinitionTabs.close()  # to hide problem definition tabs
@@ -76,8 +71,11 @@ class SABRE2_main_subclass(QMainWindow):
         shear_panel_options = ["Flange 2", "Shear Center", "Flange 1"]
         shear_panel_position = 1
 
-        DataCollection.Assign_comboBox(self, ui_layout.Shear_panel_table, shear_panel_options,
-                                       shear_panel_position)
+        Boundary_Conditions.Assign_comboBox_shear(self, ui_layout.Shear_panel_table, shear_panel_options,
+                                                  shear_panel_position)
+
+        Boundary_Conditions.Assign_comboBox_ground(self, ui_layout.Discrete_grounded_spring_table, shear_panel_options,
+                                                   shear_panel_position)
 
         # Add new row button # self, tableName, options, position
         ui_layout.Members_table.itemChanged.connect(
@@ -155,6 +153,11 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Shear_panel_table.itemChanged.connect(
             lambda: self.update_shear_panel_table(ui_layout.Shear_panel_table))
 
+        ui_layout.Discrete_grounded_spring_table.itemChanged.connect(
+            lambda: Boundary_Conditions.check_entered_data(self, ui_layout.Discrete_grounded_spring_table))
+
+        ui_layout.Discrete_grounded_spring_table.itemChanged.connect(
+            lambda: self.update_ground_table(ui_layout.Discrete_grounded_spring_table, flag="not combo"))
 
         # Progress bar
         # put me in analysis section
@@ -205,14 +208,15 @@ class SABRE2_main_subclass(QMainWindow):
         print("main screen Properties Table values", prop_values)
         return prop_values
 
-    def update_shear_panel_table(self, tableName):
-        shear_values = Boundary_Conditions.shear_panel_values(self, tableName)
+    def update_shear_panel_table(self, tableName, flag="not combo"):
+        shear_values = Boundary_Conditions.shear_panel_values(self, tableName, flag)
         print("main screen Shear Table Values", shear_values)
         return shear_values
 
-    @QtCore.pyqtSlot(QtGui.QWidget)
-    def cb_index_changed_signal(self, cb):
-        print("row: " + str(cb.row) + " column: " + str(cb.column) + " text: " + cb.currentText())
+    def update_ground_table(self, tableName, flag="not combo"):
+        shear_values = Boundary_Conditions.ground_spring_values(self, tableName, flag)
+        print("main screen Ground Table Values", shear_values)
+        return shear_values
 
 
 class DropDownActions(QMainWindow):
@@ -521,6 +525,8 @@ class LineChanges(QMainWindow):
                 for t in options:
                     combo_box.addItem(t)
                 tableName.setCellWidget(insertafter_values, position, combo_box)
+                combo_box.currentIndexChanged.connect(
+                    lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
                 copied_index = tableName.cellWidget(copyfrom_values, position).currentIndex()
                 print(copied_index)
                 tableName.cellWidget(insertafter_values, position).setCurrentIndex(copied_index)
@@ -765,10 +771,19 @@ class MemberPropertiesTable(QMainWindow):
 class Boundary_Conditions(QMainWindow):
     """This Class is imposing the changes on the Boundary Conditions tab cells"""
 
-    cb_index_changed_signal = QtCore.pyqtSignal(QtGui.QWidget)
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+
+    def Assign_comboBox_shear(self, tableName, options, position):
+        r = tableName.rowCount()
+        for i in range(r):
+            combo_box = QtGui.QComboBox()
+            for t in options:
+                combo_box.addItem(t)
+            tableName.setCellWidget(i, position, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_shear_panel_table(self, tableName, flag="combo"))
 
     def get_checkbox_values(self, table_for_checkbox):
         column_count = table_for_checkbox.columnCount()
@@ -821,14 +836,11 @@ class Boundary_Conditions(QMainWindow):
 
             for i in range(1, row_def):
                 combo_box = QtGui.QComboBox()
-                combo_box.currentIndexChanged.connect(lambda: self.signalMapper.map)
                 for t in options:
                     combo_box.addItem(t)
                 table_for_shear_panel.setCellWidget(i, position, combo_box)
-                self.signalMapper.setMapping(combo_box, combo_box)
-
-    def on_signalMapper_mapped(self, cb):
-        Boundary_Conditions.cb_index_changed_signal.emit(cb)
+                combo_box.currentIndexChanged.connect(
+                    lambda: SABRE2_main_subclass.update_shear_panel_table(self, table_for_shear_panel, flag="combo"))
 
     def shear_panel_nodes(self, table_for_shear_panel, member_ranges):
         " This function checks the values of the shear panel table"
@@ -880,7 +892,6 @@ class Boundary_Conditions(QMainWindow):
             else:
                 table_for_shear_panel.insertRow(extra_shear)
 
-
                 item = QTableWidgetItem(str(extra_shear))
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
@@ -901,34 +912,79 @@ class Boundary_Conditions(QMainWindow):
                 for t in options:
                     combo_box.addItem(t)
                 table_for_shear_panel.setCellWidget(extra_shear, position, combo_box)
+                combo_box.currentIndexChanged.connect(
+                    lambda: SABRE2_main_subclass.update_shear_panel_table(self, table_for_shear_panel, flag="combo"))
 
         except ValueError and TypeError:
             pass
 
-    def shear_panel_values(self, tableName):
+    def shear_panel_values(self, tableName, flag="not combo"):
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
         val1 = np.zeros((row_check, col_check))
-
-        if row == -1:
-            pass
-        else:
+        if flag == "not combo" or flag == "combo":
             try:
                 for i in range(row_check):
                     for j in range(col_check):
-                        if tableName.item(i, j) is None:
+                        if j == 1:
+                            value_combo = tableName.cellWidget(i, j).currentIndex()
+                            val1[i, j] = value_combo
+                            DropDownActions.statusMessage(self, message="")
                             pass
-                        elif j == 1:
-                            if tableName.cellWidget(i, j) is None:
-                                pass
-                            else:
-                                value_combo = tableName.cellWidget(i, j).currentIndex()
-                                val1[i, j] = value_combo
-                                DropDownActions.statusMessage(self, message="")
+                        elif tableName.item(i, j) is None:
+                            pass
+                        elif j == 5:
+                            val1[i, j] = tableName.item(i, j).checkState()
+                            DropDownActions.statusMessage(self, message="")
+                        else:
+                            val1[i, j] = float(tableName.item(i, j).text())
+                            DropDownActions.statusMessage(self, message="")
+            except ValueError:
+                tableName.clearSelection()
+                tableName.item(row, col).setText("")
+                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+        return val1
 
-                        elif j ==5:
+    def check_entered_data(self, tableName):
+        col = tableName.currentColumn()
+        row = tableName.currentRow()
+        try:
+            value = float(tableName.item(row,col).text())
+        except:
+            tableName.clearSelection()
+            tableName.item(row, col).setText("")
+            DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+
+    def Assign_comboBox_ground(self, tableName, options, position):
+        r = tableName.rowCount()
+        for i in range(r):
+            combo_box = QtGui.QComboBox()
+            for t in options:
+                combo_box.addItem(t)
+            tableName.setCellWidget(i, position, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_ground_table(self, tableName, flag="combo"))
+
+    def ground_spring_values(self, tableName, flag="not combo"):
+        col = tableName.currentColumn()
+        row = tableName.currentRow()
+        row_check = tableName.rowCount()
+        col_check = tableName.columnCount()
+        val1 = np.zeros((row_check, col_check))
+        if flag == "not combo" or flag == "combo":
+            try:
+                for i in range(row_check):
+                    for j in range(col_check):
+                        if j == 1:
+                            value_combo = tableName.cellWidget(i, j).currentIndex()
+                            val1[i, j] = value_combo
+                            DropDownActions.statusMessage(self, message="")
+                            pass
+                        elif tableName.item(i, j) is None:
+                            pass
+                        elif j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
                             val1[i, j] = tableName.item(i, j).checkState()
                             DropDownActions.statusMessage(self, message="")
                         else:

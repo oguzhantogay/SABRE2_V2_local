@@ -464,7 +464,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>4</number>
       </property>
       <property name="iconSize">
        <size>
@@ -1309,7 +1309,7 @@
         <item>
          <widget class="QTabWidget" name="BoundaryConditionsTabs">
           <property name="currentIndex">
-           <number>2</number>
+           <number>3</number>
           </property>
           <widget class="QWidget" name="FixitiesTab">
            <attribute name="title">
@@ -2100,7 +2100,7 @@ Panel  for Member:</string>
               <item row="1" column="3">
                <widget class="QTableWidget" name="Warping_Release">
                 <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>64</number>
+                 <number>90</number>
                 </attribute>
                 <row>
                  <property name="text">
@@ -2122,14 +2122,37 @@ Panel  for Member:</string>
                   <string>Node j</string>
                  </property>
                 </column>
+                <item row="0" column="0">
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+                 </property>
+                </item>
                 <item row="0" column="1">
+                 <property name="text">
+                  <string>Continuous</string>
+                 </property>
                  <property name="checkState">
                   <enum>Checked</enum>
                  </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
                 </item>
                 <item row="0" column="2">
+                 <property name="text">
+                  <string>Continuous</string>
+                 </property>
                  <property name="checkState">
                   <enum>Checked</enum>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
                  </property>
                 </item>
                </widget>
@@ -2139,46 +2162,6 @@ Panel  for Member:</string>
                 <property name="text">
                  <string>Warping Releases</string>
                 </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QTableWidget" name="Torsional_Release">
-                <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>64</number>
-                </attribute>
-                <row>
-                 <property name="text">
-                  <string>1</string>
-                 </property>
-                </row>
-                <column>
-                 <property name="text">
-                  <string>Element #</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Node i</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Node j</string>
-                 </property>
-                </column>
-                <item row="0" column="1">
-                 <property name="text">
-                  <string/>
-                 </property>
-                 <property name="checkState">
-                  <enum>Checked</enum>
-                 </property>
-                </item>
-                <item row="0" column="2">
-                 <property name="checkState">
-                  <enum>Checked</enum>
-                 </property>
-                </item>
                </widget>
               </item>
               <item row="0" column="1">
@@ -2191,7 +2174,7 @@ Panel  for Member:</string>
               <item row="1" column="1">
                <widget class="QTableWidget" name="My_release">
                 <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>64</number>
+                 <number>90</number>
                 </attribute>
                 <row>
                  <property name="text">
@@ -2213,22 +2196,52 @@ Panel  for Member:</string>
                   <string>Node j</string>
                  </property>
                 </column>
+                <item row="0" column="0">
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+                 </property>
+                </item>
                 <item row="0" column="1">
+                 <property name="text">
+                  <string>Continuous</string>
+                 </property>
                  <property name="checkState">
                   <enum>Checked</enum>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
                  </property>
                 </item>
                 <item row="0" column="2">
+                 <property name="text">
+                  <string>Continuous</string>
+                 </property>
                  <property name="checkState">
                   <enum>Checked</enum>
                  </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
                 </item>
+               </widget>
+              </item>
+              <item row="0" column="2">
+               <widget class="QLabel" name="Mz_release_text">
+                <property name="text">
+                 <string>Flexural Releases of Continuity, Mz</string>
+                </property>
                </widget>
               </item>
               <item row="1" column="2">
                <widget class="QTableWidget" name="Mz_release">
                 <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>64</number>
+                 <number>90</number>
                 </attribute>
                 <row>
                  <property name="text">
@@ -2250,14 +2263,40 @@ Panel  for Member:</string>
                   <string>Node j</string>
                  </property>
                 </column>
+                <item row="0" column="0">
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+                 </property>
+                </item>
                 <item row="0" column="1">
+                 <property name="text">
+                  <string>Continuous</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignLeading|AlignVCenter</set>
+                 </property>
                  <property name="checkState">
                   <enum>Checked</enum>
                  </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
                 </item>
                 <item row="0" column="2">
+                 <property name="text">
+                  <string>Continuous</string>
+                 </property>
                  <property name="checkState">
                   <enum>Checked</enum>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
                  </property>
                 </item>
                </widget>
@@ -2269,11 +2308,64 @@ Panel  for Member:</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="2">
-               <widget class="QLabel" name="Mz_release_text">
-                <property name="text">
-                 <string>Flexural Releases of Continuity, Mz</string>
-                </property>
+              <item row="1" column="0">
+               <widget class="QTableWidget" name="Torsional_Release">
+                <attribute name="horizontalHeaderDefaultSectionSize">
+                 <number>90</number>
+                </attribute>
+                <row>
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                </row>
+                <column>
+                 <property name="text">
+                  <string>Element #</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Node i</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>Node j</string>
+                 </property>
+                </column>
+                <item row="0" column="0">
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+                 </property>
+                </item>
+                <item row="0" column="1">
+                 <property name="text">
+                  <string>Continuous</string>
+                 </property>
+                 <property name="checkState">
+                  <enum>Checked</enum>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+                <item row="0" column="2">
+                 <property name="text">
+                  <string>Continuous</string>
+                 </property>
+                 <property name="checkState">
+                  <enum>Checked</enum>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
                </widget>
               </item>
              </layout>
@@ -2310,7 +2402,7 @@ Panel  for Member:</string>
                  </size>
                 </property>
                 <property name="editable">
-                 <bool>true</bool>
+                 <bool>false</bool>
                 </property>
                 <item>
                  <property name="text">

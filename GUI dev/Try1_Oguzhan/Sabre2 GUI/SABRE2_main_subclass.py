@@ -22,6 +22,12 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.DefinitionTabs.close()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
 
+        # Release Tab, first columns of the tables size arrangements
+        ui_layout.Torsional_Release.setColumnWidth(0,62)
+        ui_layout.My_release.setColumnWidth(0,62)
+        ui_layout.Mz_release.setColumnWidth(0,62)
+        ui_layout.Warping_Release.setColumnWidth(0,62)
+
         # main buttons actions
         ui_layout.DefinitionButton.clicked.connect(lambda: ui_layout.AnalysisTabs.close())
         ui_layout.AnalysisButton.clicked.connect(lambda: ui_layout.DefinitionTabs.close())
@@ -159,6 +165,18 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Discrete_grounded_spring_table.itemChanged.connect(
             lambda: self.update_ground_table(ui_layout.Discrete_grounded_spring_table, flag="not combo"))
 
+        # Release Tab
+        ui_layout.Torsional_Release.itemChanged.connect(
+            lambda: self.update_torsional_release(ui_layout.Torsional_Release))
+
+        ui_layout.My_release.itemChanged.connect(
+            lambda: self.update_My_release(ui_layout.My_release))
+
+        ui_layout.Mz_release.itemChanged.connect(
+            lambda: self.update_Mz_release(ui_layout.Mz_release))
+
+        ui_layout.Warping_Release.itemChanged.connect(
+            lambda: self.update_warping_release(ui_layout.Warping_Release))
         # Progress bar
         # put me in analysis section
         ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
@@ -185,7 +203,6 @@ class SABRE2_main_subclass(QMainWindow):
         r = tableName.rowCount()
         try:
             if copyfrom_value <= r - 1:
-                Members_values = DataCollection.update_table_values(self, tableName, position)
                 tableName.selectRow(copyfrom_value)
                 DropDownActions.statusMessage(self, message="")
         except TypeError:
@@ -195,14 +212,16 @@ class SABRE2_main_subclass(QMainWindow):
     def update_members_insertafter(self, lineName, position, tableName):
         insertafter_values = DataCollection.update_lineedit_values(self, lineName)
         insertafter_values = insertafter_values - 1
-        Members_values = DataCollection.update_table_values(self, tableName, position)
-
-        # if insert row > num of rows then add to end
-        # print("insertafter", insertafter_values)
-        # print("main screen", Members_values)
+        try:
+            if insertafter_values <= r - 1:
+                tableName.selectRow(insertafter_values)
+                DropDownActions.statusMessage(self, message="")
+        except TypeError:
+            DropDownActions.statusMessage(self, message="Row not defined")
         return insertafter_values
 
-    # Member Properties table update
+    # Table Values Update
+
     def update_member_properties_table(self, tableName):
         prop_values = JointTable.tableValues(self, tableName)
         print("main screen Properties Table values", prop_values)
@@ -218,6 +237,25 @@ class SABRE2_main_subclass(QMainWindow):
         print("main screen Ground Table Values", shear_values)
         return shear_values
 
+    def update_torsional_release(self, tableName):
+        torsional_values = Boundary_Conditions.release_tables_values(self, tableName)
+        print("main screen Torsional Table Values", torsional_values)
+        return torsional_values
+
+    def update_My_release(self, tableName):
+        My_values = Boundary_Conditions.release_tables_values(self, tableName)
+        print("main screen My Table Values", My_values)
+        return My_values
+
+    def update_Mz_release(self, tableName):
+        Mz_values = Boundary_Conditions.release_tables_values(self, tableName)
+        print("main screen Mz Table Values", Mz_values)
+        return Mz_values
+
+    def update_warping_release(self, tableName):
+        warping_values = Boundary_Conditions.release_tables_values(self, tableName)
+        print("main screen Warping Table Values", warping_values)
+        return warping_values
 
 class DropDownActions(QMainWindow):
     """docstring for Actions"""
@@ -995,3 +1033,38 @@ class Boundary_Conditions(QMainWindow):
                 tableName.item(row, col).setText("")
                 DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
         return val1
+
+    def release_tables_values(self, table_name):
+        " this function is to get values of release tables"
+
+        row = table_name.rowCount()
+        col = table_name.columnCount()
+
+        val_table = np.zeros((row, col))
+
+        for i in range(row):
+            for j in range(col):
+                if j == 0:
+                    val_table[i,j] = i+1
+                else:
+                    val_table[i,j] = table_name.item(i,j).checkState()
+
+        return val_table
+
+class LoadingClass(QMainWindow):
+    " This class is to for defining loading conditions"
+
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
+        self.ui = ui_layout
+
+    def define_load_name(self, load_define_combo_box):
+
+
+    def define_load_apply(self, load_define_apply):
+
+
+    def define_load_delete(self, load_define_delete):
+
+
+    def

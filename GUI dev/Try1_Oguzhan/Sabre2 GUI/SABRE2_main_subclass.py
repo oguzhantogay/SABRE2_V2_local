@@ -1058,13 +1058,4 @@ class LoadingClass(QMainWindow):
         QMainWindow.__init__(self)
         self.ui = ui_layout
 
-    def define_load_name(self, load_define_combo_box):
-
-
-    def define_load_apply(self, load_define_apply):
-
-
-    def define_load_delete(self, load_define_delete):
-
-
-    def
+    def predefined_list:

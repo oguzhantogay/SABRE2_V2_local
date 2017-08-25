@@ -197,7 +197,7 @@ class SABRE2_main_subclass(QMainWindow):
         #     lambda: LoadingClass.check_entered_data(self, ui_layout.LoadCombinationTable))
 
         ui_layout.LoadCombinationAdd.clicked.connect(
-            lambda: LoadingClass.add_load(self, ui_layout.LoadCombinationTable))
+            lambda: LoadingClass.add_load_comb(self, ui_layout.LoadCombinationTable))
 
         ui_layout.LoadCombinationRemove.clicked.connect(
             lambda: LoadingClass.remove_load(self, ui_layout.LoadCombinationTable))
@@ -706,8 +706,7 @@ class JointTable(QMainWindow):
             for i in range(row_check):
                 for j in range(col_check):
                     if tableName.item(i, j) is None:
-                        tableName.setItem(i, j, QTableWidgetItem("0"))
-                        val1[i, j] = 0
+                        pass
                     else:
                         val1[i, j] = float(tableName.item(i, j).text())
                         DropDownActions.statusMessage(self, message="")
@@ -772,9 +771,10 @@ class MemberPropertiesTable(QMainWindow):
         self.ui = ui_layout
 
     def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable):
+        row_member = memberPropertiesTable.rowCount()
         row_def = memberDefinitionTable.rowCount()
 
-        if row_def == 1:
+        if row_def == row_member:
             pass
         else:
             initial_values = JointTable.tableValues(self, memberPropertiesTable)
@@ -877,7 +877,9 @@ class Boundary_Conditions(QMainWindow):
 
         row_def = members_table.rowCount()
 
-        if row_def == 1:
+        row_shear = table_for_shear_panel.rowCount()
+
+        if row_def == row_shear:
             pass
         else:
             table_for_shear_panel.setRowCount(row_def)
@@ -942,6 +944,8 @@ class Boundary_Conditions(QMainWindow):
             except ValueError:
                 table_for_shear_panel.item(current_row, current_col).setText("")
                 DropDownActions.statusMessage(self, message="Please enter only integers in the cell!")
+            except AttributeError:
+                pass
         else:
             pass
 
@@ -1009,6 +1013,8 @@ class Boundary_Conditions(QMainWindow):
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
                 DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+            except AttributeError:
+                pass
         return val1
 
     def check_entered_data(self, tableName):
@@ -1118,7 +1124,7 @@ class LoadingClass(QMainWindow):
         if current_row == -1:
             DropDownActions.statusMessage(self, message="Please select load type to delete!")
         else:
-            tableName.deleteRow(current_row)
+            tableName.removeRow(current_row)
 
     def changes_on_load_combination(self, tableNameLoadType, tableNameLoadComb):
         load_type_row = tableNameLoadType.rowCount()
@@ -1156,24 +1162,62 @@ class LoadingClass(QMainWindow):
         row = tableName.currentRow()
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
+        print("row check", row_check)
+        LoadCombinationID = {}
         val1 = np.zeros((row_check, col_check))
-        try:
-            for i in range(row_check):
-                for j in range(col_check):
-                    if tableName.item(i, j) is None:
-                        tableName.item(i, j).setText("0")
-                        print("test")
-                    else:
-                        print("test1" , j)
-                        val1[i, j] = float(tableName.item(i, j).text())
-                        print(val1[i,j])
-                        DropDownActions.statusMessage(self, message="")
-        except ValueError:
-            print("test2")
-            tableName.clearSelection()
-            tableName.item(row, col).setText("")
-            DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+        flag = 0
+        #
+        # text_in = float(tableName.item(0,col_check-1).text())
+        #
+        # text_in_plus = text_in + 1
+        #
+        # print(text_in, "plus ", text_in_plus)
+
+        if row == -1:
+            pass
+        else:
+            try:
+                for i in range(row_check):
+                    for j in range(col_check):
+                        if tableName.item(i, j) is None:
+                            print(i)
+                            item = QTableWidgetItem("0")
+                            tableName.setItem(i, j, item)
+                            # print("test")
+                        elif j==1:
+                            LoadCombinationID[i] = tableName.item(i, 1).text()
+                            if ' ' in LoadCombinationID[i]:
+                                LoadCombinationID[i] = ""
+                                tableName.item(i, 1).setText("")
+
+                                flag = 1
+                            else:
+                                LoadCombinationID[i] = [tableName.item(i, 1).text()]
+                        else:
+                            val1[i, j] = float(tableName.item(i, j).text())
+                            if flag == 1:
+                                DropDownActions.statusMessage(self, message="Please don't use any space in IDs column!")
+                            else:
+                                DropDownActions.statusMessage(self, message="")
+
+            except ValueError:
+                tableName.clearSelection()
+                tableName.item(row, col).setText("0")
+                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+        return val1, LoadCombinationID
+
+    def add_load_comb(self, tableName):
+        row_number = tableName.rowCount()
+        if tableName.item(row_number - 1, 0) is None:
+            pass
+        elif tableName.item(row_number - 1, 1) is None:
+            pass
+        else:
+            tableName.insertRow(row_number)
+            for j in range(row_number+1):
+                item = QTableWidgetItem(str(j + 1))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                tableName.setItem(j, 0, item)
 
 
-        print("val1", val1)
-        return val1

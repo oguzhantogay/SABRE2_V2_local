@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1121</width>
+    <width>1128</width>
     <height>800</height>
    </rect>
   </property>
@@ -2392,214 +2392,335 @@ Panel  for Member:</string>
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_6">
             <item>
-             <layout class="QGridLayout" name="gridLayout_2">
+             <layout class="QGridLayout" name="Load_combination_layout">
+              <item row="0" column="0">
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>Define Load Types:</string>
+                </property>
+               </widget>
+              </item>
               <item row="0" column="2">
-               <widget class="QComboBox" name="loadTypeDefine">
-                <property name="minimumSize">
-                 <size>
-                  <width>600</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="editable">
-                 <bool>false</bool>
-                </property>
-                <item>
-                 <property name="text">
-                  <string>Select or Enter the Load Type</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Dead Load (DL)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Live Load (LL)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Snow Load (SL)</string>
-                 </property>
-                </item>
-                <item>
-                 <property name="text">
-                  <string>Wind Load (WL)</string>
-                 </property>
-                </item>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QPushButton" name="loadTypeApply">
-                <property name="text">
-                 <string>Apply</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QLabel" name="loadTypeLabel">
-                <property name="text">
-                 <string>Name of Load Type:</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_22">
-              <item>
-               <widget class="QTableWidget" name="LC_definition_table">
-                <property name="maximumSize">
-                 <size>
-                  <width>998</width>
-                  <height>55</height>
-                 </size>
-                </property>
-                <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>90</number>
-                </attribute>
-                <row>
-                 <property name="text">
-                  <string/>
-                 </property>
-                </row>
-                <column>
-                 <property name="text">
-                  <string>LC Name =</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>+ Scale Factor x</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Load Type</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>+ Scale Factor x</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Load Type </string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>+ Scale Factor x</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Load Type</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>+ Scale Factor x</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Load Type</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>+ Scale Factor x</string>
-                 </property>
-                </column>
-                <column>
-                 <property name="text">
-                  <string>Load Type</string>
-                 </property>
-                </column>
-               </widget>
-              </item>
-              <item>
-               <widget class="QToolButton" name="LC_apply_button">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>50</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Apply</string>
-                </property>
-                <property name="iconSize">
-                 <size>
-                  <width>16</width>
-                  <height>50</height>
-                 </size>
-                </property>
-                <property name="autoRaise">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </item>
-            <item>
-             <layout class="QGridLayout" name="gridLayout_7">
-              <item row="0" column="1">
                <widget class="QLabel" name="LoadCobinationNamesLabel">
                 <property name="text">
                  <string>Defined Load Combinations:</string>
                 </property>
                </widget>
               </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="label">
+              <item row="3" column="0">
+               <widget class="QPushButton" name="LoadTypeRemove">
                 <property name="text">
-                 <string>Defined Load Types:</string>
+                 <string>Remove Selected Case</string>
                 </property>
                </widget>
               </item>
               <item row="2" column="0">
-               <widget class="QPushButton" name="loadTypeDelete">
+               <widget class="QPushButton" name="LoadTypeAdd">
                 <property name="text">
-                 <string>Delete</string>
+                 <string>Add New Case</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QListWidget" name="listWidget">
-                <item>
+               <widget class="QTableWidget" name="LoadTypeTable">
+                <property name="showGrid">
+                 <bool>true</bool>
+                </property>
+                <attribute name="horizontalHeaderDefaultSectionSize">
+                 <number>250</number>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <row>
                  <property name="text">
-                  <string>Dead Load (DL)</string>
+                  <string>New Row</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>New Row</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>New Row</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>New Row</string>
+                 </property>
+                </row>
+                <column>
+                 <property name="text">
+                  <string>Case Name</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignLeading|AlignVCenter</set>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>ID</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignLeading|AlignVCenter</set>
+                 </property>
+                </column>
+                <item row="0" column="0">
+                 <property name="text">
+                  <string>Dead Load</string>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
                  </property>
                 </item>
-                <item>
+                <item row="0" column="1">
                  <property name="text">
-                  <string>Live Load (LL)</string>
+                  <string>DL</string>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
                  </property>
                 </item>
-                <item>
+                <item row="1" column="0">
                  <property name="text">
-                  <string>Snow Load (SL)</string>
+                  <string>Live Load</string>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
                  </property>
                 </item>
-                <item>
+                <item row="1" column="1">
                  <property name="text">
-                  <string>Wind Load (WL)</string>
+                  <string>LL</string>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+                <item row="2" column="0">
+                 <property name="text">
+                  <string>Snow Load</string>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+                <item row="2" column="1">
+                 <property name="text">
+                  <string>SL</string>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+                <item row="3" column="0">
+                 <property name="text">
+                  <string>Wind Load</string>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+                <item row="3" column="1">
+                 <property name="text">
+                  <string>WL</string>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="3" column="2">
+               <widget class="QPushButton" name="LoadCombinationRemove">
+                <property name="text">
+                 <string>Remove Selected Load Combination</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QPushButton" name="LoadCombinationAdd">
+                <property name="text">
+                 <string>Add Load Combination</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
+               <widget class="QTableWidget" name="LoadCombinationTable">
+                <attribute name="horizontalHeaderDefaultSectionSize">
+                 <number>80</number>
+                </attribute>
+                <attribute name="verticalHeaderVisible">
+                 <bool>false</bool>
+                </attribute>
+                <row>
+                 <property name="text">
+                  <string>New Row</string>
+                 </property>
+                </row>
+                <column>
+                 <property name="text">
+                  <string>#</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>ID</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>DL</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>LL</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>SL</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>WL</string>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignCenter</set>
+                 </property>
+                </column>
+                <item row="0" column="0">
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                 <property name="textAlignment">
+                  <set>AlignLeading|AlignVCenter</set>
+                 </property>
+                 <property name="flags">
+                  <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+                 </property>
+                </item>
+                <item row="0" column="1">
+                 <property name="text">
+                  <string>LC1</string>
+                 </property>
+                </item>
+                <item row="0" column="2">
+                 <property name="text">
+                  <string>1.2</string>
+                 </property>
+                </item>
+                <item row="0" column="3">
+                 <property name="text">
+                  <string>1.6</string>
+                 </property>
+                </item>
+                <item row="0" column="4">
+                 <property name="text">
+                  <string>0</string>
+                 </property>
+                </item>
+                <item row="0" column="5">
+                 <property name="text">
+                  <string>0</string>
                  </property>
                 </item>
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QTreeWidget" name="treeWidget">
-                <column>
-                 <property name="text">
-                  <string notr="true">1</string>
-                 </property>
-                </column>
+               <widget class="Line" name="line_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="Line" name="line_3">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="Line" name="line_4">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="Line" name="line_5">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
                </widget>
               </item>
              </layout>
@@ -3273,7 +3394,7 @@ Number</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1121</width>
+     <width>1128</width>
      <height>21</height>
     </rect>
    </property>

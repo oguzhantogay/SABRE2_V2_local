@@ -23,10 +23,10 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
 
         # Release Tab, first columns of the tables size arrangements
-        ui_layout.Torsional_Release.setColumnWidth(0,62)
-        ui_layout.My_release.setColumnWidth(0,62)
-        ui_layout.Mz_release.setColumnWidth(0,62)
-        ui_layout.Warping_Release.setColumnWidth(0,62)
+        ui_layout.Torsional_Release.setColumnWidth(0, 62)
+        ui_layout.My_release.setColumnWidth(0, 62)
+        ui_layout.Mz_release.setColumnWidth(0, 62)
+        ui_layout.Warping_Release.setColumnWidth(0, 62)
 
         # main buttons actions
         ui_layout.DefinitionButton.clicked.connect(lambda: ui_layout.AnalysisTabs.close())
@@ -177,6 +177,31 @@ class SABRE2_main_subclass(QMainWindow):
 
         ui_layout.Warping_Release.itemChanged.connect(
             lambda: self.update_warping_release(ui_layout.Warping_Release))
+
+        # Loading Tabs
+
+        ui_layout.LoadTypeTable.itemChanged.connect(
+            lambda: LoadingClass.changes_on_load_combination(self, ui_layout.LoadTypeTable,
+                                                             ui_layout.LoadCombinationTable))
+
+        ui_layout.LoadTypeAdd.clicked.connect(lambda: LoadingClass.add_load(self, ui_layout.LoadTypeTable))
+
+        ui_layout.LoadTypeRemove.clicked.connect(lambda: LoadingClass.remove_load(self, ui_layout.LoadTypeTable))
+
+        # Load Combinations Table
+
+        ui_layout.LoadCombinationTable.itemChanged.connect(
+            lambda: LoadingClass.get_combination_data(self, ui_layout.LoadCombinationTable))
+
+        # ui_layout.LoadCombinationTable.itemChanged.connect(
+        #     lambda: LoadingClass.check_entered_data(self, ui_layout.LoadCombinationTable))
+
+        ui_layout.LoadCombinationAdd.clicked.connect(
+            lambda: LoadingClass.add_load(self, ui_layout.LoadCombinationTable))
+
+        ui_layout.LoadCombinationRemove.clicked.connect(
+            lambda: LoadingClass.remove_load(self, ui_layout.LoadCombinationTable))
+
         # Progress bar
         # put me in analysis section
         ui_layout.progressBar = PyQt4.QtGui.QProgressBar()
@@ -256,6 +281,7 @@ class SABRE2_main_subclass(QMainWindow):
         warping_values = Boundary_Conditions.release_tables_values(self, tableName)
         print("main screen Warping Table Values", warping_values)
         return warping_values
+
 
 class DropDownActions(QMainWindow):
     """docstring for Actions"""
@@ -989,7 +1015,7 @@ class Boundary_Conditions(QMainWindow):
         col = tableName.currentColumn()
         row = tableName.currentRow()
         try:
-            value = float(tableName.item(row,col).text())
+            value = float(tableName.item(row, col).text())
         except:
             tableName.clearSelection()
             tableName.item(row, col).setText("")
@@ -1045,11 +1071,12 @@ class Boundary_Conditions(QMainWindow):
         for i in range(row):
             for j in range(col):
                 if j == 0:
-                    val_table[i,j] = i+1
+                    val_table[i, j] = i + 1
                 else:
-                    val_table[i,j] = table_name.item(i,j).checkState()
+                    val_table[i, j] = table_name.item(i, j).checkState()
 
         return val_table
+
 
 class LoadingClass(QMainWindow):
     " This class is to for defining loading conditions"
@@ -1058,4 +1085,95 @@ class LoadingClass(QMainWindow):
         QMainWindow.__init__(self)
         self.ui = ui_layout
 
-    def predefined_list:
+    def defined_load_names(self, tableName):
+        row_number = tableName.rowCount()
+
+        names = [None] * row_number
+        IDs = [None] * row_number
+        try:
+            for i in range(row_number):
+                names[i] = tableName.item(i, 0).text()
+                if ' ' in tableName.item(i, 1).text():
+                    tableName.item(i, 1).setText("")
+                    DropDownActions.statusMessage(self, message="Please don't use any space in IDs column!")
+                else:
+                    IDs[i] = tableName.item(i, 1).text()
+        except AttributeError:
+            pass
+        print(names, IDs)
+        return names, IDs
+
+    def add_load(self, tableName):
+        row_number = tableName.rowCount()
+        if tableName.item(row_number - 1, 0) is None:
+            pass
+        elif tableName.item(row_number - 1, 1) is None:
+            pass
+        else:
+            tableName.insertRow(row_number)
+
+    def remove_load(self, tableName):
+        current_row = tableName.currentRow()
+
+        if current_row == -1:
+            DropDownActions.statusMessage(self, message="Please select load type to delete!")
+        else:
+            tableName.deleteRow(current_row)
+
+    def changes_on_load_combination(self, tableNameLoadType, tableNameLoadComb):
+        load_type_row = tableNameLoadType.rowCount()
+
+        [names, IDs] = LoadingClass.defined_load_names(self, tableNameLoadType)
+
+        combination_names = ["#", "ID"]
+        IDs.insert(0, "ID")
+        IDs.insert(0, "#")
+        print(IDs)
+
+        try:
+
+            tableNameLoadComb.setColumnCount(load_type_row + 2)
+
+            tableNameLoadComb.setHorizontalHeaderLabels(IDs)
+
+        except AttributeError:
+            DropDownActions.statusMessage(self, message="Please enter ID for load type!")
+
+    def check_entered_data(self, tableName):
+        col = tableName.currentColumn()
+        row = tableName.currentRow()
+        print ("deger" ,row, col)
+        try:
+            value = float(tableName.item(row, col).text())
+        except:
+            print("test 3")
+            tableName.clearSelection()
+            tableName.item(row, col).setText("")
+            DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+
+    def get_combination_data(self, tableName):
+        col = tableName.currentColumn()
+        row = tableName.currentRow()
+        row_check = tableName.rowCount()
+        col_check = tableName.columnCount()
+        val1 = np.zeros((row_check, col_check))
+        try:
+            for i in range(row_check):
+                for j in range(col_check):
+                    if tableName.item(i, j) is None:
+                        tableName.item(i, j).setText("0")
+                        print("test")
+                    else:
+                        print("test1" , j)
+                        val1[i, j] = float(tableName.item(i, j).text())
+                        print(val1[i,j])
+                        DropDownActions.statusMessage(self, message="")
+        except ValueError:
+            print("test2")
+            tableName.clearSelection()
+            tableName.item(row, col).setText("")
+            DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+
+
+        print("val1", val1)
+        return val1

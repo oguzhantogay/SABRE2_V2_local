@@ -2384,7 +2384,7 @@ Panel  for Member:</string>
         <item>
          <widget class="QTabWidget" name="LC_tabs">
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="Load_Combinations">
            <attribute name="title">
@@ -2747,26 +2747,16 @@ Panel  for Member:</string>
                <bool>true</bool>
               </property>
               <attribute name="horizontalHeaderDefaultSectionSize">
-               <number>150</number>
+               <number>125</number>
               </attribute>
               <row>
                <property name="text">
                 <string>1</string>
                </property>
               </row>
-              <row>
-               <property name="text">
-                <string>2</string>
-               </property>
-              </row>
-              <row>
-               <property name="text">
-                <string>3</string>
-               </property>
-              </row>
               <column>
                <property name="text">
-                <string>Member / Segment #</string>
+                <string>Segment Name</string>
                </property>
                <property name="font">
                 <font>
@@ -2777,7 +2767,18 @@ Panel  for Member:</string>
               </column>
               <column>
                <property name="text">
-                <string>Load Combination Name</string>
+                <string>Load Type</string>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Load Height</string>
                </property>
                <property name="font">
                 <font>
@@ -2821,7 +2822,7 @@ Panel  for Member:</string>
               </column>
               <item row="0" column="0">
                <property name="text">
-                <string>1</string>
+                <string>M1S1</string>
                </property>
                <property name="textAlignment">
                 <set>AlignCenter</set>
@@ -2829,133 +2830,33 @@ Panel  for Member:</string>
               </item>
               <item row="0" column="1">
                <property name="text">
-                <string/>
+                <string>0</string>
                </property>
                <property name="flags">
                 <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsDropEnabled|ItemIsUserCheckable|ItemIsEnabled</set>
                </property>
               </item>
-              <item row="1" column="0">
+              <item row="0" column="2">
                <property name="text">
-                <string>2</string>
-               </property>
-               <property name="textAlignment">
-                <set>AlignCenter</set>
+                <string>0</string>
                </property>
               </item>
-              <item row="2" column="0">
+              <item row="0" column="3">
                <property name="text">
-                <string>3</string>
+                <string>0</string>
                </property>
-               <property name="textAlignment">
-                <set>AlignCenter</set>
+              </item>
+              <item row="0" column="4">
+               <property name="text">
+                <string>0</string>
+               </property>
+              </item>
+              <item row="0" column="5">
+               <property name="text">
+                <string>0</string>
                </property>
               </item>
              </widget>
-            </item>
-            <item>
-             <layout class="QGridLayout" name="gridLayout_16">
-              <item row="1" column="0">
-               <widget class="QPushButton" name="Delete_last_row_uni_load">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>200</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Delete Last 
- Row</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QPushButton" name="Delete_new_row_button_uni_load">
-                <property name="maximumSize">
-                 <size>
-                  <width>150</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Delete Row 
-Number</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QPushButton" name="Insert_new_row_button_uni_load">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>150</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Insert a New 
- Row After</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QPushButton" name="Add_new_row_uni_load">
-                <property name="maximumSize">
-                 <size>
-                  <width>200</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Add New
- Row</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLineEdit" name="Inser_number_uni_load">
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string>2</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QLineEdit" name="Delete_number_uni_load">
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>2</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-             </layout>
             </item>
             <item>
              <spacer name="horizontalSpacer_10">
@@ -3006,16 +2907,6 @@ Number</string>
               <row>
                <property name="text">
                 <string>1</string>
-               </property>
-              </row>
-              <row>
-               <property name="text">
-                <string>2</string>
-               </property>
-              </row>
-              <row>
-               <property name="text">
-                <string>3</string>
                </property>
               </row>
               <column>
@@ -3130,9 +3021,32 @@ Number</string>
                 </font>
                </property>
               </column>
+              <item row="0" column="0">
+               <property name="text">
+                <string>1</string>
+               </property>
+               <property name="font">
+                <font>
+                 <pointsize>8</pointsize>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="textAlignment">
+                <set>AlignCenter</set>
+               </property>
+               <property name="flags">
+                <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
+               </property>
+              </item>
+              <item row="0" column="1">
+               <property name="text">
+                <string>0</string>
+               </property>
+              </item>
               <item row="0" column="2">
                <property name="text">
-                <string/>
+                <string>0</string>
                </property>
               </item>
               <item row="0" column="3">
@@ -3143,127 +3057,50 @@ Number</string>
                 <set>AlignCenter</set>
                </property>
               </item>
-              <item row="1" column="3">
+              <item row="0" column="4">
                <property name="text">
                 <string>0</string>
-               </property>
-               <property name="textAlignment">
-                <set>AlignCenter</set>
                </property>
               </item>
-              <item row="2" column="3">
+              <item row="0" column="5">
                <property name="text">
                 <string>0</string>
                </property>
-               <property name="textAlignment">
-                <set>AlignCenter</set>
+              </item>
+              <item row="0" column="6">
+               <property name="text">
+                <string>0</string>
+               </property>
+              </item>
+              <item row="0" column="7">
+               <property name="text">
+                <string>0</string>
+               </property>
+              </item>
+              <item row="0" column="8">
+               <property name="text">
+                <string>0</string>
+               </property>
+              </item>
+              <item row="0" column="9">
+               <property name="text">
+                <string>0</string>
                </property>
               </item>
              </widget>
             </item>
             <item>
-             <layout class="QGridLayout" name="gridLayout_11">
-              <item row="1" column="0">
-               <widget class="QPushButton" name="Delete_last_row_point_load">
-                <property name="minimumSize">
-                 <size>
-                  <width>0</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>200</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Delete Last 
- Row</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="0">
-               <widget class="QPushButton" name="Delete_new_row_button_point_load">
-                <property name="maximumSize">
-                 <size>
-                  <width>150</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Delete Row 
-Number</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QPushButton" name="Insert_new_row_button_point_load">
-                <property name="enabled">
-                 <bool>true</bool>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>150</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Insert a New 
- Row After</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="0">
-               <widget class="QPushButton" name="Add_new_row_point_load">
-                <property name="maximumSize">
-                 <size>
-                  <width>200</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>Add New
- Row</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QLineEdit" name="Inser_number_point_load">
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="text">
-                 <string>2</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QLineEdit" name="Delete_number_point_load">
-                <property name="maximumSize">
-                 <size>
-                  <width>50</width>
-                  <height>16777215</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string>2</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-             </layout>
+             <spacer name="horizontalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </widget>

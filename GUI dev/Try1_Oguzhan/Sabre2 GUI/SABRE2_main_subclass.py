@@ -130,7 +130,7 @@ class SABRE2_main_subclass(QMainWindow):
                                                 ui_layout.Insert_after_number_mem_def))
 
         ui_layout.AISC_assign_button.clicked.connect(
-            lambda: LineChanges.sql_print(self, ui_layout, ui_layout.Members_table))
+            lambda: self.AISC_update_fun(ui_layout, ui_layout.Members_table))
 
         # Member Properties Table
         ui_layout.Apply_all_member_properties.clicked.connect(
@@ -192,15 +192,47 @@ class SABRE2_main_subclass(QMainWindow):
 
         ui_layout.LoadCombinationTable.itemChanged.connect(
             lambda: LoadingClass.get_combination_data(self, ui_layout.LoadCombinationTable))
-
-        # ui_layout.LoadCombinationTable.itemChanged.connect(
-        #     lambda: LoadingClass.check_entered_data(self, ui_layout.LoadCombinationTable))
-
         ui_layout.LoadCombinationAdd.clicked.connect(
             lambda: LoadingClass.add_load_comb(self, ui_layout.LoadCombinationTable))
 
         ui_layout.LoadCombinationRemove.clicked.connect(
             lambda: LoadingClass.remove_load(self, ui_layout.LoadCombinationTable))
+
+        # Distributed Load table arrangements
+
+        uniform_load_options = ["Flange 2", "Shear Center", "Flange 1", "Mid Web", "Centroid"]
+        load_place_position = 2
+        load_type_position = 1
+
+        ui_layout.LoadTypeTable.itemChanged.connect(
+            lambda: uniform_load_def.combo_box_types(self, ui_layout.Uniform_loading_table, ui_layout.LoadTypeTable,
+                                                     load_type_position))
+
+        uniform_load_def.set_combo_box(self, ui_layout.Uniform_loading_table, uniform_load_options,
+                                       load_place_position)
+
+        uniform_load_def.combo_box_types(self, ui_layout.Uniform_loading_table, ui_layout.LoadTypeTable,
+                                         load_type_position)
+
+        ui_layout.Uniform_loading_table.itemChanged.connect(
+            lambda: self.update_uniform_data(ui_layout.Uniform_loading_table, combo_flag=0))
+
+        # Point Load table arrangements
+
+        uniform_load_options = ["Shear Center", "Flange 2 + alpha", "Flange 1 + alpha", "Centroid"]
+
+        ui_layout.LoadTypeTable.itemChanged.connect(
+            lambda: point_load_def.combo_box_types(self, ui_layout.Point_load_table, ui_layout.LoadTypeTable,
+                                                     load_type_position))
+
+        point_load_def.set_combo_box(self, ui_layout.Point_load_table, uniform_load_options,
+                                       load_place_position)
+
+        point_load_def.combo_box_types(self, ui_layout.Point_load_table, ui_layout.LoadTypeTable,
+                                         load_type_position)
+
+        ui_layout.Point_load_table.itemChanged.connect(
+            lambda: self.update_point_data(ui_layout.Point_load_table, combo_flag=0))
 
         # Progress bar
         # put me in analysis section
@@ -218,9 +250,15 @@ class SABRE2_main_subclass(QMainWindow):
 
     # Members tab, Member definition functions
     def update_members_table(self, tableName, position):
+
         Members_values = DataCollection.update_table_values(self, tableName, position)
         print("main screen", Members_values)
         return Members_values
+
+    def AISC_update_fun(self, ui_layout, tableName):
+        flag = LineChanges.sql_print(self, ui_layout, tableName)
+        return flag
+
 
     def update_members_copyfrom(self, lineName, position, tableName):
         copyfrom_value = DataCollection.update_lineedit_values(self, lineName)
@@ -235,12 +273,17 @@ class SABRE2_main_subclass(QMainWindow):
         return copyfrom_value
 
     def update_members_insertafter(self, lineName, position, tableName):
-        insertafter_values = DataCollection.update_lineedit_values(self, lineName)
-        insertafter_values = insertafter_values - 1
+        r = tableName.rowCount()
         try:
+            insertafter_values = DataCollection.update_lineedit_values(self, lineName)
+            insertafter_values = insertafter_values - 1
+
             if insertafter_values <= r - 1:
                 tableName.selectRow(insertafter_values)
                 DropDownActions.statusMessage(self, message="")
+            else:
+                lineName.setText("")
+
         except TypeError:
             DropDownActions.statusMessage(self, message="Row not defined")
         return insertafter_values
@@ -281,6 +324,21 @@ class SABRE2_main_subclass(QMainWindow):
         warping_values = Boundary_Conditions.release_tables_values(self, tableName)
         print("main screen Warping Table Values", warping_values)
         return warping_values
+
+    def update_loading_types_conditions(self, tableName):
+        [table_data, ID_data] = LoadingClass.defined_load_names(self, tableName)
+        print("main screen load type IDs", ID_data)
+        return ID_data
+
+    def update_uniform_data(self, tableName, combo_flag):
+        [uniform_data_vals, SegmentNames] = uniform_load_def.uniform_data_table(self, tableName, combo_flag)
+        print("main screen uniform load values", uniform_data_vals)
+        return uniform_data_vals
+
+    def update_point_data(self, tableName, combo_flag):
+        point_data_vals= point_load_def.point_data_table(self, tableName, combo_flag)
+        print("main screen uniform load values", point_data_vals)
+        return point_load_def
 
 
 class DropDownActions(QMainWindow):
@@ -563,6 +621,8 @@ class TableChanges(QMainWindow):
                 item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
                 tableName.setItem(i, 0, item)
 
+        DataCollection.update_table_values(self, tableName, 3)
+
 
 class LineChanges(QMainWindow):
     """This Class is imposing the changes on the QLineEdit cells"""
@@ -572,6 +632,7 @@ class LineChanges(QMainWindow):
         self.ui = ui_layout
 
     def copy_insert_row(self, tableName, options, position, Copy_from_number, Insert_after_number):
+        tableName.blockSignals(True)
         Members_values = DataCollection.update_table_values(self, tableName, position)
         copyfrom_values = DataCollection.update_lineedit_values(self, Copy_from_number)
         insertafter_values = DataCollection.update_lineedit_values(self, Insert_after_number)
@@ -604,6 +665,7 @@ class LineChanges(QMainWindow):
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
             tableName.setItem(i, 0, item)
+        tableName.blockSignals(False)
 
     def set_member_definition_AISC_combobox(self, ui_layout):
         ''' This function sets the combobox for the AISC database'''
@@ -646,11 +708,12 @@ class LineChanges(QMainWindow):
             ui_layout.AISC_database_button.addItem(t)
 
     def sql_print(self, ui_layout, tableName):
+        tableName.blockSignals(True)
+        print("test")
         conn = sq.connect('AISC_data.db')
         c = conn.cursor()
 
         row = tableName.currentRow()
-        print(row)
         cross_section = str(ui_layout.AISC_database_button.currentText())
         if row == -1:
             DropDownActions.statusMessage(self, message="Select the row before assignment")
@@ -667,25 +730,25 @@ class LineChanges(QMainWindow):
                     var1 = c.fetchall()
                     var1 = var1[0]
                     table_prop[0, i] = var1[0]
-                print(cross_section, 'cs_properties = ', table_prop)
+                # print(cross_section, 'cs_properties = ', table_prop)
                 # table values assignment
-                tableName.setItem(row, 4, QTableWidgetItem(str(table_prop[0, 0])))
-                tableName.setItem(row, 5, QTableWidgetItem(str(table_prop[0, 1])))
-                tableName.setItem(row, 6, QTableWidgetItem(str(table_prop[0, 0])))
-                tableName.setItem(row, 7, QTableWidgetItem(str(table_prop[0, 1])))
-                tableName.setItem(row, 8, QTableWidgetItem(str(table_prop[0, 0])))
-                tableName.setItem(row, 9, QTableWidgetItem(str(table_prop[0, 1])))
-                tableName.setItem(row, 10, QTableWidgetItem(str(table_prop[0, 0])))
-                tableName.setItem(row, 11, QTableWidgetItem(str(table_prop[0, 1])))
-                tableName.setItem(row, 12, QTableWidgetItem(str(table_prop[0, 16])))
-                tableName.setItem(row, 13, QTableWidgetItem(str(table_prop[0, 3])))
-                tableName.setItem(row, 14, QTableWidgetItem(str(table_prop[0, 16])))
-                tableName.setItem(row, 15, QTableWidgetItem(str(table_prop[0, 3])))
-                tableName.setItem(row, 16, QTableWidgetItem(str(table_prop[0, 17])))
-                tableName.setItem(row, 17, QTableWidgetItem(str(table_prop[0, 17])))
+                for i in range(4,18):
+                    if i == 4 or i == 6 or i == 8 or i==10:
+                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 0])))
+                    elif i == 5 or i == 7 or i == 9 or i==11:
+                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 1])))
+                    elif i == 12 or i == 14:
+                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 16])))
+                    elif i == 13 or i == 15:
+                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 3])))
+                    elif i == 16:
+                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 17])))
+                    else:
 
+                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 17])))
             except IndexError:
                 DropDownActions.statusMessage(self, message="Please select the cross-section name!")
+        tableName.blockSignals(False)
 
 
 class JointTable(QMainWindow):
@@ -771,6 +834,7 @@ class MemberPropertiesTable(QMainWindow):
         self.ui = ui_layout
 
     def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable):
+        memberPropertiesTable.blockSignals(True)
         row_member = memberPropertiesTable.rowCount()
         row_def = memberDefinitionTable.rowCount()
 
@@ -794,6 +858,7 @@ class MemberPropertiesTable(QMainWindow):
                         item = QTableWidgetItem(str(int(initial_values[0, i])))
                         item.setTextAlignment(QtCore.Qt.AlignCenter)
                         memberPropertiesTable.setItem(j, i, item)
+        memberPropertiesTable.blockSignals(False)
 
     def set_values_with_row(self, memberPropertiesTable, member_prop_line_edit):
         row_count = memberPropertiesTable.rowCount()
@@ -872,7 +937,7 @@ class Boundary_Conditions(QMainWindow):
         table_name.scrollToItem(table_name.item(active_values, 0))
 
     def shear_panel_application(self, table_for_shear_panel, members_table, options, position):
-
+        table_for_shear_panel.blockSignals(True)
         "Shear_panel_table"
 
         row_def = members_table.rowCount()
@@ -907,6 +972,8 @@ class Boundary_Conditions(QMainWindow):
                 table_for_shear_panel.setCellWidget(i, position, combo_box)
                 combo_box.currentIndexChanged.connect(
                     lambda: SABRE2_main_subclass.update_shear_panel_table(self, table_for_shear_panel, flag="combo"))
+
+        table_for_shear_panel.blockSignals(False)
 
     def shear_panel_nodes(self, table_for_shear_panel, member_ranges):
         " This function checks the values of the shear panel table"
@@ -987,6 +1054,7 @@ class Boundary_Conditions(QMainWindow):
             pass
 
     def shear_panel_values(self, tableName, flag="not combo"):
+
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
@@ -1106,7 +1174,6 @@ class LoadingClass(QMainWindow):
                     IDs[i] = tableName.item(i, 1).text()
         except AttributeError:
             pass
-        print(names, IDs)
         return names, IDs
 
     def add_load(self, tableName):
@@ -1134,7 +1201,6 @@ class LoadingClass(QMainWindow):
         combination_names = ["#", "ID"]
         IDs.insert(0, "ID")
         IDs.insert(0, "#")
-        print(IDs)
 
         try:
 
@@ -1148,11 +1214,9 @@ class LoadingClass(QMainWindow):
     def check_entered_data(self, tableName):
         col = tableName.currentColumn()
         row = tableName.currentRow()
-        print ("deger" ,row, col)
         try:
             value = float(tableName.item(row, col).text())
         except:
-            print("test 3")
             tableName.clearSelection()
             tableName.item(row, col).setText("")
             DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
@@ -1162,17 +1226,9 @@ class LoadingClass(QMainWindow):
         row = tableName.currentRow()
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
-        print("row check", row_check)
         LoadCombinationID = {}
         val1 = np.zeros((row_check, col_check))
         flag = 0
-        #
-        # text_in = float(tableName.item(0,col_check-1).text())
-        #
-        # text_in_plus = text_in + 1
-        #
-        # print(text_in, "plus ", text_in_plus)
-
         if row == -1:
             pass
         else:
@@ -1184,7 +1240,7 @@ class LoadingClass(QMainWindow):
                             item = QTableWidgetItem("0")
                             tableName.setItem(i, j, item)
                             # print("test")
-                        elif j==1:
+                        elif j == 1:
                             LoadCombinationID[i] = tableName.item(i, 1).text()
                             if ' ' in LoadCombinationID[i]:
                                 LoadCombinationID[i] = ""
@@ -1214,10 +1270,115 @@ class LoadingClass(QMainWindow):
             pass
         else:
             tableName.insertRow(row_number)
-            for j in range(row_number+1):
+            for j in range(row_number + 1):
                 item = QTableWidgetItem(str(j + 1))
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
                 tableName.setItem(j, 0, item)
 
 
+class uniform_load_def(QMainWindow):
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
+        self.ui = ui_layout
+
+    def combo_box_types(self, tableName, table_load_type, position):
+        [var1, IDs] = LoadingClass.defined_load_names(self, table_load_type)
+        uniform_load_def.set_combo_box(self, tableName, IDs, position)
+
+    def set_combo_box(self, tableName, options, position):
+
+        r = tableName.rowCount()
+        for i in range(r):
+            combo_box = QtGui.QComboBox()
+            for t in options:
+                combo_box.addItem(t)
+            tableName.setCellWidget(i, position, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_uniform_data(self, tableName, combo_flag=1))
+
+    def uniform_data_table(self, tableName, combo_flag=0):
+        col = tableName.currentColumn()
+        row = tableName.currentRow()
+        row_check = tableName.rowCount()
+        col_check = tableName.columnCount()
+        SegmentNames = {}
+        val1 = np.zeros((row_check, col_check))
+        try:
+            for i in range(row_check):
+                for j in range(col_check):
+                    if tableName.item(i, j) is None:
+                        item = QTableWidgetItem("0")
+                        tableName.setItem(i, j, item)
+                    elif j == 0:
+                        SegmentNames[i] = tableName.item(i, j).text()
+                    elif j == 1 or j == 2:
+                        value_combo = tableName.cellWidget(i, j).currentIndex()
+                        val1[i, j] = value_combo
+                        DropDownActions.statusMessage(self, message="")
+                    else:
+                        val1[i, j] = float(tableName.item(i, j).text())
+                        DropDownActions.statusMessage(self, message="")
+
+        except ValueError:
+            tableName.clearSelection()
+            if combo_flag == 1:
+                pass
+            else:
+                tableName.item(row, col).setText("0")
+                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+
+        print(SegmentNames)
+        return val1, SegmentNames
+
+
+class point_load_def(QMainWindow):
+
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
+        self.ui = ui_layout
+
+    def combo_box_types(self, tableName, table_load_type, position):
+        [var1, IDs] = LoadingClass.defined_load_names(self, table_load_type)
+        point_load_def.set_combo_box(self, tableName, IDs, position)
+
+    def set_combo_box(self, tableName, options, position):
+
+        r = tableName.rowCount()
+        for i in range(r):
+            combo_box = QtGui.QComboBox()
+            for t in options:
+                combo_box.addItem(t)
+            tableName.setCellWidget(i, position, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_point_data(self, tableName, combo_flag=1))
+
+    def point_data_table(self, tableName, combo_flag=0):
+        col = tableName.currentColumn()
+        row = tableName.currentRow()
+        row_check = tableName.rowCount()
+        col_check = tableName.columnCount()
+        val1 = np.zeros((row_check, col_check))
+        try:
+            for i in range(row_check):
+                for j in range(col_check):
+                    if tableName.item(i, j) is None:
+                        item = QTableWidgetItem("0")
+                        tableName.setItem(i, j, item)
+                    elif j == 1 or j == 2:
+                        value_combo = tableName.cellWidget(i, j).currentIndex()
+                        val1[i, j] = value_combo
+                        DropDownActions.statusMessage(self, message="")
+                    else:
+                        val1[i, j] = float(tableName.item(i, j).text())
+                        DropDownActions.statusMessage(self, message="")
+
+        except ValueError:
+            tableName.clearSelection()
+            if combo_flag == 1:
+                pass
+            else:
+                tableName.item(row, col).setText("0")
+                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+
+        return val1

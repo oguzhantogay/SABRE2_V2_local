@@ -1,7 +1,14 @@
 import PyQt4
+import sys
 from PyQt4.QtGui import *
 from PyQt4 import QtGui, QtCore
-import pickle
+from PyQt4 import QtGui
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from PyQt4 import QtGui
+from PyQt4.QtOpenGL import *
+from PyQt4.QtCore import Qt
+# import pickle
 import SABRE2_GUI
 import numpy as np
 import sqlite3 as sq
@@ -12,6 +19,13 @@ except AttributeError:
     def _fromUtf8(s):
         return s
 
+try:
+    from OpenGL import GL
+except ImportError:
+    app = QtGui.QApplication(sys.argv)
+    QtGui.QMessageBox.critical(None, "OpenGL hellogl",
+            "PyOpenGL must be installed to run this example.")
+    sys.exit(1)
 
 class SABRE2_main_subclass(QMainWindow):
     def __init__(self, ui_layout):
@@ -21,6 +35,8 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.statusBar = self.statusBar()
         ui_layout.DefinitionTabs.close()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
+        self.OpenGLwidget = glWidget(self)
+        ui_layout.verticalLayout_8.insertWidget(0,self.OpenGLwidget)
 
         # Release Tab, first columns of the tables size arrangements
         ui_layout.Torsional_Release.setColumnWidth(0, 62)
@@ -32,7 +48,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.DefinitionButton.clicked.connect(lambda: ui_layout.AnalysisTabs.close())
         ui_layout.AnalysisButton.clicked.connect(lambda: ui_layout.DefinitionTabs.close())
         LineChanges.set_member_definition_AISC_combobox(self, ui_layout)  # set AISC database combobox values
-        ui_layout.Fixities_table.itemClicked.connect(
+        ui_layout.Fixities_table.itemChanged.connect(
             lambda: Boundary_Conditions.get_checkbox_values(self, ui_layout.Fixities_table))
 
         # File dropdown actions
@@ -709,7 +725,6 @@ class LineChanges(QMainWindow):
 
     def sql_print(self, ui_layout, tableName):
         tableName.blockSignals(True)
-        print("test")
         conn = sq.connect('AISC_data.db')
         c = conn.cursor()
 
@@ -1239,7 +1254,6 @@ class LoadingClass(QMainWindow):
                             print(i)
                             item = QTableWidgetItem("0")
                             tableName.setItem(i, j, item)
-                            # print("test")
                         elif j == 1:
                             LoadCombinationID[i] = tableName.item(i, 1).text()
                             if ' ' in LoadCombinationID[i]:
@@ -1382,3 +1396,46 @@ class point_load_def(QMainWindow):
                 DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
 
         return val1
+
+class glWidget(QGLWidget):
+
+
+    def __init__(self, parent):
+        QGLWidget.__init__(self, parent)
+        self.setMinimumSize(640, 480)
+
+    def paintGL(self):
+
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glLoadIdentity()
+
+
+        glTranslatef(-2.5, 0.5, -6.0)
+        glColor3f( 1.0, 1.5, 0.0 );
+        glPolygonMode(GL_FRONT, GL_FILL);
+
+        glBegin(GL_TRIANGLES)
+        glVertex3f(2.0,-1.2,0.0)
+        glVertex3f(2.6,0.0,0.0)
+        glVertex3f(2.9,-1.2,0.0)
+        glEnd()
+
+
+        glFlush()
+
+
+
+    def initializeGL(self):
+
+
+
+        glClearDepth(1.0)
+        glDepthFunc(GL_LESS)
+        glEnable(GL_DEPTH_TEST)
+        glShadeModel(GL_SMOOTH)
+
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        gluPerspective(45.0,1.33,0.1, 100.0)
+        glMatrixMode(GL_MODELVIEW)

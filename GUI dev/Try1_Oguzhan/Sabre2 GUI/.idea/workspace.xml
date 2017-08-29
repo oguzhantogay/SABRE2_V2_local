@@ -3,6 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="e3bdc81c-f851-421a-a983-520f479e3ce7" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2-V3.ui" afterPath="$PROJECT_DIR$/SABRE2-V3.ui" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2_GUI.py" afterPath="$PROJECT_DIR$/SABRE2_GUI.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SABRE2_main_subclass.py" afterPath="$PROJECT_DIR$/SABRE2_main_subclass.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,7 +17,8 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/Sabre2_GUI$test.coverage" NAME="test Coverage Results" MODIFIED="1502125644592" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Sabre2_GUI$qlineedit.coverage" NAME="qlineedit Coverage Results" MODIFIED="1502125612665" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Sabre2_GUI$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1503699190927" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Sabre2_GUI$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1504039403436" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Sabre2_GUI$layouts.coverage" NAME="layouts Coverage Results" MODIFIED="1504038675208" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="DatabaseView">
     <option name="SHOW_INTERMEDIATE" value="true" />
@@ -36,10 +39,19 @@
       <file leaf-file-name="SABRE2_GUI.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SABRE2_GUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="14120">
-              <caret line="706" column="13" lean-forward="false" selection-start-line="706" selection-start-column="13" selection-end-line="706" selection-end-column="13" />
+            <state relative-caret-position="206">
+              <caret line="198" column="39" lean-forward="false" selection-start-line="198" selection-start-column="13" selection-end-line="198" selection-end-column="39" />
               <folding>
-                <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
+                <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+                <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+                <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+                <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+                <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+                <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+                <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+                <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+                <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+                <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
               </folding>
             </state>
           </provider>
@@ -48,8 +60,8 @@
       <file leaf-file-name="SABRE2_main_subclass.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="166">
-              <caret line="111" column="74" lean-forward="true" selection-start-line="111" selection-start-column="74" selection-end-line="111" selection-end-column="74" />
+            <state relative-caret-position="320">
+              <caret line="34" column="46" lean-forward="true" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -80,12 +92,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>lineed</find>
-      <find>mem_def</find>
-      <find>current</find>
-      <find>setite</find>
-      <find>setText</find>
-      <find>&quot;0&quot;</find>
       <find>joints</find>
       <find>update_members_table</find>
       <find>row de</find>
@@ -99,7 +105,6 @@
       <find>selectable</find>
       <find>update_lineedit_values</find>
       <find>insertRow</find>
-      <find>itemc</find>
       <find>combo</find>
       <find>checked</find>
       <find>main scree</find>
@@ -110,6 +115,13 @@
       <find>Copy_from_number_mem_def</find>
       <find>tableName.item(i, j) is None</find>
       <find>members_table</find>
+      <find>import</find>
+      <find>print(&quot;tes</find>
+      <find>definiti</find>
+      <find>itemc</find>
+      <find>definitiontabs</find>
+      <find>self.widget</find>
+      <find>verticalLayout_8.addWidget</find>
     </findStrings>
     <replaceStrings>
       <replace>members_table_values</replace>
@@ -134,6 +146,7 @@
         <option value="$PROJECT_DIR$/SABRE2_main_subclass_test.py" />
         <option value="$PROJECT_DIR$/SABRE2_main.py" />
         <option value="$PROJECT_DIR$/test.py" />
+        <option value="$PROJECT_DIR$/layouts.py" />
         <option value="$PROJECT_DIR$/SABRE2_GUI.py" />
         <option value="$PROJECT_DIR$/SABRE2_main_subclass.py" />
       </list>
@@ -400,6 +413,24 @@
       <option name="_new_target" value="&quot;&quot;" />
       <option name="_new_targetType" value="&quot;PATH&quot;" />
     </configuration>
+    <configuration name="layouts" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="Sabre2 GUI" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/layouts.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+    </configuration>
     <configuration name="qlineedit" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -436,16 +467,18 @@
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
     </configuration>
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Python.SABRE2_main" />
       <item index="1" class="java.lang.String" itemvalue="Python.qlineedit" />
       <item index="2" class="java.lang.String" itemvalue="Python.test" />
+      <item index="3" class="java.lang.String" itemvalue="Python.layouts" />
     </list>
     <recent_temporary>
-      <list size="3">
+      <list size="4">
         <item index="0" class="java.lang.String" itemvalue="Python.SABRE2_main" />
-        <item index="1" class="java.lang.String" itemvalue="Python.test" />
-        <item index="2" class="java.lang.String" itemvalue="Python.qlineedit" />
+        <item index="1" class="java.lang.String" itemvalue="Python.layouts" />
+        <item index="2" class="java.lang.String" itemvalue="Python.test" />
+        <item index="3" class="java.lang.String" itemvalue="Python.qlineedit" />
       </list>
     </recent_temporary>
   </component>
@@ -586,7 +619,14 @@
       <option name="project" value="LOCAL" />
       <updated>1503525081217</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Loading definition works">
+      <created>1503699996155</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1503699996155</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TodoView">
@@ -657,7 +697,8 @@
     <MESSAGE value="shear panel table works with the checks" />
     <MESSAGE value="shear panel table - implementation of variable bracing" />
     <MESSAGE value="Tabs work till loading tab" />
-    <option name="LAST_COMMIT_MESSAGE" value="Tabs work till loading tab" />
+    <MESSAGE value="Loading definition works" />
+    <option name="LAST_COMMIT_MESSAGE" value="Loading definition works" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -673,7 +714,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass_backup2.py" />
     <entry file="file://$PROJECT_DIR$/SABRE2_main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
@@ -709,7 +749,16 @@
         <state relative-caret-position="7225">
           <caret line="425" column="61" lean-forward="false" selection-start-line="425" selection-start-column="50" selection-end-line="425" selection-end-column="61" />
           <folding>
-            <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
           </folding>
         </state>
       </provider>
@@ -739,7 +788,16 @@
         <state relative-caret-position="32840">
           <caret line="1642" column="57" lean-forward="false" selection-start-line="1642" selection-start-column="57" selection-end-line="1642" selection-end-column="57" />
           <folding>
-            <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
           </folding>
         </state>
       </provider>
@@ -769,7 +827,16 @@
         <state relative-caret-position="32840">
           <caret line="1642" column="57" lean-forward="true" selection-start-line="1642" selection-start-column="57" selection-end-line="1642" selection-end-column="57" />
           <folding>
-            <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
           </folding>
         </state>
       </provider>
@@ -799,7 +866,16 @@
         <state relative-caret-position="462">
           <caret line="21" column="8" lean-forward="false" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="8" />
           <folding>
-            <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
           </folding>
         </state>
       </provider>
@@ -842,7 +918,16 @@
         <state relative-caret-position="446">
           <caret line="1768" column="14" lean-forward="true" selection-start-line="1768" selection-start-column="14" selection-end-line="1768" selection-end-column="14" />
           <folding>
-            <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
           </folding>
         </state>
       </provider>
@@ -862,7 +947,16 @@
         <state relative-caret-position="7225">
           <caret line="425" column="61" lean-forward="false" selection-start-line="425" selection-start-column="50" selection-end-line="425" selection-end-column="61" />
           <folding>
-            <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
           </folding>
         </state>
       </provider>
@@ -892,7 +986,16 @@
         <state relative-caret-position="32840">
           <caret line="1642" column="57" lean-forward="false" selection-start-line="1642" selection-start-column="57" selection-end-line="1642" selection-end-column="57" />
           <folding>
-            <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
           </folding>
         </state>
       </provider>
@@ -922,7 +1025,16 @@
         <state relative-caret-position="32840">
           <caret line="1642" column="57" lean-forward="true" selection-start-line="1642" selection-start-column="57" selection-end-line="1642" selection-end-column="57" />
           <folding>
-            <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
           </folding>
         </state>
       </provider>
@@ -952,7 +1064,16 @@
         <state relative-caret-position="462">
           <caret line="21" column="8" lean-forward="false" selection-start-line="21" selection-start-column="4" selection-end-line="21" selection-end-column="8" />
           <folding>
-            <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1028,16 +1149,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SABRE2_GUI.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="14120">
-          <caret line="706" column="13" lean-forward="false" selection-start-line="706" selection-start-column="13" selection-end-line="706" selection-end-column="13" />
-          <folding>
-            <marker date="1503688489704" expanded="true" signature="715:800" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SABRE2_main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="20">
@@ -1048,10 +1159,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/layouts.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="11" column="30" lean-forward="true" selection-start-line="11" selection-start-column="30" selection-end-line="11" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SABRE2_GUI.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="198" column="39" lean-forward="false" selection-start-line="198" selection-start-column="13" selection-end-line="198" selection-end-column="39" />
+          <folding>
+            <marker date="1504039395046" expanded="true" signature="681:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="715:92860" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="92901:128248" ph="..." />
+            <marker date="1504039395046" expanded="true" signature="107758:107804" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="111728:111756" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122355:122385" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="122460:122478" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124688:124718" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="124795:124813" ph="&quot;...&quot;" />
+            <marker date="1504039395046" expanded="true" signature="128304:128491" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SABRE2_main_subclass.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="166">
-          <caret line="111" column="74" lean-forward="true" selection-start-line="111" selection-start-column="74" selection-end-line="111" selection-end-column="74" />
+        <state relative-caret-position="320">
+          <caret line="34" column="46" lean-forward="true" selection-start-line="34" selection-start-column="46" selection-end-line="34" selection-end-column="46" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>

@@ -408,7 +408,6 @@ class DropDownActions(QMainWindow):
 
     def OpenAct(self):
         DropDownActions.statusMessage(self, message="Open an existing file")
-
         fileName = PyQt4.QtGui.QFileDialog.getOpenFileName(None, "Open Sabre2 File", '',
                                                            "Sabre2 Files (*.mat);;All Files (*)")
         if not fileName:
@@ -418,6 +417,14 @@ class DropDownActions(QMainWindow):
         except IOError:
             QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
             return
+
+        #if first line states "basic" script
+        # then just fill in gui
+        #elif first line states "complete" script
+        # if autorun = "enabled"
+        #   then immediately run and show results
+        # elif autorun = "disabled"
+        #   then fill in gui, pull up analysis tab and update opengl
 
         inpdata = []
         inpdata = pickle.load(in_file)
@@ -511,6 +518,19 @@ class DropDownActions(QMainWindow):
 
     def statusMessage(self, message):
         self.ui.statusBar.showMessage(message)
+
+    # def maybeSave(self):
+    #     if self.textEdit.document().isModified():
+    #         ret = QtGui.QMessageBox.warning(self, "Application",
+    #                                         "The model has been modified.\nDo you want to save "
+    #                                         "your changes?",
+    #                                         QtGui.QMessageBox.Save | QtGui.QMessageBox.Discard |
+    #                                         QtGui.QMessageBox.Cancel)
+    #         if ret == QtGui.QMessageBox.Save:
+    #             return self.save()
+    #         elif ret == QtGui.QMessageBox.Cancel:
+    #             return False
+    #     return True
 
 
 class DataCollection(QMainWindow):

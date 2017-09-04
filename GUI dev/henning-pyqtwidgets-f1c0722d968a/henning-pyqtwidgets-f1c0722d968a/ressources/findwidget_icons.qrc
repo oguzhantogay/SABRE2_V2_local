@@ -1,9 +1,0 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-<qresource>
-       <file>go-next.png</file>	
-       <file>go-previous.png</file>
-       <file>window-close.png</file>
-       <file>find-menu.png</file>	
-</qresource>
-</RCC>

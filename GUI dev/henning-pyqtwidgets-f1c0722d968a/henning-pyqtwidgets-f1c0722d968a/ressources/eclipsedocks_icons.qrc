@@ -1,8 +1,0 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-<qresource>
-       <file>pin.png</file>	
-       <file>minimize.png</file>	
-       <file>maximize.png</file>	
-</qresource>
-</RCC>

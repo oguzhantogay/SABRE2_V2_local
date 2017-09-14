@@ -11,3 +11,6 @@ window.show()
 
 
 sys.exit(app.exec_())
+
+# self.OpenGLwidget = OpenGLcode.glWidget(self)
+        # ui_layout.verticalLayout_8.insertWidget(0,self.OpenGLwidget)

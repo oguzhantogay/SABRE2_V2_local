@@ -1,15 +1,19 @@
-from OpenGL.GLUT import *
 from OpenGL.GL import *
-from OpenGL.GLU import *
-def draw():
-    glClear(GL_COLOR_BUFFER_BIT)
-    glutWireTeapot(0.5)
-    glFlush()
-glutInit(sys.argv)
-glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB)
-glutInitWindowSize(250, 250)
-glutInitWindowPosition(100, 100)
-glutCreateWindow('TITLE')
-glutDisplayFunc(draw)
-glutMainLoop()
-# End of program
+from PIL import Image
+import numpy
+
+
+def load_texture(path):
+    texture = glGenTextures(1)
+    glBindTexture(GL_TEXTURE_2D, texture)
+    # Set the texture wrapping parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+    # Set texture filtering parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+    # load image
+    image = Image.open(path)
+    img_data = numpy.array(list(image.getdata()), numpy.uint8)
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image.width, image.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img_data)
+    return texture

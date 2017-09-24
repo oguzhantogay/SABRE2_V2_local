@@ -364,11 +364,12 @@ class SABRE2_main_subclass(QMainWindow):
         # return super(Window, self).resizeEvent(event)
 
     def someFunction(self):
-        self.OpenGLwidget
-
-        width = self.OpenGLwidget.width
-        height = self.OpenGLwidget.height
-        print("Function", width, height)
+        pass
+        # self.OpenGLwidget
+        #
+        # width = self.OpenGLwidget.width()
+        # height = self.OpenGLwidget.height()
+        # print("Function", width, height)
         # print(x,y)
         # self.OpenGLwidget.setMinimumSize()
 

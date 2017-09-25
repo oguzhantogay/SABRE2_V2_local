@@ -1,13 +1,10 @@
 from OpenGL.GL import *
-from OpenGL.GLU import *
-from OpenGL.GLUT import *
-from PyQt4.QtGui import QColor
 from PyQt4.QtOpenGL import *
 from PyQt4 import QtCore
+from PyQt4 import QtGui
+import SABRE2_GUI
 from DropDownActions import *
 import math
-import sys
-import SABRE2_GUI
 
 
 class glWidget(QGLWidget, QMainWindow):
@@ -19,12 +16,10 @@ class glWidget(QGLWidget, QMainWindow):
 
     def __init__(self, ui_layout, parent = None):
         super(glWidget,self).__init__(parent)
-        self.ui = ui_layout
-        ui_layout.setupUi(self)
+        # ui_layout.setupUi(self)
         self.setMinimumSize(640, 480)
         self.setMouseTracking(False)
         # glWidget.resizeGL(self, self.width(), self.height())
-
         self.object = 0
         self.xRot = 0
         self.yRot = 0
@@ -32,8 +27,8 @@ class glWidget(QGLWidget, QMainWindow):
 
         self.lastPos = QtCore.QPoint()
 
-        self.trolltechGreen = QColor.fromCmykF(0.40, 0.0, 1.0, 0.0)
-        self.trolltechPurple = QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
+        self.trollTechGreen = QColor.fromCmykF(0.40, 0.0, 1.0, 0.0)
+        self.trollTechPurple = QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
 
     def minimumSizeHint(self):
         return QtCore.QSize(50, 50)
@@ -63,7 +58,7 @@ class glWidget(QGLWidget, QMainWindow):
             self.updateGL()
 
     def initializeGL(self):
-        self.qglClearColor(self.trolltechPurple.dark())
+        self.qglClearColor(self.trollTechPurple.dark())
         self.object = self.makeObject()
         glShadeModel(GL_FLAT)
         glEnable(GL_DEPTH_TEST)
@@ -79,21 +74,26 @@ class glWidget(QGLWidget, QMainWindow):
         glLoadIdentity()
 
     def mousePressEvent(self, event):
-        x, y = event.x(), event.y()
-        w, h = self.width(), self.height()
-        # required to call this to force PyQt to read from the correct, updated buffer
-        glReadBuffer(GL_FRONT)
-        data = self.grabFrameBuffer()  # builtin function that calls glReadPixels internally
-        rgba = QColor(data.pixel(x, y)).getRgb()  # gets the appropriate pixel data as an RGBA tuple
-        message = "You selected pixel ({0}, {1}) with an RGBA value of {2}.".format(x, y, rgba)
-        DropDownActions.statusMessage(self.ui, message)
+        if SABRE2_GUI.Ui_SABRE2_V3.actionRotate.isChecked:
+            print("test 1")
+            x, y = event.x(), event.y()
+            w, h = self.width(), self.height()
+            # required to call this to force PyQt to read from the correct, updated buffer
+            glReadBuffer(GL_FRONT)
+            data = self.grabFrameBuffer()  # builtin function that calls glReadPixels internally
+            rgba = QColor(data.pixel(x, y)).getRgb()  # gets the appropriate pixel data as an RGBA tuple
+            message = "You selected pixel ({0}, {1}) with an RGBA value of {2}.".format(x, y, rgba)
+            DropDownActions.statusMessage(self.ui, message)
 
-        self.lastPos = event.pos()
+            self.lastPos = event.pos()
+
+        else:
+            pass
 
 
 
     def mouseMoveEvent(self, event):
-        if self.ui.actionRotate.isChecked():
+        if ActionToolBar.actionRotateCheck():
             dx = event.x() - self.lastPos.x()
             dy = event.y() - self.lastPos.y()
 
@@ -172,7 +172,7 @@ class glWidget(QGLWidget, QMainWindow):
         return genList
 
     def quad(self, x1, y1, x2, y2, x3, y3, x4, y4):
-        self.qglColor(self.trolltechGreen)
+        self.qglColor(self.trollTechGreen)
 
         glVertex3d(x1, y1, -0.05)
         glVertex3d(x2, y2, -0.05)
@@ -185,7 +185,7 @@ class glWidget(QGLWidget, QMainWindow):
         glVertex3d(x1, y1, +0.05)
 
     def extrude(self, x1, y1, x2, y2):
-        self.qglColor(self.trolltechGreen.dark(250 + int(100 * x1)))
+        self.qglColor(self.trollTechGreen.dark(250 + int(100 * x1)))
 
         glVertex3d(x1, y1, +0.05)
         glVertex3d(x2, y2, +0.05)
@@ -198,3 +198,13 @@ class glWidget(QGLWidget, QMainWindow):
         while angle > 360 * 16:
             angle -= 360 * 16
         return angle
+
+class ActionToolBar(QMainWindow):
+
+    def __init__(self, ui_layout):
+        QMainWindow.__init__(self)
+        self.ui = ui_layout
+
+    def actionRotateCheck(self):
+        var1 = self.ui.actionRotate.isChecked()
+        return var1

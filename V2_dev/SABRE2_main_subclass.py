@@ -40,6 +40,9 @@ class SABRE2_main_subclass(QMainWindow):
         # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
         self.OpenGLwidget.resized.connect(self.someFunction)
 
+        var1 = ui_layout.actionRotate.isChecked()
+        print(var1)
+
 
         # Release Tab, first columns of the tables size arrangements
         ui_layout.Torsional_Release.setColumnWidth(0, 62)
@@ -364,8 +367,8 @@ class SABRE2_main_subclass(QMainWindow):
         # return super(Window, self).resizeEvent(event)
 
     def someFunction(self):
-        pass
         # self.OpenGLwidget
+        pass
         #
         # width = self.OpenGLwidget.width()
         # height = self.OpenGLwidget.height()

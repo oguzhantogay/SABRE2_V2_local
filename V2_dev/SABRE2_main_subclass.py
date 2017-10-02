@@ -35,11 +35,15 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.statusBar = self.statusBar()
         ui_layout.DefinitionTabs.close()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
-        self.OpenGLwidget = OpenGLcode.glWidget(self)
+        self.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
         ui_layout.verticalLayout_8.insertWidget(0,self.OpenGLwidget)
         # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
         self.OpenGLwidget.resized.connect(self.someFunction)
 
+        ui_layout.actionIsometric_X_Y_Z_View.triggered.connect(lambda: self.OpenGLwidget.isometricView())
+        ui_layout.actionTop_X_Z_View.triggered.connect(lambda: self.OpenGLwidget.topView())
+        ui_layout.actionFront_X_Y_View.triggered.connect(lambda: self.OpenGLwidget.frontView())
+        ui_layout.actionSide_Y_Z_View.triggered.connect(lambda: self.OpenGLwidget.sideView())
         var1 = ui_layout.actionRotate.isChecked()
         print(var1)
 

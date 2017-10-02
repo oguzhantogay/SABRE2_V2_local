@@ -1,4 +1,5 @@
 from OpenGL.GL import *
+from OpenGL.GLU import *
 from PyQt4.QtOpenGL import *
 from PyQt4 import QtCore
 from PyQt4 import QtGui
@@ -16,7 +17,7 @@ class glWidget(QGLWidget, QMainWindow):
 
     def __init__(self, ui_layout, parent = None):
         super(glWidget,self).__init__(parent)
-        # ui_layout.setupUi(self)
+        self.ui = ui_layout
         self.setMinimumSize(640, 480)
         self.setMouseTracking(False)
         # glWidget.resizeGL(self, self.width(), self.height())
@@ -74,8 +75,9 @@ class glWidget(QGLWidget, QMainWindow):
         glLoadIdentity()
 
     def mousePressEvent(self, event):
-        if SABRE2_GUI.Ui_SABRE2_V3.actionRotate.isChecked:
-            print("test 1")
+        if self.ui.actionRotate.isChecked():
+            self.lastPos = event.pos()
+        else:
             x, y = event.x(), event.y()
             w, h = self.width(), self.height()
             # required to call this to force PyQt to read from the correct, updated buffer
@@ -83,27 +85,23 @@ class glWidget(QGLWidget, QMainWindow):
             data = self.grabFrameBuffer()  # builtin function that calls glReadPixels internally
             rgba = QColor(data.pixel(x, y)).getRgb()  # gets the appropriate pixel data as an RGBA tuple
             message = "You selected pixel ({0}, {1}) with an RGBA value of {2}.".format(x, y, rgba)
-            DropDownActions.statusMessage(self.ui, message)
-
-            self.lastPos = event.pos()
-
-        else:
-            pass
+            DropDownActions.statusMessage(self, message)
 
 
 
     def mouseMoveEvent(self, event):
-        if ActionToolBar.actionRotateCheck():
+        if self.ui.actionRotate.isChecked():
             dx = event.x() - self.lastPos.x()
             dy = event.y() - self.lastPos.y()
 
             if event.buttons() & QtCore.Qt.LeftButton:
                 self.setXRotation(self.xRot + 8 * dy)
                 self.setYRotation(self.yRot + 8 * dx)
+                # print("1", self.xRot + 8 * dy, self.yRot + 8 * dx)
             elif event.buttons() & QtCore.Qt.RightButton:
                 self.setXRotation(self.xRot + 8 * dy)
                 self.setZRotation(self.zRot + 8 * dx)
-
+                # print("2", self.xRot + 8 * dy, self.zRot + 8 * dx)
             self.lastPos = event.pos()
         else:
             pass
@@ -199,12 +197,22 @@ class glWidget(QGLWidget, QMainWindow):
             angle -= 360 * 16
         return angle
 
-class ActionToolBar(QMainWindow):
+    def isometricView(self):
+        self.setXRotation(330*16)
+        self.setYRotation(60*16)
+        pass
 
-    def __init__(self, ui_layout):
-        QMainWindow.__init__(self)
-        self.ui = ui_layout
+    def topView(self):
+        self.setXRotation(90*16)
+        self.setYRotation(0.0*16)
+        pass
 
-    def actionRotateCheck(self):
-        var1 = self.ui.actionRotate.isChecked()
-        return var1
+    def frontView(self):
+        self.setXRotation(0.0*16)
+        self.setYRotation(0.0*16)
+        pass
+
+    def sideView(self):
+        self.setXRotation(0.0*16)
+        self.setYRotation(90*16)
+        pass

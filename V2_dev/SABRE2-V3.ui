@@ -3376,7 +3376,48 @@ Number</string>
      <string>Help</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <widget class="QMenu" name="menuDefined_Views">
+     <property name="title">
+      <string>Defined Views</string>
+     </property>
+     <addaction name="actionIsometric_X_Y_Z_View"/>
+     <addaction name="actionFront_X_Y_View"/>
+     <addaction name="actionTop_X_Z_View"/>
+     <addaction name="actionSide_Y_Z_View"/>
+    </widget>
+    <widget class="QMenu" name="menuGraphic_Labels">
+     <property name="title">
+      <string>Graphic Labels</string>
+     </property>
+     <addaction name="actionFixities"/>
+     <addaction name="actionShear_Panel"/>
+     <addaction name="actionDiscrete_Grounded_Springs"/>
+     <addaction name="actionElement_Flexural_or_Warping_Releases"/>
+     <addaction name="actionPoint_Loads"/>
+     <addaction name="actionUniform_Loads"/>
+    </widget>
+    <addaction name="actionZoom"/>
+    <addaction name="actionRotate_2"/>
+    <addaction name="actionPan_2"/>
+    <addaction name="actionCamera_Toolbar"/>
+    <addaction name="separator"/>
+    <addaction name="menuDefined_Views"/>
+    <addaction name="separator"/>
+    <addaction name="actionFit"/>
+    <addaction name="actionCenter_View"/>
+    <addaction name="separator"/>
+    <addaction name="actionDiagram_Data_View"/>
+    <addaction name="separator"/>
+    <addaction name="actionData_Labels"/>
+    <addaction name="menuGraphic_Labels"/>
+    <addaction name="separator"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuView"/>
    <addaction name="menuEdit"/>
    <addaction name="menuPreferences"/>
    <addaction name="menuHelp"/>
@@ -3585,6 +3626,150 @@ Number</string>
    </property>
    <property name="toolTip">
     <string>Render all members</string>
+   </property>
+  </action>
+  <action name="actionZoom">
+   <property name="text">
+    <string>Zoom</string>
+   </property>
+  </action>
+  <action name="actionRotate_2">
+   <property name="text">
+    <string>Rotate</string>
+   </property>
+  </action>
+  <action name="actionPan_2">
+   <property name="text">
+    <string>Pan</string>
+   </property>
+  </action>
+  <action name="actionCamera_Toolbar">
+   <property name="text">
+    <string>Camera Toolbar</string>
+   </property>
+  </action>
+  <action name="actionIsometric_X_Y_Z_View">
+   <property name="text">
+    <string>Isometric (X-Y-Z) View</string>
+   </property>
+  </action>
+  <action name="actionFront_X_Y_View">
+   <property name="text">
+    <string>Front (X-Y) View</string>
+   </property>
+  </action>
+  <action name="actionTop_X_Z_View">
+   <property name="text">
+    <string>Top (X-Z) View</string>
+   </property>
+  </action>
+  <action name="actionSide_Y_Z_View">
+   <property name="text">
+    <string>Side (Y-Z) View</string>
+   </property>
+  </action>
+  <action name="actionFit">
+   <property name="text">
+    <string>Fit</string>
+   </property>
+  </action>
+  <action name="actionCenter_View">
+   <property name="text">
+    <string>Screen Center</string>
+   </property>
+  </action>
+  <action name="actionDiagram_Data_View">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Diagram Data View</string>
+   </property>
+  </action>
+  <action name="actionData_Labels">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Data Labels</string>
+   </property>
+  </action>
+  <action name="actionFixities">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Fixities</string>
+   </property>
+  </action>
+  <action name="actionShear_Panel">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Shear Panel</string>
+   </property>
+  </action>
+  <action name="actionDiscrete_Grounded_Springs">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Discrete Grounded Springs</string>
+   </property>
+  </action>
+  <action name="actionElement_Flexural_or_Warping_Releases">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Element Flexural %/ or Warping Releases</string>
+   </property>
+  </action>
+  <action name="actionPoint_Loads">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Point Loads</string>
+   </property>
+  </action>
+  <action name="actionUniform_Loads">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Uniform Loads</string>
    </property>
   </action>
  </widget>

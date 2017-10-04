@@ -243,12 +243,10 @@ class glWidget(QGLWidget, QMainWindow):
 
     def setZoomIn(self):
         self.zPos += 1
-        print (self.zPos)
         self.updateGL()
         pass
 
     def setZoomOut(self):
         self.zPos += -1
-        print(self.zPos)
         self.updateGL()
         pass

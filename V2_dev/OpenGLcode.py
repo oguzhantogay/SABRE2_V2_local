@@ -15,16 +15,20 @@ class glWidget(QGLWidget, QMainWindow):
     yRotationChanged = QtCore.pyqtSignal(int)
     zRotationChanged = QtCore.pyqtSignal(int)
 
-    def __init__(self, ui_layout, parent = None):
-        super(glWidget,self).__init__(parent)
+    def __init__(self, ui_layout, parent=None):
+        super(glWidget, self).__init__(parent)
         self.ui = ui_layout
-        self.setMinimumSize(640, 480)
+        self.setMinimumSize(200, 200)
         self.setMouseTracking(False)
-        # glWidget.resizeGL(self, self.width(), self.height())
         self.object = 0
+
         self.xRot = 0
         self.yRot = 0
         self.zRot = 0
+
+        self.xPos = 0
+        self.yPos = 0
+        self.zPos = -10
 
         self.lastPos = QtCore.QPoint()
 
@@ -70,12 +74,13 @@ class glWidget(QGLWidget, QMainWindow):
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0)
+        # glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0)
+        gluPerspective(self.zPos,width/height, 1.0, 1000.0)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
 
     def mousePressEvent(self, event):
-        if self.ui.actionRotate.isChecked():
+        if self.ui.actionRotate.isChecked() or self.ui.actionPan.isChecked():
             self.lastPos = event.pos()
         else:
             x, y = event.x(), event.y()
@@ -86,8 +91,6 @@ class glWidget(QGLWidget, QMainWindow):
             rgba = QColor(data.pixel(x, y)).getRgb()  # gets the appropriate pixel data as an RGBA tuple
             message = "You selected pixel ({0}, {1}) with an RGBA value of {2}.".format(x, y, rgba)
             DropDownActions.statusMessage(self, message)
-
-
 
     def mouseMoveEvent(self, event):
         if self.ui.actionRotate.isChecked():
@@ -102,7 +105,21 @@ class glWidget(QGLWidget, QMainWindow):
                 self.setXRotation(self.xRot + 8 * dy)
                 self.setZRotation(self.zRot + 8 * dx)
                 # print("2", self.xRot + 8 * dy, self.zRot + 8 * dx)
+
             self.lastPos = event.pos()
+
+        elif self.ui.actionPan.isChecked():
+
+            dx = event.x() - self.lastPos.x()
+            dy = event.y() - self.lastPos.y()
+
+            if event.buttons() & QtCore.Qt.LeftButton:
+                self.xPos += -dx / 25000
+                self.yPos += dy / 25000
+                self.updateGL()
+            elif event.buttons() & QtCore.Qt.RightButton:
+                pass
+
         else:
             pass
 
@@ -112,7 +129,7 @@ class glWidget(QGLWidget, QMainWindow):
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
-        glTranslated(0.0, 0.0, -10.0)
+        glTranslated(self.xPos, self.yPos, self.zPos)
         glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
         glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
         glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
@@ -198,21 +215,40 @@ class glWidget(QGLWidget, QMainWindow):
         return angle
 
     def isometricView(self):
-        self.setXRotation(330*16)
-        self.setYRotation(60*16)
+        self.setXRotation(330 * 16)
+        self.setYRotation(60 * 16)
         pass
 
     def topView(self):
-        self.setXRotation(90*16)
-        self.setYRotation(0.0*16)
+        self.setXRotation(90 * 16)
+        self.setYRotation(0.0 * 16)
         pass
 
     def frontView(self):
-        self.setXRotation(0.0*16)
-        self.setYRotation(0.0*16)
+        self.setXRotation(0.0 * 16)
+        self.setYRotation(0.0 * 16)
         pass
 
     def sideView(self):
-        self.setXRotation(0.0*16)
-        self.setYRotation(90*16)
+        self.setXRotation(0.0 * 16)
+        self.setYRotation(90 * 16)
+        pass
+
+    def setFitView(self):
+        self.xPos = 0
+        self.yPos = 0
+        self.zPos = -10
+        self.updateGL()
+        pass
+
+    def setZoomIn(self):
+        self.zPos += 1
+        print (self.zPos)
+        self.updateGL()
+        pass
+
+    def setZoomOut(self):
+        self.zPos += -1
+        print(self.zPos)
+        self.updateGL()
         pass

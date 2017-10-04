@@ -44,6 +44,10 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionTop_X_Z_View.triggered.connect(lambda: self.OpenGLwidget.topView())
         ui_layout.actionFront_X_Y_View.triggered.connect(lambda: self.OpenGLwidget.frontView())
         ui_layout.actionSide_Y_Z_View.triggered.connect(lambda: self.OpenGLwidget.sideView())
+        ui_layout.actionFit_View.triggered.connect(lambda: self.OpenGLwidget.setFitView())
+        ui_layout.actionZoom_In.triggered.connect(lambda: self.OpenGLwidget.setZoomIn())
+        ui_layout.actionZoom_Out.triggered.connect(lambda: self.OpenGLwidget.setZoomOut())
+
         var1 = ui_layout.actionRotate.isChecked()
         print(var1)
 

@@ -2,6 +2,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from PyQt4.QtOpenGL import *
 from PyQt4 import QtCore
+import numpy as np
 from PyQt4 import QtGui
 import SABRE2_GUI
 from DropDownActions import *
@@ -28,12 +29,59 @@ class glWidget(QGLWidget, QMainWindow):
 
         self.xPos = 0
         self.yPos = 0
-        self.zPos = -10
+        self.zPos = -40
 
         self.lastPos = QtCore.QPoint()
 
         self.trollTechGreen = QColor.fromCmykF(0.40, 0.0, 1.0, 0.0)
         self.trollTechPurple = QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
+
+        self.joint_nodes = np.array((0,0,-1))
+
+        self.vertices = (
+            (10, -10, -10),
+            (10, 10, -10),
+            (-10, 10, -10),
+            (-10, -10, -10),
+            (10, -10, 10),
+            (10, 10, 10),
+            (-10, -10, 10),
+            (-10, 10, 10)
+        )
+
+        self.edges = (
+            (0, 1),
+            (0, 3),
+            (0, 4),
+            (2, 1),
+            (2, 3),
+            (2, 7),
+            (6, 3),
+            (6, 4),
+            (6, 7),
+            (5, 1),
+            (5, 4),
+            (5, 7)
+        )
+
+    def Cube(self):
+        glBegin(GL_LINES)
+        for edge in self.edges:
+            for vertex in edge:
+                glVertex3fv(self.vertices[vertex])
+        glEnd()
+
+    def Joints(self, x):
+        # glPointSize(10)
+        # glBegin(GL_POINTS)
+        Q = gluNewQuadric()
+        gluQuadricNormals(Q, GL_SMOOTH)
+        gluQuadricTexture(Q, GL_TRUE)
+        glTranslatef(self.vertices[x, 0],self.vertices[x, 1],self.vertices[x, 2])
+        gluSphere(Q, 0.35, 32, 16)
+        # glVertex3f(self.joint_nodes[0],self.joint_nodes[1],self.joint_nodes[2])
+        # glEnd()
+
 
     def minimumSizeHint(self):
         return QtCore.QSize(50, 50)
@@ -64,10 +112,13 @@ class glWidget(QGLWidget, QMainWindow):
 
     def initializeGL(self):
         self.qglClearColor(self.trollTechPurple.dark())
-        self.object = self.makeObject()
+
+
+        # self.object = self.makeObject()
         glShadeModel(GL_FLAT)
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_CULL_FACE)
+
 
     def resizeGL(self, width, height):
         # glViewport is needed for proper resizing of QGLWidget
@@ -75,7 +126,8 @@ class glWidget(QGLWidget, QMainWindow):
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         # glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0)
-        gluPerspective(self.zPos,width/height, 1.0, 1000.0)
+        gluPerspective(45, width/height , 0.1, 10000.0)
+        # gluPerspective(self.zPos,width/height, 1.0, 1000.0)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
 
@@ -114,8 +166,8 @@ class glWidget(QGLWidget, QMainWindow):
             dy = event.y() - self.lastPos.y()
 
             if event.buttons() & QtCore.Qt.LeftButton:
-                self.xPos += -dx / 25000
-                self.yPos += dy / 25000
+                self.xPos += +dx / 2000
+                self.yPos += -dy / 2000
                 self.updateGL()
             elif event.buttons() & QtCore.Qt.RightButton:
                 pass
@@ -133,79 +185,11 @@ class glWidget(QGLWidget, QMainWindow):
         glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
         glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
         glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
-        glCallList(self.object)
+        # glCallList(self.object)
+        self.Cube()
+        for i in range(len(self.vertices)):
+            self.Joints(i)
 
-    def makeObject(self):
-        genList = glGenLists(1)
-        glNewList(genList, GL_COMPILE)
-
-        glBegin(GL_QUADS)
-
-        x1 = +0.06
-        y1 = -0.14
-        x2 = +0.14
-        y2 = -0.06
-        x3 = +0.08
-        y3 = +0.00
-        x4 = +0.30
-        y4 = +0.22
-
-        self.quad(x1, y1, x2, y2, y2, x2, y1, x1)
-        self.quad(x3, y3, x4, y4, y4, x4, y3, x3)
-
-        self.extrude(x1, y1, x2, y2)
-        self.extrude(x2, y2, y2, x2)
-        self.extrude(y2, x2, y1, x1)
-        self.extrude(y1, x1, x1, y1)
-        self.extrude(x3, y3, x4, y4)
-        self.extrude(x4, y4, y4, x4)
-        self.extrude(y4, x4, y3, x3)
-
-        NumSectors = 200
-
-        for i in range(NumSectors):
-            angle1 = (i * 2 * math.pi) / NumSectors
-            x5 = 0.30 * math.sin(angle1)
-            y5 = 0.30 * math.cos(angle1)
-            x6 = 0.20 * math.sin(angle1)
-            y6 = 0.20 * math.cos(angle1)
-
-            angle2 = ((i + 1) * 2 * math.pi) / NumSectors
-            x7 = 0.20 * math.sin(angle2)
-            y7 = 0.20 * math.cos(angle2)
-            x8 = 0.30 * math.sin(angle2)
-            y8 = 0.30 * math.cos(angle2)
-
-            self.quad(x5, y5, x6, y6, x7, y7, x8, y8)
-
-            self.extrude(x6, y6, x7, y7)
-            self.extrude(x8, y8, x5, y5)
-
-        glEnd()
-        glEndList()
-
-        return genList
-
-    def quad(self, x1, y1, x2, y2, x3, y3, x4, y4):
-        self.qglColor(self.trollTechGreen)
-
-        glVertex3d(x1, y1, -0.05)
-        glVertex3d(x2, y2, -0.05)
-        glVertex3d(x3, y3, -0.05)
-        glVertex3d(x4, y4, -0.05)
-
-        glVertex3d(x4, y4, +0.05)
-        glVertex3d(x3, y3, +0.05)
-        glVertex3d(x2, y2, +0.05)
-        glVertex3d(x1, y1, +0.05)
-
-    def extrude(self, x1, y1, x2, y2):
-        self.qglColor(self.trollTechGreen.dark(250 + int(100 * x1)))
-
-        glVertex3d(x1, y1, +0.05)
-        glVertex3d(x2, y2, +0.05)
-        glVertex3d(x2, y2, -0.05)
-        glVertex3d(x1, y1, -0.05)
 
     def normalizeAngle(self, angle):
         while angle < 0:
@@ -244,9 +228,11 @@ class glWidget(QGLWidget, QMainWindow):
     def setZoomIn(self):
         self.zPos += 1
         self.updateGL()
+        print(self.zPos)
         pass
 
     def setZoomOut(self):
         self.zPos += -1
+        print(self.zPos)
         self.updateGL()
         pass

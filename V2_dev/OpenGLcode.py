@@ -61,26 +61,63 @@ class glWidget(QGLWidget, QMainWindow):
             (6, 7),
             (5, 1),
             (5, 4),
-            (5, 7)
-        )
+            (5, 7))
+
+        self.colors = (
+            (1,0,0),
+            (0,1,0),
+            (0,0,1),
+            (0,1,0),
+            (1,1,1),
+            (0,1,1),
+            (1,0,0),
+            (0,1,0),
+            (0,0,1),
+            (1,0,0),
+            (1,1,1),
+            (0,1,1))
+
+        self.surfaces = (
+            (0,1,2,3),
+            (3,2,7,6),
+            (6,7,5,4),
+            (4,5,1,0),
+            (1,5,7,2),
+            (4,0,3,6))
 
     def Cube(self):
         glBegin(GL_LINES)
         for edge in self.edges:
             for vertex in edge:
+                glColor3fv((1.0, 0.0, 0.0))
+                glVertex3fv(self.vertices[vertex])
+                glColor3f(1.0, 1.0, 1.0)
+        glEnd()
+
+
+
+    def Surfaces(self):
+        glBegin(GL_QUADS)
+        for surface in self.surfaces:
+            x = 0
+            for vertex in surface:
+                x += 1
+                glColor3fv((195,195,195))
                 glVertex3fv(self.vertices[vertex])
         glEnd()
 
+
+
     def Joints(self, x):
-        # glPointSize(10)
-        # glBegin(GL_POINTS)
+        glPushMatrix()
         Q = gluNewQuadric()
         gluQuadricNormals(Q, GL_SMOOTH)
         gluQuadricTexture(Q, GL_TRUE)
-        glTranslatef(self.vertices[x, 0],self.vertices[x, 1],self.vertices[x, 2])
-        gluSphere(Q, 0.35, 32, 16)
-        # glVertex3f(self.joint_nodes[0],self.joint_nodes[1],self.joint_nodes[2])
-        # glEnd()
+        glTranslatef(self.vertices[x][0], self.vertices[x][1], self.vertices[x][2])
+        glColor3f(0,1,0)
+        gluSphere(Q, 0.35, 8, 8)
+        glColor3f(1,1,1)
+        glPopMatrix()
 
 
     def minimumSizeHint(self):
@@ -189,6 +226,9 @@ class glWidget(QGLWidget, QMainWindow):
         self.Cube()
         for i in range(len(self.vertices)):
             self.Joints(i)
+
+        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        self.Surfaces()
 
 
     def normalizeAngle(self, angle):

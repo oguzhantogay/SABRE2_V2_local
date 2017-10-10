@@ -38,7 +38,7 @@ class SABRE2_main_subclass(QMainWindow):
         self.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
         ui_layout.verticalLayout_8.insertWidget(0,self.OpenGLwidget)
         # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
-        self.OpenGLwidget.resized.connect(self.someFunction)
+        # self.OpenGLwidget.resized.connect(self.someFunction)
 
         ui_layout.actionIsometric_X_Y_Z_View.triggered.connect(lambda: self.OpenGLwidget.isometricView())
         ui_layout.actionTop_X_Z_View.triggered.connect(lambda: self.OpenGLwidget.topView())
@@ -371,8 +371,9 @@ class SABRE2_main_subclass(QMainWindow):
         return point_load_def
 
     def resizeEvent(self, event):
-        self.OpenGLwidget.resized.emit()
+        # self.OpenGLwidget.resized.emit()
         # return super(Window, self).resizeEvent(event)
+        pass
 
     def someFunction(self):
         # self.OpenGLwidget

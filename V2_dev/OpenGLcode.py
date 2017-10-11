@@ -91,7 +91,6 @@ class glWidget(QGLWidget, QMainWindow):
             for vertex in edge:
                 glColor3fv((1.0, 0.0, 0.0))
                 glVertex3fv(self.vertices[vertex])
-                glColor3f(1.0, 1.0, 1.0)
         glEnd()
 
 
@@ -102,7 +101,7 @@ class glWidget(QGLWidget, QMainWindow):
             x = 0
             for vertex in surface:
                 x += 1
-                glColor3fv((195,195,195))
+                glColor4f(0,0,0,0.3)
                 glVertex3fv(self.vertices[vertex])
         glEnd()
 
@@ -114,7 +113,7 @@ class glWidget(QGLWidget, QMainWindow):
         gluQuadricNormals(Q, GL_SMOOTH)
         gluQuadricTexture(Q, GL_TRUE)
         glTranslatef(self.vertices[x][0], self.vertices[x][1], self.vertices[x][2])
-        glColor3f(0,1,0)
+        glColor3f(0,0,1.0)
         gluSphere(Q, 0.35, 8, 8)
         glColor3f(1,1,1)
         glPopMatrix()
@@ -155,6 +154,8 @@ class glWidget(QGLWidget, QMainWindow):
         glShadeModel(GL_FLAT)
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_CULL_FACE)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glEnable(GL_BLEND)
 
 
     def resizeGL(self, width, height):
@@ -228,6 +229,7 @@ class glWidget(QGLWidget, QMainWindow):
             self.Joints(i)
 
         # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        self.qglColor(self.trollTechGreen)
         self.Surfaces()
 
 
@@ -261,7 +263,7 @@ class glWidget(QGLWidget, QMainWindow):
     def setFitView(self):
         self.xPos = 0
         self.yPos = 0
-        self.zPos = -10
+        self.zPos = -40
         self.updateGL()
         pass
 

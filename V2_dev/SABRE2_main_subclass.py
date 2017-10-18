@@ -47,9 +47,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionFit_View.triggered.connect(lambda: self.OpenGLwidget.setFitView())
         ui_layout.actionZoom_In.triggered.connect(lambda: self.OpenGLwidget.setZoomIn())
         ui_layout.actionZoom_Out.triggered.connect(lambda: self.OpenGLwidget.setZoomOut())
-
-        var1 = ui_layout.actionRotate.isChecked()
-        print(var1)
+        ui_layout.actionWhite_Background.triggered.connect(lambda: self.OpenGLwidget.updateTheWidget())
 
 
         # Release Tab, first columns of the tables size arrangements
@@ -81,6 +79,12 @@ class SABRE2_main_subclass(QMainWindow):
 
         ui_layout.Joints_Table.itemChanged.connect(
             lambda: self.update_joints_table(ui_layout.Joints_Table))
+
+        ui_layout.Joints_Table.itemChanged.connect(
+            lambda: self.OpenGLwidget.updateTheWidget())
+
+        ui_layout.Joints_Table.itemChanged.connect(
+            lambda: self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height()))
 
         ui_layout.Add_new_row_joint.clicked.connect(
             lambda: JointTable.add_new_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint, "last"))
@@ -275,7 +279,8 @@ class SABRE2_main_subclass(QMainWindow):
     # Joints table functions
     def update_joints_table(self, tableName):
         Joint_values = JointTable.tableValues(self, tableName)
-        print("main screen Joint values", Joint_values)
+
+        # print("main screen Joint values", Joint_values)
         return Joint_values
 
     # Members tab, Member definition functions

@@ -5,6 +5,7 @@ from PyQt4 import QtCore
 import numpy as np
 from PyQt4 import QtGui
 import SABRE2_GUI
+
 from DropDownActions import *
 import math
 
@@ -30,94 +31,57 @@ class glWidget(QGLWidget, QMainWindow):
         self.xPos = 0
         self.yPos = 0
         self.zPos = -40
-
+        self.joint_size = 0.05
+        self.initial_zoom = 2
         self.lastPos = QtCore.QPoint()
 
-        self.trollTechGreen = QColor.fromCmykF(0.40, 0.0, 1.0, 0.0)
-        self.trollTechPurple = QColor.fromCmykF(0.39, 0.39, 0.0, 0.0)
+        self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
 
-        self.joint_nodes = np.array((0,0,-1))
+    # def Cube(self):
+    #
+    #     glBegin(GL_LINES)
+    #     for edge in self.edges:
+    #         for vertex in edge:
+    #             glColor3fv((1.0, 0.0, 0.0))
+    #             glVertex3fv(self.vertices[vertex])
+    #     glEnd()
 
-        self.vertices = (
-            (10, -10, -10),
-            (10, 10, -10),
-            (-10, 10, -10),
-            (-10, -10, -10),
-            (10, -10, 10),
-            (10, 10, 10),
-            (-10, -10, 10),
-            (-10, 10, 10)
-        )
-
-        self.edges = (
-            (0, 1),
-            (0, 3),
-            (0, 4),
-            (2, 1),
-            (2, 3),
-            (2, 7),
-            (6, 3),
-            (6, 4),
-            (6, 7),
-            (5, 1),
-            (5, 4),
-            (5, 7))
-
-        self.colors = (
-            (1,0,0),
-            (0,1,0),
-            (0,0,1),
-            (0,1,0),
-            (1,1,1),
-            (0,1,1),
-            (1,0,0),
-            (0,1,0),
-            (0,0,1),
-            (1,0,0),
-            (1,1,1),
-            (0,1,1))
-
-        self.surfaces = (
-            (0,1,2,3),
-            (3,2,7,6),
-            (6,7,5,4),
-            (4,5,1,0),
-            (1,5,7,2),
-            (4,0,3,6))
-
-    def Cube(self):
-        glBegin(GL_LINES)
-        for edge in self.edges:
-            for vertex in edge:
-                glColor3fv((1.0, 0.0, 0.0))
-                glVertex3fv(self.vertices[vertex])
-        glEnd()
-
-
-
-    def Surfaces(self):
-        glBegin(GL_QUADS)
-        for surface in self.surfaces:
-            x = 0
-            for vertex in surface:
-                x += 1
-                glColor4f(0,0,0,0.3)
-                glVertex3fv(self.vertices[vertex])
-        glEnd()
-
-
+    # def Surfaces(self):
+    #     glBegin(GL_QUADS)
+    #     for surface in self.surfaces:
+    #         x = 0
+    #         for vertex in surface:
+    #             x += 1
+    #             glColor4f(0, 0, 0, 0.3)
+    #             glVertex3fv(self.vertices[vertex])
+    #     glEnd()
 
     def Joints(self, x):
+
+        if self.ui.Joints_Table.item(x, 1) is None:
+            pass
+        elif self.ui.Joints_Table.item(x, 2) is None:
+            pass
+        else:
+            pass
+
+            # glPushMatrix()
+            # glLoadIdentity()
+            # glPointSize(10)
+            # glBegin(GL_POINTS)
+            # glColor3f(1, 1, 1)
+            # glVertex3f(self.joint_nodes[x][1], self.joint_nodes[x][2], self.joint_nodes[x][3])
+            # glEnd()
+            # glPopMatrix()
         glPushMatrix()
         Q = gluNewQuadric()
         gluQuadricNormals(Q, GL_SMOOTH)
         gluQuadricTexture(Q, GL_TRUE)
-        glTranslatef(self.vertices[x][0], self.vertices[x][1], self.vertices[x][2])
-        glColor3f(0,0,1.0)
-        gluSphere(Q, 0.35, 8, 8)
-        glColor3f(1,1,1)
+        glTranslatef(self.joint_nodes[x][1], self.joint_nodes[x][2], self.joint_nodes[x][3])
+        glColor3f(0, 0, 1.0)
+        gluSphere(Q, self.joint_size, 32, 32)
+        glColor3f(1, 1, 1)
         glPopMatrix()
-
 
     def minimumSizeHint(self):
         return QtCore.QSize(50, 50)
@@ -147,9 +111,8 @@ class glWidget(QGLWidget, QMainWindow):
             self.updateGL()
 
     def initializeGL(self):
-        self.qglClearColor(self.trollTechPurple.dark())
 
-
+        glClearColor(0, 0, 0, 1)
         # self.object = self.makeObject()
         glShadeModel(GL_FLAT)
         glEnable(GL_DEPTH_TEST)
@@ -157,14 +120,15 @@ class glWidget(QGLWidget, QMainWindow):
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glEnable(GL_BLEND)
 
-
     def resizeGL(self, width, height):
         # glViewport is needed for proper resizing of QGLWidget
+        print("resize GL")
+        ar = width / height
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        # glOrtho(-0.5, +0.5, +0.5, -0.5, 4.0, 15.0)
-        gluPerspective(45, width/height , 0.1, 10000.0)
+        glOrtho(-self.initial_zoom*ar, self.initial_zoom*ar, -self.initial_zoom, self.initial_zoom, -100.0, 100.0)
+        # gluPerspective(45, width / height, 0.1, 10000.0)
         # gluPerspective(self.zPos,width/height, 1.0, 1000.0)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
@@ -224,14 +188,12 @@ class glWidget(QGLWidget, QMainWindow):
         glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
         glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
         # glCallList(self.object)
-        self.Cube()
-        for i in range(len(self.vertices)):
+        # self.Cube()
+        for i in range(self.joint_nodes_length):
             self.Joints(i)
 
         # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        self.qglColor(self.trollTechGreen)
-        self.Surfaces()
-
+        # self.Surfaces()
 
     def normalizeAngle(self, angle):
         while angle < 0:
@@ -263,18 +225,80 @@ class glWidget(QGLWidget, QMainWindow):
     def setFitView(self):
         self.xPos = 0
         self.yPos = 0
-        self.zPos = -40
+        size_joint = self.joint_nodes.shape[0]
+
+        if size_joint == 1:
+            pass
+        else:
+            if self.ui.DefinitionTabs.isEnabled():
+                print("test")
+                self.zPos += (
+                max(self.joint_nodes[0][1], self.joint_nodes[0][2]) - max(self.joint_nodes[int(size_joint-1)][1],
+                                                                          self.joint_nodes[int(size_joint-1)][2])-100)
+                self.joint_size = 3 * 0.35
+            else:
+
+                self.joint_size = 2 * 0.35
+                self.zPos += (
+                    max(self.joint_nodes[0][1], self.joint_nodes[0][2]) - max(self.joint_nodes[int(size_joint - 1)][1],
+                                                                              self.joint_nodes[int(size_joint - 1)][
+                                                                                  2]) - 30)
+
         self.updateGL()
         pass
 
     def setZoomIn(self):
-        self.zPos += 1
+        self.initial_zoom -= 1
+        if self.initial_zoom == 0:
+            self.initial_zoom = 0.1
+        elif self.initial_zoom < 0.1:
+            self.initial_zoom *= -0.5
+            pass
+        self.resizeGL(self.width(), self.height())
         self.updateGL()
-        print(self.zPos)
+        print(self.initial_zoom)
+        if self.initial_zoom == 0.1:
+            self.initial_zoom = 0
+        else:
+            pass
         pass
 
     def setZoomOut(self):
-        self.zPos += -1
-        print(self.zPos)
+        self.initial_zoom += 1
+        if self.initial_zoom == 0:
+            self.initial_zoom = 0.1
+        else:
+            pass
+        self.resizeGL(self.width(), self.height())
         self.updateGL()
+        print(self.initial_zoom)
+        if self.initial_zoom == 0.1:
+            self.initial_zoom = 0
+        else:
+            pass
         pass
+
+    def updateTheWidget(self):
+
+        print("update")
+        self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
+        var1 = self.ui.actionWhite_Background.isChecked()
+
+        if var1:
+            glClearColor(1, 1, 1, 1)
+
+        else:
+            glClearColor(0, 0, 0, 1)
+
+        self.updateGL()
+
+    def JointTableValues(self):
+
+        import SABRE2_main_subclass
+
+        joint_nodes = SABRE2_main_subclass.SABRE2_main_subclass.update_joints_table(self, self.ui.Joints_Table)
+
+        joint_nodes_length = \
+            (SABRE2_main_subclass.SABRE2_main_subclass.update_joints_table(self, self.ui.Joints_Table)).shape[0]
+
+        return joint_nodes_length, joint_nodes

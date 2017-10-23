@@ -23,6 +23,7 @@ class glWidget(QGLWidget, QMainWindow):
         self.setMinimumSize(200, 200)
         self.setMouseTracking(False)
         self.object = 0
+        self.diam = 0
 
         self.xRot = 0
         self.yRot = 0
@@ -30,8 +31,16 @@ class glWidget(QGLWidget, QMainWindow):
 
         self.xPos = 0
         self.yPos = 0
-        self.zPos = -40
-        self.joint_size = 0.05
+        self.zPos = 0
+        self.aspect_ratio = 0
+        self.aspect = 0
+
+        self.left = 0
+        self.right = 0
+        self.bottom = 0
+        self.top = 0
+
+        self.joint_size = 0.015
         self.initial_zoom = 2
         self.lastPos = QtCore.QPoint()
 
@@ -63,25 +72,15 @@ class glWidget(QGLWidget, QMainWindow):
         elif self.ui.Joints_Table.item(x, 2) is None:
             pass
         else:
-            pass
-
-            # glPushMatrix()
-            # glLoadIdentity()
-            # glPointSize(10)
-            # glBegin(GL_POINTS)
-            # glColor3f(1, 1, 1)
-            # glVertex3f(self.joint_nodes[x][1], self.joint_nodes[x][2], self.joint_nodes[x][3])
-            # glEnd()
-            # glPopMatrix()
-        glPushMatrix()
-        Q = gluNewQuadric()
-        gluQuadricNormals(Q, GL_SMOOTH)
-        gluQuadricTexture(Q, GL_TRUE)
-        glTranslatef(self.joint_nodes[x][1], self.joint_nodes[x][2], self.joint_nodes[x][3])
-        glColor3f(0, 0, 1.0)
-        gluSphere(Q, self.joint_size, 32, 32)
-        glColor3f(1, 1, 1)
-        glPopMatrix()
+            glPushMatrix()
+            Q = gluNewQuadric()
+            gluQuadricNormals(Q, GL_SMOOTH)
+            gluQuadricTexture(Q, GL_TRUE)
+            glTranslatef(self.joint_nodes[x][1], self.joint_nodes[x][2], self.joint_nodes[x][3])
+            glColor3f(0, 0, 1.0)
+            gluSphere(Q, self.joint_size, 32, 32)
+            glColor3f(1, 1, 1)
+            glPopMatrix()
 
     def minimumSizeHint(self):
         return QtCore.QSize(50, 50)
@@ -121,13 +120,38 @@ class glWidget(QGLWidget, QMainWindow):
         glEnable(GL_BLEND)
 
     def resizeGL(self, width, height):
+
         # glViewport is needed for proper resizing of QGLWidget
-        print("resize GL")
-        ar = width / height
+        # print("resize GL")
         glViewport(0, 0, width, height)
+        aspect_ratio = width / height
+
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        glOrtho(-self.initial_zoom*ar, self.initial_zoom*ar, -self.initial_zoom, self.initial_zoom, -100.0, 100.0)
+        max_x = max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])
+        max_y = max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])
+        if max_y < self.initial_zoom / aspect_ratio:
+
+            glOrtho(-self.initial_zoom, self.initial_zoom,
+                    -self.initial_zoom / aspect_ratio, self.initial_zoom / aspect_ratio,
+                    -100, 100.0)
+
+            # print("ortho 1,", -self.initial_zoom, self.initial_zoom,
+            #       -self.initial_zoom / aspect_ratio, self.initial_zoom / aspect_ratio)
+
+        elif max_y > self.initial_zoom / aspect_ratio:
+
+            glOrtho(-self.initial_zoom * aspect_ratio,
+                    self.initial_zoom * aspect_ratio,
+                    -self.initial_zoom, self.initial_zoom, -100,
+                    100.0)
+
+            # print("ortho 2,", -self.initial_zoom * aspect_ratio,
+            #       self.initial_zoom * aspect_ratio,
+            #       -self.initial_zoom, self.initial_zoom)
+        else:
+            pass
+
         # gluPerspective(45, width / height, 0.1, 10000.0)
         # gluPerspective(self.zPos,width/height, 1.0, 1000.0)
         glMatrixMode(GL_MODELVIEW)
@@ -192,8 +216,8 @@ class glWidget(QGLWidget, QMainWindow):
         for i in range(self.joint_nodes_length):
             self.Joints(i)
 
-        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        # self.Surfaces()
+            # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+            # self.Surfaces()
 
     def normalizeAngle(self, angle):
         while angle < 0:
@@ -233,8 +257,9 @@ class glWidget(QGLWidget, QMainWindow):
             if self.ui.DefinitionTabs.isEnabled():
                 print("test")
                 self.zPos += (
-                max(self.joint_nodes[0][1], self.joint_nodes[0][2]) - max(self.joint_nodes[int(size_joint-1)][1],
-                                                                          self.joint_nodes[int(size_joint-1)][2])-100)
+                    max(self.joint_nodes[0][1], self.joint_nodes[0][2]) - max(self.joint_nodes[int(size_joint - 1)][1],
+                                                                              self.joint_nodes[int(size_joint - 1)][
+                                                                                  2]) - 100)
                 self.joint_size = 3 * 0.35
             else:
 
@@ -279,18 +304,48 @@ class glWidget(QGLWidget, QMainWindow):
         pass
 
     def updateTheWidget(self):
-
-        print("update")
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
         var1 = self.ui.actionWhite_Background.isChecked()
+        self.diam = max(max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1]),
+                        (max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])))
+
+        if (max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])) == 0 and (
+                max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])) > 0:
+
+            self.joint_nodes[:, 2] = self.joint_nodes[:, 2] - self.diam / 2
+
+        elif (max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])) > 0 and (
+                max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])) == 0:
+
+            self.joint_nodes[:, 1] = self.joint_nodes[:, 1] - self.diam / 2
+
+        else:
+            self.joint_nodes[:, 1] = self.joint_nodes[:, 1] - self.diam / 2
+            self.joint_nodes[:, 2] = self.joint_nodes[:, 2] - self.diam / 2
+
+        if self.joint_nodes.shape[0] == 1:
+            self.initial_zoom = 2
+            self.resizeGL(self.width(), self.height())
+            self.updateGL()
+        elif self.ui.Joints_Table.item(self.joint_nodes.shape[0]-1, 1) is None:
+            print("test1")
+            pass
+        elif self.ui.Joints_Table.item(self.joint_nodes.shape[0]-1, 2) is None:
+            print("test2")
+            pass
+        else:
+
+            self.initial_zoom = self.diam
+            self.resizeGL(self.width(), self.height())
+            self.updateGL()
 
         if var1:
             glClearColor(1, 1, 1, 1)
-
+            self.updateGL()
         else:
             glClearColor(0, 0, 0, 1)
+            self.updateGL()
 
-        self.updateGL()
 
     def JointTableValues(self):
 

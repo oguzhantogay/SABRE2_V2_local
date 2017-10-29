@@ -1698,9 +1698,6 @@ class Ui_SABRE2_V3(object):
         self.menuGraphic_Labels.addAction(self.actionElement_Flexural_or_Warping_Releases)
         self.menuGraphic_Labels.addAction(self.actionPoint_Loads)
         self.menuGraphic_Labels.addAction(self.actionUniform_Loads)
-        self.menuView.addAction(self.actionZoom)
-        self.menuView.addAction(self.actionRotate_2)
-        self.menuView.addAction(self.actionPan_2)
         self.menuView.addAction(self.actionCamera_Toolbar)
         self.menuView.addSeparator()
         self.menuView.addAction(self.menuDefined_Views.menuAction())
@@ -1731,7 +1728,7 @@ class Ui_SABRE2_V3(object):
 
         self.retranslateUi(SABRE2_V3)
         self.AnalysisTabs.setCurrentIndex(1)
-        self.DefinitionTabs.setCurrentIndex(4)
+        self.DefinitionTabs.setCurrentIndex(0)
         self.Members_tabs.setCurrentIndex(0)
         self.BoundaryConditionsTabs.setCurrentIndex(3)
         self.LC_tabs.setCurrentIndex(2)

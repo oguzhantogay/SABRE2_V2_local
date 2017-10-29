@@ -7,8 +7,8 @@ import SABRE2_GUI
 class DropDownActions(QMainWindow):
     """docstring for Actions"""
 
-    def __init__(self, ui_layout):
-        QMainWindow.__init__(self)
+    def __init__(self, ui_layout, parent=None):
+        super(DropDownActions, self).__init__(parent)
         self.ui = ui_layout
 
     def AboutAct(self):
@@ -93,7 +93,7 @@ class DropDownActions(QMainWindow):
         # go directly to analysis screen
 
     def SaveAct(self):
-        DropDownActions.statusMessage(self, message="Save the model to disk")
+        self.statusMessage(message="Save the model to disk")
 
         inpdata = "text test addon"
         fileName = "test1.txt"

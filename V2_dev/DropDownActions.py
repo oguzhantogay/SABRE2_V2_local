@@ -3,12 +3,14 @@ from PyQt4.QtGui import *
 from PyQt4 import QtGui
 import SABRE2_GUI
 
+import saver_pickle
 
-class DropDownActions(QMainWindow):
+
+class ActionClass(QMainWindow):
     """docstring for Actions"""
 
     def __init__(self, ui_layout, parent=None):
-        super(DropDownActions, self).__init__(parent)
+        super(ActionClass, self).__init__(parent)
         self.ui = ui_layout
 
     def AboutAct(self):
@@ -54,16 +56,18 @@ class DropDownActions(QMainWindow):
         # reset messages
 
     def OpenAct(self):
-        DropDownActions.statusMessage(self, message="Open an existing file")
-        fileName = PyQt4.QtGui.QFileDialog.getOpenFileName(None, "Open Sabre2 File", '',
-                                                           "Sabre2 Files (*.mat);;All Files (*)")
-        if not fileName:
-            return
-        try:
-            in_file = open(str(fileName), 'rb')
-        except IOError:
-            QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
-            return
+
+        saver_pickle.saver_pickle.read_fun(self)
+        # DropDownActions.statusMessage(self, message="Open an existing file")
+        # fileName = PyQt4.QtGui.QFileDialog.getOpenFileName(None, "Open Sabre2 File", '',
+        #                                                    "Sabre2 Files (*.mat);;All Files (*)")
+        # if not fileName:
+        #     return
+        # try:
+        #     in_file = open(str(fileName), 'rb')
+        # except IOError:
+        #     QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
+        #     return
 
         #if first line states "basic" script
         # then just fill in gui
@@ -72,63 +76,66 @@ class DropDownActions(QMainWindow):
         #   then immediately run and show results
         # elif autorun = "disabled"
         #   then fill in gui, pull up analysis tab and update opengl
-
-        inpdata = []
-        inpdata = pickle.load(in_file)
-        in_file.close()
-
-        if len(inpdata) == 0:
-            QtGui.QMessageBox.information(self, "File is empty")
-        else:
-            # needs to be updated once data structure is determined**************************
-            for name, address in inpdata:
-                self.nameLine.setText(name)
-                self.addressText.setText(address)
-
-        self.updateInterface(self.NavigationMode)
-
-        # Fill in spread sheet cells
-        # update OpenGL screen
+        #
+        # inpdata = []
+        # inpdata = pickle.load(in_file)
+        # in_file.close()
+        #
+        # if len(inpdata) == 0:
+        #     QtGui.QMessageBox.information(self, "File is empty")
+        # else:
+        #     # needs to be updated once data structure is determined**************************
+        #     for name, address in inpdata:
+        #         self.nameLine.setText(name)
+        #         self.addressText.setText(address)
+        #
+        # self.updateInterface(self.NavigationMode)
+        #
+        # # Fill in spread sheet cells
+        # # update OpenGL screen
         # update messages
         # go directly to analysis screen
 
     def SaveAct(self):
-        self.statusMessage(message="Save the model to disk")
-
-        inpdata = "text test addon"
-        fileName = "test1.txt"
-
-        if len(inpdata) == 0:
-            QtGui.QMessageBox.information(self, "No data has been attributed to the model")
-        else:
-            try:
-                fileName
-            except NameError:  # if data has not been saved to a file yet invoke popup save screen
-                import pickle
-                fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(None, "Save Sabre2 File", '',
-                                                                   "Sabre2 File (*.mat);;All Files (*)")
-                if not fileName:
-                    return
-                try:
-                    out_file = open(str(fileName), 'wb')
-                except IOError:
-                    PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
-                                                        "There was an error opening \"%s\"" % fileName)
-                    return
-
-                pickle.dump(inpdata, out_file)
-                out_file.close()
-            else:
-                import pickle
-                try:  # if file already exists skip popup and update save file
-                    out_file = open(str(fileName), 'wb')
-                except IOError:
-                    PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
-                                                        "There was an error opening \"%s\"" % fileName)
-                    return
-
-                pickle.dump(inpdata, out_file)
-                out_file.close()
+        import SABRE2_main_subclass
+        s = saver_pickle.SaverPicker(self)
+        s.save_fun()
+        # self.statusMessage(message="Save the model to disk")
+        #
+        # inpdata = "text test addon"
+        # fileName = "test1.txt"
+        #
+        # if len(inpdata) == 0:
+        #     QtGui.QMessageBox.information(self, "No data has been attributed to the model")
+        # else:
+        #     try:
+        #         fileName
+        #     except NameError:  # if data has not been saved to a file yet invoke popup save screen
+        #         import pickle
+        #         fileName = PyQt4.QtGui.QFileDialog.getSaveFileName(None, "Save Sabre2 File", '',
+        #                                                            "Sabre2 File (*.mat);;All Files (*)")
+        #         if not fileName:
+        #             return
+        #         try:
+        #             out_file = open(str(fileName), 'wb')
+        #         except IOError:
+        #             PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
+        #                                                 "There was an error opening \"%s\"" % fileName)
+        #             return
+        #
+        #         pickle.dump(inpdata, out_file)
+        #         out_file.close()
+        #     else:
+        #         import pickle
+        #         try:  # if file already exists skip popup and update save file
+        #             out_file = open(str(fileName), 'wb')
+        #         except IOError:
+        #             PyQt4.QtGui.QMessageBox.information(self, "Unable to open file",
+        #                                                 "There was an error opening \"%s\"" % fileName)
+        #             return
+        #
+        #         pickle.dump(inpdata, out_file)
+        #         out_file.close()
 
     def Save_AsAct(self):
         DropDownActions.statusMessage(self, message="Name the file saved to disk")

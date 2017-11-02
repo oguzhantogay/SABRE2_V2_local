@@ -346,7 +346,6 @@ class glWidget(QGLWidget, QMainWindow):
             glClearColor(0, 0, 0, 1)
             self.updateGL()
 
-
     def JointTableValues(self):
 
         import SABRE2_main_subclass

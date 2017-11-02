@@ -4,7 +4,7 @@ from PyQt4.QtGui import *
 from PyQt4 import QtGui, QtCore
 from PyQt4 import QtGui
 from DropDownActions import *
-# import pickle
+import saver_pickle
 import OpenGLcode
 from OpenGL.GL import *
 import SABRE2_GUI
@@ -64,12 +64,12 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: Boundary_Conditions.get_checkbox_values(self, ui_layout.Fixities_table))
 
         # File dropdown actions
-        ui_layout.actionNew.triggered.connect(lambda: DropDownActions('uidesign').NewAct())
-        ui_layout.actionOpen.triggered.connect(lambda: DropDownActions('uidesign').OpenAct())
-        ui_layout.actionSave.triggered.connect(lambda: DropDownActions('uidesign').SaveAct())
-        ui_layout.actionSave_As.triggered.connect(lambda: DropDownActions('uidesign').Save_AsAct())
-        ui_layout.actionPrint.triggered.connect(lambda: DropDownActions('uidesign').PrintAct())
-        ui_layout.actionPrint_Preview.triggered.connect(lambda: DropDownActions('uidesign').Print_PreviewAct())
+        ui_layout.actionNew.triggered.connect(lambda: ActionClass('uidesign').NewAct())
+        ui_layout.actionOpen.triggered.connect(lambda: ActionClass('uidesign').OpenAct())
+        ui_layout.actionSave.triggered.connect(lambda: ActionClass('uidesign').SaveAct())
+        ui_layout.actionSave_As.triggered.connect(lambda: ActionClass('uidesign').Save_AsAct())
+        ui_layout.actionPrint.triggered.connect(lambda: ActionClass('uidesign').PrintAct())
+        ui_layout.actionPrint_Preview.triggered.connect(lambda: ActionClass('uidesign').Print_PreviewAct())
         ui_layout.actionQuit.triggered.connect(qApp.quit)
 
         # Help dropdown actions
@@ -843,11 +843,11 @@ class JointTable(QMainWindow):
                         pass
                     else:
                         val1[i, j] = float(tableName.item(i, j).text())
-                        DropDownActions.statusMessage(self, message="")
+                        ActionClass.statusMessage(self, message="")
         except ValueError:
             tableName.clearSelection()
             tableName.item(row, col).setText("")
-            DropDownActions.statusMessage(self, message="Please enter only numbers in the cell!")
+            ActionClass.statusMessage(self, message="Please enter only numbers in the cell!")
         # print("val1", val1)
         return val1
 

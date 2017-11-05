@@ -1,26 +1,13 @@
-from OpenGL.GL import *
-from OpenGL.GLU import *
-from PyQt4.QtOpenGL import *
-from PyQt4 import QtCore
-import numpy as np
-from PyQt4 import QtGui
-import SABRE2_GUI
-
-from DropDownActions import *
-import math
 from tempfile import TemporaryFile
 from PyQt4.QtGui import *
-from PyQt4 import QtCore
 import numpy as np
-from PyQt4 import QtGui
-import SABRE2_GUI
+from SABRE2_GUI import Ui_SABRE2_V3
 
 
-class SaverPicker(QGLWidget, QMainWindow):
+class SaverPicker(QMainWindow):
+
     def __init__(self, ui_layout, parent=None):
         super(SaverPicker, self).__init__(parent)
-        self.ui = ui_layout
-
         self.Members_table_position = 3
 
         self.joint_values = None
@@ -35,11 +22,13 @@ class SaverPicker(QGLWidget, QMainWindow):
         self.uniform_data_values = None
         self.point_data_values = None
 
-    def save_fun(self):
+    def save_fun(self, ui_layout):
 
-        import SABRE2_main_subclass
+        from SABRE2_main_subclass import SABRE2_main_subclass
+        sw = SABRE2_main_subclass(ui_layout)
+        self.joint_values = sw.update_joints_table(sw.JointsTable)
+        print("joint values", self.joint_values)
 
-        self.joint_values = SABRE2_main_subclass.SABRE2_main_subclass.update_joints_table(self, SABRE2_GUI.Ui_SABRE2_V3.Joints_Table)
         self.member_properties_values = SABRE2_main_subclass.SABRE2_main_subclass.update_member_properties_table(self,
                                                                                                       self.ui.Member_Properties_Table)
         self.members_table_values = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table,

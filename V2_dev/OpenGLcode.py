@@ -1,13 +1,10 @@
-from OpenGL.GL import *
 from OpenGL.GLU import *
 from PyQt4.QtOpenGL import *
 from PyQt4 import QtCore
-import numpy as np
-from PyQt4 import QtGui
-import SABRE2_GUI
+from PyQt4.QtGui import *
+from OpenGL.GL import *
+from DropDownActions import ActionClass
 
-from DropDownActions import *
-import math
 
 
 class glWidget(QGLWidget, QMainWindow):
@@ -16,6 +13,7 @@ class glWidget(QGLWidget, QMainWindow):
     xRotationChanged = QtCore.pyqtSignal(int)
     yRotationChanged = QtCore.pyqtSignal(int)
     zRotationChanged = QtCore.pyqtSignal(int)
+
 
     def __init__(self, ui_layout, parent=None):
         super(glWidget, self).__init__(parent)
@@ -168,7 +166,7 @@ class glWidget(QGLWidget, QMainWindow):
             data = self.grabFrameBuffer()  # builtin function that calls glReadPixels internally
             rgba = QColor(data.pixel(x, y)).getRgb()  # gets the appropriate pixel data as an RGBA tuple
             message = "You selected pixel ({0}, {1}) with an RGBA value of {2}.".format(x, y, rgba)
-            DropDownActions.statusMessage(self, message)
+            ActionClass.statusMessage(self, message)
 
     def mouseMoveEvent(self, event):
         if self.ui.actionRotate.isChecked():

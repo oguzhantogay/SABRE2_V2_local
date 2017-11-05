@@ -3,8 +3,7 @@ import sys
 from PyQt4.QtGui import *
 from PyQt4 import QtGui, QtCore
 from PyQt4 import QtGui
-from DropDownActions import *
-import saver_pickle
+import DropDownActions
 import OpenGLcode
 from OpenGL.GL import *
 import SABRE2_GUI
@@ -36,6 +35,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.DefinitionTabs.close()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
         self.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
+        self.ActionMenus = DropDownActions.ActionClass(ui_layout)
         ui_layout.verticalLayout_8.insertWidget(0,self.OpenGLwidget)
         # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
         # self.OpenGLwidget.resized.connect(self.someFunction)
@@ -64,12 +64,12 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: Boundary_Conditions.get_checkbox_values(self, ui_layout.Fixities_table))
 
         # File dropdown actions
-        ui_layout.actionNew.triggered.connect(lambda: ActionClass('uidesign').NewAct())
-        ui_layout.actionOpen.triggered.connect(lambda: ActionClass('uidesign').OpenAct())
-        ui_layout.actionSave.triggered.connect(lambda: ActionClass('uidesign').SaveAct())
-        ui_layout.actionSave_As.triggered.connect(lambda: ActionClass('uidesign').Save_AsAct())
-        ui_layout.actionPrint.triggered.connect(lambda: ActionClass('uidesign').PrintAct())
-        ui_layout.actionPrint_Preview.triggered.connect(lambda: ActionClass('uidesign').Print_PreviewAct())
+        # ui_layout.actionNew.triggered.connect(lambda: ActionClass('uidesign').NewAct())
+        ui_layout.actionOpen.triggered.connect(lambda: self.ActionMenus.OpenAct())
+        ui_layout.actionSave.triggered.connect(lambda: self.ActionMenus.SaveAct())
+        # ui_layout.actionSave_As.triggered.connect(lambda: ActionClass('uidesign').Save_AsAct())
+        # ui_layout.actionPrint.triggered.connect(lambda: ActionClass('uidesign').PrintAct())
+        # ui_layout.actionPrint_Preview.triggered.connect(lambda: ActionClass('uidesign').Print_PreviewAct())
         ui_layout.actionQuit.triggered.connect(qApp.quit)
 
         # Help dropdown actions
@@ -302,9 +302,9 @@ class SABRE2_main_subclass(QMainWindow):
         try:
             if copyfrom_value <= r - 1:
                 tableName.selectRow(copyfrom_value)
-                DropDownActions.statusMessage(self, message="")
+                DropDownActions.ActionClass.statusMessage(self, message="")
         except TypeError:
-            DropDownActions.statusMessage(self, message="Row not defined")
+            DropDownActions.ActionClass.statusMessage(self, message="Row not defined")
         return copyfrom_value
 
     def update_members_insertafter(self, lineName, position, tableName):
@@ -315,12 +315,12 @@ class SABRE2_main_subclass(QMainWindow):
 
             if insertafter_values <= r - 1:
                 tableName.selectRow(insertafter_values)
-                DropDownActions.statusMessage(self, message="")
+                DropDownActions.ActionClass.statusMessage(self, message="")
             else:
                 lineName.setText("")
 
         except TypeError:
-            DropDownActions.statusMessage(self, message="Row not defined")
+            DropDownActions.ActionClass.statusMessage(self, message="Row not defined")
         return insertafter_values
 
     # Table Values Update
@@ -434,7 +434,7 @@ class SABRE2_main_subclass(QMainWindow):
 #         about_box.exec_()
 #
 #     def NewAct(self):
-#         DropDownActions.statusMessage(self, message="Create a new file")
+#         DropDownActions.ActionClass.statusMessage(self, message="Create a new file")
 #
 #         fileName = []
 #         inpdata = []
@@ -443,7 +443,7 @@ class SABRE2_main_subclass(QMainWindow):
 #         # reset messages
 #
 #     def OpenAct(self):
-#         DropDownActions.statusMessage(self, message="Open an existing file")
+#         DropDownActions.ActionClass.statusMessage(self, message="Open an existing file")
 #         fileName = PyQt4.QtGui.QFileDialog.getOpenFileName(None, "Open Sabre2 File", '',
 #                                                            "Sabre2 Files (*.mat);;All Files (*)")
 #         if not fileName:
@@ -482,7 +482,7 @@ class SABRE2_main_subclass(QMainWindow):
 #         # go directly to analysis screen
 #
 #     def SaveAct(self):
-#         DropDownActions.statusMessage(self, message="Save the model to disk")
+#         DropDownActions.ActionClass.statusMessage(self, message="Save the model to disk")
 #
 #         inpdata = "text test addon"
 #         fileName = "test1.txt"
@@ -520,7 +520,7 @@ class SABRE2_main_subclass(QMainWindow):
 #                 out_file.close()
 #
 #     def Save_AsAct(self):
-#         DropDownActions.statusMessage(self, message="Name the file saved to disk")
+#         DropDownActions.ActionClass.statusMessage(self, message="Name the file saved to disk")
 #
 #         inpdata = "text test"
 #
@@ -544,13 +544,13 @@ class SABRE2_main_subclass(QMainWindow):
 #             out_file.close()
 #
 #     def PrintAct(self):
-#         DropDownActions.statusMessage(self, message="Print screen")
+#         DropDownActions.ActionClass.statusMessage(self, message="Print screen")
 #
 #         # not sure what we are printing?
 #         # data, results, or just screenshot of OpenGL?
 #
 #     def Print_PreviewAct(self):
-#         DropDownActions.statusMessage(self, message="Preview screen print")
+#         DropDownActions.ActionClass.statusMessage(self, message="Preview screen print")
 #
 #     def statusMessage(self, message):
 #         self.ui.statusBar.showMessage(message)
@@ -575,6 +575,7 @@ class DataCollection(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+        self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def Assign_comboBox(self, tableName, options, position):
         r = tableName.rowCount()
@@ -605,18 +606,18 @@ class DataCollection(QMainWindow):
                             # print(i)
                             if tableName.cellWidget(i, position) is None:
                                 val1[i, position] = 0
-                                DropDownActions.statusMessage(self, message="New row added!")
+                                DropDownActions.ActionClass.statusMessage(self, message="New row added!")
                             else:
                                 value_combo = tableName.cellWidget(i, position).currentIndex()
                                 val1[i, position] = value_combo
-                                DropDownActions.statusMessage(self, message="")
+                                DropDownActions.ActionClass.statusMessage(self, message="")
                         else:
                             val1[i, j] = float(tableName.item(i, j).text())
-                            DropDownActions.statusMessage(self, message="")
+                            DropDownActions.ActionClass.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
-                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+                DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
         # print("val1", val1)
         return val1
 
@@ -627,7 +628,7 @@ class DataCollection(QMainWindow):
             # print("val2", val2)
         except ValueError:
             lineName.setText("")
-            DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+            DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
         return val2
 
 
@@ -637,6 +638,7 @@ class TableChanges(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+        self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def add_new_row(self, tableName, options, position, lineName, flag):
         row_position = tableName.rowCount()
@@ -702,6 +704,7 @@ class LineChanges(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+        self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def copy_insert_row(self, tableName, options, position, Copy_from_number, Insert_after_number):
         tableName.blockSignals(True)
@@ -787,7 +790,7 @@ class LineChanges(QMainWindow):
         row = tableName.currentRow()
         cross_section = str(ui_layout.AISC_database_button.currentText())
         if row == -1:
-            DropDownActions.statusMessage(self, message="Select the row before assignment")
+            DropDownActions.ActionClass.statusMessage(self, message="Select the row before assignment")
         else:
             try:
                 variable_names = ["bf", "tf", "d", "tw", "A", "W", "Ix", "Zx", "Sx", "rx", "Iy", "Zy", "Sy", "ry", "J",
@@ -818,7 +821,7 @@ class LineChanges(QMainWindow):
 
                         tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 17])))
             except IndexError:
-                DropDownActions.statusMessage(self, message="Please select the cross-section name!")
+                DropDownActions.ActionClass.statusMessage(self, message="Please select the cross-section name!")
         tableName.blockSignals(False)
 
 
@@ -828,6 +831,7 @@ class JointTable(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+        self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def tableValues(self, tableName):
         col = tableName.currentColumn()
@@ -843,11 +847,11 @@ class JointTable(QMainWindow):
                         pass
                     else:
                         val1[i, j] = float(tableName.item(i, j).text())
-                        ActionClass.statusMessage(self, message="")
+                        # ActionClass.statusMessage(self, message="")
         except ValueError:
             tableName.clearSelection()
             tableName.item(row, col).setText("")
-            ActionClass.statusMessage(self, message="Please enter only numbers in the cell!")
+            # ActionClass.statusMessage(self, message="Please enter only numbers in the cell!")
         # print("val1", val1)
         return val1
 
@@ -884,7 +888,7 @@ class JointTable(QMainWindow):
         row_position = tableName.rowCount()
         print(row_position)
         if row_position == 1:
-            DropDownActions.statusMessage(self, message="First row cannot be deleted!")
+            DropDownActions.ActionClass.statusMessage(self, message="First row cannot be deleted!")
         elif flag == "last":
             tableName.removeRow(row_position - 1)
         else:
@@ -903,6 +907,7 @@ class MemberPropertiesTable(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+        self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable):
         memberPropertiesTable.blockSignals(True)
@@ -962,7 +967,7 @@ class MemberPropertiesTable(QMainWindow):
         except ValueError:
             memberPropertiesTable.clearSelection()
             memberPropertiesTable.item(row, col).setText("")
-            DropDownActions.statusMessage(self, message="Please enter only numbers in the cell!")
+            DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in the cell!")
 
         except AttributeError:
             pass
@@ -974,6 +979,7 @@ class Boundary_Conditions(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+        self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def Assign_comboBox_shear(self, tableName, options, position):
         r = tableName.rowCount()
@@ -1060,11 +1066,11 @@ class Boundary_Conditions(QMainWindow):
         if current_col == 2 or current_col == 3:
             try:
                 if float(table_for_shear_panel.item(current_row, current_col).text()) % 1 == 0:
-                    DropDownActions.statusMessage(self, message="")
+                    DropDownActions.ActionClass.statusMessage(self, message="")
                     pass
                 else:
                     table_for_shear_panel.item(current_row, current_col).setText("")
-                    DropDownActions.statusMessage(self, message="Please enter only integers in the cell!")
+                    DropDownActions.ActionClass.statusMessage(self, message="Please enter only integers in the cell!")
 
                 if table_for_shear_panel.item(current_row, current_col) is None:
                     pass
@@ -1074,14 +1080,14 @@ class Boundary_Conditions(QMainWindow):
                     pass
                 else:
                     table_for_shear_panel.item(current_row, current_col).setText("")
-                    DropDownActions.statusMessage(self,
+                    DropDownActions.ActionClass.statusMessage(self,
                                                   message=(
                                                       "Please define the joint within the member " + table_for_shear_panel.item(
                                                           current_row, 0).text()))
 
             except ValueError:
                 table_for_shear_panel.item(current_row, current_col).setText("")
-                DropDownActions.statusMessage(self, message="Please enter only integers in the cell!")
+                DropDownActions.ActionClass.statusMessage(self, message="Please enter only integers in the cell!")
             except AttributeError:
                 pass
         else:
@@ -1094,7 +1100,7 @@ class Boundary_Conditions(QMainWindow):
             extra_shear = DataCollection.update_lineedit_values(self, lineName)
             if extra_shear > row_def:
                 lineName.setText("")
-                DropDownActions.statusMessage(self, message="Please enter member number within the range!")
+                DropDownActions.ActionClass.statusMessage(self, message="Please enter member number within the range!")
             else:
                 table_for_shear_panel.insertRow(extra_shear)
 
@@ -1138,20 +1144,20 @@ class Boundary_Conditions(QMainWindow):
                         if j == 1:
                             value_combo = tableName.cellWidget(i, j).currentIndex()
                             val1[i, j] = value_combo
-                            DropDownActions.statusMessage(self, message="")
+                            DropDownActions.ActionClass.statusMessage(self, message="")
                             pass
                         elif tableName.item(i, j) is None:
                             pass
                         elif j == 5:
                             val1[i, j] = tableName.item(i, j).checkState()
-                            DropDownActions.statusMessage(self, message="")
+                            DropDownActions.ActionClass.statusMessage(self, message="")
                         else:
                             val1[i, j] = float(tableName.item(i, j).text())
-                            DropDownActions.statusMessage(self, message="")
+                            DropDownActions.ActionClass.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
-                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+                DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
             except AttributeError:
                 pass
         return val1
@@ -1164,7 +1170,7 @@ class Boundary_Conditions(QMainWindow):
         except:
             tableName.clearSelection()
             tableName.item(row, col).setText("")
-            DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+            DropDownActions.ActionClass.statusMessage(self,message="Please enter only numbers in this cell!")
 
     def Assign_comboBox_ground(self, tableName, options, position):
         r = tableName.rowCount()
@@ -1189,20 +1195,20 @@ class Boundary_Conditions(QMainWindow):
                         if j == 1:
                             value_combo = tableName.cellWidget(i, j).currentIndex()
                             val1[i, j] = value_combo
-                            DropDownActions.statusMessage(self, message="")
+                            DropDownActions.ActionClass.statusMessage(self, message="")
                             pass
                         elif tableName.item(i, j) is None:
                             pass
                         elif j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
                             val1[i, j] = tableName.item(i, j).checkState()
-                            DropDownActions.statusMessage(self, message="")
+                            DropDownActions.ActionClass.statusMessage(self,  message="")
                         else:
                             val1[i, j] = float(tableName.item(i, j).text())
-                            DropDownActions.statusMessage(self, message="")
+                            DropDownActions.ActionClass.statusMessage(self, "")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
-                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+                DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
         return val1
 
     def release_tables_values(self, table_name):
@@ -1229,6 +1235,7 @@ class LoadingClass(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+        self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def defined_load_names(self, tableName):
         row_number = tableName.rowCount()
@@ -1240,7 +1247,7 @@ class LoadingClass(QMainWindow):
                 names[i] = tableName.item(i, 0).text()
                 if ' ' in tableName.item(i, 1).text():
                     tableName.item(i, 1).setText("")
-                    DropDownActions.statusMessage(self, message="Please don't use any space in IDs column!")
+                    DropDownActions.ActionClass.statusMessage(self,message="Please don't use any space in IDs column!")
                 else:
                     IDs[i] = tableName.item(i, 1).text()
         except AttributeError:
@@ -1260,7 +1267,7 @@ class LoadingClass(QMainWindow):
         current_row = tableName.currentRow()
 
         if current_row == -1:
-            DropDownActions.statusMessage(self, message="Please select load type to delete!")
+            DropDownActions.ActionClass.statusMessage(self, message="Please select load type to delete!")
         else:
             tableName.removeRow(current_row)
 
@@ -1280,7 +1287,7 @@ class LoadingClass(QMainWindow):
             tableNameLoadComb.setHorizontalHeaderLabels(IDs)
 
         except AttributeError:
-            DropDownActions.statusMessage(self, message="Please enter ID for load type!")
+            DropDownActions.ActionClass.statusMessage(self, message="Please enter ID for load type!")
 
     def check_entered_data(self, tableName):
         col = tableName.currentColumn()
@@ -1290,7 +1297,7 @@ class LoadingClass(QMainWindow):
         except:
             tableName.clearSelection()
             tableName.item(row, col).setText("")
-            DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+            DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
 
     def get_combination_data(self, tableName):
         col = tableName.currentColumn()
@@ -1322,14 +1329,14 @@ class LoadingClass(QMainWindow):
                         else:
                             val1[i, j] = float(tableName.item(i, j).text())
                             if flag == 1:
-                                DropDownActions.statusMessage(self, message="Please don't use any space in IDs column!")
+                                DropDownActions.ActionClass.statusMessage(self, message="Please don't use any space in IDs column!")
                             else:
-                                DropDownActions.statusMessage(self, message="")
+                                DropDownActions.ActionClass.statusMessage(self, message="")
 
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("0")
-                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+                DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
         return val1, LoadCombinationID
 
     def add_load_comb(self, tableName):
@@ -1351,6 +1358,7 @@ class uniform_load_def(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+        self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def combo_box_types(self, tableName, table_load_type, position):
         [var1, IDs] = LoadingClass.defined_load_names(self, table_load_type)
@@ -1385,10 +1393,10 @@ class uniform_load_def(QMainWindow):
                     elif j == 1 or j == 2:
                         value_combo = tableName.cellWidget(i, j).currentIndex()
                         val1[i, j] = value_combo
-                        DropDownActions.statusMessage(self, message="")
+                        DropDownActions.ActionClass.statusMessage(self, message="")
                     else:
                         val1[i, j] = float(tableName.item(i, j).text())
-                        DropDownActions.statusMessage(self, message="")
+                        DropDownActions.ActionClass.statusMessage(self, message="")
 
         except ValueError:
             tableName.clearSelection()
@@ -1396,7 +1404,7 @@ class uniform_load_def(QMainWindow):
                 pass
             else:
                 tableName.item(row, col).setText("0")
-                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+                DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
 
         print(SegmentNames)
         return val1, SegmentNames
@@ -1407,6 +1415,7 @@ class point_load_def(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout
+        self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def combo_box_types(self, tableName, table_load_type, position):
         [var1, IDs] = LoadingClass.defined_load_names(self, table_load_type)
@@ -1438,10 +1447,10 @@ class point_load_def(QMainWindow):
                     elif j == 1 or j == 2:
                         value_combo = tableName.cellWidget(i, j).currentIndex()
                         val1[i, j] = value_combo
-                        DropDownActions.statusMessage(self, message="")
+                        DropDownActions.ActionClass.statusMessage(self, message="")
                     else:
                         val1[i, j] = float(tableName.item(i, j).text())
-                        DropDownActions.statusMessage(self, message="")
+                        DropDownActions.ActionClass.statusMessage(self, message="")
 
         except ValueError:
             tableName.clearSelection()
@@ -1449,6 +1458,6 @@ class point_load_def(QMainWindow):
                 pass
             else:
                 tableName.item(row, col).setText("0")
-                DropDownActions.statusMessage(self, message="Please enter only numbers in this cell!")
+                DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
 
         return val1

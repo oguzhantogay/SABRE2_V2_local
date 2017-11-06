@@ -317,6 +317,8 @@ class glWidget(QGLWidget, QMainWindow):
         var1 = self.ui.actionWhite_Background.isChecked()
         self.diam = max(max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1]),
                         (max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])))
+        self.diam_x = max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])
+        self.diam_y = max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])
 
         if self.diam == 0 or self.joint_nodes_length == 1:
             pass
@@ -324,20 +326,26 @@ class glWidget(QGLWidget, QMainWindow):
             self.joint_size = self.diam / 150
             print("joint size = ", self.joint_size)
 
-        if (max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])) == 0 and (
-                    max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])) > 0:
-
-            self.joint_nodes[:, 2] = self.joint_nodes[:, 2] - self.diam / 2
-
-        elif (max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])) > 0 and (
-                    max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])) == 0:
-
-            self.joint_nodes[:, 1] = self.joint_nodes[:, 1] - self.diam / 2
-
+        if self.joint_nodes_length == 1:
+            pass
         else:
-            self.joint_nodes[:, 1] = self.joint_nodes[:, 1] - self.diam / 2
-            self.joint_nodes[:, 2] = self.joint_nodes[:, 2] - self.diam / 2
+            self.xPos = -min(abs(self.joint_nodes[:,1]))-self.diam_x/2
+            self.yPos = min(self.joint_nodes[:,2])-self.diam_y/2
 
+        # if (max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])) == 0 and (
+        #             max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])) > 0:
+        #
+        #     self.joint_nodes[:, 2] = self.joint_nodes[:, 2] - self.diam / 2
+        #
+        # elif (max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])) > 0 and (
+        #             max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])) == 0:
+        #
+        #     self.joint_nodes[:, 1] = self.joint_nodes[:, 1] - self.diam / 2
+        #
+        # else:
+        #     self.joint_nodes[:, 1] = self.joint_nodes[:, 1] - self.diam / 2
+        #     self.joint_nodes[:, 2] = self.joint_nodes[:, 2] - self.diam / 2
+        #
         if self.joint_nodes.shape[0] == 1:
             self.initial_zoom = 2
             self.resizeGL(self.width(), self.height())

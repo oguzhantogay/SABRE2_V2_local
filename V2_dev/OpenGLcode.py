@@ -6,14 +6,12 @@ from OpenGL.GL import *
 from DropDownActions import ActionClass
 
 
-
 class glWidget(QGLWidget, QMainWindow):
     resized = QtCore.pyqtSignal()
 
     xRotationChanged = QtCore.pyqtSignal(int)
     yRotationChanged = QtCore.pyqtSignal(int)
     zRotationChanged = QtCore.pyqtSignal(int)
-
 
     def __init__(self, ui_layout, parent=None):
         super(glWidget, self).__init__(parent)
@@ -74,7 +72,7 @@ class glWidget(QGLWidget, QMainWindow):
             Q = gluNewQuadric()
             gluQuadricNormals(Q, GL_SMOOTH)
             gluQuadricTexture(Q, GL_TRUE)
-            glTranslatef(self.joint_nodes[x][1], self.joint_nodes[x][2], self.joint_nodes[x][3])
+            glTranslatef(self.joint_nodes[x][1], self.joint_nodes[x][2], 0)
             glColor3f(0, 0, 1.0)
             gluSphere(Q, self.joint_size, 32, 32)
             glColor3f(1, 1, 1)
@@ -128,27 +126,40 @@ class glWidget(QGLWidget, QMainWindow):
         glLoadIdentity()
         max_x = max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])
         max_y = max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])
-        if max_y < self.initial_zoom / aspect_ratio:
+        print ("jo = ", self.joint_nodes[0, 1])
+        if self.joint_nodes_length == 1:
 
-            glOrtho(-self.initial_zoom, self.initial_zoom,
-                    -self.initial_zoom / aspect_ratio, self.initial_zoom / aspect_ratio,
+            glOrtho(-self.initial_zoom + self.joint_nodes[0, 1], self.initial_zoom + self.joint_nodes[0, 1],
+                    -self.initial_zoom / aspect_ratio + self.joint_nodes[0, 2],
+                    self.initial_zoom / aspect_ratio + self.joint_nodes[0, 2],
                     -100, 100.0)
+            print("ortho one = ", -self.initial_zoom + self.joint_nodes[0, 0], self.initial_zoom + self.joint_nodes[0, 0],
+                    -self.initial_zoom / aspect_ratio + self.joint_nodes[0, 1],
+                    self.initial_zoom / aspect_ratio + self.joint_nodes[0, 1])
 
-            # print("ortho 1,", -self.initial_zoom, self.initial_zoom,
-            #       -self.initial_zoom / aspect_ratio, self.initial_zoom / aspect_ratio)
-
-        elif max_y > self.initial_zoom / aspect_ratio:
-
-            glOrtho(-self.initial_zoom * aspect_ratio,
-                    self.initial_zoom * aspect_ratio,
-                    -self.initial_zoom, self.initial_zoom, -100,
-                    100.0)
-
-            # print("ortho 2,", -self.initial_zoom * aspect_ratio,
-            #       self.initial_zoom * aspect_ratio,
-            #       -self.initial_zoom, self.initial_zoom)
         else:
-            pass
+
+            if max_y < self.initial_zoom / aspect_ratio:
+
+                glOrtho(-self.initial_zoom, self.initial_zoom,
+                        -self.initial_zoom / aspect_ratio, self.initial_zoom / aspect_ratio,
+                        -100, 100.0)
+
+                print("ortho 1,", -self.initial_zoom, self.initial_zoom,
+                      -self.initial_zoom / aspect_ratio, self.initial_zoom / aspect_ratio)
+
+            elif max_y > self.initial_zoom / aspect_ratio:
+
+                glOrtho(-self.initial_zoom * aspect_ratio,
+                        self.initial_zoom * aspect_ratio,
+                        -self.initial_zoom, self.initial_zoom, -100,
+                        100.0)
+
+                print("ortho 2,", -self.initial_zoom * aspect_ratio,
+                      self.initial_zoom * aspect_ratio,
+                      -self.initial_zoom, self.initial_zoom)
+            else:
+                pass
 
         # gluPerspective(45, width / height, 0.1, 10000.0)
         # gluPerspective(self.zPos,width/height, 1.0, 1000.0)
@@ -192,6 +203,7 @@ class glWidget(QGLWidget, QMainWindow):
             if event.buttons() & QtCore.Qt.LeftButton:
                 self.xPos += +dx / 2000
                 self.yPos += -dy / 2000
+                print("xpos = ", self.xPos, "ypos = ", self.yPos)
                 self.updateGL()
             elif event.buttons() & QtCore.Qt.RightButton:
                 pass
@@ -253,7 +265,6 @@ class glWidget(QGLWidget, QMainWindow):
             pass
         else:
             if self.ui.DefinitionTabs.isEnabled():
-                print("test")
                 self.zPos += (
                     max(self.joint_nodes[0][1], self.joint_nodes[0][2]) - max(self.joint_nodes[int(size_joint - 1)][1],
                                                                               self.joint_nodes[int(size_joint - 1)][
@@ -307,13 +318,19 @@ class glWidget(QGLWidget, QMainWindow):
         self.diam = max(max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1]),
                         (max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])))
 
+        if self.diam == 0 or self.joint_nodes_length == 1:
+            pass
+        else:
+            self.joint_size = self.diam / 150
+            print("joint size = ", self.joint_size)
+
         if (max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])) == 0 and (
-                max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])) > 0:
+                    max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])) > 0:
 
             self.joint_nodes[:, 2] = self.joint_nodes[:, 2] - self.diam / 2
 
         elif (max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])) > 0 and (
-                max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])) == 0:
+                    max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])) == 0:
 
             self.joint_nodes[:, 1] = self.joint_nodes[:, 1] - self.diam / 2
 
@@ -325,11 +342,9 @@ class glWidget(QGLWidget, QMainWindow):
             self.initial_zoom = 2
             self.resizeGL(self.width(), self.height())
             self.updateGL()
-        elif self.ui.Joints_Table.item(self.joint_nodes.shape[0]-1, 1) is None:
-            print("test1")
+        elif self.ui.Joints_Table.item(self.joint_nodes.shape[0] - 1, 1) is None:
             pass
-        elif self.ui.Joints_Table.item(self.joint_nodes.shape[0]-1, 2) is None:
-            print("test2")
+        elif self.ui.Joints_Table.item(self.joint_nodes.shape[0] - 1, 2) is None:
             pass
         else:
 

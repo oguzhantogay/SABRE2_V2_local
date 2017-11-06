@@ -6,7 +6,6 @@ import numpy as np
 import tempfile
 
 
-
 class ActionClass(QMainWindow):
     """docstring for Actions"""
 
@@ -84,9 +83,9 @@ class ActionClass(QMainWindow):
         #     QtGui.QMessageBox.information(self, "Unable to open file", "There was an error opening \"%s\"" % fileName)
         #     return
 
-        #if first line states "basic" script
+        # if first line states "basic" script
         # then just fill in gui
-        #elif first line states "complete" script
+        # elif first line states "complete" script
         # if autorun = "enabled"
         #   then immediately run and show results
         # elif autorun = "disabled"
@@ -112,7 +111,6 @@ class ActionClass(QMainWindow):
         # go directly to analysis screen
 
     def SaveAct(self):
-
         self.save_fun()
         # self.statusMessage(message="Save the model to disk")
         #
@@ -210,38 +208,61 @@ class ActionClass(QMainWindow):
         self.joint_values = SABRE2_main_subclass.SABRE2_main_subclass.update_joints_table(self, self.ui.Joints_Table)
 
         self.member_properties_values = SABRE2_main_subclass.SABRE2_main_subclass.update_member_properties_table(self,
-                                                                                                      self.ui.Member_Properties_Table)
-        self.members_table_values = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table,
-                                                                                        self.Members_table_position)
+                                                                                                                 self.ui.Member_Properties_Table)
+        self.members_table_values = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self,
+                                                                                                   self.ui.Members_table,
+                                                                                                   self.Members_table_position)
         self.shear_panel_values = SABRE2_main_subclass.SABRE2_main_subclass.update_shear_panel_table(self,
-                                                                                          self.ui.Shear_panel_table)
+                                                                                                     self.ui.Shear_panel_table)
         self.ground_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_ground_table(self,
-                                                                                       self.ui.Discrete_grounded_spring_table)
+                                                                                                  self.ui.Discrete_grounded_spring_table)
         self.torsional_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_torsional_release(self,
-                                                                                               self.ui.Torsional_Release)
+                                                                                                          self.ui.Torsional_Release)
         self.My_release_values = SABRE2_main_subclass.SABRE2_main_subclass.update_My_release(self, self.ui.My_release)
         self.Mz_release_values = SABRE2_main_subclass.SABRE2_main_subclass.update_Mz_release(self, self.ui.Mz_release)
         self.Warping_release_values = SABRE2_main_subclass.SABRE2_main_subclass.update_warping_release(self,
-                                                                                            self.ui.Warping_Release)
+                                                                                                       self.ui.Warping_Release)
         self.uniform_data_values = SABRE2_main_subclass.SABRE2_main_subclass.update_uniform_data(self,
-                                                                                      self.ui.Uniform_loading_table,
-                                                                                      combo_flag=0)
-        self.point_data_values = SABRE2_main_subclass.SABRE2_main_subclass.update_point_data(self, self.ui.Point_load_table,
+                                                                                                 self.ui.Uniform_loading_table,
+                                                                                                 combo_flag=0)
+        self.point_data_values = SABRE2_main_subclass.SABRE2_main_subclass.update_point_data(self,
+                                                                                             self.ui.Point_load_table,
                                                                                              combo_flag=0)
-
-        from tempfile import TemporaryFile
-        file= TemporaryFile()
 
         filename = 'test_bin3.npz'
         file = open(filename, 'wb')
 
-        np.savez(file, name1= self.joint_values, name2 = self.member_properties_values)
+        np.savez(file, joint_values=self.joint_values,
+                 member_properties_values=self.member_properties_values,
+                 members_table_values=self.members_table_values,
+                 shear_panel_values=self.shear_panel_values,
+                 ground_spring_values=self.ground_spring_values,
+                 torsional_spring_values=self.torsional_spring_values,
+                 My_release_values=self.My_release_values,
+                 Mz_release_values=self.Mz_release_values,
+                 Warping_release_values=self.Warping_release_values,
+                 uniform_data_values=self.uniform_data_values,
+                 point_data_values=self.point_data_values
+                 )
         file.close()
-        # np.save(f, self.members_table_values)
 
     def read_fun(self):
+        '''This function reads the variables from the compressed file'''
+
         filename = 'test_bin3.npz'
 
         aa = np.load(filename)
+
+        self.joint_values = aa['joint_values']
+        self.member_properties_values = aa['member_properties_values']
+        self.members_table_values = aa['members_table_values']
+        self.shear_panel_values = aa['shear_panel_values']
+        self.ground_spring_values = aa['ground_spring_values']
+        self.torsional_spring_values = aa['torsional_spring_values']
+        self.My_release_values = aa['My_release_values']
+        self.Mz_release_values = aa['Mz_release_values']
+        self.Warping_release_values = aa['Warping_release_values']
+        self.uniform_data_values = aa['uniform_data_values']
+        self.point_data_values = aa['point_data_values']
 
         print("joint values", aa['name1'], "member prop values", aa['name2'])

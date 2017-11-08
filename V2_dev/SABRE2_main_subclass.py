@@ -21,11 +21,11 @@ try:
 except ImportError:
     app = QtGui.QApplication(sys.argv)
     QtGui.QMessageBox.critical(None, "OpenGL hellogl",
-            "PyOpenGL must be installed to run this example.")
+                               "PyOpenGL must be installed to run this example.")
     sys.exit(1)
 
-class SABRE2_main_subclass(QMainWindow):
 
+class SABRE2_main_subclass(QMainWindow):
     def __init__(self, ui_layout):
 
         QMainWindow.__init__(self)
@@ -36,7 +36,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
         self.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
-        ui_layout.verticalLayout_8.insertWidget(0,self.OpenGLwidget)
+        ui_layout.verticalLayout_8.insertWidget(0, self.OpenGLwidget)
         # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
         # self.OpenGLwidget.resized.connect(self.someFunction)
 
@@ -48,7 +48,6 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionZoom_In.triggered.connect(lambda: self.OpenGLwidget.setZoomIn())
         ui_layout.actionZoom_Out.triggered.connect(lambda: self.OpenGLwidget.setZoomOut())
         ui_layout.actionWhite_Background.triggered.connect(lambda: self.OpenGLwidget.updateTheWidget())
-
 
         # Release Tab, first columns of the tables size arrangements
         ui_layout.Torsional_Release.setColumnWidth(0, 62)
@@ -95,6 +94,9 @@ class SABRE2_main_subclass(QMainWindow):
 
         ui_layout.Delete_last_row_Joint.clicked.connect(
             lambda: JointTable.delete_row(self, ui_layout.Joints_Table, ui_layout.Delete_row_number_mem_def, "last"))
+
+        ui_layout.Delete_last_row_Joint.clicked.connect(
+            lambda: self.OpenGLwidget.updateTheWidget())
 
         ui_layout.Delete_row_button_Joint.clicked.connect(
             lambda: JointTable.delete_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint_2,
@@ -294,7 +296,6 @@ class SABRE2_main_subclass(QMainWindow):
         flag = LineChanges.sql_print(self, ui_layout, tableName)
         return flag
 
-
     def update_members_copyfrom(self, lineName, position, tableName):
         copyfrom_value = DataCollection.update_lineedit_values(self, lineName)
         copyfrom_value = copyfrom_value - 1
@@ -371,7 +372,7 @@ class SABRE2_main_subclass(QMainWindow):
         return uniform_data_vals
 
     def update_point_data(self, tableName, combo_flag):
-        point_data_vals= point_load_def.point_data_table(self, tableName, combo_flag)
+        point_data_vals = point_load_def.point_data_table(self, tableName, combo_flag)
         print("main screen uniform load values", point_data_vals)
         return point_load_def
 
@@ -389,8 +390,6 @@ class SABRE2_main_subclass(QMainWindow):
         # print("Function", width, height)
         # print(x,y)
         # self.OpenGLwidget.setMinimumSize()
-
-
 
 
 # class DropDownActions(QMainWindow):
@@ -686,7 +685,6 @@ class TableChanges(QMainWindow):
             tableName.removeRow(row_position - 1)
         else:
             row_number = DataCollection.update_lineedit_values(self, lineName)
-            print(row_number)
             tableName.removeRow(row_number - 1)
 
             for i in range(row_position + 2):
@@ -728,7 +726,6 @@ class LineChanges(QMainWindow):
                 combo_box.currentIndexChanged.connect(
                     lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
                 copied_index = tableName.cellWidget(copyfrom_values, position).currentIndex()
-                print(copied_index)
                 tableName.cellWidget(insertafter_values, position).setCurrentIndex(copied_index)
             else:
                 val = Members_values[copyfrom_values - 1, j]
@@ -806,10 +803,10 @@ class LineChanges(QMainWindow):
                     table_prop[0, i] = var1[0]
                 # print(cross_section, 'cs_properties = ', table_prop)
                 # table values assignment
-                for i in range(4,18):
-                    if i == 4 or i == 6 or i == 8 or i==10:
+                for i in range(4, 18):
+                    if i == 4 or i == 6 or i == 8 or i == 10:
                         tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 0])))
-                    elif i == 5 or i == 7 or i == 9 or i==11:
+                    elif i == 5 or i == 7 or i == 9 or i == 11:
                         tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 1])))
                     elif i == 12 or i == 14:
                         tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 16])))
@@ -857,8 +854,9 @@ class JointTable(QMainWindow):
 
     def add_new_row(self, tableName, lineName, flag):
         row_position = tableName.rowCount()
-        print(row_position)
+
         if flag == "last":
+
             tableName.insertRow(row_position)
             item = QTableWidgetItem(str(row_position + 1))
             item.setTextAlignment(QtCore.Qt.AlignCenter)
@@ -886,7 +884,6 @@ class JointTable(QMainWindow):
 
     def delete_row(self, tableName, lineName, flag):
         row_position = tableName.rowCount()
-        print(row_position)
         if row_position == 1:
             DropDownActions.ActionClass.statusMessage(self, message="First row cannot be deleted!")
         elif flag == "last":
@@ -1081,9 +1078,9 @@ class Boundary_Conditions(QMainWindow):
                 else:
                     table_for_shear_panel.item(current_row, current_col).setText("")
                     DropDownActions.ActionClass.statusMessage(self,
-                                                  message=(
-                                                      "Please define the joint within the member " + table_for_shear_panel.item(
-                                                          current_row, 0).text()))
+                                                              message=(
+                                                                  "Please define the joint within the member " + table_for_shear_panel.item(
+                                                                      current_row, 0).text()))
 
             except ValueError:
                 table_for_shear_panel.item(current_row, current_col).setText("")
@@ -1170,7 +1167,7 @@ class Boundary_Conditions(QMainWindow):
         except:
             tableName.clearSelection()
             tableName.item(row, col).setText("")
-            DropDownActions.ActionClass.statusMessage(self,message="Please enter only numbers in this cell!")
+            DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
 
     def Assign_comboBox_ground(self, tableName, options, position):
         r = tableName.rowCount()
@@ -1201,7 +1198,7 @@ class Boundary_Conditions(QMainWindow):
                             pass
                         elif j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
                             val1[i, j] = tableName.item(i, j).checkState()
-                            DropDownActions.ActionClass.statusMessage(self,  message="")
+                            DropDownActions.ActionClass.statusMessage(self, message="")
                         else:
                             val1[i, j] = float(tableName.item(i, j).text())
                             DropDownActions.ActionClass.statusMessage(self, "")
@@ -1247,7 +1244,7 @@ class LoadingClass(QMainWindow):
                 names[i] = tableName.item(i, 0).text()
                 if ' ' in tableName.item(i, 1).text():
                     tableName.item(i, 1).setText("")
-                    DropDownActions.ActionClass.statusMessage(self,message="Please don't use any space in IDs column!")
+                    DropDownActions.ActionClass.statusMessage(self, message="Please don't use any space in IDs column!")
                 else:
                     IDs[i] = tableName.item(i, 1).text()
         except AttributeError:
@@ -1329,7 +1326,8 @@ class LoadingClass(QMainWindow):
                         else:
                             val1[i, j] = float(tableName.item(i, j).text())
                             if flag == 1:
-                                DropDownActions.ActionClass.statusMessage(self, message="Please don't use any space in IDs column!")
+                                DropDownActions.ActionClass.statusMessage(self,
+                                                                          message="Please don't use any space in IDs column!")
                             else:
                                 DropDownActions.ActionClass.statusMessage(self, message="")
 
@@ -1411,7 +1409,6 @@ class uniform_load_def(QMainWindow):
 
 
 class point_load_def(QMainWindow):
-
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
         self.ui = ui_layout

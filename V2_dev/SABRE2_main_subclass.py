@@ -66,6 +66,7 @@ class SABRE2_main_subclass(QMainWindow):
         # ui_layout.actionNew.triggered.connect(lambda: ActionClass('uidesign').NewAct())
         ui_layout.actionOpen.triggered.connect(lambda: self.ActionMenus.OpenAct())
         ui_layout.actionSave.triggered.connect(lambda: self.ActionMenus.SaveAct())
+        ui_layout.actionJoint_Member_Labels.triggered.connect(lambda: self.OpenGLwidget.updateTheWidget())
         # ui_layout.actionSave_As.triggered.connect(lambda: ActionClass('uidesign').Save_AsAct())
         # ui_layout.actionPrint.triggered.connect(lambda: ActionClass('uidesign').PrintAct())
         # ui_layout.actionPrint_Preview.triggered.connect(lambda: ActionClass('uidesign').Print_PreviewAct())

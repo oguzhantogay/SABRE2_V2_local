@@ -3399,6 +3399,7 @@ Number</string>
      <addaction name="actionElement_Flexural_or_Warping_Releases"/>
      <addaction name="actionPoint_Loads"/>
      <addaction name="actionUniform_Loads"/>
+     <addaction name="actionJoint_Member_Labels"/>
     </widget>
     <addaction name="actionCamera_Toolbar"/>
     <addaction name="separator"/>
@@ -3776,6 +3777,17 @@ Number</string>
    </property>
    <property name="text">
     <string>White Background</string>
+   </property>
+  </action>
+  <action name="actionJoint_Member_Labels">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Joint &amp; Member Labels</string>
    </property>
   </action>
  </widget>

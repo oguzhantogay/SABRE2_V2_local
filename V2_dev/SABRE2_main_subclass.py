@@ -86,6 +86,9 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Joints_Table.itemChanged.connect(
             lambda: self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height()))
 
+        ui_layout.Members_table.itemChanged.connect(
+            lambda: self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height()))
+
         ui_layout.Add_new_row_joint.clicked.connect(
             lambda: JointTable.add_new_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint, "last"))
 
@@ -124,6 +127,9 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Members_table.itemChanged.connect(
             lambda: self.update_members_table(ui_layout.Members_table,
                                               self.Members_table_position))
+
+        ui_layout.Members_table.itemChanged.connect(
+            lambda: self.OpenGLwidget.updateTheWidget())
 
         # change number of rows of Member Properties table
         ui_layout.Members_table.itemChanged.connect(
@@ -290,7 +296,7 @@ class SABRE2_main_subclass(QMainWindow):
     def update_members_table(self, tableName, position):
 
         Members_values = DataCollection.update_table_values(self, tableName, position)
-        print("main screen", Members_values)
+        # print("main screen", Members_values)
         return Members_values
 
     def AISC_update_fun(self, ui_layout, tableName):

@@ -45,6 +45,8 @@ class glWidget(QGLWidget, QMainWindow):
         self.parameters = []
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
         self.member_count, self.member_values = self.memberTableValues()
+        self.joint_i = 1
+        self.joint_j = 2
         # print("values = ", self.member_count, self.member_values)
 
     # def Cube(self):
@@ -78,7 +80,7 @@ class glWidget(QGLWidget, QMainWindow):
             gluQuadricNormals(Q, GL_SMOOTH)
             gluQuadricTexture(Q, GL_TRUE)
             glTranslatef(self.joint_nodes[x][1], self.joint_nodes[x][2], 0)
-            glColor3f(0, 0, 1.0)
+            glColor3f(1.0, 1.0, 1.0)
             gluSphere(Q, self.joint_size, 32, 32)
 
             glPopMatrix()
@@ -251,21 +253,24 @@ class glWidget(QGLWidget, QMainWindow):
 
                     joint_text = "J" + str(int(self.joint_nodes[i][0]))
                     self.renderText(self.joint_nodes[i][1] - self.joint_size,
-                                    self.joint_nodes[i][2] + self.joint_size, 0, joint_text, font = self.font)
+                                    self.joint_nodes[i][2] + self.joint_size, 0, joint_text, font=self.font)
 
         for i in range(self.member_count):
             self.memberOnly(i)
             if self.ui.actionJoint_Member_Labels.isChecked():
                 if self.ui.Members_table.item(i, 1) is not None and self.ui.Members_table.item(i,
-                                                                                             2) is not None:
+                                                                                               2) is not None:
                     if self.white_checked:
                         glColor3f(0, 0, 0)
                     else:
                         glColor3f(1, 1, 1)
 
+                    text_x = self.joint_nodes[self.joint_i][1] + (self.joint_nodes[self.joint_j][1] -
+                                                                  self.joint_nodes[self.joint_i][1]) / 2
+                    text_y = self.joint_nodes[self.joint_i][2] + (self.joint_nodes[self.joint_j][2] -
+                                                                  self.joint_nodes[self.joint_i][2]) / 2
                     joint_text = "M" + str(int(self.member_values[i][0]))
-                    self.renderText(self.joint_nodes[i][1] - self.joint_size,
-                                    self.joint_nodes[i][2] + self.joint_size, 0, joint_text, font=self.font)
+                    self.renderText(text_x, text_y, 0, joint_text, font=self.font)
 
                     # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
                     # self.Surfaces()
@@ -448,34 +453,18 @@ class glWidget(QGLWidget, QMainWindow):
             glPushAttrib(GL_ENABLE_BIT)
             # glPushAttrib is done to return everything to normal after drawing
 
-            glLineStipple(1, 0x00FF) # [1]
+            glLineStipple(1, 0x00FF)  # [1]
             glEnable(GL_LINE_STIPPLE)
             glBegin(GL_LINES)
 
-            joint_i = int(self.member_values[x][1] - 1.0)
-            joint_j = int(self.member_values[x][2] - 1.0)
+            self.joint_i = int(self.member_values[x][1] - 1.0)
+            self.joint_j = int(self.member_values[x][2] - 1.0)
 
-            print("test = ", self.member_values[x][1],self.member_values[x][2], 0)
+            # print("test = ", self.member_values[x][1],self.member_values[x][2], 0)
+            glColor3ub(100, 149, 237)
 
-            glVertex3f(self.joint_nodes[joint_i][1], self.joint_nodes[joint_i][2], 0)
-            glVertex3f(self.joint_nodes[joint_j][1], self.joint_nodes[joint_j][2], 0)
+            glVertex3f(self.joint_nodes[self.joint_i][1], self.joint_nodes[self.joint_i][2], 0)
+            glVertex3f(self.joint_nodes[self.joint_j][1], self.joint_nodes[self.joint_j][2], 0)
             glEnd()
 
             glPopAttrib()
-            # glPushMatrix()
-            # Q = gluNewQuadric()
-            # gluQuadricNormals(Q, GL_SMOOTH)
-            # gluQuadricTexture(Q, GL_TRUE)
-            # glTranslatef(self.joint_nodes[x][1], self.joint_nodes[x][2], 0)
-            # glColor3f(0, 0, 1.0)
-            # gluSphere(Q, self.joint_size, 32, 32)
-            #
-            # glPopMatrix()
-            #
-            # glBegin(GL_LINES)
-            #     for edge in self.edges:
-            #         for vertex in edge:
-            #             glColor3fv((1.0, 0.0, 0.0))
-            #             glVertex3fv(self.vertices[vertex])
-            #     glEnd()
-

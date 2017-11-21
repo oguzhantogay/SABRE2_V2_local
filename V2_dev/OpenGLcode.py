@@ -44,7 +44,7 @@ class glWidget(QGLWidget, QMainWindow):
         self.lastPos = QtCore.QPoint()
         self.parameters = []
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        self.member_count, self.member_values = self.memberTableValues()
+        self.member_count, self.member_values, self.JNodeValues_i , self.JNodeValues_j = self.memberTableValues()
         self.joint_i = 1
         self.joint_j = 2
         # print("values = ", self.member_count, self.member_values)
@@ -362,7 +362,7 @@ class glWidget(QGLWidget, QMainWindow):
         row = self.ui.Joints_Table.currentRow()
         none_checker = self.noneDetector(self.ui.Joints_Table)
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        self.member_count, self.member_values = self.memberTableValues()
+        self.member_count, self.member_values, self.JNodeValues_i , self.JNodeValues_j = self.memberTableValues()
         self.white_checked = self.ui.actionWhite_Background.isChecked()
         self.diam = max(max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1]),
                         (max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])))
@@ -425,12 +425,14 @@ class glWidget(QGLWidget, QMainWindow):
 
         import SABRE2_main_subclass
 
-        member_values = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table, 3)
+        member_values , JNodeValues_i , JNodeValues_j= SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table, 3)
 
-        member_count = \
-            (SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table, 3)).shape[0]
+        member_count = member_values.shape[0]
 
-        return member_count, member_values
+        # print("i = ", JNodeValues_i)
+        # print("j = ", JNodeValues_j)
+
+        return member_count, member_values, JNodeValues_i , JNodeValues_j
 
     def noneDetector(self, tableName):
         row_count = tableName.rowCount()
@@ -457,8 +459,9 @@ class glWidget(QGLWidget, QMainWindow):
             glEnable(GL_LINE_STIPPLE)
             glBegin(GL_LINES)
 
-            self.joint_i = int(self.member_values[x][1] - 1.0)
-            self.joint_j = int(self.member_values[x][2] - 1.0)
+
+            self.joint_i = int(self.member_values[x][1]-1)
+            self.joint_j = int(self.member_values[x][2]-1)
 
             # print("test = ", self.member_values[x][1],self.member_values[x][2], 0)
             glColor3ub(100, 149, 237)

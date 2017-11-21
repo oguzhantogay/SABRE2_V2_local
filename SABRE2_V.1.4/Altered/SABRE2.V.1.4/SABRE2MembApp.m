@@ -35,7 +35,7 @@ elseif isempty(get(pde_jointi_edit,'String')) || isempty(get(pde_jointj_edit,'St
    set(pt_title_name,'Visible','on')
 elseif isequal(str2double(get(pde_jointi_edit,'String')),str2double(get(pde_jointj_edit,'String')))
    set(pt_title_name,'String',['Please select different Joints for Member ',num2str(mnum)])
-   set(pt_title_name,'Visible','on')   
+   set(pt_title_name,'Visible','on')
 elseif isempty(get(pde_bfbi_edit,'String')) ...
       || isempty(get(pde_bfti_edit,'String')) ...
       || isempty(get(pde_tfbi_edit,'String')) ...
@@ -48,8 +48,8 @@ elseif isempty(get(pde_bfbi_edit,'String')) ...
       || isempty(get(pde_tfbj_edit,'String')) ...
       || isempty(get(pde_tftj_edit,'String')) ...
       || isempty(get(pde_dwj_edit,'String')) ...
-      || isempty(get(pde_twj_edit,'String')) ... 
-      || isempty(get(pde_filj_edit,'String')) ... 
+      || isempty(get(pde_twj_edit,'String')) ...
+      || isempty(get(pde_filj_edit,'String')) ...
       || isnan(str2double(get(pde_bfbi_edit,'String'))) ...
       || isnan(str2double(get(pde_bfti_edit,'String'))) ...
       || isnan(str2double(get(pde_tfbi_edit,'String'))) ...
@@ -65,32 +65,32 @@ elseif isempty(get(pde_bfbi_edit,'String')) ...
       || isnan(str2double(get(pde_twj_edit,'String'))) ...
       || isnan(str2double(get(pde_filj_edit,'String'))) ...
       || str2double(get(pde_bfbi_edit,'String')) <= 0 ...
-      || str2double(get(pde_bfti_edit,'String')) <= 0 ...  
+      || str2double(get(pde_bfti_edit,'String')) <= 0 ...
       || str2double(get(pde_tfbi_edit,'String')) <= 0 ...
-      || str2double(get(pde_tfti_edit,'String')) <= 0 ...     
+      || str2double(get(pde_tfti_edit,'String')) <= 0 ...
       || str2double(get(pde_dwi_edit,'String')) <= 0 ...
       || str2double(get(pde_twi_edit,'String')) <= 0 ...
       || str2double(get(pde_fili_edit,'String')) < 0 ...
       || str2double(get(pde_bfbj_edit,'String')) <= 0 ...
-      || str2double(get(pde_bftj_edit,'String')) <= 0 ...  
+      || str2double(get(pde_bftj_edit,'String')) <= 0 ...
       || str2double(get(pde_tfbj_edit,'String')) <= 0 ...
-      || str2double(get(pde_tftj_edit,'String')) <= 0 ...     
+      || str2double(get(pde_tftj_edit,'String')) <= 0 ...
       || str2double(get(pde_dwj_edit,'String')) <= 0 ...
       || str2double(get(pde_twj_edit,'String')) <= 0 ...
       || str2double(get(pde_filj_edit,'String')) < 0
    set(pt_title_name,'String','Please define Section')
-   set(pt_title_name,'Visible','on')     
+   set(pt_title_name,'Visible','on')
 else
    set(pt_title_name,'Visible','off') % Hide BACKGROUNG TEXT
    if ~isempty(Massemble)
       if max(Massemble(:,1))< mnum
          SNodevalue=[];
-      end 
+      end
    end
    % Incidence
    Massemble(mnum,1) = mnum;
    Massemble(mnum,2) = str2double(get(pde_jointi_edit,'String'));
-   Massemble(mnum,3) = str2double(get(pde_jointj_edit,'String'));  
+   Massemble(mnum,3) = str2double(get(pde_jointj_edit,'String'));
 
    % i node
    JNodevalue_i(mnum,1)=Massemble(mnum,1);
@@ -98,29 +98,29 @@ else
    JNodevalue_i(mnum,3)=JNodevalue(Massemble(mnum,2),2);
    JNodevalue_i(mnum,4)=JNodevalue(Massemble(mnum,2),3);
    JNodevalue_i(mnum,5)=JNodevalue(Massemble(mnum,2),4);
-   JNodevalue_i(mnum,6)=str2double(get(pde_bfbi_edit, 'String')); 
-   JNodevalue_i(mnum,7)=str2double(get(pde_tfbi_edit, 'String')); 
-   JNodevalue_i(mnum,8)=str2double(get(pde_bfti_edit, 'String')); 
-   JNodevalue_i(mnum,9)=str2double(get(pde_tfti_edit, 'String')); 
+   JNodevalue_i(mnum,6)=str2double(get(pde_bfbi_edit, 'String'));
+   JNodevalue_i(mnum,7)=str2double(get(pde_tfbi_edit, 'String'));
+   JNodevalue_i(mnum,8)=str2double(get(pde_bfti_edit, 'String'));
+   JNodevalue_i(mnum,9)=str2double(get(pde_tfti_edit, 'String'));
    JNodevalue_i(mnum,10)=str2double(get(pde_dwi_edit, 'String'));
-   JNodevalue_i(mnum,11)=str2double(get(pde_twi_edit, 'String'));          
+   JNodevalue_i(mnum,11)=str2double(get(pde_twi_edit, 'String'));
    JNodevalue_i(mnum,12)=JNodevalue_i(mnum,10) ...
       +JNodevalue_i(mnum,7)+JNodevalue_i(mnum,9);     % total depth
    JNodevalue_i(mnum,13)=JNodevalue_i(mnum,10) ...
-      +(JNodevalue_i(mnum,7)+JNodevalue_i(mnum,9))/2; %top flange centroid coordinates
-   JNodevalue_i(mnum,14)=str2double(get(pde_fili_edit, 'String')); 
+      +(JNodevalue_i(mnum,7)+JNodevalue_i(mnum,9))/2; %flange centroid to flange centroid coordinates
+   JNodevalue_i(mnum,14)=str2double(get(pde_fili_edit, 'String'));
    % j node
    JNodevalue_j(mnum,1)=Massemble(mnum,1);
    JNodevalue_j(mnum,2)=Massemble(mnum,3);
    JNodevalue_j(mnum,3)=JNodevalue(Massemble(mnum,3),2);
    JNodevalue_j(mnum,4)=JNodevalue(Massemble(mnum,3),3);
-   JNodevalue_j(mnum,5)=JNodevalue(Massemble(mnum,3),4); 
-   JNodevalue_j(mnum,6)=str2double(get(pde_bfbj_edit, 'String')); 
-   JNodevalue_j(mnum,7)=str2double(get(pde_tfbj_edit, 'String')); 
-   JNodevalue_j(mnum,8)=str2double(get(pde_bftj_edit, 'String')); 
-   JNodevalue_j(mnum,9)=str2double(get(pde_tftj_edit, 'String')); 
+   JNodevalue_j(mnum,5)=JNodevalue(Massemble(mnum,3),4);
+   JNodevalue_j(mnum,6)=str2double(get(pde_bfbj_edit, 'String'));
+   JNodevalue_j(mnum,7)=str2double(get(pde_tfbj_edit, 'String'));
+   JNodevalue_j(mnum,8)=str2double(get(pde_bftj_edit, 'String'));
+   JNodevalue_j(mnum,9)=str2double(get(pde_tftj_edit, 'String'));
    JNodevalue_j(mnum,10)=str2double(get(pde_dwj_edit, 'String'));
-   JNodevalue_j(mnum,11)=str2double(get(pde_twj_edit, 'String'));        
+   JNodevalue_j(mnum,11)=str2double(get(pde_twj_edit, 'String'));
    JNodevalue_j(mnum,12)=JNodevalue_j(mnum,10) ...
       +JNodevalue_j(mnum,7)+JNodevalue_j(mnum,9);     % total depth
    JNodevalue_j(mnum,13)=JNodevalue_j(mnum,10) ...
@@ -130,13 +130,14 @@ else
    if isempty(Rval)
       for i=1:length(Massemble(:,1))
          Rval(i,1)=i;
-         Rval(i,2)=1;    
-      end   
+         Rval(i,2)=1;
+      end
    end
    Rval(mnum,1)=mnum;
-   Rval(mnum,2)=get(pde_reference_edit,'Value');   %Rval is design axis information, 3 = flange 1, 2 = flange 2, 1= mid-web
+   Rval(mnum,2)=get(pde_reference_edit,'Value');
+   %Rval is design axis information, 3 = flange 1, 2 = flange 2, 1= mid-web
 
-   % ************** Rolled section   
+   % ************** Rolled section
    % Set pre-definded database
    filename1='AISCSTEEL.mat';
    Sectiondata=load(fullfile(filename1));
@@ -144,7 +145,7 @@ else
 
    for i=1:(length(SECTION(:,1)))
        i
-      if isequal(SECTION(i,1),str2double(get(pde_bfbi_edit,'String'))) && isequal(SECTION(i,2),str2double(get(pde_tfbi_edit,'String'))) ... 
+      if isequal(SECTION(i,1),str2double(get(pde_bfbi_edit,'String'))) && isequal(SECTION(i,2),str2double(get(pde_tfbi_edit,'String'))) ...
             && isequal(SECTION(i,3),str2double(get(pde_bfti_edit,'String'))) && isequal(SECTION(i,4),str2double(get(pde_tfti_edit,'String'))) ...
             && isequal(round(SECTION(i,5)*10^5)/10^5,round( ( str2double(get(pde_dwi_edit,'String'))  + str2double(get(pde_tfbi_edit,'String')) + str2double(get(pde_tfti_edit,'String'))  )*10^5)/10^5) ...
             && isequal(SECTION(i,6),str2double(get(pde_twi_edit,'String'))) ...
@@ -154,16 +155,16 @@ else
             && isequal(SECTION(i,6),str2double(get(pde_twj_edit,'String'))) ...
             && isequal(round(SECTION(i,7)*10^5)/10^5,round( ( str2double(get(pde_bfbi_edit,'String'))...
             *str2double(get(pde_tfbi_edit,'String')) +str2double(get(pde_bfti_edit,'String'))*str2double(get(pde_tfti_edit,'String'))...
-            +str2double(get(pde_dwi_edit,'String'))*str2double(get(pde_twi_edit,'String'))  +str2double(get(pde_fili_edit,'String'))  )*10^5)/10^5) ...            
+            +str2double(get(pde_dwi_edit,'String'))*str2double(get(pde_twi_edit,'String'))  +str2double(get(pde_fili_edit,'String'))  )*10^5)/10^5) ...
             && isequal(round(SECTION(i,7)*10^5)/10^5,round( ( str2double(get(pde_bfbj_edit,'String'))...
             *str2double(get(pde_tfbj_edit,'String')) +str2double(get(pde_bftj_edit,'String'))*str2double(get(pde_tftj_edit,'String'))...
             +str2double(get(pde_dwj_edit,'String'))*str2double(get(pde_twj_edit,'String'))  +str2double(get(pde_filj_edit,'String'))  )*10^5)/10^5)
-         
+
                Massemble(mnum,1) = mnum;
                Massemble(mnum,2) = str2double(get(pde_jointi_edit,'String'));
-               Massemble(mnum,3) = str2double(get(pde_jointj_edit,'String'));           
+               Massemble(mnum,3) = str2double(get(pde_jointj_edit,'String'));
                Massemble(mnum,4) = 1;
-               Massemble(mnum,5) = SECTION(i,7); % Area 
+               Massemble(mnum,5) = SECTION(i,7); % Area
                Massemble(mnum,6) = SECTION(i,8); % Nominal Weight
                Massemble(mnum,7) = SECTION(i,9); % Ix
                Massemble(mnum,8) = SECTION(i,10); % Zx
@@ -178,11 +179,11 @@ else
                format shortG
                Massemble
             break;
-            
+
       else
                Massemble(mnum,1) = mnum;
                Massemble(mnum,2) = str2double(get(pde_jointi_edit,'String'));
-               Massemble(mnum,3) = str2double(get(pde_jointj_edit,'String'));           
+               Massemble(mnum,3) = str2double(get(pde_jointj_edit,'String'));
                Massemble(mnum,4) = 0;
                Massemble(mnum,5) = SECTION(i,7); % A
                Massemble(mnum,6) = SECTION(i,8); % W
@@ -196,15 +197,15 @@ else
                Massemble(mnum,14) = SECTION(i,16); % ry
                Massemble(mnum,15) = SECTION(i,17); % J
                Massemble(mnum,16) = SECTION(i,18); % Cw
-      end   
-   end   
+      end
+   end
    % **************
 
 end % if end
 
 % ************************************************************************
 % **************             Initial Setting              ****************
-% ************************************************************************ 
+% ************************************************************************
 if isempty(Massemble)
    nextmnum = 1;
 else
@@ -214,7 +215,7 @@ end
 set(pde_type_name,'string',num2str(nextmnum));
 set([pde_jointi_edit,pde_jointj_edit],'String','');
 set(pde_jointi_radiobutton,'value',1)
-set(pde_jointj_radiobutton,'value',0)  
+set(pde_jointj_radiobutton,'value',0)
 set([pde_bfbi_edit,pde_tfbi_edit,pde_bfti_edit],'string','');
 set([pde_tfti_edit,pde_dwi_edit,pde_twi_edit],'string','');
 set([pde_bfbj_edit,pde_tfbj_edit,pde_bftj_edit],'string','');
@@ -237,22 +238,22 @@ if ~isempty(Massemble)
          BNodevalue(i,1,1)=i;
          BNodevalue(i,1,2)=0; % 0 No bracing
       end
-   end 
+   end
 end
 
 % ************************************************************************
 % ***    Updated JNodevalue_i & JNodevalue_j & BNodevalue by Moving   ****
-% ************************************************************************ 
+% ************************************************************************
 if ~isempty(Massemble)
-   % Preprocessing to update BNodevalue coordinates 
+   % Preprocessing to update BNodevalue coordinates
    % Distance from i node
    for i = 1:max(Massemble(:,1))
       if ~isequal(max(BNodevalue(i,:,2)),0) % ~ No Bracing
          for j = 1:max(BNodevalue(i,:,2))
             seglength = BNodevalue(i,j,16);
-            alpharef = zeros(i,2);    
+            alpharef = zeros(i,2);
             opp = JNodevalue_j(i,4)-JNodevalue_i(i,4);  % element depth in y-dir
-            adj = JNodevalue_j(i,3)-JNodevalue_i(i,3);  % element length in x-dir         
+            adj = JNodevalue_j(i,3)-JNodevalue_i(i,3);  % element length in x-dir
             alpharef(i,1)=i; % Member number
             alpharef(i,2)=atan2(opp,adj); % Only global frame angle
             % Rotation
@@ -269,7 +270,7 @@ if ~isempty(Massemble)
          end
       end
    end
-   
+
 end
 
 % ************************************************************************

@@ -36,7 +36,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
         self.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
-        SABRE2_main_subclass.Massemble = [np.zeros(16)]
+        self.Massemble = np.zeros((1,16))
         ui_layout.verticalLayout_8.insertWidget(0, self.OpenGLwidget)
         # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
         # self.OpenGLwidget.resized.connect(self.someFunction)
@@ -184,9 +184,9 @@ class SABRE2_main_subclass(QMainWindow):
                                                                                       Insert_after_number=ui_layout.Insert_after_number_mem_def,
                                                                                       flag="copy from"))
         ui_layout.AISC_assign_button.clicked.connect(
-            lambda: self.AISC_update_fun(ui_layout, ui_layout.Members_table))
+            lambda: self.AISC_update_fun(ui_layout.Members_table))
 
-        # ui_layout.AISC_assign_button.clicked.connect(lambda : self.m_assemble_updater())
+        # ui_layout.AISC_assign_button.clicked.connect(lambda : self.m_assemble_updater(ui_layout.Members_table, ))
 
         # Member Properties Table
         ui_layout.Apply_all_member_properties.clicked.connect(
@@ -309,6 +309,7 @@ class SABRE2_main_subclass(QMainWindow):
     def update_members_table(self, tableName, position):
         JNodeValue = JointTable.tableValues(self, self.ui.Joints_Table)
         Members_values, changed, current_row = DataCollection.update_table_values(self, tableName, position)
+        print("changed = ", changed)
         JNodeValue_i = np.zeros((Members_values.shape[0], 14))
         JNodeValue_j = np.zeros((Members_values.shape[0], 14))
         if Members_values.shape[0] == 1:
@@ -350,14 +351,16 @@ class SABRE2_main_subclass(QMainWindow):
         # print("main screen node j", JNodeValue_j)
         return Members_values, JNodeValue_i, JNodeValue_j
 
-    def AISC_update_fun(self, ui_layout, tableName):
-        Massemble, current_row_number, row_count = LineChanges.sql_print(self, ui_layout, tableName)
+    def AISC_update_fun(self, tableName):
+        tableName.blockSignals(True)
+        Massemble, current_row_number, row_count = LineChanges.sql_print(self,tableName)
         # print("aisc = ", Massemble)
-        # print("aisc2 = ", SABRE2_main_subclass.Massemble)
+        # print("aisc2 = ", self.Massemble[0][1])
         # print("aisc3 = ", current_row_number)
-        SABRE2_main_subclass.Massemble[current_row_number][:] = [Massemble[v] for v in range(16)]
-            # SABRE2_main_subclass.Massemble[current_row_number][i] = Massemble[i]
-        print("AISC  = ", SABRE2_main_subclass.Massemble)
+        for i in range(16):
+            self.Massemble[int(current_row_number)][i] = Massemble[i]
+        print("AISC  = ", self.Massemble)
+        tableName.blockSignals(False)
         return Massemble, current_row_number, row_count
 
     def update_members_copyfrom(self, lineName, position, tableName):
@@ -444,36 +447,30 @@ class SABRE2_main_subclass(QMainWindow):
                            flag="insert after button"):
 
         if flag == "last":
-            to_append = np.zeros(16)
-            SABRE2_main_subclass.Massemble = np.append(SABRE2_main_subclass.Massemble, to_append, axis=0)
-            print("assemble last = ", SABRE2_main_subclass.Massemble)
+            to_append = np.zeros((0,16))
+            self.Massemble = np.append(self.Massemble, to_append, axis=0)
+            print("assemble last = ", self.Massemble)
         elif flag == "insert after button":
             row_number = DataCollection.update_lineedit_values(self, lineName)
-            SABRE2_main_subclass.Massemble = np.insert(SABRE2_main_subclass.Massemble, row_number, 0, axis=0)
-            print("assemble last = ", SABRE2_main_subclass.Massemble)
+            self.Massemble = np.insert(self.Massemble, row_number, 0, axis=0)
+            print("assemble last = ", self.Massemble)
         elif flag == "copy from":
             copyfrom_values = DataCollection.update_lineedit_values(self, Copy_from_number)
             insertafter_values = DataCollection.update_lineedit_values(self, Insert_after_number)
-            SABRE2_main_subclass.Massemble = np.insert(SABRE2_main_subclass.Massemble, insertafter_values,
-                                                       SABRE2_main_subclass.Massemble[(copyfrom_values - 1), :],
+            self.Massemble = np.insert(self.Massemble, insertafter_values,
+                                                       self.Massemble[(copyfrom_values - 1), :],
                                                        axis=0)
-            print("assemble copyfrom = ", SABRE2_main_subclass.Massemble)
+            print("assemble copyfrom = ", self.Massemble)
         elif flag == "cell changed":
             row = tableName.currentRow()
             print("row = ", row)
-            if row == 0:
-                if SABRE2_main_subclass.Massemble[3] == 1:
-                    SABRE2_main_subclass.Massemble[3:15] = 0
-                else:
-                    # have the function for  Massemble welded section update
-                    pass
+            print("cell changed before =", self.Massemble)
+            if self.Massemble[row, 3] == 1:
+                self.Massemble[row, 3:15] = 0
             else:
-                if SABRE2_main_subclass.Massemble[row, 3] == 1:
-                    SABRE2_main_subclass.Massemble[row, 3:15] = 0
-                else:
-                    # have the function for  Massemble welded section update
-                    pass
-            print("assemble cell changed = ", SABRE2_main_subclass.Massemble)
+                # have the function for  Massemble welded section update
+                pass
+            print("assemble cell changed = ", self.Massemble)
         pass
 
     def resizeEvent(self, event):
@@ -693,15 +690,11 @@ class DataCollection(QMainWindow):
         col_check = tableName.columnCount()
         val1 = np.zeros((row_check, col_check))
         changed = 0
-
+        print("test", row, col)
         if col == 1 or col == 2 or col == 3:
-            pass
+            changed = 1
         else:
-            if tableName.itemSelectionChanged.connect(
-                    lambda: SABRE2_main_subclass.m_assemble_updater(self, tableName, flag="cell changed")):
-                changed = 0
-            else:
-                changed = 1
+            changed = 0
 
         if row == -1:
             pass
@@ -891,14 +884,14 @@ class LineChanges(QMainWindow):
         for t in cross_sections:
             ui_layout.AISC_database_button.addItem(t)
 
-    def sql_print(self, ui_layout, tableName):
+    def sql_print(self, tableName):
         tableName.blockSignals(True)
         conn = sq.connect('AISC_data.db')
         c = conn.cursor()
 
         row = tableName.currentRow()
         row_count = tableName.rowCount()
-        cross_section = str(ui_layout.AISC_database_button.currentText())
+        cross_section = str(self.ui.AISC_database_button.currentText())
         if row == -1:
             DropDownActions.ActionClass.statusMessage(self, message="Select the row before assignment")
         else:

@@ -37,9 +37,16 @@ class SABRE2_main_subclass(QMainWindow):
         self.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
         self.Massemble = np.zeros((1,16))
+        self.table_prop = np.zeros((1,14))
+        self.members_table_values = np.zeros((1,14))
         ui_layout.verticalLayout_8.insertWidget(0, self.OpenGLwidget)
         # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
         # self.OpenGLwidget.resized.connect(self.someFunction)
+
+        # for i in range(4, 18):
+        #     item = QTableWidgetItem("0")
+        #     item.setFlags(QtCore.Qt.ItemIsDragEnabled)
+        #     ui_layout.Members_table.setItem(0, i, item)
 
         ui_layout.actionIsometric_X_Y_Z_View.triggered.connect(lambda: self.OpenGLwidget.isometricView())
         ui_layout.actionTop_X_Z_View.triggered.connect(lambda: self.OpenGLwidget.topView())
@@ -155,7 +162,7 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
                                              self.Members_table_position, ui_layout.Insert_row_number_mem_def,
                                              "arbitrary"))
-        ui_layout.Mem_def_add.clicked.connect(
+        ui_layout.Insert_row_mem_def_button.clicked.connect(
             lambda: self.m_assemble_updater(ui_layout.Members_table, lineName=ui_layout.Insert_row_number_mem_def))
 
         ui_layout.Mem_def_delete.clicked.connect(
@@ -307,9 +314,8 @@ class SABRE2_main_subclass(QMainWindow):
 
     # Members tab, Member definition functions
     def update_members_table(self, tableName, position):
-        JNodeValue = JointTable.tableValues(self, self.ui.Joints_Table)
-        Members_values, changed, current_row = DataCollection.update_table_values(self, tableName, position)
-        print("changed = ", changed)
+        JNodeValue = self.update_joints_table(self.ui.Joints_Table)
+        Members_values, current_row = DataCollection.update_table_values(self, tableName, position)
         JNodeValue_i = np.zeros((Members_values.shape[0], 14))
         JNodeValue_j = np.zeros((Members_values.shape[0], 14))
         if Members_values.shape[0] == 1:
@@ -352,16 +358,37 @@ class SABRE2_main_subclass(QMainWindow):
         return Members_values, JNodeValue_i, JNodeValue_j
 
     def AISC_update_fun(self, tableName):
-        tableName.blockSignals(True)
-        Massemble, current_row_number, row_count = LineChanges.sql_print(self,tableName)
-        # print("aisc = ", Massemble)
-        # print("aisc2 = ", self.Massemble[0][1])
-        # print("aisc3 = ", current_row_number)
-        for i in range(16):
-            self.Massemble[int(current_row_number)][i] = Massemble[i]
-        print("AISC  = ", self.Massemble)
-        tableName.blockSignals(False)
-        return Massemble, current_row_number, row_count
+        # tableName.blockSignals(True)
+        try:
+            Massemble, current_row_number, row_count, table_prop = LineChanges.sql_print(self,tableName)
+            self.table_prop[current_row_number][0] = table_prop[0, 0]
+            self.table_prop[current_row_number][2] = table_prop[0, 0]
+            self.table_prop[current_row_number][4] = table_prop[0, 0]
+            self.table_prop[current_row_number][6] = table_prop[0, 0]
+            self.table_prop[current_row_number][1] = table_prop[0, 1]
+            self.table_prop[current_row_number][3] = table_prop[0, 1]
+            self.table_prop[current_row_number][5] = table_prop[0, 1]
+            self.table_prop[current_row_number][7] = table_prop[0, 1]
+            self.table_prop[current_row_number][8] = table_prop[0, 16]
+            self.table_prop[current_row_number][10] = table_prop[0, 16]
+            self.table_prop[current_row_number][9] = table_prop[0, 3]
+            self.table_prop[current_row_number][11] = table_prop[0, 3]
+            self.table_prop[current_row_number][12] = table_prop[0, 17]
+            self.table_prop[current_row_number][13] = table_prop[0, 17]
+
+            # print("table prop = ", self.table_prop)
+            # print("aisc = ", Massemble)
+            # print("aisc2 = ", self.Massemble[0][1])
+            # print("aisc3 = ", current_row_number)
+            for i in range(16):
+                self.Massemble[int(current_row_number)][i] = Massemble[0][i]
+            # print("AISC  = ", self.Massemble)
+            # tableName.blockSignals(False)
+            self.m_assemble_updater(tableName, flag="cell changed")
+            return Massemble, current_row_number, row_count
+        except TypeError:
+            pass
+
 
     def update_members_copyfrom(self, lineName, position, tableName):
         copyfrom_value = DataCollection.update_lineedit_values(self, lineName)
@@ -445,32 +472,39 @@ class SABRE2_main_subclass(QMainWindow):
 
     def m_assemble_updater(self, tableName, Copy_from_number=1, Insert_after_number=1, lineName=1,
                            flag="insert after button"):
-
+        members_value, _ ,_ = self.update_members_table(tableName,3)
+        members_value = np.delete(members_value,(3), axis=1)
+        print("mem_vals_local = ", members_value)
+        to_append = np.zeros((1, 16))
+        to_append_prop = np.zeros((1, 14))
         if flag == "last":
-            to_append = np.zeros((0,16))
             self.Massemble = np.append(self.Massemble, to_append, axis=0)
-            print("assemble last = ", self.Massemble)
+            self.table_prop = np.append(self.table_prop, to_append_prop, axis=0)
         elif flag == "insert after button":
             row_number = DataCollection.update_lineedit_values(self, lineName)
             self.Massemble = np.insert(self.Massemble, row_number, 0, axis=0)
-            print("assemble last = ", self.Massemble)
+            self.table_prop = np.insert(self.table_prop, row_number, 0, axis=0)
         elif flag == "copy from":
             copyfrom_values = DataCollection.update_lineedit_values(self, Copy_from_number)
             insertafter_values = DataCollection.update_lineedit_values(self, Insert_after_number)
             self.Massemble = np.insert(self.Massemble, insertafter_values,
                                                        self.Massemble[(copyfrom_values - 1), :],
                                                        axis=0)
-            print("assemble copyfrom = ", self.Massemble)
+            self.table_prop = np.insert(self.table_prop, insertafter_values,
+                                       self.table_prop[(copyfrom_values - 1), :],
+                                       axis=0)
         elif flag == "cell changed":
             row = tableName.currentRow()
-            print("row = ", row)
-            print("cell changed before =", self.Massemble)
-            if self.Massemble[row, 3] == 1:
-                self.Massemble[row, 3:15] = 0
-            else:
-                # have the function for  Massemble welded section update
+            print("prop = ", self.table_prop)
+            if np.allclose(self.members_table_values, self.table_prop):
+                # print("Rolled")
                 pass
-            print("assemble cell changed = ", self.Massemble)
+            else:
+                # print("Welded")
+                pass
+                self.Massemble[row][4] = 0
+            # print("assemble cell changed = ", self.Massemble)
+        print("assembly matrix = ", self.Massemble)
         pass
 
     def resizeEvent(self, event):
@@ -689,16 +723,12 @@ class DataCollection(QMainWindow):
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
         val1 = np.zeros((row_check, col_check))
-        changed = 0
-        print("test", row, col)
-        if col == 1 or col == 2 or col == 3:
-            changed = 1
-        else:
-            changed = 0
 
         if row == -1:
             pass
+
         else:
+
             try:
                 for i in range(row_check):
                     for j in range(col_check):
@@ -714,14 +744,28 @@ class DataCollection(QMainWindow):
                                 val1[i, position] = value_combo
                                 DropDownActions.ActionClass.statusMessage(self, message="")
                         else:
-                            val1[i, j] = float(tableName.item(i, j).text())
-                            DropDownActions.ActionClass.statusMessage(self, message="")
+                            if col == 1 or col == 2:
+                                val1[i, j] = float(tableName.item(i, j).text())
+                                pass
+
+                            elif tableName.item(row, 1) is None:
+                                tableName.clearSelection()
+                                tableName.item(row, col).setText("0")
+                                DropDownActions.ActionClass.statusMessage(self, message="Please select joint i!")
+
+                            elif tableName.item(row, 2) is None:
+                                tableName.clearSelection()
+                                tableName.item(row, col).setText("0")
+                                DropDownActions.ActionClass.statusMessage(self, message="Please select joints j!")
+                            else:
+                                val1[i, j] = float(tableName.item(i, j).text())
+                                DropDownActions.ActionClass.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
                 DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
         # print("val1", val1)
-        return val1, changed, row
+        return val1, row
 
     def update_lineedit_values(self, lineName):
         try:
@@ -890,58 +934,70 @@ class LineChanges(QMainWindow):
         c = conn.cursor()
 
         row = tableName.currentRow()
+        row_i = tableName.item(row,1)
+        row_j = tableName.item(row,2)
+        print("row, i j = ", row_i, row_j)
         row_count = tableName.rowCount()
         cross_section = str(self.ui.AISC_database_button.currentText())
-        if row == -1:
-            DropDownActions.ActionClass.statusMessage(self, message="Select the row before assignment")
-        else:
-            try:
-                variable_names = ["bf", "tf", "d", "tw", "A", "W", "Ix", "Zx", "Sx", "rx", "Iy", "Zy", "Sy", "ry", "J",
-                                  "Cw", "dw", "Afillet"]
+        try:
+            if row == -1:
+                DropDownActions.ActionClass.statusMessage(self, message="Select the row before assignment")
+            elif row_i is None:
+                DropDownActions.ActionClass.statusMessage(self, message="Please select the joints before assigning the cross-section properties!")
+            elif row_j is None:
+                DropDownActions.ActionClass.statusMessage(self, message="Please select the joints before assigning the cross-section properties!")
+            else:
+                try:
+                    variable_names = ["bf", "tf", "d", "tw", "A", "W", "Ix", "Zx", "Sx", "rx", "Iy", "Zy", "Sy", "ry", "J",
+                                      "Cw", "dw", "Afillet"]
 
-                table_prop = np.zeros((1, 18))
+                    table_prop = np.zeros((1, 18))
 
-                for i in range(len(variable_names)):
-                    c.execute('SELECT ' + variable_names[i] + ' FROM records WHERE "AISC_Manual_Label" = ?',
-                              (cross_section,))
-                    var1 = c.fetchall()
-                    var1 = var1[0]
-                    table_prop[0, i] = var1[0]
-                # print(cross_section, 'cs_properties = ', table_prop)
-                # table values assignment
-                Massemble = np.zeros(16)
-                Massemble[3] = 1
-                Massemble[4] = table_prop[0, 4]
-                Massemble[5] = table_prop[0, 5]
-                Massemble[6] = table_prop[0, 6]
-                Massemble[7] = table_prop[0, 7]
-                Massemble[8] = table_prop[0, 8]
-                Massemble[9] = table_prop[0, 9]
-                Massemble[10] = table_prop[0, 10]
-                Massemble[11] = table_prop[0, 11]
-                Massemble[12] = table_prop[0, 12]
-                Massemble[13] = table_prop[0, 13]
-                Massemble[14] = table_prop[0, 14]
-                Massemble[15] = table_prop[0, 15]
+                    for i in range(len(variable_names)):
+                        c.execute('SELECT ' + variable_names[i] + ' FROM records WHERE "AISC_Manual_Label" = ?',
+                                  (cross_section,))
+                        var1 = c.fetchall()
+                        var1 = var1[0]
+                        table_prop[0, i] = var1[0]
+                    # print(cross_section, 'cs_properties = ', table_prop)
+                    # table values assignment
+                    Massemble = np.zeros((1,16))
+                    Massemble[0][3] = 1
+                    Massemble[0][4] = table_prop[0, 4]
+                    Massemble[0][5] = table_prop[0, 5]
+                    Massemble[0][6] = table_prop[0, 6]
+                    Massemble[0][7] = table_prop[0, 7]
+                    Massemble[0][8] = table_prop[0, 8]
+                    Massemble[0][9] = table_prop[0, 9]
+                    Massemble[0][10] = table_prop[0, 10]
+                    Massemble[0][11] = table_prop[0, 11]
+                    Massemble[0][12] = table_prop[0, 12]
+                    Massemble[0][13] = table_prop[0, 13]
+                    Massemble[0][14] = table_prop[0, 14]
+                    Massemble[0][15] = table_prop[0, 15]
 
-                for i in range(4, 18):
-                    if i == 4 or i == 6 or i == 8 or i == 10:
-                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 0])))
-                    elif i == 5 or i == 7 or i == 9 or i == 11:
-                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 1])))
-                    elif i == 12 or i == 14:
-                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 16])))
-                    elif i == 13 or i == 15:
-                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 3])))
-                    elif i == 16:
-                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 17])))
-                    else:
-                        tableName.blockSignals(False)
-                        tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 17])))
+                    for i in range(4, 18):
+                        if i == 4 or i == 6 or i == 8 or i == 10:
+                            tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 0])))
+                        elif i == 5 or i == 7 or i == 9 or i == 11:
+                            tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 1])))
+                        elif i == 12 or i == 14:
+                            tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 16])))
+                        elif i == 13 or i == 15:
+                            tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 3])))
+                        elif i == 16:
+                            tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 17])))
+                        else:
+                            tableName.blockSignals(False)
+                            tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 17])))
 
-                return Massemble, row, row_count
-            except IndexError:
-                DropDownActions.ActionClass.statusMessage(self, message="Please select the cross-section name!")
+                    return Massemble, row, row_count, table_prop
+                except IndexError:
+                    DropDownActions.ActionClass.statusMessage(self, message="Please select the cross-section name!")
+        except TypeError:
+            tableName.item(row,4).setFlags( QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsEnabled )
+            DropDownActions.ActionClass.statusMessage(self,
+                                                      message="Please select the joints before assigning the cross-section properties!")
 
 
 class JointTable(QMainWindow):
@@ -989,6 +1045,8 @@ class JointTable(QMainWindow):
             item1.setTextAlignment(QtCore.Qt.AlignCenter)
             item1.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
             tableName.setItem(row_position, 3, item1)
+
+
 
         else:
             row_number = DataCollection.update_lineedit_values(self, lineName)

@@ -314,7 +314,7 @@ class SABRE2_main_subclass(QMainWindow):
 
     # Members tab, Member definition functions
     def update_members_table(self, tableName, position):
-        JNodeValue = self.update_joints_table(self.ui.Joints_Table)
+        JNodeValue = SABRE2_main_subclass.update_joints_table(self, self.ui.Joints_Table)
         Members_values, current_row = DataCollection.update_table_values(self, tableName, position)
         JNodeValue_i = np.zeros((Members_values.shape[0], 14))
         JNodeValue_j = np.zeros((Members_values.shape[0], 14))

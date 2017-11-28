@@ -44,7 +44,7 @@ class glWidget(QGLWidget, QMainWindow):
         self.lastPos = QtCore.QPoint()
         self.parameters = []
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        self.member_count, self.member_values, self.JNodeValues_i , self.JNodeValues_j = self.memberTableValues()
+        self.member_count, self.member_values, self.JNodeValues_i , self.JNodeValues_j = None, None, None, None
         self.joint_i = 1
         self.joint_j = 2
         # print("values = ", self.member_count, self.member_values)
@@ -255,25 +255,28 @@ class glWidget(QGLWidget, QMainWindow):
                     self.renderText(self.joint_nodes[i][1] - self.joint_size,
                                     self.joint_nodes[i][2] + self.joint_size, 0, joint_text, font=self.font)
 
-        for i in range(self.member_count):
-            self.memberOnly(i)
-            if self.ui.actionJoint_Member_Labels.isChecked():
-                if self.ui.Members_table.item(i, 1) is not None and self.ui.Members_table.item(i,
-                                                                                               2) is not None:
-                    if self.white_checked:
-                        glColor3f(0, 0, 0)
-                    else:
-                        glColor3f(1, 1, 1)
+        if self.member_count is None:
+            pass
+        else:
+            for i in range(self.member_count):
+                self.memberOnly(i)
+                if self.ui.actionJoint_Member_Labels.isChecked():
+                    if self.ui.Members_table.item(i, 1) is not None and self.ui.Members_table.item(i,
+                                                                                                   2) is not None:
+                        if self.white_checked:
+                            glColor3f(0, 0, 0)
+                        else:
+                            glColor3f(1, 1, 1)
 
-                    text_x = self.joint_nodes[self.joint_i][1] + (self.joint_nodes[self.joint_j][1] -
-                                                                  self.joint_nodes[self.joint_i][1]) / 2
-                    text_y = self.joint_nodes[self.joint_i][2] + (self.joint_nodes[self.joint_j][2] -
-                                                                  self.joint_nodes[self.joint_i][2]) / 2
-                    joint_text = "M" + str(int(self.member_values[i][0]))
-                    self.renderText(text_x, text_y, 0, joint_text, font=self.font)
+                        text_x = self.joint_nodes[self.joint_i][1] + (self.joint_nodes[self.joint_j][1] -
+                                                                      self.joint_nodes[self.joint_i][1]) / 2
+                        text_y = self.joint_nodes[self.joint_i][2] + (self.joint_nodes[self.joint_j][2] -
+                                                                      self.joint_nodes[self.joint_i][2]) / 2
+                        joint_text = "M" + str(int(self.member_values[i][0]))
+                        self.renderText(text_x, text_y, 0, joint_text, font=self.font)
 
-                    # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-                    # self.Surfaces()
+                        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+                        # self.Surfaces()
 
     def normalizeAngle(self, angle):
         while angle < 0:
@@ -362,7 +365,15 @@ class glWidget(QGLWidget, QMainWindow):
         row = self.ui.Joints_Table.currentRow()
         none_checker = self.noneDetector(self.ui.Joints_Table)
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        self.member_count, self.member_values, self.JNodeValues_i , self.JNodeValues_j = self.memberTableValues()
+
+        try:
+            if self.ui.Members_table.item(0,0) is None:
+                pass
+            else:
+                self.member_count, self.member_values, self.JNodeValues_i , self.JNodeValues_j = self.memberTableValues()
+        except AttributeError:
+            pass
+
         self.white_checked = self.ui.actionWhite_Background.isChecked()
         self.diam = max(max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1]),
                         (max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])))

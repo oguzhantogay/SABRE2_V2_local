@@ -315,12 +315,17 @@ class SABRE2_main_subclass(QMainWindow):
         if current_col == 1 or current_col == 2:
             if Members_values[current_row, current_col] in JNodeValue[:, 0]:
                 DropDownActions.ActionClass.statusMessage(self, message="")
+            elif Members_values[current_row, current_col] == 0:
+                self.ui.Members_table.setCurrentCell(current_row, current_col)
+                DropDownActions.ActionClass.statusMessage(self,
+                                                          message="The member has been defined before. Please change the highlighted cell!")
             else:
                 DropDownActions.ActionClass.statusMessage(self,
                                                           message="Please enter a joint number that is in the Joints Tab")
                 col = tableName.currentColumn()
                 row = tableName.currentRow()
-                tableName.item(row, col).setText("")
+                tableName.item(row, col).setText("0")
+                self.ui.Members_tabs.setCurrentIndex(0)
 
         JNodeValue_i = np.zeros((Members_values.shape[0], 14))
         JNodeValue_j = np.zeros((Members_values.shape[0], 14))
@@ -382,15 +387,11 @@ class SABRE2_main_subclass(QMainWindow):
             self.table_prop[current_row_number][12] = table_prop[0, 17]
             self.table_prop[current_row_number][13] = table_prop[0, 17]
 
-            # print("table prop = ", self.table_prop)
-            # print("aisc = ", Massemble)
-            # print("aisc2 = ", self.Massemble[0][1])
-            # print("aisc3 = ", current_row_number)
             for i in range(16):
                 self.Massemble[int(current_row_number)][i] = Massemble[0][i]
-            # print("AISC  = ", self.Massemble)
-            # tableName.blockSignals(False)
+
             self.m_assemble_updater(tableName, flag="cell changed")
+
             return Massemble, current_row_number, row_count
         except TypeError:
             pass
@@ -506,10 +507,10 @@ class SABRE2_main_subclass(QMainWindow):
                 pass
             else:
                 # print("Welded")
-                pass
                 self.Massemble[row][4] = 0
                 # print("assemble cell changed = ", self.Massemble)
-                # print("assembly matrix = ", self.Massemble)
+
+        print("assembly matrix = ", self.Massemble)
                 # pass
 
     def resizeEvent(self, event):
@@ -728,6 +729,8 @@ class DataCollection(QMainWindow):
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
         val1 = np.zeros((row_check, col_check))
+        val2 = np.zeros((row_check, col_check))
+        val2[:, 3] = 2
 
         if row == -1:
             pass
@@ -751,25 +754,54 @@ class DataCollection(QMainWindow):
                         else:
                             if col == 1 or col == 2:
                                 val1[i, j] = float(tableName.item(i, j).text())
+                                val2[i, j] = 2
                                 pass
 
                             elif tableName.item(row, 1) is None:
                                 tableName.clearSelection()
                                 tableName.item(row, col).setText("0")
                                 DropDownActions.ActionClass.statusMessage(self, message="Please select joint i!")
+                                self.ui.Members_tabs.setCurrentIndex(0)
 
                             elif tableName.item(row, 2) is None:
                                 tableName.clearSelection()
                                 tableName.item(row, col).setText("0")
                                 DropDownActions.ActionClass.statusMessage(self, message="Please select joints j!")
+                                self.ui.Members_tabs.setCurrentIndex(0)
                             else:
                                 val1[i, j] = float(tableName.item(i, j).text())
+                                val2[i, j] = 2
                                 DropDownActions.ActionClass.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
-                tableName.item(row, col).setText("")
+                tableName.item(row, col).setText("0")
+                self.ui.Members_tabs.setCurrentIndex(1)
                 DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
-        # print("val1", val1)
+
+        if 0 in val2:
+            self.ui.Member_Properties_Table.setEnabled(False)
+        else:
+            self.ui.Member_Properties_Table.setEnabled(True)
+            DropDownActions.ActionClass.statusMessage(self, message="Member Defined")
+
+        def unique(a):
+            b = [a[i] for i in sorted(np.unique(a, axis=0, return_index=True)[1])]
+            return b
+
+        if row_check == 1:
+            pass
+        else:
+            if col == 1 or col == 2:
+                val3 = val1[:, (1, 2)]
+                val_uniq = unique(val3)
+                if np.array_equal(val3, val_uniq):
+                    pass
+                else:
+                    print("test")
+                    tableName.clearSelection()
+                    tableName.item(row, col).setText("0")
+                    DropDownActions.ActionClass.statusMessage(self, message="The Member has been defined before!")
+                    self.ui.Members_tabs.setCurrentIndex(0)
         return val1, row, col
 
     def update_lineedit_values(self, lineName):
@@ -1059,8 +1091,6 @@ class JointTable(QMainWindow):
             except AttributeError:
                 DropDownActions.ActionClass.statusMessage(self, message="")
 
-
-
             # ActionClass.statusMessage(self, message="Please enter only numbers in the cell!")
         # print("val1", val1)
         return val1
@@ -1294,8 +1324,8 @@ class Boundary_Conditions(QMainWindow):
                     table_for_shear_panel.item(current_row, current_col).setText("")
                     DropDownActions.ActionClass.statusMessage(self,
                                                               message=(
-                                                                  "Please define the joint within the member " + table_for_shear_panel.item(
-                                                                      current_row, 0).text()))
+                                                                      "Please define the joint within the member " + table_for_shear_panel.item(
+                                                                  current_row, 0).text()))
 
             except ValueError:
                 table_for_shear_panel.item(current_row, current_col).setText("")

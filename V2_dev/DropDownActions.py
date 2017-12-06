@@ -211,7 +211,7 @@ class ActionClass(QMainWindow):
 
         self.member_properties_values = SABRE2_main_subclass.SABRE2_main_subclass.update_member_properties_table(self,
                                                                                                                  self.ui.Member_Properties_Table)
-        self.members_table_values, self.JNodeValue_i, self.JNodeValue_j = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self,
+        self.members_table_values, self.JNodeValue_i, self.JNodeValue_j, _ = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self,
                                                                                                    self.ui.Members_table,
                                                                                                    self.Members_table_position)
         self.shear_panel_values = SABRE2_main_subclass.SABRE2_main_subclass.update_shear_panel_table(self,

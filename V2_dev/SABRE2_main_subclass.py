@@ -38,7 +38,7 @@ class SABRE2_main_subclass(QMainWindow):
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
         self.Massemble = np.zeros((1, 16))
         self.table_prop = np.zeros((1, 14))
-        self.members_table_values = np.zeros((1, 14))
+        self.members_table_values = np.zeros((1, 18))
         ui_layout.Members_table.setEnabled(False)
         ui_layout.verticalLayout_8.insertWidget(0, self.OpenGLwidget)
         # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
@@ -164,9 +164,14 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Mem_def_delete.clicked.connect(
             lambda: TableChanges.delete_row(self, ui_layout.Members_table, ui_layout.Delete_row_number_mem_def, "last"))
 
+        ui_layout.Mem_def_delete.clicked.connect(
+            lambda:self.m_assemble_updater(ui_layout.Members_table, flag="Delete Last"))
+
         ui_layout.Delete_row_mem_def_button.clicked.connect(
             lambda: TableChanges.delete_row(self, ui_layout.Members_table, ui_layout.Delete_row_number_mem_def,
                                             "arbitrary"))
+        ui_layout.Delete_row_mem_def_button.clicked.connect(
+            lambda:self.m_assemble_updater(ui_layout.Members_table, Delete_row= ui_layout.Delete_row_number_mem_def,flag="Delete Selected"))
 
         # Members line CopyInsert
         ui_layout.Copy_from_number_mem_def.textChanged.connect(
@@ -366,7 +371,7 @@ class SABRE2_main_subclass(QMainWindow):
         # print("main screen", Members_values)
         # print("main screen node i", JNodeValue_i)
         # print("main screen node j", JNodeValue_j)
-        return Members_values, JNodeValue_i, JNodeValue_j
+        return Members_values, JNodeValue_i, JNodeValue_j, current_row
 
     def AISC_update_fun(self, tableName):
         # tableName.blockSignals(True)
@@ -386,6 +391,9 @@ class SABRE2_main_subclass(QMainWindow):
             self.table_prop[current_row_number][11] = table_prop[0, 3]
             self.table_prop[current_row_number][12] = table_prop[0, 17]
             self.table_prop[current_row_number][13] = table_prop[0, 17]
+
+            # print("Massemble = ", Massemble)
+            # print("table prop = ", self.table_prop)
 
             for i in range(16):
                 self.Massemble[int(current_row_number)][i] = Massemble[0][i]
@@ -476,20 +484,30 @@ class SABRE2_main_subclass(QMainWindow):
         print("main screen uniform load values", point_data_vals)
         return point_load_def
 
-    def m_assemble_updater(self, tableName, Copy_from_number=1, Insert_after_number=1, lineName=1,
+    def m_assemble_updater(self, tableName, Copy_from_number=1, Insert_after_number=1, lineName=1, Delete_row = 1,
                            flag="insert after button"):
-        members_value, _, _ = self.update_members_table(tableName, 3)
-        members_value = np.delete(members_value, (3), axis=1)
-        # print("mem_vals_local = ", members_value)
+
+        self.members_table_values, _, _, current_row = self.update_members_table(tableName, 3)
+
+        # print("members = ", self.members_table_values)
+        row_count = tableName.rowCount()
         to_append = np.zeros((1, 16))
         to_append_prop = np.zeros((1, 14))
+
+
+
         if flag == "last":
             self.Massemble = np.append(self.Massemble, to_append, axis=0)
             self.table_prop = np.append(self.table_prop, to_append_prop, axis=0)
+            for i in range(3):
+                self.Massemble[current_row][i] = self.members_table_values[current_row][i]
+
         elif flag == "insert after button":
             row_number = DataCollection.update_lineedit_values(self, lineName)
             self.Massemble = np.insert(self.Massemble, row_number, 0, axis=0)
             self.table_prop = np.insert(self.table_prop, row_number, 0, axis=0)
+            for i in range(3):
+                self.Massemble[current_row][i] = self.members_table_values[current_row][i]
         elif flag == "copy from":
             copyfrom_values = DataCollection.update_lineedit_values(self, Copy_from_number)
             insertafter_values = DataCollection.update_lineedit_values(self, Insert_after_number)
@@ -499,19 +517,58 @@ class SABRE2_main_subclass(QMainWindow):
             self.table_prop = np.insert(self.table_prop, insertafter_values,
                                         self.table_prop[(copyfrom_values - 1), :],
                                         axis=0)
+            for i in range(3):
+                self.Massemble[current_row][i] = self.members_table_values[current_row][i]
+
+        elif flag == "Delete Last":
+            self.Massemble = np.delete(self.Massemble,(row_count-1), axis = 0)
+
+        elif flag == "Delete Selected":
+            row_number = DataCollection.update_lineedit_values(self, Delete_row)
+            delete = int(row_number) - 1
+            self.Massemble = np.delete(self.Massemble, (delete), axis=0)
+
+            for i in range(row_count):
+                self.Massemble[i][0] = self.members_table_values[i][0]
+
+
         elif flag == "cell changed":
             row = tableName.currentRow()
-            # print("prop = ", self.table_prop)
-            if np.allclose(self.members_table_values, self.table_prop):
-                # print("Rolled")
-                pass
-            else:
-                # print("Welded")
-                self.Massemble[row][4] = 0
-                # print("assemble cell changed = ", self.Massemble)
 
+            try:
+                for i in range(3):
+                    self.Massemble[current_row][i] = self.members_table_values[current_row][i]
+
+                for i in range(14):
+
+                    if tableName.item(current_row, i+3) is None:
+                        self.Massemble[current_row][3] = 1
+                        break
+
+                    elif np.isclose(self.table_prop[current_row][i], self.members_table_values[current_row][i + 4],
+                                             rtol=1e-05, atol=1e-08, equal_nan=False):
+                        # print("current row " + str(current_row) + " is rolled")
+                        self.Massemble[current_row][3] = 1
+                    else:
+
+                        for i in range(1,14):
+                            self.Massemble[current_row][i+2] = 0
+
+                        # print("current row " + str(current_row) + " is welded")
+                        break
+            except ValueError and IndexError:
+                pass
+
+            # if np.allclose(self.members_table_values, self.table_prop):
+            #     # print("Rolled")
+            #     pass
+            # else:
+            #     # print("Welded")
+            #     self.Massemble[row][3] = 0
+            #     # print("assemble cell changed = ", self.Massemble)
+        # print("table_" , self.table_prop, "/n members table = ", self.members_table_values)
         print("assembly matrix = ", self.Massemble)
-                # pass
+        # pass
 
     def resizeEvent(self, event):
         # self.OpenGLwidget.resized.emit()
@@ -867,8 +924,10 @@ class TableChanges(QMainWindow):
     def delete_row(self, tableName, lineName, flag):
         row_position = tableName.rowCount()
         if flag == "last":
-
-            tableName.removeRow(row_position - 1)
+            if row_position == 1:
+                pass
+            else:
+                tableName.removeRow(row_position - 1)
         else:
             row_number = DataCollection.update_lineedit_values(self, lineName)
             tableName.removeRow(row_number - 1)

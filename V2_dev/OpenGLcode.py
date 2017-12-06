@@ -436,7 +436,7 @@ class glWidget(QGLWidget, QMainWindow):
 
         import SABRE2_main_subclass
 
-        member_values , JNodeValues_i , JNodeValues_j= SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table, 3)
+        member_values , JNodeValues_i , JNodeValues_j, _= SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table, 3)
 
         member_count = member_values.shape[0]
 

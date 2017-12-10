@@ -4,6 +4,7 @@ from PyQt4 import QtCore
 from PyQt4.QtGui import *
 from OpenGL.GL import *
 from DropDownActions import ActionClass
+import numpy as np
 
 
 class glWidget(QGLWidget, QMainWindow):
@@ -44,9 +45,13 @@ class glWidget(QGLWidget, QMainWindow):
         self.lastPos = QtCore.QPoint()
         self.parameters = []
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        self.member_count, self.member_values, self.JNodeValues_i , self.JNodeValues_j = None, None, None, None
+        self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue = None, None, None, None, None
         self.joint_i = 1
         self.joint_j = 2
+
+        self.line_checked = False
+        self.selected_checked = False
+        self.render_checked = False
         # print("values = ", self.member_count, self.member_values)
 
     # def Cube(self):
@@ -315,17 +320,19 @@ class glWidget(QGLWidget, QMainWindow):
         else:
             if self.ui.DefinitionTabs.isEnabled():
                 self.zPos += (
-                    max(self.joint_nodes[0][1], self.joint_nodes[0][2]) - max(self.joint_nodes[int(size_joint - 1)][1],
-                                                                              self.joint_nodes[int(size_joint - 1)][
-                                                                                  2]) - 100)
+                        max(self.joint_nodes[0][1], self.joint_nodes[0][2]) - max(
+                    self.joint_nodes[int(size_joint - 1)][1],
+                    self.joint_nodes[int(size_joint - 1)][
+                        2]) - 100)
                 self.joint_size = 3 * 0.35
             else:
 
                 self.joint_size = 2 * 0.35
                 self.zPos += (
-                    max(self.joint_nodes[0][1], self.joint_nodes[0][2]) - max(self.joint_nodes[int(size_joint - 1)][1],
-                                                                              self.joint_nodes[int(size_joint - 1)][
-                                                                                  2]) - 30)
+                        max(self.joint_nodes[0][1], self.joint_nodes[0][2]) - max(
+                    self.joint_nodes[int(size_joint - 1)][1],
+                    self.joint_nodes[int(size_joint - 1)][
+                        2]) - 30)
 
         self.updateGL()
         pass
@@ -362,15 +369,18 @@ class glWidget(QGLWidget, QMainWindow):
         pass
 
     def updateTheWidget(self):
-        row = self.ui.Joints_Table.currentRow()
+        row = self.ui.Members_table.currentRow()
         none_checker = self.noneDetector(self.ui.Joints_Table)
+        self.render_checked = self.ui.actionRender_All_Members.isChecked()
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
 
         try:
-            if self.ui.Members_table.item(0,0) is None:
+            if self.ui.Members_table.item(row, 1) is None:
                 pass
             else:
-                self.member_count, self.member_values, self.JNodeValues_i , self.JNodeValues_j = self.memberTableValues()
+                self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue = self.memberTableValues()
+                if self.render_checked:
+                    self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue)
         except AttributeError:
             pass
 
@@ -436,14 +446,11 @@ class glWidget(QGLWidget, QMainWindow):
 
         import SABRE2_main_subclass
 
-        member_values , JNodeValues_i , JNodeValues_j, _= SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table, 3)
-
+        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
+            self, self.ui.Members_table, 3)
         member_count = member_values.shape[0]
 
-        # print("i = ", JNodeValues_i)
-        # print("j = ", JNodeValues_j)
-
-        return member_count, member_values, JNodeValues_i , JNodeValues_j
+        return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue
 
     def noneDetector(self, tableName):
         row_count = tableName.rowCount()
@@ -470,9 +477,8 @@ class glWidget(QGLWidget, QMainWindow):
             glEnable(GL_LINE_STIPPLE)
             glBegin(GL_LINES)
 
-
-            self.joint_i = int(self.member_values[x][1]-1)
-            self.joint_j = int(self.member_values[x][2]-1)
+            self.joint_i = int(self.member_values[x][1] - 1)
+            self.joint_j = int(self.member_values[x][2] - 1)
 
             # print("test = ", self.member_values[x][1],self.member_values[x][2], 0)
             glColor3ub(100, 149, 237)
@@ -482,3 +488,43 @@ class glWidget(QGLWidget, QMainWindow):
             glEnd()
 
             glPopAttrib()
+
+    def renderAllProp(self, JNodevalue_i, JNodevalue_j, BNodevalue):
+        ''' This function works on the rendering all properties of the model'''
+        # self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j
+        # print("node values", self.JNodeValues_i, self.JNodeValues_j)
+        print("test", JNodevalue_i)
+        SASSEM = np.zeros((self.member_count, 2, 13))
+        print("Sassem 1 = ", SASSEM)
+        for k in range(13):
+            for i in range(int(self.member_count)):
+                # print(int(self.member_count))
+                # print("test1.2",JNodevalue_i[i,k])
+                if np.amax(BNodevalue[i,:,1]):
+                    pass
+                else:
+                    SASSEM[i][0][k] = JNodevalue_i[i][k]
+
+                    if np.amax(BNodevalue[i, :, 1]) == 0:
+                        pass
+                    else:
+                        for j in range(np.amax(BNodevalue[i, :, 1])):
+                            SASSEM[i][j + 1][k] = BNodevalue[i, j, k]
+
+                SASSEM[i][int(np.amax(BNodevalue[i, :, 1]))+1][k] = JNodevalue_j[i][k]
+
+        # print("sassem values = ", SASSEM)
+        # print("sassem values = ", SASSEM[:,:,0])
+        # print("sassem values = ", SASSEM[:,:,1])
+        # print("sassem values = ", SASSEM[:,:,2])
+        # print("sassem values = ", SASSEM[:,:,3])
+        # print("sassem values = ", SASSEM[:,:,4])
+        # print("sassem values = ", SASSEM[:,:,5])
+        # print("sassem values = ", SASSEM[:,:,6])
+        # print("sassem values = ", SASSEM[:,:,7])
+        # print("sassem values = ", SASSEM[:,:,8])
+        # print("sassem values = ", SASSEM[:,:,9])
+        # print("sassem values = ", SASSEM[:,:,10])
+        # print("sassem values = ", SASSEM[:,:,11])
+        # print("sassem values = ", SASSEM[:,:,12])
+        print("test2")

@@ -39,6 +39,11 @@ class SABRE2_main_subclass(QMainWindow):
         self.Massemble = np.zeros((1, 16))
         self.table_prop = np.zeros((1, 14))
         self.members_table_values = np.zeros((1, 18))
+        self.BNodevalue = None
+        self.SNodevalue = None
+        ui_layout.actionRender_Line_Element.setCheckable(True)
+        ui_layout.actionRender_Selected_Member.setCheckable(True)
+        ui_layout.actionRender_All_Members.setCheckable(True)
         ui_layout.Members_table.setEnabled(False)
         ui_layout.verticalLayout_8.insertWidget(0, self.OpenGLwidget)
         # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
@@ -111,7 +116,7 @@ class SABRE2_main_subclass(QMainWindow):
                                           "arbitrary"))
 
         # Members Table Arrangements
-        self.Members_table_options = ["Mid Depth", "Flange 1", "Flange 2"]
+        self.Members_table_options = ["Mid Depth", "Flange 2", "Flange 1"]
         self.Members_table_position = 3
         # The data update for members tab
         DataCollection.Assign_comboBox(self, ui_layout.Members_table, self.Members_table_options,
@@ -316,7 +321,7 @@ class SABRE2_main_subclass(QMainWindow):
     # Members tab, Member definition functions
     def update_members_table(self, tableName, position):
         JNodeValue = SABRE2_main_subclass.update_joints_table(self, self.ui.Joints_Table)
-        Members_values, current_row, current_col = DataCollection.update_table_values(self, tableName, position)
+        Members_values, current_row, current_col, flag_mem_values = DataCollection.update_table_values(self, tableName, position)
         if current_col == 1 or current_col == 2:
             if Members_values[current_row, current_col] in JNodeValue[:, 0]:
                 DropDownActions.ActionClass.statusMessage(self, message="")
@@ -332,13 +337,34 @@ class SABRE2_main_subclass(QMainWindow):
                 tableName.item(row, col).setText("0")
                 self.ui.Members_tabs.setCurrentIndex(0)
 
+        row_count = tableName.rowCount()
+        Rval = np.zeros((row_count, 2))
+        #
+        for i in range(row_count):
+            Rval[i][0] = Members_values[i][0]
+            Rval[i][1] = Members_values[i][3] + 1
+
+
+        self.BNodevalue = np.zeros((row_count, 1, 2))
+        if row_count == self.BNodevalue.shape[0]:
+            for i in range(row_count):
+                self.BNodevalue[i][0][0] = i + 1
+                self.BNodevalue[i][0][1] = 0  # to indicate zero bracing
+
+        # elif row_count == self.BNodevalue.shape[0]:
+        #     for i in range(row_count):
+        #         self.BNodevalue[i][0][0] = i + 1
+        #         self.BNodevalue[i][0][1] = 0  # to indicate zero bracing
+
         JNodeValue_i = np.zeros((Members_values.shape[0], 14))
         JNodeValue_j = np.zeros((Members_values.shape[0], 14))
-        if Members_values.shape[0] == 1:
-            pass
-        else:
-            for i in range(Members_values.shape[0]):
-                # i node values
+        # if Members_values.shape[0] == 1:
+        #     pass
+        # else:
+
+        for i in range(Members_values.shape[0]):
+            # i node values
+            if flag_mem_values[i][1] == 1:
                 JNodeValue_i[i][0] = Members_values[i][0]
                 JNodeValue_i[i][1] = Members_values[i][1]
                 JNodeValue_i[i][2] = JNodeValue[int(Members_values[i][1] - 1)][1]
@@ -368,10 +394,16 @@ class SABRE2_main_subclass(QMainWindow):
                 JNodeValue_j[i][11] = JNodeValue_j[i][9] + JNodeValue_j[i][6] + JNodeValue_j[i][8]
                 JNodeValue_j[i][12] = JNodeValue_j[i][9] + (JNodeValue_j[i][6] + JNodeValue_j[i][8]) / 2
                 JNodeValue_j[i][13] = Members_values[i][17]
-        # print("main screen", Members_values)
+
+
+
+
+        # print("Rval", Rval)
+
+
         # print("main screen node i", JNodeValue_i)
         # print("main screen node j", JNodeValue_j)
-        return Members_values, JNodeValue_i, JNodeValue_j, current_row
+        return Members_values, JNodeValue_i, JNodeValue_j, current_row, self.BNodevalue, flag_mem_values
 
     def AISC_update_fun(self, tableName):
         # tableName.blockSignals(True)
@@ -487,7 +519,7 @@ class SABRE2_main_subclass(QMainWindow):
     def m_assemble_updater(self, tableName, Copy_from_number=1, Insert_after_number=1, lineName=1, Delete_row = 1,
                            flag="insert after button"):
 
-        self.members_table_values, _, _, current_row = self.update_members_table(tableName, 3)
+        self.members_table_values, _, _, current_row, _, _ = self.update_members_table(tableName, 3)
 
         # print("members = ", self.members_table_values)
         row_count = tableName.rowCount()
@@ -567,7 +599,7 @@ class SABRE2_main_subclass(QMainWindow):
             #     self.Massemble[row][3] = 0
             #     # print("assemble cell changed = ", self.Massemble)
         # print("table_" , self.table_prop, "/n members table = ", self.members_table_values)
-        print("assembly matrix = ", self.Massemble)
+        # print("assembly matrix = ", self.Massemble)
         # pass
 
     def resizeEvent(self, event):
@@ -788,6 +820,7 @@ class DataCollection(QMainWindow):
         val1 = np.zeros((row_check, col_check))
         val2 = np.zeros((row_check, col_check))
         val2[:, 3] = 2
+        flag_mem_value = np.zeros((row_check,2))
 
         if row == -1:
             pass
@@ -841,6 +874,16 @@ class DataCollection(QMainWindow):
             self.ui.Member_Properties_Table.setEnabled(True)
             DropDownActions.ActionClass.statusMessage(self, message="Member Defined")
 
+        val4 = np.delete(val2,(0,1,2,3), axis = 1)
+
+        flag_mem_value[:,0] = val1[:,0]
+        for i in range(int(row_check)):
+            if 0 in val4[i, :]:
+                flag_mem_value[i][1] = 0
+            else:
+                flag_mem_value[i][1] = 1
+
+
         def unique(a):
             b = [a[i] for i in sorted(np.unique(a, axis=0, return_index=True)[1])]
             return b
@@ -859,7 +902,7 @@ class DataCollection(QMainWindow):
                     tableName.item(row, col).setText("0")
                     DropDownActions.ActionClass.statusMessage(self, message="The Member has been defined before!")
                     self.ui.Members_tabs.setCurrentIndex(0)
-        return val1, row, col
+        return val1, row, col,flag_mem_value
 
     def update_lineedit_values(self, lineName):
         try:
@@ -951,7 +994,7 @@ class LineChanges(QMainWindow):
 
     def copy_insert_row(self, tableName, options, position, Copy_from_number, Insert_after_number):
         tableName.blockSignals(True)
-        Members_values, current_row, _ = DataCollection.update_table_values(self, tableName, position)
+        Members_values, current_row, _ ,_= DataCollection.update_table_values(self, tableName, position)
         copyfrom_values = DataCollection.update_lineedit_values(self, Copy_from_number)
         insertafter_values = DataCollection.update_lineedit_values(self, Insert_after_number)
         row_position = tableName.rowCount()

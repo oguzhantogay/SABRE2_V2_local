@@ -5049,13 +5049,6 @@ function pdn_apply_pushbutton_Callback(hObject, eventdata)
       Massemble,JNodevalue_i,JNodevalue_j,Rval,BNodevalue,SNodevalue,pdn_type_name,pdn_coordx_edit,...
       pdn_coordy_edit,pdn_coordz_edit,pt_title_name,axesm,vstm);
 
-    JNodevalue
-    JNodevalue_i
-    JNodevalue_j
-    BNodevalue
-    SNodevalue
-
-
 end % function end
 % --------------------------------------------------------------------
 function pdn_cancel_pushbutton_Callback(hObject, eventdata)
@@ -5148,12 +5141,7 @@ function pde_apply_pushbutton_Callback(hObject, eventdata)
       pde_bfti_edit,pde_tfti_edit,pde_dwi_edit,pde_twi_edit,pde_bfbj_edit,...
       pde_tfbj_edit,pde_bftj_edit,pde_tftj_edit,pde_dwj_edit,pde_twj_edit,pde_fili_edit,pde_filj_edit,...
       pde_reference_edit,pde_jointi_radiobutton,pde_jointj_radiobutton,axesm,pde_wsname_edit,vstm);
-      Massemble
-      JNodevalue_i
-      JNodevalue_j
-      Rval
-      BNodevalue
-      SNodevalue
+
  end % function end
  % --------------------------------------------------------------------
 function pde_cancel_pushbutton_Callback(hObject, eventdata)

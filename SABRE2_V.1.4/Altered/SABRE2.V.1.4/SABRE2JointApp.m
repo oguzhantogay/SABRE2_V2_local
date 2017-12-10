@@ -7,6 +7,9 @@ function [JNodevalue,JNodevalue_i,JNodevalue_j,BNodevalue,SNodevalue]=SABRE2Join
 % *****************       Add Joint Node              ********************
 % ************************************************************************ 
 % Automatic Joint numbering
+fprintf('\n before')
+BNodevalue
+SNodevalue
 if isempty(JNodevalue)
    nextnjnode = 1;
 else
@@ -111,7 +114,9 @@ if ~isempty(Massemble)
    end
    
 end
-
+fprintf('after')
+BNodevalue
+SNodevalue
 % ************************************************************************
 % *******                   Plot Model                            ********
 % ************************************************************************

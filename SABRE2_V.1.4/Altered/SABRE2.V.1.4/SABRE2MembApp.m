@@ -144,7 +144,6 @@ else
    SECTION=Sectiondata.SECTION;
 
    for i=1:(length(SECTION(:,1)))
-       i
       if isequal(SECTION(i,1),str2double(get(pde_bfbi_edit,'String'))) && isequal(SECTION(i,2),str2double(get(pde_tfbi_edit,'String'))) ...
             && isequal(SECTION(i,3),str2double(get(pde_bfti_edit,'String'))) && isequal(SECTION(i,4),str2double(get(pde_tfti_edit,'String'))) ...
             && isequal(round(SECTION(i,5)*10^5)/10^5,round( ( str2double(get(pde_dwi_edit,'String'))  + str2double(get(pde_tfbi_edit,'String')) + str2double(get(pde_tfti_edit,'String'))  )*10^5)/10^5) ...
@@ -175,9 +174,7 @@ else
                Massemble(mnum,13) = SECTION(i,15); % Sy
                Massemble(mnum,14) = SECTION(i,16); % ry
                Massemble(mnum,15) = SECTION(i,17); % J
-               Massemble(mnum,16) = SECTION(i,18); % Cw
-               format shortG
-               Massemble
+               Massemble(mnum,16) = SECTION(i,18); % Cw               
             break;
 
       else
@@ -222,7 +219,9 @@ set([pde_bfbj_edit,pde_tfbj_edit,pde_bftj_edit],'string','');
 set([pde_tftj_edit,pde_dwj_edit,pde_twj_edit],'string','');
 set([pde_fili_edit,pde_filj_edit],'string','0');
 set(pde_wsname_edit,'String','');
-
+fprintf('before')
+BNodevalue
+Rval
 % Initially Auto Genetate BNodevalue for No Bracing Cases
 if ~isempty(Massemble)
    if isempty(BNodevalue)
@@ -240,7 +239,8 @@ if ~isempty(Massemble)
       end
    end
 end
-
+fprintf('midlle')
+BNodevalue
 % ************************************************************************
 % ***    Updated JNodevalue_i & JNodevalue_j & BNodevalue by Moving   ****
 % ************************************************************************
@@ -250,6 +250,8 @@ if ~isempty(Massemble)
    for i = 1:max(Massemble(:,1))
       if ~isequal(max(BNodevalue(i,:,2)),0) % ~ No Bracing
          for j = 1:max(BNodevalue(i,:,2))
+             
+            fprintf('test')
             seglength = BNodevalue(i,j,16);
             alpharef = zeros(i,2);
             opp = JNodevalue_j(i,4)-JNodevalue_i(i,4);  % element depth in y-dir
@@ -272,7 +274,8 @@ if ~isempty(Massemble)
    end
 
 end
-
+fprintf('last')
+BNodevalue
 % ************************************************************************
 % *******                   Plot Model                            ********
 % ************************************************************************

@@ -156,7 +156,8 @@ else % ~isempty(Massemble)
       end
       q = max(BNodevalue(i,:,2))+q+1;
    end
-
+%    fprintf('final q \n')
+%    q
    q = 1;
    for i = 1:mem
       for j = 1:max(BNodevalue(i,:,2))
@@ -189,7 +190,8 @@ else % ~isempty(Massemble)
       NJ_j(q-1,12)=SASSEM(i,max(BNodevalue(i,:,2))+2,12);
       NJ_j(q-1,13)=SASSEM(i,max(BNodevalue(i,:,2))+2,13);
    end
-
+%    NJ_i
+%    NJ_j
    sn = max(NJ_i(:,1)); % Total segment number.
 
    % ***************************************** Assemble Member & Bracing E
@@ -198,7 +200,7 @@ else % ~isempty(Massemble)
    % ---------------------------------------------------------------------
 
    % Nodes for each element (# ele, #node start, #node end)
-   MI=[NJ_i(:,1),NJ_i(:,2),NJ_j(:,2)];
+   MI=[NJ_i(:,1),NJ_i(:,2),NJ_j(:,2)]
    % Global frame coordinates at each element.
    % Start node : node(1) and end node : node(2) for each element
    xg1=NJ_i(:,3);xg2=NJ_j(:,3);  % element length : xg1(start) xg2(end)

@@ -219,9 +219,9 @@ set([pde_bfbj_edit,pde_tfbj_edit,pde_bftj_edit],'string','');
 set([pde_tftj_edit,pde_dwj_edit,pde_twj_edit],'string','');
 set([pde_fili_edit,pde_filj_edit],'string','0');
 set(pde_wsname_edit,'String','');
-fprintf('before')
-BNodevalue
-Rval
+% fprintf('before')
+% BNodevalue
+% Rval
 % Initially Auto Genetate BNodevalue for No Bracing Cases
 if ~isempty(Massemble)
    if isempty(BNodevalue)
@@ -239,8 +239,8 @@ if ~isempty(Massemble)
       end
    end
 end
-fprintf('midlle')
-BNodevalue
+% fprintf('midlle')
+% BNodevalue
 % ************************************************************************
 % ***    Updated JNodevalue_i & JNodevalue_j & BNodevalue by Moving   ****
 % ************************************************************************
@@ -274,8 +274,8 @@ if ~isempty(Massemble)
    end
 
 end
-fprintf('last')
-BNodevalue
+% fprintf('last')
+% BNodevalue
 % ************************************************************************
 % *******                   Plot Model                            ********
 % ************************************************************************

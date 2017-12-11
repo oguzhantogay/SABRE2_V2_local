@@ -493,9 +493,21 @@ class glWidget(QGLWidget, QMainWindow):
         ''' This function works on the rendering all properties of the model'''
         # self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j
         # print("node values", self.JNodeValues_i, self.JNodeValues_j)
-        print("test", JNodevalue_i)
+        # print("test", JNodevalue_i)
         SASSEM = np.zeros((self.member_count, 2, 13))
-        print("Sassem 1 = ", SASSEM)
+        max_b = 0
+
+        for i in range(int(self.member_count)):
+            max_c = np.amax(BNodevalue[i,:,1])
+            if max_b < max_c:
+                max_b = max_c
+
+        max_for_NJ_i = max_b + self.member_count
+        max_for_NJ_j = max_b + self.member_count + 1
+        NJ_i = np.zeros((max_for_NJ_i, 13))
+        NJ_j = np.zeros((max_for_NJ_i, 13))
+
+        # print("Sassem 1 = ", SASSEM)
         for k in range(13):
             for i in range(int(self.member_count)):
                 # print(int(self.member_count))
@@ -513,7 +525,7 @@ class glWidget(QGLWidget, QMainWindow):
 
                 SASSEM[i][int(np.amax(BNodevalue[i, :, 1]))+1][k] = JNodevalue_j[i][k]
 
-        # print("sassem values = ", SASSEM)
+        print("sassem values = ", SASSEM)
         # print("sassem values = ", SASSEM[:,:,0])
         # print("sassem values = ", SASSEM[:,:,1])
         # print("sassem values = ", SASSEM[:,:,2])
@@ -527,4 +539,122 @@ class glWidget(QGLWidget, QMainWindow):
         # print("sassem values = ", SASSEM[:,:,10])
         # print("sassem values = ", SASSEM[:,:,11])
         # print("sassem values = ", SASSEM[:,:,12])
-        print("test2")
+        # print("test2")
+
+        q = 1
+
+
+        for i in range(self.member_count):
+            NJ_i[q - 1][0] = q
+            NJ_i[q - 1][1] = q
+            NJ_i[q - 1][2] = SASSEM[i, 0, 2]
+            NJ_i[q - 1][3] = SASSEM[i, 0, 3]
+            NJ_i[q - 1][4] = SASSEM[i, 0, 4]
+            NJ_i[q - 1][5] = SASSEM[i, 0, 5]
+            NJ_i[q - 1][6] = SASSEM[i, 0, 6]
+            NJ_i[q - 1][7] = SASSEM[i, 0, 7]
+            NJ_i[q - 1][8] = SASSEM[i, 0, 8]
+            NJ_i[q - 1][9] = SASSEM[i, 0, 9]
+            NJ_i[q - 1][10] = SASSEM[i, 0, 10]
+            NJ_i[q - 1][11] = SASSEM[i, 0, 11]
+            NJ_i[q - 1][12] = SASSEM[i, 0, 12]
+            for j in range(int(np.amax(BNodevalue[i, :, 1]))):
+                NJ_i[q - 1 + j][0] = q + j +1
+                NJ_i[q - 1 + j][1] = q + j +1
+                NJ_i[q - 1 + j][2] = SASSEM[i, j + 0, 2]
+                NJ_i[q - 1 + j][3] = SASSEM[i, j + 0, 3]
+                NJ_i[q - 1 + j][4] = SASSEM[i, j + 0, 4]
+                NJ_i[q - 1 + j][5] = SASSEM[i, j + 0, 5]
+                NJ_i[q - 1 + j][6] = SASSEM[i, j + 0, 6]
+                NJ_i[q - 1 + j][7] = SASSEM[i, j + 0, 7]
+                NJ_i[q - 1 + j][8] = SASSEM[i, j + 0, 8]
+                NJ_i[q - 1 + j][9] = SASSEM[i, j + 0, 9]
+                NJ_i[q - 1 + j][10] = SASSEM[i, j + 0, 10]
+                NJ_i[q - 1 + j][11] = SASSEM[i, j + 0, 11]
+                NJ_i[q - 1 + j][12] = SASSEM[i, j + 0, 12]
+            q = int(np.amax(BNodevalue[i, :, 1]) + q + 1)
+
+        q = 1
+
+        for i in range(self.member_count):
+
+            for j in range(int(np.amax(BNodevalue[i,:,1]))):
+                NJ_j[q + j-2][0] = q + j-1
+                NJ_j[q + j-2][1] = q + j
+                NJ_j[q + j-2][2] = SASSEM[i, j+0, 2]
+                NJ_j[q + j-2][3] = SASSEM[i, j+0, 3]
+                NJ_j[q + j-2][4] = SASSEM[i, j+0, 4]
+                NJ_j[q + j-2][5] = SASSEM[i, j+0, 5]
+                NJ_j[q + j-2][6] = SASSEM[i, j+0, 6]
+                NJ_j[q + j-2][7] = SASSEM[i, j+0, 7]
+                NJ_j[q + j-2][8] = SASSEM[i, j+0, 8]
+                NJ_j[q + j-2][9] = SASSEM[i, j+0, 9]
+                NJ_j[q + j-2][10] = SASSEM[i, j+0, 10]
+                NJ_j[q + j-2][11] = SASSEM[i, j+0, 11]
+                NJ_j[q + j-2][12] = SASSEM[i, j+0, 12]
+
+            # print("q before = ", q)
+            q = int(np.amax(BNodevalue[i, :, 1])) + q+1
+            sec_dim = int(np.amax(BNodevalue[i,:,1]))
+            NJ_j[q-2][0] = q-1
+            NJ_j[q-2][1] = q
+            NJ_j[q-2][2] = SASSEM[i,sec_dim,2]
+            NJ_j[q-2][3] = SASSEM[i,sec_dim,3]
+            NJ_j[q-2][4] = SASSEM[i,sec_dim,4]
+            NJ_j[q-2][5] = SASSEM[i,sec_dim,5]
+            NJ_j[q-2][6] = SASSEM[i,sec_dim,6]
+            NJ_j[q-2][7] = SASSEM[i,sec_dim,7]
+            NJ_j[q-2][8] = SASSEM[i,sec_dim,8]
+            NJ_j[q-2][9] = SASSEM[i,sec_dim,9]
+            NJ_j[q-2][10] = SASSEM[i,sec_dim,10]
+            NJ_j[q-2][11] = SASSEM[i,sec_dim,11]
+            NJ_j[q-2][12] = SASSEM[i,sec_dim,12]
+        #     print("q after = ", q)
+        #
+        #
+        # print("NJ_i = ", NJ_i, "NJ_j", NJ_j)
+
+        sn = np.amax(NJ_i[:, 0]) # Total Segment Number
+
+        #Model Generation
+
+        MI = np.zeros((self.member_count, 3))
+
+        MI[:,0] = NJ_i[:,0]
+        MI[:,1] = NJ_i[:,1]
+        MI[:,2] = NJ_j[:,1]
+
+        # print(" MI = ", MI)
+
+        xg1, xg2 = np.zeros((self.member_count, 0)) , np.zeros((self.member_count, 0)) #element length: xg1(start) xg2(end)
+        yg1, yg2 = np.zeros((self.member_count, 0)) , np.zeros((self.member_count, 0)) #element length: xg1(start) xg2(end)
+        zg1, zg2 = np.zeros((self.member_count, 0)) , np.zeros((self.member_count, 0)) #element length: xg1(start) xg2(end)
+
+        xg1[:, 0] = NJ_i[:, 2]
+        yg1[:, 0] = NJ_i[:, 3]
+        zg1[:, 0] = NJ_i[:, 4]
+
+        xg2[:, 0] = NJ_j[:, 2]
+        yg2[:, 0] = NJ_j[:, 3]
+        zg2[:, 0] = NJ_j[:, 4]
+
+        bfb1,bfb2= np.zeros((self.member_count, 0)) ,np.zeros((self.member_count, 0))  # Bottom flange width
+        tfb1,tfb2= np.zeros((self.member_count, 0)) ,np.zeros((self.member_count, 0))  # Bottom flange thickness
+        bft1,bft2= np.zeros((self.member_count, 0)) ,np.zeros((self.member_count, 0))  # Top flange width
+        tft1,tft2= np.zeros((self.member_count, 0)) ,np.zeros((self.member_count, 0))  # Top flange thickness
+        Dg1 , Dg2= np.zeros((self.member_count, 0)) ,np.zeros((self.member_count, 0))  # dw:Web depth (y-dir)
+        hg1 , hg2= np.zeros((self.member_count, 0)) ,np.zeros((self.member_count, 0))  # h : Distance between flange centroids
+
+        bfb1[:, 0] = NJ_i[:, 5]
+        tfb1[:, 0] = NJ_i[:, 6]
+        bft1[:, 0] = NJ_i[:, 7]
+        tft1[:, 0] = NJ_i[:, 8]
+        Dg1 [:, 0] = NJ_i[:, 9]
+        hg1 [:, 0] = NJ_i[:, 12]
+
+        bfb2[:, 0] = NJ_j[:, 5]
+        tfb2[:, 0] = NJ_j[:, 6]
+        bft2[:, 0] = NJ_j[:, 7]
+        tft2[:, 0] = NJ_j[:, 8]
+        Dg2[:, 0] = NJ_j[:, 9]
+        hg2[:, 0] = NJ_j[:, 12]

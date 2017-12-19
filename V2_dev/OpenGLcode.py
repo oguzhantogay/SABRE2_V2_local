@@ -45,7 +45,7 @@ class glWidget(QGLWidget, QMainWindow):
         self.lastPos = QtCore.QPoint()
         self.parameters = []
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue = None, None, None, None, None
+        self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval = None, None, None, None, None, None
         self.joint_i = 1
         self.joint_j = 2
 
@@ -378,9 +378,9 @@ class glWidget(QGLWidget, QMainWindow):
             if self.ui.Members_table.item(row, 1) is None:
                 pass
             else:
-                self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue = self.memberTableValues()
+                self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval = self.memberTableValues()
                 if self.render_checked:
-                    self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue)
+                    self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval)
         except AttributeError:
             pass
 
@@ -446,11 +446,11 @@ class glWidget(QGLWidget, QMainWindow):
 
         import SABRE2_main_subclass
 
-        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
+        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
             self, self.ui.Members_table, 3)
         member_count = member_values.shape[0]
 
-        return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue
+        return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval
 
     def noneDetector(self, tableName):
         row_count = tableName.rowCount()
@@ -489,7 +489,33 @@ class glWidget(QGLWidget, QMainWindow):
 
             glPopAttrib()
 
-    def renderAllProp(self, JNodevalue_i, JNodevalue_j, BNodevalue):
+    def TapedEleLength(self, NTshex1, NTshey1, NTshez1, NTshex2, NTshey2, NTshez2, alpharef):
+        tr1 = np.zeros((3, 1))
+        tr2 = np.zeros((3, 1))
+        Rz = np.zeros((3, 3))
+
+        tr1[0][0] = NTshex1
+        tr1[1][0] = NTshey1
+        tr1[2][0] = NTshez1
+
+        tr2[0][0] = NTshex2
+        tr2[1][0] = NTshey2
+        tr2[2][0] = NTshez2
+
+        Rz[0][0] = np.cos(alpharef)
+        Rz[0][1] = -np.sin(alpharef)
+        Rz[1][0] = np.sin(alpharef)
+        Rz[1][1] = np.cos(alpharef)
+        Rz[2][2] = 1
+
+        tap1 = Rz.dot(tr1)
+        tap2 = Rz.dot(tr2)
+
+        # print("taqps", tap1, tap2)
+
+        return tap1, tap2
+
+    def renderAllProp(self, JNodevalue_i, JNodevalue_j, BNodevalue, Rval):
         ''' This function works on the rendering all properties of the model'''
         # self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j
         # print("node values", self.JNodeValues_i, self.JNodeValues_j)
@@ -503,7 +529,6 @@ class glWidget(QGLWidget, QMainWindow):
                 max_b = max_c
 
         max_for_NJ_i = max_b + self.member_count
-        max_for_NJ_j = max_b + self.member_count + 1
         NJ_i = np.zeros((max_for_NJ_i, 13))
         NJ_j = np.zeros((max_for_NJ_i, 13))
 
@@ -525,20 +550,20 @@ class glWidget(QGLWidget, QMainWindow):
 
                 SASSEM[i][int(np.amax(BNodevalue[i, :, 1])) + 1][k] = JNodevalue_j[i][k]
 
-        print("sassem values = ", SASSEM)
-        # print("sassem values = ", SASSEM[:,:,0])
-        # print("sassem values = ", SASSEM[:,:,1])
-        # print("sassem values = ", SASSEM[:,:,2])
-        # print("sassem values = ", SASSEM[:,:,3])
-        # print("sassem values = ", SASSEM[:,:,4])
-        # print("sassem values = ", SASSEM[:,:,5])
-        # print("sassem values = ", SASSEM[:,:,6])
-        # print("sassem values = ", SASSEM[:,:,7])
-        # print("sassem values = ", SASSEM[:,:,8])
-        # print("sassem values = ", SASSEM[:,:,9])
-        # print("sassem values = ", SASSEM[:,:,10])
-        # print("sassem values = ", SASSEM[:,:,11])
-        # print("sassem values = ", SASSEM[:,:,12])
+        # print("sassem values = ", SASSEM)
+        # print("sassem 1 values = ", SASSEM[:,:,0])
+        # print("sassem 2 values = ", SASSEM[:,:,1])
+        # print("sassem 3 values = ", SASSEM[:,:,2])
+        # print("sassem 4 values = ", SASSEM[:,:,3])
+        # print("sassem 5 values = ", SASSEM[:,:,4])
+        # print("sassem 6 values = ", SASSEM[:,:,5])
+        # print("sassem 7 values = ", SASSEM[:,:,6])
+        # print("sassem 8 values = ", SASSEM[:,:,7])
+        # print("sassem 9 values = ", SASSEM[:,:,8])
+        # print("sassem 10 values = ", SASSEM[:,:,9])
+        # print("sassem 11 values = ", SASSEM[:,:,10])
+        # print("sassem 12 values = ", SASSEM[:,:,11])
+        # print("sassem 13 values = ", SASSEM[:,:,12])
         # print("test2")
 
         q = 1
@@ -580,40 +605,40 @@ class glWidget(QGLWidget, QMainWindow):
             for j in range(int(np.amax(BNodevalue[i, :, 1]))):
                 NJ_j[q + j - 2][0] = q + j - 1
                 NJ_j[q + j - 2][1] = q + j
-                NJ_j[q + j - 2][2] = SASSEM[i, j + 0, 2]
-                NJ_j[q + j - 2][3] = SASSEM[i, j + 0, 3]
-                NJ_j[q + j - 2][4] = SASSEM[i, j + 0, 4]
-                NJ_j[q + j - 2][5] = SASSEM[i, j + 0, 5]
-                NJ_j[q + j - 2][6] = SASSEM[i, j + 0, 6]
-                NJ_j[q + j - 2][7] = SASSEM[i, j + 0, 7]
-                NJ_j[q + j - 2][8] = SASSEM[i, j + 0, 8]
-                NJ_j[q + j - 2][9] = SASSEM[i, j + 0, 9]
-                NJ_j[q + j - 2][10] = SASSEM[i, j + 0, 10]
-                NJ_j[q + j - 2][11] = SASSEM[i, j + 0, 11]
-                NJ_j[q + j - 2][12] = SASSEM[i, j + 0, 12]
+                NJ_j[q + j - 2][2] =  SASSEM[i, j + 1 , 2]
+                NJ_j[q + j - 2][3] =  SASSEM[i, j + 1 , 3]
+                NJ_j[q + j - 2][4] =  SASSEM[i, j + 1 , 4]
+                NJ_j[q + j - 2][5] =  SASSEM[i, j + 1 , 5]
+                NJ_j[q + j - 2][6] =  SASSEM[i, j + 1 , 6]
+                NJ_j[q + j - 2][7] =  SASSEM[i, j + 1 , 7]
+                NJ_j[q + j - 2][8] =  SASSEM[i, j + 1 , 8]
+                NJ_j[q + j - 2][9] =  SASSEM[i, j + 1 , 9]
+                NJ_j[q + j - 2][10] = SASSEM[i, j + 1 , 10]
+                NJ_j[q + j - 2][11] = SASSEM[i, j + 1 , 11]
+                NJ_j[q + j - 2][12] = SASSEM[i, j + 1 , 12]
 
             # print("q before = ", q)
             q = int(np.amax(BNodevalue[i, :, 1])) + q + 1
             sec_dim = int(np.amax(BNodevalue[i, :, 1]))
             NJ_j[q - 2][0] = q - 1
             NJ_j[q - 2][1] = q
-            NJ_j[q - 2][2] = SASSEM[i, sec_dim, 2]
-            NJ_j[q - 2][3] = SASSEM[i, sec_dim, 3]
-            NJ_j[q - 2][4] = SASSEM[i, sec_dim, 4]
-            NJ_j[q - 2][5] = SASSEM[i, sec_dim, 5]
-            NJ_j[q - 2][6] = SASSEM[i, sec_dim, 6]
-            NJ_j[q - 2][7] = SASSEM[i, sec_dim, 7]
-            NJ_j[q - 2][8] = SASSEM[i, sec_dim, 8]
-            NJ_j[q - 2][9] = SASSEM[i, sec_dim, 9]
-            NJ_j[q - 2][10] = SASSEM[i, sec_dim, 10]
-            NJ_j[q - 2][11] = SASSEM[i, sec_dim, 11]
-            NJ_j[q - 2][12] = SASSEM[i, sec_dim, 12]
+            NJ_j[q - 2][2] = SASSEM[i,  sec_dim + 1 , 2]
+            NJ_j[q - 2][3] = SASSEM[i,  sec_dim + 1 , 3]
+            NJ_j[q - 2][4] = SASSEM[i,  sec_dim + 1 , 4]
+            NJ_j[q - 2][5] = SASSEM[i,  sec_dim + 1 , 5]
+            NJ_j[q - 2][6] = SASSEM[i,  sec_dim + 1 , 6]
+            NJ_j[q - 2][7] = SASSEM[i,  sec_dim + 1 , 7]
+            NJ_j[q - 2][8] = SASSEM[i,  sec_dim + 1 , 8]
+            NJ_j[q - 2][9] = SASSEM[i,  sec_dim + 1 , 9]
+            NJ_j[q - 2][10] = SASSEM[i, sec_dim + 1 , 10]
+            NJ_j[q - 2][11] = SASSEM[i, sec_dim + 1 , 11]
+            NJ_j[q - 2][12] = SASSEM[i, sec_dim + 1 , 12]
         #     print("q after = ", q)
         #
         #
         # print("NJ_i = ", NJ_i, "NJ_j", NJ_j)
 
-        sn = np.amax(NJ_i[:, 0])  # Total Segment Number
+        sn = int(np.amax(NJ_i[:, 0]))  # Total Segment Number
 
         # Model Generation
         # Nodes for each element (# ele, #node start, #node end)
@@ -626,12 +651,12 @@ class glWidget(QGLWidget, QMainWindow):
         # print(" MI = ", MI)
         # Global frame coordinates at each element.
         # Start node : node(1) and end node : node(2) for each element
-        xg1, xg2 = np.zeros((self.member_count, 0)), np.zeros(
-            (self.member_count, 0))  # element length: xg1(start) xg2(end)
-        yg1, yg2 = np.zeros((self.member_count, 0)), np.zeros(
-            (self.member_count, 0))  # element length: xg1(start) xg2(end)
-        zg1, zg2 = np.zeros((self.member_count, 0)), np.zeros(
-            (self.member_count, 0))  # element length: xg1(start) xg2(end)
+        xg1, xg2 = np.zeros((self.member_count, 1)), np.zeros(
+            (self.member_count, 1))  # element length: xg1(start) xg2(end)
+        yg1, yg2 = np.zeros((self.member_count, 1)), np.zeros(
+            (self.member_count, 1))  # element length: xg1(start) xg2(end)
+        zg1, zg2 = np.zeros((self.member_count, 1)), np.zeros(
+            (self.member_count, 1))  # element length: xg1(start) xg2(end)
 
         xg1[:, 0] = NJ_i[:, 2]
         yg1[:, 0] = NJ_i[:, 3]
@@ -641,13 +666,12 @@ class glWidget(QGLWidget, QMainWindow):
         yg2[:, 0] = NJ_j[:, 3]
         zg2[:, 0] = NJ_j[:, 4]
         # Section properties at each element under natural frame
-        bfb1, bfb2 = np.zeros((self.member_count, 0)), np.zeros((self.member_count, 0))  # Bottom flange width
-        tfb1, tfb2 = np.zeros((self.member_count, 0)), np.zeros((self.member_count, 0))  # Bottom flange thickness
-        bft1, bft2 = np.zeros((self.member_count, 0)), np.zeros((self.member_count, 0))  # Top flange width
-        tft1, tft2 = np.zeros((self.member_count, 0)), np.zeros((self.member_count, 0))  # Top flange thickness
-        Dg1, Dg2 = np.zeros((self.member_count, 0)), np.zeros((self.member_count, 0))  # dw:Web depth (y-dir)
-        hg1, hg2 = np.zeros((self.member_count, 0)), np.zeros(
-            (self.member_count, 0))  # h : Distance between flange centroids
+        bfb1, bfb2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Bottom flange width
+        tfb1, tfb2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Bottom flange thickness
+        bft1, bft2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Top flange width
+        tft1, tft2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Top flange thickness
+        Dg1, Dg2   = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # dw:Web depth (y-dir)
+        hg1, hg2   = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # h : Distance between flange centroids
 
         bfb1[:, 0] = NJ_i[:, 5]
         tfb1[:, 0] = NJ_i[:, 6]
@@ -680,30 +704,34 @@ class glWidget(QGLWidget, QMainWindow):
         # bottom flange centroid to shear center
 
         hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
-                         (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tfb1, np.power(bfb1, 3))))
+                         (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1, np.power(bft1, 3))))
         Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
         hst1 = hg1 - hsb1  # top flange centroid to shear center
         Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
+        # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
+        # print("hsb1 = ", hsb1, "hst1 = ", hst1)
 
         # End node
         # bottom flange centroid to shear center
 
-        hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
-                         (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tfb2, np.power(bfb2, 3))))
-        Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
-        hst2 = hg2 - hsb2       # top flange centroid to shear center
-        Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
 
+        hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
+                         (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2, np.power(bft2, 3))))
+        Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
+        hst2 = hg2 - hsb2  # top flange centroid to shear center
+        Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
+        # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
+        # print("hsb2 = ", hsb2, "hst2 = ", hst2)
         # Geometric dimension of Cross-section .
 
         # Global frame angle for each element without considering shear center
 
-        alpharef = np.zeros((sn,2))
+        alpharef = np.zeros((sn, 2))
         for i in range(sn):
-           opp = yg2[i,0]-yg1[i,0]  # element depth in y-dir
-           adj = xg2[i,0]-xg1[i,0]  # element length in x-dir
-           alpharef[i][1]=MI[i][0]
-           alpharef[i][1]=np.arctan2((opp,adj)) # Only global frame angle
+            opp = yg2[i, 0] - yg1[i, 0]  # element depth in y-dir
+            adj = xg2[i, 0] - xg1[i, 0]  # element length in x-dir
+            alpharef[i][1] = MI[i][0]
+            alpharef[i][1] = np.arctan2(opp, adj)  # Only global frame angle
 
         # Calculate Initial Member x-dir Nodal Coordinates for Each Member S
         # Preallocationg
@@ -717,21 +745,475 @@ class glWidget(QGLWidget, QMainWindow):
             dX0[i][0] = xg2[i][0] - xg1[i][0]
             dY0[i][0] = yg2[i][0] - yg1[i][0]
             dZ0[i][0] = zg2[i][0] - zg1[i][0]
-            L0[i][0] = ((dX0[i][0])**2 + (dY0[i][0])**2 + (dZ0[i][0])**2)**0.5
+            L0[i][0] = ((dX0[i][0]) ** 2 + (dY0[i][0]) ** 2 + (dZ0[i][0]) ** 2) ** 0.5
 
         # Initial Member x-dir Nodal Coordinates for Each Member
         # Preallocationg
 
-        MemLength = np.zeros((sn,1))
-        segnum = np.zeros((self.member_count,1))
-        segnum[0][0]=0  # (Start node number - 1) for each member
+        MemLength = np.zeros((sn, 1))
+        segnum = np.zeros((self.member_count+1, 1))
+        segnum[0][0] = 0  # (Start node number - 1) for each member
 
         for i in range(self.member_count):
-            for k in range(np.amax(BNodevalue[i,:,1]+1)):
-                if (k+segnum[i][0]) == (1 + segnum[i][0]):
-                    MemLength[k+segnum[i][0]][0] = L0[k+segnum[i][0]][0]
+            for k in range(int(np.amax(BNodevalue[i, :, 1] + 1))):
+                # print("test a = ", segnum[i][0], "test b =", segnum[i][0] )
+                if (k + segnum[i][0]) == (segnum[i][0]):
+                    MemLength[int(k + segnum[i][0])][0] = L0[int(k + segnum[i][0])][0]
                 else:
-                    MemLength[k + segnum[i][0]][0] = MemLength[k + segnum[i][0] -1][0] + L0[k+segnum[i][0]][0]
+                    MemLength[int(k + segnum[i][0])][0] = MemLength[int(k + segnum[i][0])-1][0] + L0[k + segnum[i][0]][0]
 
-            segnum[i+1][0] = segnum[i][0] + np.amax(BNodevalue[i,:,1]+1)
+            segnum[i + 1][0] = segnum[i][0] + int(np.amax(BNodevalue[i, :, 1] + 1))
 
+        # Calculate Initial Member x-dir Nodal Coordinates for Each Member E
+
+        # Set up reference axis for each segments
+
+        q = 0
+        val1 = np.zeros((sn, 1))
+
+        for i in range(self.member_count):
+            for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
+                val1[q + j][0] = Rval[i][1]
+
+            q = (int(np.amax(BNodevalue[i, :, 1]) + 1)) + q
+
+        NTshe1 = np.zeros((sn, 4))
+        NTshe2 = np.zeros((sn, 4))
+        segnum[0][0] = 0  # (Start node number - 1) for each member
+
+        ys1 = np.zeros((sn, 1))
+        ys2 = np.zeros((sn, 1))
+        segnum = segnum.astype(int)
+        # print("Memlength = ", MemLength)
+        # print("Dg1 = ", Dg1, "Dg2 = ", Dg2, "Dst1 = ", Dst1 , "Dst2 = ", Dst2)
+        for i in range(self.member_count):
+            if Rval[i][1] == 1:
+                for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
+                    ys1[k + segnum[i][0]][0] = (Dg1[k + segnum[i][0]][0]) / 2 - Dst1[k + segnum[i][0]][0]
+                    ys2[k + segnum[i][0]][0] = (Dg2[k + segnum[i][0]][0]) / 2 - Dst2[k + segnum[i][0]][0]  # Shear center
+                    if [k + segnum[i][0]][0] == (segnum[i][0]):
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
+                        NTshe1[[k + segnum[i][0]][0]][1] = 0
+                        NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][2] = ys2[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
+                    else:
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
+                        NTshe1[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0] - 1][0]
+                        NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][2] = ys2[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
+
+            elif Rval[i][1] == 2:
+                for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
+                    ys1[k + segnum[i][0]][0] = - Dst1[k + segnum[i][0]][0]
+                    ys2[k + segnum[i][0]][0] = - Dst2[k + segnum[i][0]][0]  # Shear center
+                    if [k + segnum[i][0]][0] == (segnum[i][0] + 1):
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+ 1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+ 1
+                        NTshe1[[k + segnum[i][0]][0]][1] = 0
+                        NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][2] = ys2[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
+                    else:
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
+                        NTshe1[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0] - 1][0]
+                        NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][2] = ys2[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
+
+            elif Rval[i][1] == 2:
+                for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
+                    ys1[k + segnum[i][0]][0] = (Dsb1[k + segnum[i][0]][0])
+                    ys2[k + segnum[i][0]][0] = (Dsb2[k + segnum[i][0]][0])
+                    if [k + segnum[i][0]][0] == (segnum[i][0] + 1):
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+1
+                        NTshe1[[k + segnum[i][0]][0]][1] = 0
+                        NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][2] = ys2[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
+                    else:
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe1[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0] - 1][0]
+                        NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][2] = ys2[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
+            segnum[i + 1][0] = segnum[i][0] + (int(np.amax(BNodevalue[i, :, 1]) + 1))
+        # print("ys1 = ", ys1, "ys2 = ", ys2, "zg1 = ", zg1, "zg2 = ", zg2)
+        # print("2", "NTshe1 = ", NTshe1,"NTshe2 = ", NTshe2)
+        # Preallocationg
+        taper1 = np.zeros((sn, 3))
+        taper2 = np.zeros((sn, 3))
+
+        tap1 = np.zeros((3, 1))
+        tap2 = np.zeros((3, 1))
+
+        for n in range(sn):
+            tap1, tap2 = self.TapedEleLength(NTshe1[n][1], NTshe1[n][2], NTshe1[n][3], NTshe2[n][1], NTshe2[n][2],
+                                             NTshe2[n][3], alpharef[n][1])
+            # print("tap1 = ", tap1)
+            # print("tap2 = ", tap2)
+
+            taper1[n, :] = tap1[:,n]  # Which is the same as xg.
+            taper2[n, :] = tap2[:,n]  # Which is the same as yg.
+
+        # Starting Node for each member
+        segnum[0, 0] = 0  # (Start node number - 1) for each member
+        NG1 = np.zeros((max_for_NJ_i, 3))
+        NG2 = np.zeros((max_for_NJ_i, 3))
+        for i in range(self.member_count):
+            for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
+                NG1[k + segnum[i][0]][0] = NJ_i[segnum[i][0]][2]
+                NG2[k + segnum[i][0]][0] = NJ_i[segnum[i][0]][2]
+                NG1[k + segnum[i][0]][1] = NJ_i[segnum[i][0]][3]
+                NG2[k + segnum[i][0]][1] = NJ_i[segnum[i][0]][3]
+                NG1[k + segnum[i][0]][2] = NJ_i[segnum[i][0]][4]
+                NG2[k + segnum[i][0]][2] = NJ_i[segnum[i][0]][4]
+
+            segnum[i + 1][0] = segnum[i][0] + (int(np.amax(BNodevalue[i, :, 1]) + 1))
+
+        # print("taper 1 = ", taper1, "taper 2 = ", taper2 )
+        # print("NG1 = ", NG1, "NG2 =" , NG2)
+
+        MemLength1 = np.zeros((NTshe1.shape[0], 1))
+        MemLength2 = np.zeros((NTshe2.shape[0], 1))
+
+        MemLength1[:, 0] = NTshe1[:, 1]
+        MemLength2[:, 0] = NTshe2[:, 1]
+
+        Nshe1 = np.zeros((taper1.shape[0], 3))
+        Nshe2 = np.zeros((taper2.shape[0], 3))
+
+        # Global frame nodal coordinates w.r.t Shear center
+        Nshe1[:, 0] = taper1[:, 0] + NG1[:, 0]
+        Nshe2[:, 0] = taper2[:, 0] + NG2[:, 0]
+        Nshe1[:, 1] = taper1[:, 1] + NG1[:, 0]
+        Nshe2[:, 1] = taper2[:, 1] + NG2[:, 0]
+        Nshe1[:, 2] = taper1[:, 2] + NG1[:, 0]
+        Nshe2[:, 2] = taper2[:, 2] + NG2[:, 0]
+
+        # print("Nshe1 = ", Nshe1, "Nshe2 = ", Nshe2)
+
+        # ---------------------------------------------------------------------
+        # ----------------    Undeformed 3D rendering       -------------------
+        # ---------------------------------------------------------------------
+
+        Rz = np.zeros((3, 3))
+
+        SN1, SN5, SN8, SN12 = np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3))
+        SN2, SN6, SN9, SN13 = np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3))
+        SN3, SN7, SN10, SN14 = np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3))
+        # print("memlength 1 = ", MemLength1)
+        # print("memlength 2 = ", MemLength2)
+        for i in range(sn):
+
+            Rz[0][0] = np.cos(alpharef[i, 1])
+            Rz[0][1] = -np.sin(alpharef[i, 1])
+            Rz[1][0] = np.sin(alpharef[i, 1])
+            Rz[1][1] = np.cos(alpharef[i, 1])
+            Rz[2][2] = 1
+            print("Rz = ", Rz)
+            if Rval[i][1] == 1:
+                # *************************** Rotation
+                # print("before1")
+                # print("SN1", SN1)
+                # print("SN2", SN2)
+                # print("SN3", SN3)
+                # print("SN5", SN5)
+                # print("SN6", SN6)
+                # print("SN7", SN7)
+                # print("SN8", SN8)
+                # print("SN9", SN9)
+                # print("SN10", SN10)
+                # print("SN12", SN12)
+                # print("SN13", SN13)
+                # bottom flange start node
+                SN1[0, :] = [MemLength1[i, 0], (-Db1[i, 0]), (zg1[i, 0] + bfb1[i, 0] / 2)]
+                SN2[0, :] = [MemLength1[i, 0], (-Db1[i, 0]), (zg1[i, 0] + 0)]
+                SN3[0, :] = [MemLength1[i, 0], (-Db1[i, 0]), (zg1[i, 0] - bfb1[i, 0] / 2)]
+                # top flange start node
+                SN5[0, :] = [MemLength1[i, 0], Dt1[i, 0], (zg1[i, 0] + bft1[i, 0] / 2)]
+                SN6[0, :] = [MemLength1[i, 0], Dt1[i, 0], (zg1[i, 0] + 0)]
+                SN7[0, :] = [MemLength1[i, 0], Dt1[i, 0], (zg1[i, 0] - bft1[i, 0] / 2)]
+                # bottom flange end node
+                SN8[0, :] = [MemLength2[i, 0], (-Db2[i, 0]), (zg2[i, 0] + bfb2[i, 0] / 2)]
+                SN9[0, :] = [MemLength2[i, 0], (-Db2[i, 0]), (zg2[i, 0] + 0)]
+                SN10[0, :] = [MemLength2[i, 0], (-Db2[i, 0]), (zg2[i, 0] - bfb2[i, 0] / 2)]
+                # top flange end node
+                SN12[0, :] = [MemLength2[i, 0], Dt2[i, 0], (zg2[i, 0] + bft2[i, 0] / 2)]
+                SN13[0, :] = [MemLength2[i, 0], Dt2[i, 0], (zg2[i, 0] + 0)]
+                SN14[0, :] = [MemLength2[i, 0], Dt2[i, 0], (zg2[i, 0] - bft2[i, 0] / 2)]
+                print("before2")
+                print("SN1", SN1)
+                print("SN2", SN2)
+                print("SN3", SN3)
+                print("SN5", SN5)
+                print("SN6", SN6)
+                print("SN7", SN7)
+                print("SN8", SN8)
+                print("SN9", SN9)
+                print("SN10", SN10)
+                print("SN12", SN12)
+                print("SN13", SN13)
+                #   ********* Global Rotation
+                SN1 = np.dot(Rz, np.transpose(SN1))
+                SN2 = np.dot(Rz, np.transpose(SN2))
+                SN3 = np.dot(Rz, np.transpose(SN3))
+                SN5 = np.dot(Rz, np.transpose(SN5))
+                SN6 = np.dot(Rz, np.transpose(SN6))
+                SN7 = np.dot(Rz, np.transpose(SN7))
+                SN8 = np.dot(Rz, np.transpose(SN8))
+                SN9 = np.dot(Rz, np.transpose(SN9))
+                SN10 = np.dot(Rz, np.transpose(SN10))
+                SN12 = np.dot(Rz, np.transpose(SN12))
+                SN13 = np.dot(Rz, np.transpose(SN13))
+                SN14 = np.dot(Rz, np.transpose(SN14))
+                # print("middle1")
+                # print("SN1", SN1)
+                # print("SN2", SN2)
+                # print("SN3", SN3)
+                # print("SN5", SN5)
+                # print("SN6", SN6)
+                # print("SN7", SN7)
+                # print("SN8", SN8)
+                # print("SN9", SN9)
+                # print("SN10", SN10)
+                # print("SN12", SN12)
+                # print("SN13", SN13)
+
+                SN1 = np.transpose(SN1)
+                SN2 = np.transpose(SN2)
+                SN3 = np.transpose(SN3)
+                SN5 = np.transpose(SN5)
+                SN6 = np.transpose(SN6)
+                SN7 = np.transpose(SN7)
+                SN8 = np.transpose(SN8)
+                SN9 = np.transpose(SN9)
+                SN10 = np.transpose(SN10)
+                SN12 = np.transpose(SN12)
+                SN13 = np.transpose(SN13)
+                SN14 = np.transpose(SN14)
+                # print("middle")
+                # print("SN1", SN1)
+                # print("SN2", SN2)
+                # print("SN3", SN3)
+                # print("SN5", SN5)
+                # print("SN6", SN6)
+                # print("SN7", SN7)
+                # print("SN8", SN8)
+                # print("SN9", SN9)
+                # print("SN10", SN10)
+                # print("SN12", SN12)
+                # print("SN13", SN13)
+                # *************************** Global Translation to reference axis
+                # bottom flange start node
+                SN1 = SN1 + NG1[i, :]
+                SN2 = SN2 + NG1[i, :]
+                SN3 = SN3 + NG1[i, :]
+                # top flange start node
+                SN5 = SN5 + NG1[i, :]
+                SN6 = SN6 + NG1[i, :]
+                SN7 = SN7 + NG1[i, :]
+                # bottom flange end node
+                SN8 = SN8 + NG2[i, :]
+                SN9 = SN9 + NG2[i, :]
+                SN10 = SN10 + NG2[i, :]
+                # top flange end node
+                SN12 = SN12 + NG2[i, :]
+                SN13 = SN13 + NG2[i, :]
+                SN14 = SN14 + NG2[i, :]
+
+            elif Rval[i][1] == 2:
+                # *************************** Rotation
+                # bottom flange start node
+                SN1[0, :] = [MemLength1[i, 0], (-Dg1[i, 0]), (zg1[i, 0] + bfb1[i, 0] / 2)]
+                SN2[0, :] = [MemLength1[i, 0], (-Dg1[i, 0]), (zg1[i, 0] + 0)]
+                SN3[0, :] = [MemLength1[i, 0], (-Dg1[i, 0]), (zg1[i, 0] - bfb1[i, 0] / 2)]
+                # top flange start node
+                SN5[0, :] = [MemLength1[i, 0], 0, (zg1[i, 0] + bft1[i, 0] / 2)]
+                SN6[0, :] = [MemLength1[i, 0], 0, (zg1[i, 0] + 0)]
+                SN7[0, :] = [MemLength1[i, 0], 0, (zg1[i, 0] - bft1[i, 0] / 2)]
+                # bottom flange end node
+                SN8[0, :] = [MemLength2[i, 0], (-Dg2[i, 0]), (zg2[i, 0] + bfb2[i, 0] / 2)]
+                SN9[0, :] = [MemLength2[i, 0], (-Dg2[i, 0]), (zg2[i, 0] + 0)]
+                SN10[0, :] = [MemLength2[i, 0], (-Dg2[i, 0]), (zg2[i, 0] - bfb2[i, 0] / 2)]
+                # top flange end node
+                SN12[0, :] = [MemLength2[i, 0], 0, (zg2[i, 0] + bft2[i, 0] / 2)]
+                SN13[0, :] = [MemLength2[i, 0], 0, (zg2[i, 0] + 0)]
+                SN14[0, :] = [MemLength2[i, 0], 0, (zg2[i, 0] - bft2[i, 0] / 2)]
+                #   ********* Global Rotation
+                SN1 = np.dot(Rz, np.transpose(SN1))
+                SN2 = np.dot(Rz, np.transpose(SN2))
+                SN3 = np.dot(Rz, np.transpose(SN3))
+                SN5 = np.dot(Rz, np.transpose(SN5))
+                SN6 = np.dot(Rz, np.transpose(SN6))
+                SN7 = np.dot(Rz, np.transpose(SN7))
+                SN8 = np.dot(Rz, np.transpose(SN8))
+                SN9 = np.dot(Rz, np.transpose(SN9))
+                SN10 = np.dot(Rz, np.transpose(SN10))
+                SN12 = np.dot(Rz, np.transpose(SN12))
+                SN13 = np.dot(Rz, np.transpose(SN13))
+                SN14 = np.dot(Rz, np.transpose(SN14))
+                # print("middle")
+                # print("SN1", SN1)
+                # print("SN2", SN2)
+                # print("SN3", SN3)
+                # print("SN5", SN5)
+                # print("SN6", SN6)
+                # print("SN7", SN7)
+                # print("SN8", SN8)
+                # print("SN9", SN9)
+                # print("SN10", SN10)
+                # print("SN12", SN12)
+                # print("SN13", SN13)
+                # *************************** Global Translation to reference axis
+                # bottom flange start node
+                SN1 = SN1 + NG1[i, :]
+                SN2 = SN2 + NG1[i, :]
+                SN3 = SN3 + NG1[i, :]
+                # top flange start node
+                SN5 = SN5 + NG1[i, :]
+                SN6 = SN6 + NG1[i, :]
+                SN7 = SN7 + NG1[i, :]
+                # bottom flange end node
+                SN8 = SN8 + NG2[i, :]
+                SN9 = SN9 + NG2[i, :]
+                SN10 = SN10 + NG2[i, :]
+                # top flange end node
+                SN12 = SN12 + NG2[i, :]
+                SN13 = SN13 + NG2[i, :]
+                SN14 = SN14 + NG2[i, :]
+
+            elif Rval[i][1] == 3:
+                # *************************** Rotation
+                # bottom flange start node
+                SN1[0, :] = [MemLength1[i, 0], 0, (zg1[i, 0] + bfb1[i, 0] / 2)]
+                SN2[0, :] = [MemLength1[i, 0], 0, (zg1[i, 0] + 0)]
+                SN3[0, :] = [MemLength1[i, 0], 0, (zg1[i, 0] - bfb1[i, 0] / 2)]
+                # top flange start node
+                SN5[0, :] = [MemLength1[i, 0], (Dg1[i, 0]), (zg1[i, 0] + bft1[i, 0] / 2)]
+                SN6[0, :] = [MemLength1[i, 0], (Dg1[i, 0]), (zg1[i, 0] + 0)]
+                SN7[0, :] = [MemLength1[i, 0], (Dg1[i, 0]), (zg1[i, 0] - bft1[i, 0] / 2)]
+                # bottom flange end node
+                SN8[0, :] = [MemLength2[i, 0], 0, (zg2[i, 0] + bfb2[i, 0] / 2)]
+                SN9[0, :] = [MemLength2[i, 0], 0, (zg2[i, 0] + 0)]
+                SN10[0, :] = [MemLength2[i, 0], 0, (zg2[i, 0] - bfb2[i, 0] / 2)]
+                # top flange end node
+                SN12[0, :] = [MemLength2[i, 0], (Dg2[i, 0]), (zg2[i, 0] + bft2[i, 0] / 2)]
+                SN13[0, :] = [MemLength2[i, 0], (Dg2[i, 0]), (zg2[i, 0] + 0)]
+                SN14[0, :] = [MemLength2[i, 0], (Dg2[i, 0]), (zg2[i, 0] - bft2[i, 0] / 2)]
+                #   ********* Global Rotation
+                SN1 = np.dot(Rz, np.transpose(SN1))
+                SN2 = np.dot(Rz, np.transpose(SN2))
+                SN3 = np.dot(Rz, np.transpose(SN3))
+                SN5 = np.dot(Rz, np.transpose(SN5))
+                SN6 = np.dot(Rz, np.transpose(SN6))
+                SN7 = np.dot(Rz, np.transpose(SN7))
+                SN8 = np.dot(Rz, np.transpose(SN8))
+                SN9 = np.dot(Rz, np.transpose(SN9))
+                SN10 = np.dot(Rz, np.transpose(SN10))
+                SN12 = np.dot(Rz, np.transpose(SN12))
+                SN13 = np.dot(Rz, np.transpose(SN13))
+                SN14 = np.dot(Rz, np.transpose(SN14))
+                print("middle")
+                print("SN1", SN1)
+                print("SN2", SN2)
+                print("SN3", SN3)
+                print("SN5", SN5)
+                print("SN6", SN6)
+                print("SN7", SN7)
+                print("SN8", SN8)
+                print("SN9", SN9)
+                print("SN10", SN10)
+                print("SN12", SN12)
+                print("SN13", SN13)
+                # *************************** Global Translation to reference axis
+                # bottom flange start node
+                SN1 = SN1 + NG1[i, :]
+                SN2 = SN2 + NG1[i, :]
+                SN3 = SN3 + NG1[i, :]
+                # top flange start node
+                SN5 = SN5 + NG1[i, :]
+                SN6 = SN6 + NG1[i, :]
+                SN7 = SN7 + NG1[i, :]
+                # bottom flange end node
+                SN8 = SN8 + NG2[i, :]
+                SN9 = SN9 + NG2[i, :]
+                SN10 = SN10 + NG2[i, :]
+                # top flange end node
+                SN12 = SN12 + NG2[i, :]
+                SN13 = SN13 + NG2[i, :]
+                SN14 = SN14 + NG2[i, :]
+
+            eLtf = np.zeros((4 , 3))
+            eLweb = np.zeros((4, 3))
+            eLbf = np.zeros((4, 3))
+            # print("SN1", SN1)
+            # print("SN2", SN2)
+            # print("SN3", SN3)
+            # print("SN5", SN5)
+            # print("SN6", SN6)
+            # print("SN7", SN7)
+            # print("SN8", SN8)
+            # print("SN9", SN9)
+            # print("SN10", SN10)
+            # print("SN12", SN12)
+            # print("SN13", SN13)
+            eLtf[0, :] = SN5  # top flange surface.
+            eLtf[1, :] = SN7
+            eLtf[2, :] = SN12
+            eLtf[3, :] = SN14
+            eLweb[0, :] = SN2  # web surface.
+            eLweb[1, :] = SN6
+            eLweb[2, :] = SN9
+            eLweb[3, :] = SN13
+            eLbf[0, :] = SN1  # bottom flange surface.
+            eLbf[1, :] = SN3
+            eLbf[2, :] = SN8
+            eLbf[3, :] = SN10
+
+            print("eltf = " , eLtf, "eLweb = ", eLbf, "eLbf = ", eLbf)
+
+            Xwtf = np.zeros((2, 2))
+            Ywtf = np.zeros((2, 2))
+            Zwtf = np.zeros((2, 2))
+            Xwweb = np.zeros((2, 2))
+            Ywweb = np.zeros((2, 2))
+            Zwweb = np.zeros((2, 2))
+            Xwbf = np.zeros((2, 2))
+            Ywbf = np.zeros((2, 2))
+            Zwbf = np.zeros((2, 2))
+
+            for k in range(2):
+                for j in range(2):
+                    # top flange
+                    Xwtf[k, j] = eLtf[k * 2 + j, 0]
+                    Ywtf[k, j] = eLtf[k * 2 + j, 1]
+                    Zwtf[k, j] = eLtf[k * 2 + j, 2]
+                    # web
+                    Xwweb[k, j] = eLweb[k * 2 + j, 0]
+                    Ywweb[k, j] = eLweb[k * 2 + j, 1]
+                    Zwweb[k, j] = eLweb[k * 2 + j, 2]
+                    # bottom flange
+                    Xwbf[k, j] = eLbf[k * 2 + j, 0]
+                    Ywbf[k, j] = eLbf[k * 2 + j, 1]
+                    Zwbf[k, j] = eLbf[k * 2 + j, 2]
+
+            print("Xwtf =", Xwtf, "Ywtf =", Ywtf, "Zwtf =", Zwtf)

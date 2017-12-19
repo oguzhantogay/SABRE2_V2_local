@@ -116,8 +116,8 @@ else % ~isempty(Massemble)
       end
    end
    
-   fprintf('sassem final')
-   SASSEM
+%    fprintf('sassem final')
+%    SASSEM
 
    % NJ_i : Start Node ; NJ_j : End Node for SASSEM
    NJ_i=[]; NJ_j=[];
@@ -225,6 +225,9 @@ else % ~isempty(Massemble)
    % Shear center
    % Start node
    % bottom flange centroid to shear center
+%    a = (tft1.*bft1.^3.*hg1)
+%    b = (tfb1.*bfb1.^3+tft1.*bft1.^3)
+%    c = bft1.^3
    hsb1 = (tft1.*bft1.^3.*hg1)./(tfb1.*bfb1.^3+tft1.*bft1.^3);
    Dsb1 = hsb1 - tfb1/2; % bottom of Web depth to shear center
    hst1 = hg1 - hsb1;    % top flange centroid to shear center
@@ -236,7 +239,21 @@ else % ~isempty(Massemble)
    hst2 = hg2 - hsb2;    % top flange centroid to shear center
    Dst2 = hst2 - tft2/2;    % top of Web depth to shear center
    % -------------------------- Geometric dimension of Cross-section : P299 E
-
+%    tft1
+%    bft1
+%    hg1
+%    tfb1
+%    bfb1
+%    hsb1
+%    hst1
+%    
+%    tft2
+%    bft2
+%    hg2
+%    tfb2
+%    bfb2
+%    hsb2
+%    hst2
    % *** Global frame angle for each element without considering shear center
    alpharef = zeros(sn,2);
    for i=1:sn
@@ -262,8 +279,12 @@ else % ~isempty(Massemble)
    % Preallocationg
    MemLength = zeros(sn,1);
    segnum(1,1)=0; % (Start node number - 1) for each member
+%    segnum
    for i = 1:mem
       for k = 1:(max(BNodevalue(i,:,2))+1)
+%          fprintf('test1')
+%          a = k+segnum(i,1)
+%          b = segnum(i,1)+1
          if isequal(k+segnum(i,1),segnum(i,1)+1)
             MemLength(k+segnum(i,1),1)=L0(k+segnum(i,1),1);
          else
@@ -272,6 +293,8 @@ else % ~isempty(Massemble)
       end
       segnum(i+1,1) = segnum(i,1) + (max(BNodevalue(i,:,2))+1);
    end
+%    fprintf('after')
+%    segnum
    % -- Calculate Initial Member x-dir Nodal Coordinates for Each Member E
 
    % Set up reference axis for each segments
@@ -286,6 +309,11 @@ else % ~isempty(Massemble)
    NTshe1=zeros(sn,4);NTshe2=zeros(sn,4);
    segnum(1,1)=0;          % (Start node number - 1) for each member
    ys1=zeros(sn,1);ys2=zeros(sn,1);
+   MemLength
+%    Dg1
+%    Dst1
+%    Dg2
+%    Dst2
    for i = 1:mem
       switch Rval(i,2)
 
@@ -294,7 +322,15 @@ else % ~isempty(Massemble)
             for k = 1:(max(BNodevalue(i,:,2))+1)
                ys1(k+segnum(i,1),1)=Dg1(k+segnum(i,1),1)/2 - Dst1(k+segnum(i,1),1);
                ys2(k+segnum(i,1),1)=Dg2(k+segnum(i,1),1)/2 - Dst2(k+segnum(i,1),1);    % Shear center
+%                a=k+segnum(i,1)
+%                b=k+segnum(i,1)
+%                c=MemLength(k+segnum(i,1),1)
+%                d=ys1(k+segnum(i,1),1)
+%                e=ys2(k+segnum(i,1),1)
+%                f=zg1(k+segnum(i,1),1)
+%                g=zg2(k+segnum(i,1),1)
                if isequal(k+segnum(i,1),segnum(i,1)+1)
+                  fprintf('test1')
                   NTshe1(k+segnum(i,1),1)=k+segnum(i,1);
                   NTshe2(k+segnum(i,1),1)=k+segnum(i,1);
                   NTshe1(k+segnum(i,1),2)=0;
@@ -304,6 +340,7 @@ else % ~isempty(Massemble)
                   NTshe1(k+segnum(i,1),4)=zg1(k+segnum(i,1),1);
                   NTshe2(k+segnum(i,1),4)=zg2(k+segnum(i,1),1);
                else
+                  fprintf('test2')
                   NTshe1(k+segnum(i,1),1)=k+segnum(i,1);
                   NTshe2(k+segnum(i,1),1)=k+segnum(i,1);
                   NTshe1(k+segnum(i,1),2)=MemLength(k+segnum(i,1)-1,1);
@@ -369,12 +406,18 @@ else % ~isempty(Massemble)
       end
       segnum(i+1,1) = segnum(i,1) + (max(BNodevalue(i,:,2))+1);
    end
-
+%    ys1
+%    ys2
+%    zg1
+%    zg2
+%    NTshe1 
+%    NTshe2
    % Preallocationg
    taper1 = zeros(sn,3); taper2 = zeros(sn,3);
    for n = 1:sn
    [tap1,tap2]=TapedEleLength(NTshe1(n,2),NTshe1(n,3),NTshe1(n,4), ...
       NTshe2(n,2),NTshe2(n,3),NTshe2(n,4),alpharef(n,2));
+  
    taper1(n,:)=tap1; % Which is the same as xg.
    taper2(n,:)=tap2; % Which is the same as yg.
    end
@@ -392,7 +435,11 @@ else % ~isempty(Massemble)
       end
       segnum(i+1,1) = segnum(i,1) + (max(BNodevalue(i,:,2))+1);
    end
-
+%    taper1
+%    taper2
+%    NG1 
+%    NG2
+   
    MemLength1=NTshe1(:,2);MemLength2=NTshe2(:,2);
 
    % ******************************************************
@@ -403,11 +450,14 @@ else % ~isempty(Massemble)
    Nshe2(:,2)=taper2(:,2)+NG2(:,2);
    Nshe1(:,3)=taper1(:,3)+NG1(:,3);
    Nshe2(:,3)=taper2(:,3)+NG2(:,3);
-
+%    Nshe1
+%    Nshe2
    % ---------------------------------------------------------------------
    % ----------------    Undeformed 3D rendering       -------------------
    % ---------------------------------------------------------------------
 %    Evalue = [];
+%    MemLength1
+%    MemLength2
    for i = 1:sn
       Rz=[cos(alpharef(i,2)) -sin(alpharef(i,2)) 0; ...
       sin(alpharef(i,2)) cos(alpharef(i,2)) 0; ...
@@ -455,6 +505,19 @@ else % ~isempty(Massemble)
          SN12=Rz*SN12';SN12=SN12';
          SN13=Rz*SN13';SN13=SN13';
          SN14=Rz*SN14';SN14=SN14';
+%          fprintf('middle')
+%          Rz
+%          SN1
+%          SN2
+%          SN3
+%          SN5
+%          SN6
+%          SN7
+%          SN8
+%          SN9
+%          SN10
+%          SN12
+%          SN13
          % *************************** Global Translation to reference axis
          % bottom flage start node
          SN1 = SN1+NG1(i,:);
@@ -553,6 +616,18 @@ else % ~isempty(Massemble)
          SN12=Rz*SN12';SN12=SN12';
          SN13=Rz*SN13';SN13=SN13';
          SN14=Rz*SN14';SN14=SN14';
+%          fprintf('middle')
+%          SN1
+%          SN2
+%          SN3
+%          SN5
+%          SN6
+%          SN7
+%          SN8
+%          SN9
+%          SN10
+%          SN12
+%          SN13
          % *************************** Global Translation to reference axis
          % bottom flage start node
          SN1 = SN1+NG1(i,:);
@@ -572,10 +647,21 @@ else % ~isempty(Massemble)
          SN14 = SN14+NG2(i,:);
 
       end % Switch end
-
-      eLtf=[SN5;SN7;SN12;SN14]; % top flange surface.
-      eLweb=[SN2;SN6;SN9;SN13]; % web surface.
-      eLbf=[SN1;SN3;SN8;SN10];  % bottom flange surface.
+      fprintf('after')
+      SN1
+      SN2
+      SN3
+      SN5
+      SN6
+      SN7
+      SN8
+      SN9
+      SN10
+      SN12
+      SN13
+      eLtf=[SN5;SN7;SN12;SN14] %f top flange surace.
+      eLweb=[SN2;SN6;SN9;SN13] % web surface.
+      eLbf=[SN1;SN3;SN8;SN10] % bottom flange surface.
       Xwtf = zeros(2,2); Ywtf = zeros(2,2); Zwtf = zeros(2,2);
       Xwweb = zeros(2,2); Ywweb = zeros(2,2); Zwweb = zeros(2,2);
       Xwbf = zeros(2,2); Ywbf = zeros(2,2); Zwbf = zeros(2,2);
@@ -595,6 +681,10 @@ else % ~isempty(Massemble)
             Zwbf(k,j) = eLbf((k-1)*2+j,3);
          end
       end
+      
+      Xwtf
+      Ywtf
+      Zwtf
 
       if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background
          otf = surf(axesm,Xwtf,Zwtf,Ywtf,'FaceColor',[0.6 0.6 0.6],'Clipping','off', ...

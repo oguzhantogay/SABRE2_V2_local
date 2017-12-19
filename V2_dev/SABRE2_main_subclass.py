@@ -403,7 +403,7 @@ class SABRE2_main_subclass(QMainWindow):
 
         # print("main screen node i", JNodeValue_i)
         # print("main screen node j", JNodeValue_j)
-        return Members_values, JNodeValue_i, JNodeValue_j, current_row, self.BNodevalue, flag_mem_values
+        return Members_values, JNodeValue_i, JNodeValue_j, current_row, self.BNodevalue, flag_mem_values, Rval
 
     def AISC_update_fun(self, tableName):
         # tableName.blockSignals(True)
@@ -519,7 +519,7 @@ class SABRE2_main_subclass(QMainWindow):
     def m_assemble_updater(self, tableName, Copy_from_number=1, Insert_after_number=1, lineName=1, Delete_row = 1,
                            flag="insert after button"):
 
-        self.members_table_values, _, _, current_row, _, _ = self.update_members_table(tableName, 3)
+        self.members_table_values, _, _, current_row, _, _ , _= self.update_members_table(tableName, 3)
 
         # print("members = ", self.members_table_values)
         row_count = tableName.rowCount()

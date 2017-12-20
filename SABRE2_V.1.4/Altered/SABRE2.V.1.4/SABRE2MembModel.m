@@ -647,21 +647,21 @@ else % ~isempty(Massemble)
          SN14 = SN14+NG2(i,:);
 
       end % Switch end
-      fprintf('after')
-      SN1
-      SN2
-      SN3
-      SN5
-      SN6
-      SN7
-      SN8
-      SN9
-      SN10
-      SN12
-      SN13
-      eLtf=[SN5;SN7;SN12;SN14] %f top flange surace.
-      eLweb=[SN2;SN6;SN9;SN13] % web surface.
-      eLbf=[SN1;SN3;SN8;SN10] % bottom flange surface.
+%       fprintf('after')
+%       SN1
+%       SN2
+%       SN3
+%       SN5
+%       SN6
+%       SN7
+%       SN8
+%       SN9
+%       SN10
+%       SN12
+%       SN13
+      eLtf=[SN5;SN7;SN12;SN14]; %f top flange surace.
+      eLweb=[SN2;SN6;SN9;SN13]; % web surface.
+      eLbf=[SN1;SN3;SN8;SN10]; % bottom flange surface.
       Xwtf = zeros(2,2); Ywtf = zeros(2,2); Zwtf = zeros(2,2);
       Xwweb = zeros(2,2); Ywweb = zeros(2,2); Zwweb = zeros(2,2);
       Xwbf = zeros(2,2); Ywbf = zeros(2,2); Zwbf = zeros(2,2);
@@ -685,6 +685,12 @@ else % ~isempty(Massemble)
       Xwtf
       Ywtf
       Zwtf
+      Xwweb
+      Ywweb
+      Zwweb
+      Xwbf
+      Ywbf
+      Zwbf
 
       if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background
          otf = surf(axesm,Xwtf,Zwtf,Ywtf,'FaceColor',[0.6 0.6 0.6],'Clipping','off', ...

@@ -54,24 +54,21 @@ class glWidget(QGLWidget, QMainWindow):
         self.render_checked = False
         # print("values = ", self.member_count, self.member_values)
 
-    # def Cube(self):
-    #
-    #     glBegin(GL_LINES)
-    #     for edge in self.edges:
-    #         for vertex in edge:
-    #             glColor3fv((1.0, 0.0, 0.0))
-    #             glVertex3fv(self.vertices[vertex])
-    #     glEnd()
+    def SurfaceContour(self, vertices, edges):
+        glBegin(GL_LINES)
+        for edge in edges:
+            for vertex in edge:
+                glColor3fv((1.0, 0.0, 0.0))
+                glVertex3fv(vertices[vertex])
+        glEnd()
 
-    # def Surfaces(self):
-    #     glBegin(GL_QUADS)
-    #     for surface in self.surfaces:
-    #         x = 0
-    #         for vertex in surface:
-    #             x += 1
-    #             glColor4f(0, 0, 0, 0.3)
-    #             glVertex3fv(self.vertices[vertex])
-    #     glEnd()
+    def Surfaces(self,  vertices):
+        glBegin(GL_QUADS)
+        for i in range(4):
+            print("vertices = ", vertices[i,:])
+            glColor4f(1, 1, 1, 0.3)
+            glVertex3fv(vertices[i ,:])
+        glEnd()
 
     def Joints(self, x):
 
@@ -283,6 +280,10 @@ class glWidget(QGLWidget, QMainWindow):
                         # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
                         # self.Surfaces()
 
+        self.render_checked = self.ui.actionRender_All_Members.isChecked()
+        if self.render_checked:
+            self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval)
+
     def normalizeAngle(self, angle):
         while angle < 0:
             angle += 360 * 16
@@ -373,7 +374,7 @@ class glWidget(QGLWidget, QMainWindow):
         none_checker = self.noneDetector(self.ui.Joints_Table)
         self.render_checked = self.ui.actionRender_All_Members.isChecked()
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-
+        # print("row number =", row)
         try:
             if self.ui.Members_table.item(row, 1) is None:
                 pass
@@ -814,7 +815,7 @@ class glWidget(QGLWidget, QMainWindow):
                 for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                     ys1[k + segnum[i][0]][0] = - Dst1[k + segnum[i][0]][0]
                     ys2[k + segnum[i][0]][0] = - Dst2[k + segnum[i][0]][0]  # Shear center
-                    if [k + segnum[i][0]][0] == (segnum[i][0] + 1):
+                    if [k + segnum[i][0]][0] == (segnum[i][0]):
                         NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+ 1
                         NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+ 1
                         NTshe1[[k + segnum[i][0]][0]][1] = 0
@@ -833,11 +834,11 @@ class glWidget(QGLWidget, QMainWindow):
                         NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
                         NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
 
-            elif Rval[i][1] == 2:
+            elif Rval[i][1] == 3:
                 for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                     ys1[k + segnum[i][0]][0] = (Dsb1[k + segnum[i][0]][0])
                     ys2[k + segnum[i][0]][0] = (Dsb2[k + segnum[i][0]][0])
-                    if [k + segnum[i][0]][0] == (segnum[i][0] + 1):
+                    if [k + segnum[i][0]][0] == (segnum[i][0]):
                         NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+1
                         NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+1
                         NTshe1[[k + segnum[i][0]][0]][1] = 0
@@ -929,7 +930,8 @@ class glWidget(QGLWidget, QMainWindow):
             Rz[1][0] = np.sin(alpharef[i, 1])
             Rz[1][1] = np.cos(alpharef[i, 1])
             Rz[2][2] = 1
-            print("Rz = ", Rz)
+            # print("Rz = ", Rz)
+            # print("Rval  = ", Rval)
             if Rval[i][1] == 1:
                 # *************************** Rotation
                 # print("before1")
@@ -960,18 +962,18 @@ class glWidget(QGLWidget, QMainWindow):
                 SN12[0, :] = [MemLength2[i, 0], Dt2[i, 0], (zg2[i, 0] + bft2[i, 0] / 2)]
                 SN13[0, :] = [MemLength2[i, 0], Dt2[i, 0], (zg2[i, 0] + 0)]
                 SN14[0, :] = [MemLength2[i, 0], Dt2[i, 0], (zg2[i, 0] - bft2[i, 0] / 2)]
-                print("before2")
-                print("SN1", SN1)
-                print("SN2", SN2)
-                print("SN3", SN3)
-                print("SN5", SN5)
-                print("SN6", SN6)
-                print("SN7", SN7)
-                print("SN8", SN8)
-                print("SN9", SN9)
-                print("SN10", SN10)
-                print("SN12", SN12)
-                print("SN13", SN13)
+                # print("before2")
+                # print("SN1", SN1)
+                # print("SN2", SN2)
+                # print("SN3", SN3)
+                # print("SN5", SN5)
+                # print("SN6", SN6)
+                # print("SN7", SN7)
+                # print("SN8", SN8)
+                # print("SN9", SN9)
+                # print("SN10", SN10)
+                # print("SN12", SN12)
+                # print("SN13", SN13)
                 #   ********* Global Rotation
                 SN1 = np.dot(Rz, np.transpose(SN1))
                 SN2 = np.dot(Rz, np.transpose(SN2))
@@ -1010,7 +1012,7 @@ class glWidget(QGLWidget, QMainWindow):
                 SN12 = np.transpose(SN12)
                 SN13 = np.transpose(SN13)
                 SN14 = np.transpose(SN14)
-                # print("middle")
+                # print("middle Rval1")
                 # print("SN1", SN1)
                 # print("SN2", SN2)
                 # print("SN3", SN3)
@@ -1071,7 +1073,7 @@ class glWidget(QGLWidget, QMainWindow):
                 SN12 = np.dot(Rz, np.transpose(SN12))
                 SN13 = np.dot(Rz, np.transpose(SN13))
                 SN14 = np.dot(Rz, np.transpose(SN14))
-                # print("middle")
+                # print("middle rval 2")
                 # print("SN1", SN1)
                 # print("SN2", SN2)
                 # print("SN3", SN3)
@@ -1083,6 +1085,18 @@ class glWidget(QGLWidget, QMainWindow):
                 # print("SN10", SN10)
                 # print("SN12", SN12)
                 # print("SN13", SN13)
+                SN1 = np.transpose(SN1)
+                SN2 = np.transpose(SN2)
+                SN3 = np.transpose(SN3)
+                SN5 = np.transpose(SN5)
+                SN6 = np.transpose(SN6)
+                SN7 = np.transpose(SN7)
+                SN8 = np.transpose(SN8)
+                SN9 = np.transpose(SN9)
+                SN10 = np.transpose(SN10)
+                SN12 = np.transpose(SN12)
+                SN13 = np.transpose(SN13)
+                SN14 = np.transpose(SN14)
                 # *************************** Global Translation to reference axis
                 # bottom flange start node
                 SN1 = SN1 + NG1[i, :]
@@ -1104,6 +1118,7 @@ class glWidget(QGLWidget, QMainWindow):
             elif Rval[i][1] == 3:
                 # *************************** Rotation
                 # bottom flange start node
+
                 SN1[0, :] = [MemLength1[i, 0], 0, (zg1[i, 0] + bfb1[i, 0] / 2)]
                 SN2[0, :] = [MemLength1[i, 0], 0, (zg1[i, 0] + 0)]
                 SN3[0, :] = [MemLength1[i, 0], 0, (zg1[i, 0] - bfb1[i, 0] / 2)]
@@ -1119,6 +1134,18 @@ class glWidget(QGLWidget, QMainWindow):
                 SN12[0, :] = [MemLength2[i, 0], (Dg2[i, 0]), (zg2[i, 0] + bft2[i, 0] / 2)]
                 SN13[0, :] = [MemLength2[i, 0], (Dg2[i, 0]), (zg2[i, 0] + 0)]
                 SN14[0, :] = [MemLength2[i, 0], (Dg2[i, 0]), (zg2[i, 0] - bft2[i, 0] / 2)]
+                # print("start rval 3")
+                # print("SN1", SN1)
+                # print("SN2", SN2)
+                # print("SN3", SN3)
+                # print("SN5", SN5)
+                # print("SN6", SN6)
+                # print("SN7", SN7)
+                # print("SN8", SN8)
+                # print("SN9", SN9)
+                # print("SN10", SN10)
+                # print("SN12", SN12)
+                # print("SN13", SN13)
                 #   ********* Global Rotation
                 SN1 = np.dot(Rz, np.transpose(SN1))
                 SN2 = np.dot(Rz, np.transpose(SN2))
@@ -1132,18 +1159,19 @@ class glWidget(QGLWidget, QMainWindow):
                 SN12 = np.dot(Rz, np.transpose(SN12))
                 SN13 = np.dot(Rz, np.transpose(SN13))
                 SN14 = np.dot(Rz, np.transpose(SN14))
-                print("middle")
-                print("SN1", SN1)
-                print("SN2", SN2)
-                print("SN3", SN3)
-                print("SN5", SN5)
-                print("SN6", SN6)
-                print("SN7", SN7)
-                print("SN8", SN8)
-                print("SN9", SN9)
-                print("SN10", SN10)
-                print("SN12", SN12)
-                print("SN13", SN13)
+
+                SN1 = np.transpose(SN1)
+                SN2 = np.transpose(SN2)
+                SN3 = np.transpose(SN3)
+                SN5 = np.transpose(SN5)
+                SN6 = np.transpose(SN6)
+                SN7 = np.transpose(SN7)
+                SN8 = np.transpose(SN8)
+                SN9 = np.transpose(SN9)
+                SN10 = np.transpose(SN10)
+                SN12 = np.transpose(SN12)
+                SN13 = np.transpose(SN13)
+                SN14 = np.transpose(SN14)
                 # *************************** Global Translation to reference axis
                 # bottom flange start node
                 SN1 = SN1 + NG1[i, :]
@@ -1165,6 +1193,7 @@ class glWidget(QGLWidget, QMainWindow):
             eLtf = np.zeros((4 , 3))
             eLweb = np.zeros((4, 3))
             eLbf = np.zeros((4, 3))
+            # print("last")
             # print("SN1", SN1)
             # print("SN2", SN2)
             # print("SN3", SN3)
@@ -1189,7 +1218,7 @@ class glWidget(QGLWidget, QMainWindow):
             eLbf[2, :] = SN8
             eLbf[3, :] = SN10
 
-            print("eltf = " , eLtf, "eLweb = ", eLbf, "eLbf = ", eLbf)
+            # print("eltf = " , eLtf, "eLweb = ", eLbf, "eLbf = ", eLbf)
 
             Xwtf = np.zeros((2, 2))
             Ywtf = np.zeros((2, 2))
@@ -1215,5 +1244,86 @@ class glWidget(QGLWidget, QMainWindow):
                     Xwbf[k, j] = eLbf[k * 2 + j, 0]
                     Ywbf[k, j] = eLbf[k * 2 + j, 1]
                     Zwbf[k, j] = eLbf[k * 2 + j, 2]
+            print("Xwtf =", Xwtf, "\nYwtf =", Ywtf, "\nZwtf =", Zwtf)
 
-            print("Xwtf =", Xwtf, "Ywtf =", Ywtf, "Zwtf =", Zwtf)
+
+            tf = np.zeros((4,3))
+            tf[0][0] = Xwtf[0][0]
+            tf[0][1] = Ywtf[0][0]
+            tf[0][2] = Zwtf[0][0]
+
+            tf[1][0] = Xwtf[0][1]
+            tf[1][1] = Ywtf[0][1]
+            tf[1][2] = Zwtf[0][1]
+
+            tf[2][0] = Xwtf[1][0]
+            tf[2][1] = Ywtf[1][0]
+            tf[2][2] = Zwtf[1][0]
+
+            tf[3][0] = Xwtf[1][1]
+            tf[3][1] = Ywtf[1][1]
+            tf[3][2] = Zwtf[1][1]
+
+            web = np.zeros((4, 3))
+            web[0][0] = Xwweb[0][0]
+            web[0][1] = Ywweb[0][0]
+            web[0][2] = Zwweb[0][0]
+
+            web[1][0] = Xwweb[0][1]
+            web[1][1] = Ywweb[0][1]
+            web[1][2] = Zwweb[0][1]
+
+            web[2][0] = Xwweb[1][0]
+            web[2][1] = Ywweb[1][0]
+            web[2][2] = Zwweb[1][0]
+
+            web[3][0] = Xwweb[1][1]
+            web[3][1] = Ywweb[1][1]
+            web[3][2] = Zwweb[1][1]
+
+            bf = np.zeros((4, 3))
+            bf[0][0] = Xwbf[0][0]
+            bf[0][1] = Ywbf[0][0]
+            bf[0][2] = Zwbf[0][0]
+
+            bf[1][0] = Xwbf[0][1]
+            bf[1][1] = Ywbf[0][1]
+            bf[1][2] = Zwbf[0][1]
+
+            bf[2][0] = Xwbf[1][0]
+            bf[2][1] = Ywbf[1][0]
+            bf[2][2] = Zwbf[1][0]
+
+            bf[3][0] = Xwbf[1][1]
+            bf[3][1] = Ywbf[1][1]
+            bf[3][2] = Zwbf[1][1]
+            print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
+
+            edges = ((0,2),
+                     (2,3),
+                     (3,1),
+                     (1,0))
+
+            surface = (0,1,2,3)
+
+            self.SurfaceContour(tf, edges)
+            self.Surfaces(tf)
+
+            self.SurfaceContour(web, edges)
+            self.Surfaces(web)
+
+            self.SurfaceContour(bf, edges)
+            self.Surfaces(bf)
+
+
+        # def Surfaces(self):
+        #     glBegin(GL_QUADS)
+        #     for surface in self.surfaces:
+        #         x = 0
+        #         for vertex in surface:
+        #             x += 1
+        #             glColor4f(0, 0, 0, 0.3)
+        #             glVertex3fv(self.vertices[vertex])
+        #     glEnd()
+
+

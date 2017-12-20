@@ -802,13 +802,15 @@ class DataCollection(QMainWindow):
         self.ui = ui_layout
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
-    def Assign_comboBox(self, tableName, options, position):
+    def Assign_comboBox(self, tableName, options, position, current_index = None):
         r = tableName.rowCount()
         for i in range(r):
             combo_box = QtGui.QComboBox()
             for t in options:
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
+            if current_index is not None:
+                combo_box.setCurrentIndex(current_index)
             combo_box.currentIndexChanged.connect(
                 lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
 
@@ -923,7 +925,7 @@ class TableChanges(QMainWindow):
         self.ui = ui_layout
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
-    def add_new_row(self, tableName, options, position, lineName, flag):
+    def add_new_row(self, tableName, options, position, lineName, flag, combo_values=None):
         row_position = tableName.rowCount()
         combo_box = QtGui.QComboBox()
         if flag == "last":
@@ -936,6 +938,10 @@ class TableChanges(QMainWindow):
                 combo_box.addItem(t)
 
             tableName.setCellWidget(row_position, position, combo_box)
+            if combo_values is None:
+                pass
+            else:
+                combo_box.setCurrentIndex(combo_values[row_position])
             combo_box.currentIndexChanged.connect(
                 lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
 

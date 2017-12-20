@@ -1,5 +1,6 @@
 import PyQt4
 from PyQt4.QtGui import *
+from PyQt4 import QtCore
 from PyQt4 import QtGui
 import SABRE2_GUI
 import numpy as np
@@ -211,9 +212,10 @@ class ActionClass(QMainWindow):
 
         self.member_properties_values = SABRE2_main_subclass.SABRE2_main_subclass.update_member_properties_table(self,
                                                                                                                  self.ui.Member_Properties_Table)
-        self.members_table_values, self.JNodeValue_i, self.JNodeValue_j, _, _ = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self,
-                                                                                                   self.ui.Members_table,
-                                                                                                   self.Members_table_position)
+        self.members_table_values, self.JNodeValue_i, self.JNodeValue_j, _, _, _, _ = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
+            self,
+            self.ui.Members_table,
+            self.Members_table_position)
         self.shear_panel_values = SABRE2_main_subclass.SABRE2_main_subclass.update_shear_panel_table(self,
                                                                                                      self.ui.Shear_panel_table)
         self.ground_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_ground_table(self,
@@ -231,7 +233,7 @@ class ActionClass(QMainWindow):
                                                                                              self.ui.Point_load_table,
                                                                                              combo_flag=0)
 
-        filename = 'test_bin3.npz'
+        filename = 'test.npz'
         file = open(filename, 'wb')
 
         np.savez(file, joint_values=self.joint_values,
@@ -249,9 +251,15 @@ class ActionClass(QMainWindow):
         file.close()
 
     def read_fun(self):
-        '''This function reads the variables from the compressed file'''
 
-        filename = 'test_bin3.npz'
+        '''This function reads the variables from the compressed file'''
+        import SABRE2_main_subclass
+
+        import OpenGLcode
+
+        self.OpenGLwidget = OpenGLcode.glWidget(self.ui)
+
+        filename = 'test.npz'
 
         aa = np.load(filename)
 
@@ -267,4 +275,73 @@ class ActionClass(QMainWindow):
         self.uniform_data_values = aa['uniform_data_values']
         self.point_data_values = aa['point_data_values']
 
-        print("joint values", aa['name1'], "member prop values", aa['name2'])
+        # print("\njoint values = ", self.joint_values, "\nmember prop values = ", self.member_properties_values,
+        #       "\nmembers table values = ", self.members_table_values)
+
+        shape_joint_table = int(self.joint_values.shape[0])
+        shape_members_table_values = int(self.members_table_values.shape[0])
+        shape_shear_panel_values = int(self.shear_panel_values.shape[0])
+        shape_ground_spring_values = int(self.ground_spring_values.shape[0])
+        shape_torsional_spring_values = int(self.torsional_spring_values.shape[0])
+        shape_My_values = int(self.My_release_values.shape[0])
+        shape_Mz_values = int(self.Mz_release_values.shape[0])
+        shape_warping_release_values = int(self.Warping_release_values.shape[0])
+        shape_uniform_data_values = int(self.uniform_data_values.shape[0])
+        # shape_point_data_values = int(self.point_data_values.shape[0])
+
+        # filling for joints table
+
+        for i in range(shape_joint_table):
+
+            if i == (shape_joint_table - 1):
+                self.ui.Joints_Table.blockSignals(False)
+            else:
+                self.ui.Joints_Table.blockSignals(True)
+
+            if shape_joint_table > 2:
+                for i in range(shape_joint_table - 2):
+                    SABRE2_main_subclass.JointTable.add_new_row(self, self.ui.Joints_Table,
+                                                                self.ui.Insert_row_number_Joint, "last")
+
+            for j in range(2):
+                item = QTableWidgetItem(str(self.joint_values[i][j + 1]))
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.ui.Joints_Table.setItem(i, j + 1, item)
+
+        # filling for members table
+        self.Members_table_options = ["Mid Depth", "Flange 2", "Flange 1"]
+        self.Members_table_position = 3
+
+        # print("member shape = ", shape_members_table_values)
+
+        for i in range(shape_members_table_values):
+
+            if shape_members_table_values > 1:
+                # print("test 1")
+                for i in range(shape_joint_table - 1):
+                    SABRE2_main_subclass.TableChanges.add_new_row(self, self.ui.Members_table,
+                                                                  self.Members_table_options,
+                                                                  self.Members_table_position,
+                                                                  self.ui.Insert_row_number_mem_def, "last",
+                                                                  combo_values=self.members_table_values[:, 3])
+
+            for j in range(1, 18):
+                if j == 17:
+                    self.ui.Members_table.blockSignals(False)
+                    self.ui.Members_table.setCurrentCell(i, j)
+                    # self.OpenGLwidget.updateTheWidget()
+                    # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
+                else:
+                    self.ui.Members_table.blockSignals(True)
+
+                if j == 3 and i == 0:
+                    SABRE2_main_subclass.DataCollection.Assign_comboBox(self, self.ui.Members_table, self.Members_table_options,
+                                       self.Members_table_position, self.members_table_values[0][3])
+                elif j == 1 or j == 2:
+                    item = QTableWidgetItem(str(int(self.members_table_values[i][j])))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.ui.Members_table.setItem(i, j, item)
+                else:
+                    item = QTableWidgetItem(str(self.members_table_values[i][j]))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.ui.Members_table.setItem(i, j, item)

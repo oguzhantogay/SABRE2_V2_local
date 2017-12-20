@@ -65,7 +65,7 @@ class glWidget(QGLWidget, QMainWindow):
     def Surfaces(self,  vertices):
         glBegin(GL_QUADS)
         for i in range(4):
-            print("vertices = ", vertices[i,:])
+            # print("vertices = ", vertices[i,:])
             glColor4f(1, 1, 1, 0.3)
             glVertex3fv(vertices[i ,:])
         glEnd()
@@ -146,7 +146,7 @@ class glWidget(QGLWidget, QMainWindow):
             glOrtho(-self.initial_zoom + self.joint_nodes[0, 1], self.initial_zoom + self.joint_nodes[0, 1],
                     -self.initial_zoom / aspect_ratio + self.joint_nodes[0, 2],
                     self.initial_zoom / aspect_ratio + self.joint_nodes[0, 2],
-                    -100, 100.0)
+                    -1000, 1000.0)
             # print("ortho one = ", -self.initial_zoom + self.joint_nodes[0, 0],
             #       self.initial_zoom + self.joint_nodes[0, 0],
             #       -self.initial_zoom / aspect_ratio + self.joint_nodes[0, 1],
@@ -161,7 +161,7 @@ class glWidget(QGLWidget, QMainWindow):
 
                 glOrtho(-self.initial_zoom, self.initial_zoom,
                         -self.initial_zoom / aspect_ratio, self.initial_zoom / aspect_ratio,
-                        -100, 100.0)
+                        -1000, 1000.0)
 
                 # print("ortho 1,", -self.initial_zoom, self.initial_zoom,
                 #       -self.initial_zoom / aspect_ratio, self.initial_zoom / aspect_ratio)
@@ -174,8 +174,8 @@ class glWidget(QGLWidget, QMainWindow):
 
                 glOrtho(-self.initial_zoom * aspect_ratio,
                         self.initial_zoom * aspect_ratio,
-                        -self.initial_zoom, self.initial_zoom, -100,
-                        100.0)
+                        -self.initial_zoom, self.initial_zoom, -1000,
+                        1000.0)
 
                 # print("ortho 2,", -self.initial_zoom * aspect_ratio,
                 #       self.initial_zoom * aspect_ratio,
@@ -224,7 +224,7 @@ class glWidget(QGLWidget, QMainWindow):
             if event.buttons() & QtCore.Qt.LeftButton:
                 self.xPos += +dx / 2000
                 self.yPos += -dy / 2000
-                print("xpos = ", self.xPos, "ypos = ", self.yPos)
+                # print("xpos = ", self.xPos, "ypos = ", self.yPos)
                 self.updateGL()
             elif event.buttons() & QtCore.Qt.RightButton:
                 pass
@@ -872,8 +872,8 @@ class glWidget(QGLWidget, QMainWindow):
             # print("tap1 = ", tap1)
             # print("tap2 = ", tap2)
 
-            taper1[n, :] = tap1[:,n]  # Which is the same as xg.
-            taper2[n, :] = tap2[:,n]  # Which is the same as yg.
+            taper1[n, :] = tap1[:,0]  # Which is the same as xg.
+            taper2[n, :] = tap2[:,0]  # Which is the same as yg.
 
         # Starting Node for each member
         segnum[0, 0] = 0  # (Start node number - 1) for each member
@@ -1244,7 +1244,7 @@ class glWidget(QGLWidget, QMainWindow):
                     Xwbf[k, j] = eLbf[k * 2 + j, 0]
                     Ywbf[k, j] = eLbf[k * 2 + j, 1]
                     Zwbf[k, j] = eLbf[k * 2 + j, 2]
-            print("Xwtf =", Xwtf, "\nYwtf =", Ywtf, "\nZwtf =", Zwtf)
+            # print("Xwtf =", Xwtf, "\nYwtf =", Ywtf, "\nZwtf =", Zwtf)
 
 
             tf = np.zeros((4,3))
@@ -1297,7 +1297,7 @@ class glWidget(QGLWidget, QMainWindow):
             bf[3][0] = Xwbf[1][1]
             bf[3][1] = Ywbf[1][1]
             bf[3][2] = Zwbf[1][1]
-            print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
+            # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
 
             edges = ((0,2),
                      (2,3),

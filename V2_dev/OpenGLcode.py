@@ -5,6 +5,7 @@ from PyQt4.QtGui import *
 from OpenGL.GL import *
 from DropDownActions import ActionClass
 import numpy as np
+import sys, os
 
 
 class glWidget(QGLWidget, QMainWindow):
@@ -42,10 +43,12 @@ class glWidget(QGLWidget, QMainWindow):
         self.initial_zoom = 2
         self.font = QFont()
         self.font.setPointSize(11)
+        self.font2 = QFont()
+        self.font2.setPointSize(7)
         self.lastPos = QtCore.QPoint()
         self.parameters = []
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval = None, None, None, None, None, None
+        self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, self.Massemble = None, None, None, None, None, None, None
         self.joint_i = 1
         self.joint_j = 2
 
@@ -58,16 +61,26 @@ class glWidget(QGLWidget, QMainWindow):
         glBegin(GL_LINES)
         for edge in edges:
             for vertex in edge:
-                glColor3fv((1.0, 0.0, 0.0))
+                if self.white_checked:
+                    glColor3fv((0, 0, 0))
+                else:
+                    glColor3fv((0.66274, 0.66274, 0.66274))
                 glVertex3fv(vertices[vertex])
         glEnd()
 
-    def Surfaces(self,  vertices):
+    def Surfaces(self, vertices):
+        # print("vertex = ", vertices)
+        glDisable(GL_CULL_FACE)
         glBegin(GL_QUADS)
         for i in range(4):
+            # print("i = ", i)
             # print("vertices = ", vertices[i,:])
-            glColor4f(1, 1, 1, 0.3)
-            glVertex3fv(vertices[i ,:])
+            if self.white_checked:
+                glColor4f(0, 0, 0, 0.3)
+            else:
+                glColor4f(1, 1, 1, 0.3)
+
+            glVertex3fv(vertices[i, :])
         glEnd()
 
     def Joints(self, x):
@@ -82,7 +95,10 @@ class glWidget(QGLWidget, QMainWindow):
             gluQuadricNormals(Q, GL_SMOOTH)
             gluQuadricTexture(Q, GL_TRUE)
             glTranslatef(self.joint_nodes[x][1], self.joint_nodes[x][2], 0)
-            glColor3f(1.0, 1.0, 1.0)
+            if self.white_checked:
+                glColor3fv((0, 0, 0))
+            else:
+                glColor3f(1.0, 1.0, 1.0)
             gluSphere(Q, self.joint_size, 32, 32)
 
             glPopMatrix()
@@ -282,7 +298,9 @@ class glWidget(QGLWidget, QMainWindow):
 
         self.render_checked = self.ui.actionRender_All_Members.isChecked()
         if self.render_checked:
-            self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval)
+            # print("test working")
+            # print("tester = ", self.Massemble)
+            self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, self.Massemble)
 
     def normalizeAngle(self, angle):
         while angle < 0:
@@ -379,9 +397,11 @@ class glWidget(QGLWidget, QMainWindow):
             if self.ui.Members_table.item(row, 1) is None:
                 pass
             else:
-                self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval = self.memberTableValues()
+                self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, self.Massemble= self.memberTableValues()
                 if self.render_checked:
-                    self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval)
+                    # print("test working")
+                    # print("tester = ", self.Massemble)
+                    self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, self.Massemble)
         except AttributeError:
             pass
 
@@ -446,12 +466,27 @@ class glWidget(QGLWidget, QMainWindow):
     def memberTableValues(self):
 
         import SABRE2_main_subclass
-
-        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
-            self, self.ui.Members_table, 3)
+        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval, self.Massemble = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table, 3)
         member_count = member_values.shape[0]
+        print("values = ", self.Massemble)
 
-        return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval
+#
+        # print(self.render_checked)
+        # if self.render_checked:
+        #     print("test")
+        # try:
+        #     Massemble = SABRE2_main_subclass.SABRE2_main_subclass.m_assemble_updater(self, self.ui.Members_table, flag = "cell changed")
+        # except Exception as e:
+        #     print("Oops an exception occurred")
+        #     print(e)
+        #     exc_type, exc_obj, exc_tb = sys.exc_info()
+        #     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        #     print(exc_type, fname, exc_tb.tb_lineno)
+
+
+
+        return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval, self.Massemble
+
 
     def noneDetector(self, tableName):
         row_count = tableName.rowCount()
@@ -516,7 +551,7 @@ class glWidget(QGLWidget, QMainWindow):
 
         return tap1, tap2
 
-    def renderAllProp(self, JNodevalue_i, JNodevalue_j, BNodevalue, Rval):
+    def renderAllProp(self, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, Massemble):
         ''' This function works on the rendering all properties of the model'''
         # self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j
         # print("node values", self.JNodeValues_i, self.JNodeValues_j)
@@ -606,34 +641,34 @@ class glWidget(QGLWidget, QMainWindow):
             for j in range(int(np.amax(BNodevalue[i, :, 1]))):
                 NJ_j[q + j - 2][0] = q + j - 1
                 NJ_j[q + j - 2][1] = q + j
-                NJ_j[q + j - 2][2] =  SASSEM[i, j + 1 , 2]
-                NJ_j[q + j - 2][3] =  SASSEM[i, j + 1 , 3]
-                NJ_j[q + j - 2][4] =  SASSEM[i, j + 1 , 4]
-                NJ_j[q + j - 2][5] =  SASSEM[i, j + 1 , 5]
-                NJ_j[q + j - 2][6] =  SASSEM[i, j + 1 , 6]
-                NJ_j[q + j - 2][7] =  SASSEM[i, j + 1 , 7]
-                NJ_j[q + j - 2][8] =  SASSEM[i, j + 1 , 8]
-                NJ_j[q + j - 2][9] =  SASSEM[i, j + 1 , 9]
-                NJ_j[q + j - 2][10] = SASSEM[i, j + 1 , 10]
-                NJ_j[q + j - 2][11] = SASSEM[i, j + 1 , 11]
-                NJ_j[q + j - 2][12] = SASSEM[i, j + 1 , 12]
+                NJ_j[q + j - 2][2] = SASSEM[i, j + 1, 2]
+                NJ_j[q + j - 2][3] = SASSEM[i, j + 1, 3]
+                NJ_j[q + j - 2][4] = SASSEM[i, j + 1, 4]
+                NJ_j[q + j - 2][5] = SASSEM[i, j + 1, 5]
+                NJ_j[q + j - 2][6] = SASSEM[i, j + 1, 6]
+                NJ_j[q + j - 2][7] = SASSEM[i, j + 1, 7]
+                NJ_j[q + j - 2][8] = SASSEM[i, j + 1, 8]
+                NJ_j[q + j - 2][9] = SASSEM[i, j + 1, 9]
+                NJ_j[q + j - 2][10] = SASSEM[i, j + 1, 10]
+                NJ_j[q + j - 2][11] = SASSEM[i, j + 1, 11]
+                NJ_j[q + j - 2][12] = SASSEM[i, j + 1, 12]
 
             # print("q before = ", q)
             q = int(np.amax(BNodevalue[i, :, 1])) + q + 1
             sec_dim = int(np.amax(BNodevalue[i, :, 1]))
             NJ_j[q - 2][0] = q - 1
             NJ_j[q - 2][1] = q
-            NJ_j[q - 2][2] = SASSEM[i,  sec_dim + 1 , 2]
-            NJ_j[q - 2][3] = SASSEM[i,  sec_dim + 1 , 3]
-            NJ_j[q - 2][4] = SASSEM[i,  sec_dim + 1 , 4]
-            NJ_j[q - 2][5] = SASSEM[i,  sec_dim + 1 , 5]
-            NJ_j[q - 2][6] = SASSEM[i,  sec_dim + 1 , 6]
-            NJ_j[q - 2][7] = SASSEM[i,  sec_dim + 1 , 7]
-            NJ_j[q - 2][8] = SASSEM[i,  sec_dim + 1 , 8]
-            NJ_j[q - 2][9] = SASSEM[i,  sec_dim + 1 , 9]
-            NJ_j[q - 2][10] = SASSEM[i, sec_dim + 1 , 10]
-            NJ_j[q - 2][11] = SASSEM[i, sec_dim + 1 , 11]
-            NJ_j[q - 2][12] = SASSEM[i, sec_dim + 1 , 12]
+            NJ_j[q - 2][2] = SASSEM[i, sec_dim + 1, 2]
+            NJ_j[q - 2][3] = SASSEM[i, sec_dim + 1, 3]
+            NJ_j[q - 2][4] = SASSEM[i, sec_dim + 1, 4]
+            NJ_j[q - 2][5] = SASSEM[i, sec_dim + 1, 5]
+            NJ_j[q - 2][6] = SASSEM[i, sec_dim + 1, 6]
+            NJ_j[q - 2][7] = SASSEM[i, sec_dim + 1, 7]
+            NJ_j[q - 2][8] = SASSEM[i, sec_dim + 1, 8]
+            NJ_j[q - 2][9] = SASSEM[i, sec_dim + 1, 9]
+            NJ_j[q - 2][10] = SASSEM[i, sec_dim + 1, 10]
+            NJ_j[q - 2][11] = SASSEM[i, sec_dim + 1, 11]
+            NJ_j[q - 2][12] = SASSEM[i, sec_dim + 1, 12]
         #     print("q after = ", q)
         #
         #
@@ -671,8 +706,9 @@ class glWidget(QGLWidget, QMainWindow):
         tfb1, tfb2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Bottom flange thickness
         bft1, bft2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Top flange width
         tft1, tft2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Top flange thickness
-        Dg1, Dg2   = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # dw:Web depth (y-dir)
-        hg1, hg2   = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # h : Distance between flange centroids
+        Dg1, Dg2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # dw:Web depth (y-dir)
+        hg1, hg2 = np.zeros((self.member_count, 1)), np.zeros(
+            (self.member_count, 1))  # h : Distance between flange centroids
 
         bfb1[:, 0] = NJ_i[:, 5]
         tfb1[:, 0] = NJ_i[:, 6]
@@ -715,7 +751,6 @@ class glWidget(QGLWidget, QMainWindow):
         # End node
         # bottom flange centroid to shear center
 
-
         hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
                          (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2, np.power(bft2, 3))))
         Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
@@ -752,7 +787,7 @@ class glWidget(QGLWidget, QMainWindow):
         # Preallocationg
 
         MemLength = np.zeros((sn, 1))
-        segnum = np.zeros((self.member_count+1, 1))
+        segnum = np.zeros((self.member_count + 1, 1))
         segnum[0][0] = 0  # (Start node number - 1) for each member
 
         for i in range(self.member_count):
@@ -761,7 +796,8 @@ class glWidget(QGLWidget, QMainWindow):
                 if (k + segnum[i][0]) == (segnum[i][0]):
                     MemLength[int(k + segnum[i][0])][0] = L0[int(k + segnum[i][0])][0]
                 else:
-                    MemLength[int(k + segnum[i][0])][0] = MemLength[int(k + segnum[i][0])-1][0] + L0[k + segnum[i][0]][0]
+                    MemLength[int(k + segnum[i][0])][0] = MemLength[int(k + segnum[i][0]) - 1][0] + \
+                                                          L0[k + segnum[i][0]][0]
 
             segnum[i + 1][0] = segnum[i][0] + int(np.amax(BNodevalue[i, :, 1] + 1))
 
@@ -791,10 +827,11 @@ class glWidget(QGLWidget, QMainWindow):
             if Rval[i][1] == 1:
                 for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                     ys1[k + segnum[i][0]][0] = (Dg1[k + segnum[i][0]][0]) / 2 - Dst1[k + segnum[i][0]][0]
-                    ys2[k + segnum[i][0]][0] = (Dg2[k + segnum[i][0]][0]) / 2 - Dst2[k + segnum[i][0]][0]  # Shear center
+                    ys2[k + segnum[i][0]][0] = (Dg2[k + segnum[i][0]][0]) / 2 - Dst2[k + segnum[i][0]][
+                        0]  # Shear center
                     if [k + segnum[i][0]][0] == (segnum[i][0]):
-                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
-                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
                         NTshe1[[k + segnum[i][0]][0]][1] = 0
                         NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
                         NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
@@ -802,8 +839,8 @@ class glWidget(QGLWidget, QMainWindow):
                         NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
                         NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
                     else:
-                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
-                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
                         NTshe1[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0] - 1][0]
                         NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
                         NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
@@ -816,8 +853,8 @@ class glWidget(QGLWidget, QMainWindow):
                     ys1[k + segnum[i][0]][0] = - Dst1[k + segnum[i][0]][0]
                     ys2[k + segnum[i][0]][0] = - Dst2[k + segnum[i][0]][0]  # Shear center
                     if [k + segnum[i][0]][0] == (segnum[i][0]):
-                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+ 1
-                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+ 1
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
                         NTshe1[[k + segnum[i][0]][0]][1] = 0
                         NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
                         NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
@@ -825,8 +862,8 @@ class glWidget(QGLWidget, QMainWindow):
                         NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
                         NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
                     else:
-                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
-                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] +1
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
                         NTshe1[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0] - 1][0]
                         NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
                         NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
@@ -839,8 +876,8 @@ class glWidget(QGLWidget, QMainWindow):
                     ys1[k + segnum[i][0]][0] = (Dsb1[k + segnum[i][0]][0])
                     ys2[k + segnum[i][0]][0] = (Dsb2[k + segnum[i][0]][0])
                     if [k + segnum[i][0]][0] == (segnum[i][0]):
-                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+1
-                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0]+1
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
                         NTshe1[[k + segnum[i][0]][0]][1] = 0
                         NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
                         NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
@@ -872,8 +909,8 @@ class glWidget(QGLWidget, QMainWindow):
             # print("tap1 = ", tap1)
             # print("tap2 = ", tap2)
 
-            taper1[n, :] = tap1[:,0]  # Which is the same as xg.
-            taper2[n, :] = tap2[:,0]  # Which is the same as yg.
+            taper1[n, :] = tap1[:, 0]  # Which is the same as xg.
+            taper2[n, :] = tap2[:, 0]  # Which is the same as yg.
 
         # Starting Node for each member
         segnum[0, 0] = 0  # (Start node number - 1) for each member
@@ -1190,7 +1227,7 @@ class glWidget(QGLWidget, QMainWindow):
                 SN13 = SN13 + NG2[i, :]
                 SN14 = SN14 + NG2[i, :]
 
-            eLtf = np.zeros((4 , 3))
+            eLtf = np.zeros((4, 3))
             eLweb = np.zeros((4, 3))
             eLbf = np.zeros((4, 3))
             # print("last")
@@ -1246,15 +1283,14 @@ class glWidget(QGLWidget, QMainWindow):
                     Zwbf[k, j] = eLbf[k * 2 + j, 2]
             # print("Xwtf =", Xwtf, "\nYwtf =", Ywtf, "\nZwtf =", Zwtf)
 
+            tf = np.zeros((4, 3))
+            tf[0][0] = Xwtf[0][1]
+            tf[0][1] = Ywtf[0][1]
+            tf[0][2] = Zwtf[0][1]
 
-            tf = np.zeros((4,3))
-            tf[0][0] = Xwtf[0][0]
-            tf[0][1] = Ywtf[0][0]
-            tf[0][2] = Zwtf[0][0]
-
-            tf[1][0] = Xwtf[0][1]
-            tf[1][1] = Ywtf[0][1]
-            tf[1][2] = Zwtf[0][1]
+            tf[1][0] = Xwtf[0][0]
+            tf[1][1] = Ywtf[0][0]
+            tf[1][2] = Zwtf[0][0]
 
             tf[2][0] = Xwtf[1][0]
             tf[2][1] = Ywtf[1][0]
@@ -1265,13 +1301,13 @@ class glWidget(QGLWidget, QMainWindow):
             tf[3][2] = Zwtf[1][1]
 
             web = np.zeros((4, 3))
-            web[0][0] = Xwweb[0][0]
-            web[0][1] = Ywweb[0][0]
-            web[0][2] = Zwweb[0][0]
+            web[0][0] = Xwweb[0][1]
+            web[0][1] = Ywweb[0][1]
+            web[0][2] = Zwweb[0][1]
 
-            web[1][0] = Xwweb[0][1]
-            web[1][1] = Ywweb[0][1]
-            web[1][2] = Zwweb[0][1]
+            web[1][0] = Xwweb[0][0]
+            web[1][1] = Ywweb[0][0]
+            web[1][2] = Zwweb[0][0]
 
             web[2][0] = Xwweb[1][0]
             web[2][1] = Ywweb[1][0]
@@ -1282,13 +1318,13 @@ class glWidget(QGLWidget, QMainWindow):
             web[3][2] = Zwweb[1][1]
 
             bf = np.zeros((4, 3))
-            bf[0][0] = Xwbf[0][0]
-            bf[0][1] = Ywbf[0][0]
-            bf[0][2] = Zwbf[0][0]
+            bf[0][0] = Xwbf[0][1]
+            bf[0][1] = Ywbf[0][1]
+            bf[0][2] = Zwbf[0][1]
 
-            bf[1][0] = Xwbf[0][1]
-            bf[1][1] = Ywbf[0][1]
-            bf[1][2] = Zwbf[0][1]
+            bf[1][0] = Xwbf[0][0]
+            bf[1][1] = Ywbf[0][0]
+            bf[1][2] = Zwbf[0][0]
 
             bf[2][0] = Xwbf[1][0]
             bf[2][1] = Ywbf[1][0]
@@ -1299,22 +1335,29 @@ class glWidget(QGLWidget, QMainWindow):
             bf[3][2] = Zwbf[1][1]
             # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
 
-            edges = ((0,2),
-                     (2,3),
-                     (3,1),
-                     (1,0))
+            edges = ((0, 1),
+                     (1, 2),
+                     (2, 3),
+                     (3, 0))
 
-            surface = (0,1,2,3)
+            # text identifier :
+            forTop = [np.mean((np.amax(tf[:, 0]), np.amin(tf[:, 0]))), np.mean((np.amax(tf[:, 1]), np.amin(tf[:, 1]))),
+                      np.mean((np.amax(tf[:, 2]), np.amin(tf[:, 2])))]
 
+            forBottom = [np.mean((np.amax(bf[:, 0]), np.amin(bf[:, 0]))),
+                         np.mean((np.amax(bf[:, 1]), np.amin(bf[:, 1]))),
+                         np.mean((np.amax(bf[:, 2]), np.amin(bf[:, 2])))]
+            glColor4f(0, 1, 0, 1)
+            self.renderText(forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=self.font2)
+            self.renderText(forTop[0], forTop[1], forTop[2], "Flange 2", font=self.font2)
             self.SurfaceContour(tf, edges)
-            self.Surfaces(tf)
-
             self.SurfaceContour(web, edges)
-            self.Surfaces(web)
-
             self.SurfaceContour(bf, edges)
+            self.Surfaces(tf)
+            self.Surfaces(web)
             self.Surfaces(bf)
 
+            # print("Massemble last point = ", Massemble)
 
         # def Surfaces(self):
         #     glBegin(GL_QUADS)
@@ -1325,5 +1368,3 @@ class glWidget(QGLWidget, QMainWindow):
         #             glColor4f(0, 0, 0, 0.3)
         #             glVertex3fv(self.vertices[vertex])
         #     glEnd()
-
-

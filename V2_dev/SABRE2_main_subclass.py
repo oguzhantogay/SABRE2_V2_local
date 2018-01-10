@@ -2,11 +2,8 @@ import PyQt4
 import sys
 from PyQt4.QtGui import *
 from PyQt4 import QtGui, QtCore
-from PyQt4 import QtGui
 import DropDownActions
 import OpenGLcode
-from OpenGL.GL import *
-import SABRE2_GUI
 import numpy as np
 import sqlite3 as sq
 
@@ -36,11 +33,12 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
         self.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
-        self.Massemble = np.zeros((1, 16))
+        self.Massemble = None
         self.table_prop = np.zeros((1, 14))
         self.members_table_values = np.zeros((1, 18))
         self.BNodevalue = None
         self.SNodevalue = None
+        self.render_checked = self.ui.actionRender_All_Members.isChecked()
         ui_layout.actionRender_Line_Element.setCheckable(True)
         ui_layout.actionRender_Selected_Member.setCheckable(True)
         ui_layout.actionRender_All_Members.setCheckable(True)
@@ -48,7 +46,21 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.verticalLayout_8.insertWidget(0, self.OpenGLwidget)
         # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
         # self.OpenGLwidget.resized.connect(self.someFunction)
-
+        # Action Button for selected members
+        ui_layout.actionRender_All_Members.triggered.connect(
+            lambda: ui_layout.actionRender_Line_Element.setChecked(False))
+        ui_layout.actionRender_All_Members.triggered.connect(
+            lambda: self.OpenGLwidget.updateTheWidget())
+        ui_layout.actionRender_All_Members.triggered.connect(
+            lambda: ui_layout.actionRender_Selected_Member.setChecked(False))
+        ui_layout.actionRender_Line_Element.triggered.connect(
+            lambda: ui_layout.actionRender_Selected_Member.setChecked(False))
+        ui_layout.actionRender_Line_Element.triggered.connect(
+            lambda: ui_layout.actionRender_All_Members.setChecked(False))
+        ui_layout.actionRender_Selected_Member.triggered.connect(
+            lambda: ui_layout.actionRender_Line_Element.setChecked(False))
+        ui_layout.actionRender_Selected_Member.triggered.connect(
+            lambda: ui_layout.actionRender_All_Members.setChecked(False))
         ui_layout.actionIsometric_X_Y_Z_View.triggered.connect(lambda: self.OpenGLwidget.isometricView())
         ui_layout.actionTop_X_Z_View.triggered.connect(lambda: self.OpenGLwidget.topView())
         ui_layout.actionFront_X_Y_View.triggered.connect(lambda: self.OpenGLwidget.frontView())
@@ -399,11 +411,12 @@ class SABRE2_main_subclass(QMainWindow):
 
 
         # print("Rval", Rval)
-
-
+        print("updater = ", self.Massemble)
         # print("main screen node i", JNodeValue_i)
         # print("main screen node j", JNodeValue_j)
-        return Members_values, JNodeValue_i, JNodeValue_j, current_row, self.BNodevalue, flag_mem_values, Rval
+        self.members_table_values = Members_values
+        return Members_values, JNodeValue_i, JNodeValue_j, current_row, self.BNodevalue, flag_mem_values, Rval, self.Massemble
+
 
     def AISC_update_fun(self, tableName):
         # tableName.blockSignals(True)
@@ -426,7 +439,8 @@ class SABRE2_main_subclass(QMainWindow):
 
             # print("Massemble = ", Massemble)
             # print("table prop = ", self.table_prop)
-
+            if self.Massemble is None:
+                self.Massemble = np.zeros((1, 16))
             for i in range(16):
                 self.Massemble[int(current_row_number)][i] = Massemble[0][i]
 
@@ -518,14 +532,12 @@ class SABRE2_main_subclass(QMainWindow):
 
     def m_assemble_updater(self, tableName, Copy_from_number=1, Insert_after_number=1, lineName=1, Delete_row = 1,
                            flag="insert after button"):
-
-        self.members_table_values, _, _, current_row, _, _ , _= self.update_members_table(tableName, 3)
-
-        # print("members = ", self.members_table_values)
+        current_row = tableName.currentRow()
         row_count = tableName.rowCount()
         to_append = np.zeros((1, 16))
         to_append_prop = np.zeros((1, 14))
-
+        if self.Massemble is None:
+            self.Massemble = np.zeros((1, 16))
 
 
         if flag == "last":
@@ -533,13 +545,16 @@ class SABRE2_main_subclass(QMainWindow):
             self.table_prop = np.append(self.table_prop, to_append_prop, axis=0)
             for i in range(3):
                 self.Massemble[current_row][i] = self.members_table_values[current_row][i]
-
+            self.update_members_table(tableName, 3)
+            print("test 1")
         elif flag == "insert after button":
             row_number = DataCollection.update_lineedit_values(self, lineName)
             self.Massemble = np.insert(self.Massemble, row_number, 0, axis=0)
             self.table_prop = np.insert(self.table_prop, row_number, 0, axis=0)
             for i in range(3):
                 self.Massemble[current_row][i] = self.members_table_values[current_row][i]
+            print("test 2")
+            self.update_members_table(tableName, 3)
         elif flag == "copy from":
             copyfrom_values = DataCollection.update_lineedit_values(self, Copy_from_number)
             insertafter_values = DataCollection.update_lineedit_values(self, Insert_after_number)
@@ -551,10 +566,12 @@ class SABRE2_main_subclass(QMainWindow):
                                         axis=0)
             for i in range(3):
                 self.Massemble[current_row][i] = self.members_table_values[current_row][i]
-
+            print("test 3")
+            self.update_members_table(tableName, 3)
         elif flag == "Delete Last":
             self.Massemble = np.delete(self.Massemble,(row_count-1), axis = 0)
-
+            print("test 4")
+            self.update_members_table(tableName, 3)
         elif flag == "Delete Selected":
             row_number = DataCollection.update_lineedit_values(self, Delete_row)
             delete = int(row_number) - 1
@@ -563,22 +580,32 @@ class SABRE2_main_subclass(QMainWindow):
             for i in range(row_count):
                 self.Massemble[i][0] = self.members_table_values[i][0]
 
-
+        # elif flag == "OpenGL":
+        #     print("test")
+        # Massemble = self.Massemble
+        # print("Massemble 1= ", self.Massemble)
+        # return Massemble
+            print("test 5")
+            self.update_members_table(tableName, 3)
         elif flag == "cell changed":
+            # print ("cell changed")
             row = tableName.currentRow()
+            if current_row == -1:
+                current_row = row
 
             try:
                 for i in range(3):
+                    # print("cell changed" + str(i))
                     self.Massemble[current_row][i] = self.members_table_values[current_row][i]
 
                 for i in range(14):
-
+                    # print("cell changed" + str(i))
                     if tableName.item(current_row, i+3) is None:
                         self.Massemble[current_row][3] = 1
                         break
 
                     elif np.isclose(self.table_prop[current_row][i], self.members_table_values[current_row][i + 4],
-                                             rtol=1e-05, atol=1e-08, equal_nan=False):
+                                    rtol=1e-05, atol=1e-08, equal_nan=False):
                         # print("current row " + str(current_row) + " is rolled")
                         self.Massemble[current_row][3] = 1
                     else:
@@ -588,8 +615,13 @@ class SABRE2_main_subclass(QMainWindow):
 
                         # print("current row " + str(current_row) + " is welded")
                         break
+                print("test 6")
+                self.update_members_table(tableName, 3)
             except ValueError and IndexError:
                 pass
+            # elif flag == "OpenGL":
+            #     print("OpenGL")
+
 
             # if np.allclose(self.members_table_values, self.table_prop):
             #     # print("Rolled")
@@ -601,6 +633,7 @@ class SABRE2_main_subclass(QMainWindow):
         # print("table_" , self.table_prop, "/n members table = ", self.members_table_values)
         # print("assembly matrix = ", self.Massemble)
         # pass
+        self.update_members_table(tableName, 3)
 
     def resizeEvent(self, event):
         # self.OpenGLwidget.resized.emit()

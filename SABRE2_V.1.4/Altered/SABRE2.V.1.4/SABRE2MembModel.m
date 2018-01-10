@@ -744,6 +744,9 @@ else % ~isempty(Massemble)
    % ********************************************** Plot Joint Node E
 
    % ********************************************** Plot Member Define S
+   Massemble
+   JNodevalue
+   
    MJvalue = [];
    if ~isempty(Massemble)
       mem=length(Massemble(:,1));     % # of members

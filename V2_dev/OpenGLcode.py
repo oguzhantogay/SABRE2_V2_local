@@ -48,7 +48,9 @@ class glWidget(QGLWidget, QMainWindow):
         self.lastPos = QtCore.QPoint()
         self.parameters = []
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, self.Massemble = None, None, None, None, None, None, None
+        self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval = None, None, None, None, None, None
+
+        self.Massemble = None
         self.joint_i = 1
         self.joint_j = 2
 
@@ -298,9 +300,9 @@ class glWidget(QGLWidget, QMainWindow):
 
         self.render_checked = self.ui.actionRender_All_Members.isChecked()
         if self.render_checked:
-            # print("test working")
-            # print("tester = ", self.Massemble)
-            self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, self.Massemble)
+            Massemble = self.MassembleUpdater()
+            print("tester = ", Massemble)
+            self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, Massemble)
 
     def normalizeAngle(self, angle):
         while angle < 0:
@@ -397,11 +399,11 @@ class glWidget(QGLWidget, QMainWindow):
             if self.ui.Members_table.item(row, 1) is None:
                 pass
             else:
-                self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, self.Massemble= self.memberTableValues()
+                self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval= self.memberTableValues()
                 if self.render_checked:
-                    # print("test working")
-                    # print("tester = ", self.Massemble)
-                    self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, self.Massemble)
+                    Massemble = np.zeros((1,16))
+
+                    self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval,Massemble)
         except AttributeError:
             pass
 
@@ -466,9 +468,8 @@ class glWidget(QGLWidget, QMainWindow):
     def memberTableValues(self):
 
         import SABRE2_main_subclass
-        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval, self.Massemble = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table, 3)
+        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table, 3)
         member_count = member_values.shape[0]
-        print("values = ", self.Massemble)
 
 #
         # print(self.render_checked)
@@ -485,8 +486,21 @@ class glWidget(QGLWidget, QMainWindow):
 
 
 
-        return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval, self.Massemble
+        return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval
 
+    def MassembleUpdater(self):
+        import SABRE2_main_subclass
+        SABRE2_obj = SABRE2_main_subclass.SABRE2_main_subclass(self.ui)
+        try:
+            Massemble = SABRE2_obj.m_assemble_updater(self.ui.Members_table, flag = "OpenGL")
+            print("function inside = ", Massemble)
+            return Massemble
+        except Exception as e:
+            print("Oops an exception occurred")
+            print(e)
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
 
     def noneDetector(self, tableName):
         row_count = tableName.rowCount()
@@ -1357,7 +1371,7 @@ class glWidget(QGLWidget, QMainWindow):
             self.Surfaces(web)
             self.Surfaces(bf)
 
-            # print("Massemble last point = ", Massemble)
+            print("Massemble last point = ", Massemble)
 
         # def Surfaces(self):
         #     glBegin(GL_QUADS)

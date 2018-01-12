@@ -36,7 +36,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
         self.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
-        self.Massemble = np.zeros((1, 16))
+        SABRE2_main_subclass.Massemble = np.zeros((1, 16))
         self.table_prop = np.zeros((1, 14))
         self.members_table_values = np.zeros((1, 18))
         self.BNodevalue = None
@@ -166,6 +166,9 @@ class SABRE2_main_subclass(QMainWindow):
                                                                 ui_layout.Members_table,
                                                                 shear_panel_options, shear_panel_position))
 
+        ui_layout.Members_table.itemChanged.connect(
+            lambda: self.OpenGLwidget.updateTheWidget())
+
         ui_layout.Mem_def_add.clicked.connect(
             lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
                                              self.Members_table_position, ui_layout.Insert_row_number_mem_def, "last"))
@@ -211,6 +214,9 @@ class SABRE2_main_subclass(QMainWindow):
                                                                                       flag="copy from"))
         ui_layout.AISC_assign_button.clicked.connect(
             lambda: self.AISC_update_fun(ui_layout.Members_table))
+
+        ui_layout.AISC_assign_button.clicked.connect(
+            lambda: self.OpenGLwidget.updateTheWidget())
 
         # ui_layout.AISC_assign_button.clicked.connect(lambda : self.m_assemble_updater(ui_layout.Members_table, ))
 
@@ -327,7 +333,6 @@ class SABRE2_main_subclass(QMainWindow):
     # Joints table functions
     def update_joints_table(self, tableName):
         Joint_values = JointTable.tableValues(self, tableName)
-
         # print("main screen Joint values", Joint_values)
         return Joint_values
 
@@ -441,7 +446,7 @@ class SABRE2_main_subclass(QMainWindow):
             # print("table prop = ", self.table_prop)
 
             for i in range(16):
-                self.Massemble[int(current_row_number)][i] = Massemble[0][i]
+                SABRE2_main_subclass.Massemble[int(current_row_number)][i] = Massemble[0][i]
 
             self.m_assemble_updater(tableName, flag="cell changed")
 
@@ -541,39 +546,39 @@ class SABRE2_main_subclass(QMainWindow):
 
 
         if flag == "last":
-            self.Massemble = np.append(self.Massemble, to_append, axis=0)
+            SABRE2_main_subclass.Massemble = np.append(SABRE2_main_subclass.Massemble, to_append, axis=0)
             self.table_prop = np.append(self.table_prop, to_append_prop, axis=0)
             for i in range(3):
-                self.Massemble[current_row][i] = self.members_table_values[current_row][i]
+                SABRE2_main_subclass.Massemble[current_row][i] = self.members_table_values[current_row][i]
 
         elif flag == "insert after button":
             row_number = DataCollection.update_lineedit_values(self, lineName)
-            self.Massemble = np.insert(self.Massemble, row_number, 0, axis=0)
+            SABRE2_main_subclass.Massemble = np.insert(SABRE2_main_subclass.Massemble, row_number, 0, axis=0)
             self.table_prop = np.insert(self.table_prop, row_number, 0, axis=0)
             for i in range(3):
-                self.Massemble[current_row][i] = self.members_table_values[current_row][i]
+                SABRE2_main_subclass.Massemble[current_row][i] = self.members_table_values[current_row][i]
         elif flag == "copy from":
             copyfrom_values = DataCollection.update_lineedit_values(self, Copy_from_number)
             insertafter_values = DataCollection.update_lineedit_values(self, Insert_after_number)
-            self.Massemble = np.insert(self.Massemble, insertafter_values,
-                                       self.Massemble[(copyfrom_values - 1), :],
+            SABRE2_main_subclass.Massemble = np.insert(SABRE2_main_subclass.Massemble, insertafter_values,
+                                       SABRE2_main_subclass.Massemble[(copyfrom_values - 1), :],
                                        axis=0)
             self.table_prop = np.insert(self.table_prop, insertafter_values,
                                         self.table_prop[(copyfrom_values - 1), :],
                                         axis=0)
             for i in range(3):
-                self.Massemble[current_row][i] = self.members_table_values[current_row][i]
+                SABRE2_main_subclass.Massemble[current_row][i] = self.members_table_values[current_row][i]
 
         elif flag == "Delete Last":
-            self.Massemble = np.delete(self.Massemble,(row_count-1), axis = 0)
+            SABRE2_main_subclass.Massemble = np.delete(SABRE2_main_subclass.Massemble,(row_count-1), axis = 0)
 
         elif flag == "Delete Selected":
             row_number = DataCollection.update_lineedit_values(self, Delete_row)
             delete = int(row_number) - 1
-            self.Massemble = np.delete(self.Massemble, (delete), axis=0)
+            SABRE2_main_subclass.Massemble = np.delete(SABRE2_main_subclass.Massemble, (delete), axis=0)
 
             for i in range(row_count):
-                self.Massemble[i][0] = self.members_table_values[i][0]
+                SABRE2_main_subclass.Massemble[i][0] = self.members_table_values[i][0]
 
 
         elif flag == "cell changed":
@@ -582,48 +587,39 @@ class SABRE2_main_subclass(QMainWindow):
 
             try:
                 for i in range(3):
-                    self.Massemble[row][i] = self.members_table_values[row][i]
+                    SABRE2_main_subclass.Massemble[row][i] = self.members_table_values[row][i]
 
                 for i in range(14):
 
                     if tableName.item(row, i+3) is None:
-                        self.Massemble[row][3] = 1
+                        SABRE2_main_subclass.Massemble[row][3] = 1
                         break
 
                     elif np.isclose(self.table_prop[row][i], self.members_table_values[row][i + 4],
                                              rtol=1e-05, atol=1e-08, equal_nan=False):
                         # print("current row " + str(current_row) + " is rolled")
-                        self.Massemble[row][3] = 1
+                        SABRE2_main_subclass.Massemble[row][3] = 1
                     else:
 
                         for i in range(1,14):
-                            self.Massemble[row][i+2] = 0
+                            SABRE2_main_subclass.Massemble[row][i+2] = 0
 
                         # print("current row " + str(current_row) + " is welded")
                         break
             except ValueError and IndexError:
                 pass
         elif flag == "OpenGL":
-            try:
-                print("OpenGL = ", self.Massemble)
-                return self.Massemble
-            except Exception as e:
-                print("Oops an exception occurred")
-                print(e)
-                exc_type, exc_obj, exc_tb = sys.exc_info()
-                fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-                print(exc_type, fname, exc_tb.tb_lineno)
+            pass
+            # try:
+            #     print("OpenGL = ", SABRE2_main_subclass.Massemble)
+            #     return SABRE2_main_subclass.Massemble
+            # except Exception as e:
+            #     print("Oops an exception occurred")
+            #     print(e)
 
-            # if np.allclose(self.members_table_values, self.table_prop):
-            #     # print("Rolled")
-            #     pass
-            # else:
-            #     # print("Welded")
-            #     self.Massemble[row][3] = 0
-            #     # print("assemble cell changed = ", self.Massemble)
         # print("table_" , self.table_prop, "/n members table = ", self.members_table_values)
-        print("assembly matrix = ", self.Massemble)
-        return self.Massemble
+        print("assembly matrix = ", SABRE2_main_subclass.Massemble)
+        return SABRE2_main_subclass.Massemble
         # pass
 
     def updater(self):

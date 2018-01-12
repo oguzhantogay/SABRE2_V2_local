@@ -60,6 +60,7 @@ class glWidget(QGLWidget, QMainWindow):
         # print("values = ", self.member_count, self.member_values)
 
     def SurfaceContour(self, vertices, edges):
+        glDisable(GL_CULL_FACE)
         glBegin(GL_LINES)
         for edge in edges:
             for vertex in edge:
@@ -78,12 +79,21 @@ class glWidget(QGLWidget, QMainWindow):
             # print("i = ", i)
             # print("vertices = ", vertices[i,:])
             if self.white_checked:
-                glColor4f(0, 0, 0, 0.3)
+                glColor4f(0, 0, 0, 0.26)
             else:
-                glColor4f(1, 1, 1, 0.3)
+                glColor4f(1, 1, 1, 0.26)
 
             glVertex3fv(vertices[i, :])
         glEnd()
+
+    def referenceLine(self, MJvalue):
+        glPushAttrib(GL_ENABLE_BIT)
+        glBegin(GL_LINES)
+        glColor3ub(100, 149, 237)
+        for i in range(2):
+            glVertex3f(MJvalue[i,1], MJvalue[i,3], MJvalue[i,2])
+        glEnd()
+        glPopAttrib()
 
     def Joints(self, x):
 
@@ -301,7 +311,6 @@ class glWidget(QGLWidget, QMainWindow):
         self.render_checked = self.ui.actionRender_All_Members.isChecked()
         if self.render_checked:
             Massemble = self.MassembleUpdater()
-            print("tester = ", Massemble)
             self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, Massemble)
 
     def normalizeAngle(self, angle):
@@ -401,7 +410,7 @@ class glWidget(QGLWidget, QMainWindow):
             else:
                 self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval= self.memberTableValues()
                 if self.render_checked:
-                    Massemble = np.zeros((1,16))
+                    Massemble = self.MassembleUpdater()
 
                     self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval,Massemble)
         except AttributeError:
@@ -490,17 +499,8 @@ class glWidget(QGLWidget, QMainWindow):
 
     def MassembleUpdater(self):
         import SABRE2_main_subclass
-        SABRE2_obj = SABRE2_main_subclass.SABRE2_main_subclass(self.ui)
-        try:
-            Massemble = SABRE2_obj.m_assemble_updater(self.ui.Members_table, flag = "OpenGL")
-            print("function inside = ", Massemble)
-            return Massemble
-        except Exception as e:
-            print("Oops an exception occurred")
-            print(e)
-            exc_type, exc_obj, exc_tb = sys.exc_info()
-            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-            print(exc_type, fname, exc_tb.tb_lineno)
+        Massemble = SABRE2_main_subclass.SABRE2_main_subclass.m_assemble_updater(self, self.ui.Members_table, flag = "OpenGL")
+        return Massemble
 
     def noneDetector(self, tableName):
         row_count = tableName.rowCount()
@@ -515,10 +515,32 @@ class glWidget(QGLWidget, QMainWindow):
         return return_value
 
     def memberOnly(self, x):
+        render_checked = self.ui.actionRender_All_Members.isChecked()
         if self.ui.Members_table.item(x, 1) is None:
             pass
         elif self.ui.Members_table.item(x, 2) is None:
             pass
+        elif render_checked:
+            Massemble = self.MassembleUpdater()
+            MJvalue = np.zeros((2, 4))
+            print("JnodeValue =", self.joint_nodes)
+            if Massemble is not None:
+                mem = Massemble.shape[0]
+                print("mem = ", mem)
+                for i in range(mem):
+                    MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1] - 1)][1]
+                    MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2] - 1)][1]
+                    MJvalue[0][2] = self.joint_nodes[int(Massemble[i][1] - 1)][2]
+                    MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2] - 1)][2]
+                    MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1] - 1)][3]
+                    MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2] - 1)][3]
+            glPushAttrib(GL_ENABLE_BIT)
+            glBegin(GL_LINES)
+            glColor3ub(100, 149, 237)
+            for i in range(2):
+                glVertex3f(MJvalue[i, 1], MJvalue[i, 3], MJvalue[i, 2])
+            glEnd()
+            glPopAttrib()
         else:
             glPushAttrib(GL_ENABLE_BIT)
             # glPushAttrib is done to return everything to normal after drawing
@@ -1371,14 +1393,20 @@ class glWidget(QGLWidget, QMainWindow):
             self.Surfaces(web)
             self.Surfaces(bf)
 
-            print("Massemble last point = ", Massemble)
+            # print("Massemble last point = ", Massemble)   Massemble works !
 
-        # def Surfaces(self):
-        #     glBegin(GL_QUADS)
-        #     for surface in self.surfaces:
-        #         x = 0
-        #         for vertex in surface:
-        #             x += 1
-        #             glColor4f(0, 0, 0, 0.3)
-        #             glVertex3fv(self.vertices[vertex])
-        #     glEnd()
+            MJvalue = np.zeros((2,4))
+            print("JnodeValue =", self.joint_nodes)
+            if Massemble is not None:
+                mem = Massemble.shape[0]
+                print("mem = ", mem)
+                for i in range(mem):
+                    MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1]-1)][1]
+                    MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2]-1)][1]
+                    MJvalue[0][2] = self.joint_nodes[int(Massemble[i][1]-1)][2]
+                    MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2]-1)][2]
+                    MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1]-1)][3]
+                    MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2]-1)][3]
+
+                    opp = MJvalue[1][2] - MJvalue[0][2]  #element depth in y - dir
+                    adj = MJvalue[1][1] - MJvalue[0][1]  #element length in x - dir

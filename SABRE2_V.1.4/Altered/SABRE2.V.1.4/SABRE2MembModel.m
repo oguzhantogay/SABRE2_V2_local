@@ -309,7 +309,7 @@ else % ~isempty(Massemble)
    NTshe1=zeros(sn,4);NTshe2=zeros(sn,4);
    segnum(1,1)=0;          % (Start node number - 1) for each member
    ys1=zeros(sn,1);ys2=zeros(sn,1);
-   MemLength
+%    MemLength
 %    Dg1
 %    Dst1
 %    Dg2
@@ -682,15 +682,15 @@ else % ~isempty(Massemble)
          end
       end
       
-      Xwtf
-      Ywtf
-      Zwtf
-      Xwweb
-      Ywweb
-      Zwweb
-      Xwbf
-      Ywbf
-      Zwbf
+%       Xwtf
+%       Ywtf
+%       Zwtf
+%       Xwweb
+%       Ywweb
+%       Zwweb
+%       Xwbf
+%       Ywbf
+%       Zwbf
 
       if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background
          otf = surf(axesm,Xwtf,Zwtf,Ywtf,'FaceColor',[0.6 0.6 0.6],'Clipping','off', ...
@@ -758,6 +758,8 @@ else % ~isempty(Massemble)
          MJvalue(2,3) = JNodevalue(Massemble(i,3),3);
          MJvalue(1,4) = JNodevalue(Massemble(i,2),4);
          MJvalue(2,4) = JNodevalue(Massemble(i,3),4);
+         
+         MJvalue
          % Drawing Member Design Reference Axis
          plot3(axesm,MJvalue(:,2),-MJvalue(:,4),MJvalue(:,3),'Color','b','Tag',...
             ['M',num2str(i)],'HitTest','off','PickableParts','none');

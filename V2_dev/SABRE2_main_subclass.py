@@ -34,7 +34,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.statusBar = self.statusBar()
         ui_layout.DefinitionTabs.close()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
-        self.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
+        SABRE2_main_subclass.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
         SABRE2_main_subclass.Massemble = np.zeros((1, 16))
         self.table_prop = np.zeros((1, 14))
@@ -45,13 +45,13 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionRender_Selected_Member.setCheckable(True)
         ui_layout.actionRender_All_Members.setCheckable(True)
         ui_layout.Members_table.setEnabled(False)
-        ui_layout.verticalLayout_8.insertWidget(0, self.OpenGLwidget)
-        # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
-        # self.OpenGLwidget.resized.connect(self.someFunction)
+        ui_layout.verticalLayout_8.insertWidget(0, SABRE2_main_subclass.OpenGLwidget)
+        # SABRE2_main_subclass.OpenGLwidget.resizeGL(SABRE2_main_subclass.OpenGLwidget.width(), SABRE2_main_subclass.OpenGLwidget.height())
+        # SABRE2_main_subclass.OpenGLwidget.resized.connect(self.someFunction)
         ui_layout.actionRender_All_Members.triggered.connect(
             lambda: ui_layout.actionRender_Line_Element.setChecked(False))
         ui_layout.actionRender_All_Members.triggered.connect(
-            lambda: self.OpenGLwidget.updateTheWidget())
+            lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         ui_layout.actionRender_All_Members.triggered.connect(
             lambda: ui_layout.actionRender_Selected_Member.setChecked(False))
         ui_layout.actionRender_Line_Element.triggered.connect(
@@ -62,14 +62,14 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: ui_layout.actionRender_Line_Element.setChecked(False))
         ui_layout.actionRender_Selected_Member.triggered.connect(
             lambda: ui_layout.actionRender_All_Members.setChecked(False))
-        ui_layout.actionIsometric_X_Y_Z_View.triggered.connect(lambda: self.OpenGLwidget.isometricView())
-        ui_layout.actionTop_X_Z_View.triggered.connect(lambda: self.OpenGLwidget.topView())
-        ui_layout.actionFront_X_Y_View.triggered.connect(lambda: self.OpenGLwidget.frontView())
-        ui_layout.actionSide_Y_Z_View.triggered.connect(lambda: self.OpenGLwidget.sideView())
-        ui_layout.actionFit_View.triggered.connect(lambda: self.OpenGLwidget.setFitView())
-        ui_layout.actionZoom_In.triggered.connect(lambda: self.OpenGLwidget.setZoomIn())
-        ui_layout.actionZoom_Out.triggered.connect(lambda: self.OpenGLwidget.setZoomOut())
-        ui_layout.actionWhite_Background.triggered.connect(lambda: self.OpenGLwidget.updateTheWidget())
+        ui_layout.actionIsometric_X_Y_Z_View.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.isometricView())
+        ui_layout.actionTop_X_Z_View.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.topView())
+        ui_layout.actionFront_X_Y_View.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.frontView())
+        ui_layout.actionSide_Y_Z_View.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.sideView())
+        ui_layout.actionFit_View.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.setFitView())
+        ui_layout.actionZoom_In.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.setZoomIn())
+        ui_layout.actionZoom_Out.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.setZoomOut())
+        ui_layout.actionWhite_Background.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
         # Release Tab, first columns of the tables size arrangements
         ui_layout.Torsional_Release.setColumnWidth(0, 62)
@@ -88,7 +88,7 @@ class SABRE2_main_subclass(QMainWindow):
         # ui_layout.actionNew.triggered.connect(lambda: ActionClass('uidesign').NewAct())
         ui_layout.actionOpen.triggered.connect(lambda: self.ActionMenus.OpenAct())
         ui_layout.actionSave.triggered.connect(lambda: self.ActionMenus.SaveAct())
-        ui_layout.actionJoint_Member_Labels.triggered.connect(lambda: self.OpenGLwidget.updateTheWidget())
+        ui_layout.actionJoint_Member_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         # ui_layout.actionSave_As.triggered.connect(lambda: ActionClass('uidesign').Save_AsAct())
         # ui_layout.actionPrint.triggered.connect(lambda: ActionClass('uidesign').PrintAct())
         # ui_layout.actionPrint_Preview.triggered.connect(lambda: ActionClass('uidesign').Print_PreviewAct())
@@ -103,13 +103,13 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: self.update_joints_table(ui_layout.Joints_Table))
 
         ui_layout.Joints_Table.itemChanged.connect(
-            lambda: self.OpenGLwidget.updateTheWidget())
+            lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
         ui_layout.Joints_Table.itemChanged.connect(
-            lambda: self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height()))
+            lambda: SABRE2_main_subclass.OpenGLwidget.resizeGL(SABRE2_main_subclass.OpenGLwidget.width(), SABRE2_main_subclass.OpenGLwidget.height()))
 
         ui_layout.Members_table.itemChanged.connect(
-            lambda: self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height()))
+            lambda: SABRE2_main_subclass.OpenGLwidget.resizeGL(SABRE2_main_subclass.OpenGLwidget.width(), SABRE2_main_subclass.OpenGLwidget.height()))
 
         ui_layout.Add_new_row_joint.clicked.connect(
             lambda: JointTable.add_new_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint, "last"))
@@ -122,7 +122,7 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: JointTable.delete_row(self, ui_layout.Joints_Table, ui_layout.Delete_row_number_mem_def, "last"))
 
         ui_layout.Delete_last_row_Joint.clicked.connect(
-            lambda: self.OpenGLwidget.updateTheWidget())
+            lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
         ui_layout.Delete_row_button_Joint.clicked.connect(
             lambda: JointTable.delete_row(self, ui_layout.Joints_Table, ui_layout.Insert_row_number_Joint_2,
@@ -151,7 +151,7 @@ class SABRE2_main_subclass(QMainWindow):
                                               self.Members_table_position))
 
         ui_layout.Members_table.itemChanged.connect(
-            lambda: self.OpenGLwidget.updateTheWidget())
+            lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
         ui_layout.Members_table.itemChanged.connect(
             lambda: self.m_assemble_updater(ui_layout.Members_table, flag="cell changed"))
@@ -167,7 +167,7 @@ class SABRE2_main_subclass(QMainWindow):
                                                                 shear_panel_options, shear_panel_position))
 
         ui_layout.Members_table.itemChanged.connect(
-            lambda: self.OpenGLwidget.updateTheWidget())
+            lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
         ui_layout.Mem_def_add.clicked.connect(
             lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
@@ -216,7 +216,7 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: self.AISC_update_fun(ui_layout.Members_table))
 
         ui_layout.AISC_assign_button.clicked.connect(
-            lambda: self.OpenGLwidget.updateTheWidget())
+            lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
         # ui_layout.AISC_assign_button.clicked.connect(lambda : self.m_assemble_updater(ui_layout.Members_table, ))
 
@@ -537,7 +537,6 @@ class SABRE2_main_subclass(QMainWindow):
     def m_assemble_updater(self, tableName, Copy_from_number=1, Insert_after_number=1, lineName=1, Delete_row = 1,
                            flag="insert after button"):
 
-        print("test2")
         # print("members = ", self.members_table_values)
         row_count = tableName.rowCount()
         to_append = np.zeros((1, 16))
@@ -582,7 +581,6 @@ class SABRE2_main_subclass(QMainWindow):
 
 
         elif flag == "cell changed":
-            print("test")
             row = tableName.currentRow()
 
             try:
@@ -618,7 +616,7 @@ class SABRE2_main_subclass(QMainWindow):
             #     print(e)
 
         # print("table_" , self.table_prop, "/n members table = ", self.members_table_values)
-        print("assembly matrix = ", SABRE2_main_subclass.Massemble)
+        # print("assembly matrix = ", SABRE2_main_subclass.Massemble)
         return SABRE2_main_subclass.Massemble
         # pass
 
@@ -627,19 +625,19 @@ class SABRE2_main_subclass(QMainWindow):
         print("main = ", Massemble)
 
     def resizeEvent(self, event):
-        # self.OpenGLwidget.resized.emit()
+        # SABRE2_main_subclass.OpenGLwidget.resized.emit()
         # return super(Window, self).resizeEvent(event)
         pass
 
     def someFunction(self):
-        # self.OpenGLwidget
+        # SABRE2_main_subclass.OpenGLwidget
         pass
         #
-        # width = self.OpenGLwidget.width()
-        # height = self.OpenGLwidget.height()
+        # width = SABRE2_main_subclass.OpenGLwidget.width()
+        # height = SABRE2_main_subclass.OpenGLwidget.height()
         # print("Function", width, height)
         # print(x,y)
-        # self.OpenGLwidget.setMinimumSize()
+        # SABRE2_main_subclass.OpenGLwidget.setMinimumSize()
 
 
 # class DropDownActions(QMainWindow):
@@ -838,6 +836,12 @@ class DataCollection(QMainWindow):
             combo_box.currentIndexChanged.connect(
                 lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
 
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
+
+            combo_box.currentIndexChanged.connect(
+                lambda:SABRE2_main_subclass.OpenGLwidget.resizeGL(SABRE2_main_subclass.OpenGLwidget.width(),
+                                               SABRE2_main_subclass.OpenGLwidget.height()))
     def update_table_values(self, tableName, position):
         col = tableName.currentColumn()
         row = tableName.currentRow()
@@ -923,7 +927,6 @@ class DataCollection(QMainWindow):
                 if np.array_equal(val3, val_uniq):
                     pass
                 else:
-                    print("test")
                     tableName.clearSelection()
                     tableName.item(row, col).setText("0")
                     DropDownActions.ActionClass.statusMessage(self, message="The Member has been defined before!")

@@ -91,7 +91,7 @@ class glWidget(QGLWidget, QMainWindow):
         glBegin(GL_LINES)
         glColor3ub(100, 149, 237)
         for i in range(2):
-            glVertex3f(MJvalue[i,1], MJvalue[i,3], MJvalue[i,2])
+            glVertex3f(MJvalue[i, 1], MJvalue[i, 3], MJvalue[i, 2])
         glEnd()
         glPopAttrib()
 
@@ -297,7 +297,6 @@ class glWidget(QGLWidget, QMainWindow):
                             glColor3f(0, 0, 0)
                         else:
                             glColor3f(1, 1, 1)
-
                         text_x = self.joint_nodes[self.joint_i][1] + (self.joint_nodes[self.joint_j][1] -
                                                                       self.joint_nodes[self.joint_i][1]) / 2
                         text_y = self.joint_nodes[self.joint_i][2] + (self.joint_nodes[self.joint_j][2] -
@@ -408,11 +407,11 @@ class glWidget(QGLWidget, QMainWindow):
             if self.ui.Members_table.item(row, 1) is None:
                 pass
             else:
-                self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval= self.memberTableValues()
+                self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval = self.memberTableValues()
                 if self.render_checked:
                     Massemble = self.MassembleUpdater()
 
-                    self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval,Massemble)
+                    self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, Massemble)
         except AttributeError:
             pass
 
@@ -477,29 +476,15 @@ class glWidget(QGLWidget, QMainWindow):
     def memberTableValues(self):
 
         import SABRE2_main_subclass
-        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table, 3)
+        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
+            self, self.ui.Members_table, 3)
         member_count = member_values.shape[0]
-
-#
-        # print(self.render_checked)
-        # if self.render_checked:
-        #     print("test")
-        # try:
-        #     Massemble = SABRE2_main_subclass.SABRE2_main_subclass.m_assemble_updater(self, self.ui.Members_table, flag = "cell changed")
-        # except Exception as e:
-        #     print("Oops an exception occurred")
-        #     print(e)
-        #     exc_type, exc_obj, exc_tb = sys.exc_info()
-        #     fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        #     print(exc_type, fname, exc_tb.tb_lineno)
-
-
-
         return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval
 
     def MassembleUpdater(self):
         import SABRE2_main_subclass
-        Massemble = SABRE2_main_subclass.SABRE2_main_subclass.m_assemble_updater(self, self.ui.Members_table, flag = "OpenGL")
+        Massemble = SABRE2_main_subclass.SABRE2_main_subclass.m_assemble_updater(self, self.ui.Members_table,
+                                                                                 flag="OpenGL")
         return Massemble
 
     def noneDetector(self, tableName):
@@ -523,10 +508,15 @@ class glWidget(QGLWidget, QMainWindow):
         elif render_checked:
             Massemble = self.MassembleUpdater()
             MJvalue = np.zeros((2, 4))
-            print("JnodeValue =", self.joint_nodes)
+            # print("JnodeValue =", self.joint_nodes)
             if Massemble is not None:
+                self.joint_i = int(self.member_values[x][1] - 1)
+                self.joint_j = int(self.member_values[x][2] - 1)
                 mem = Massemble.shape[0]
-                print("mem = ", mem)
+                # print("mem = ", mem)
+                glPushAttrib(GL_ENABLE_BIT)
+                glBegin(GL_LINES)
+                glColor3ub(100, 149, 237)
                 for i in range(mem):
                     MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1] - 1)][1]
                     MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2] - 1)][1]
@@ -534,13 +524,10 @@ class glWidget(QGLWidget, QMainWindow):
                     MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2] - 1)][2]
                     MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1] - 1)][3]
                     MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2] - 1)][3]
-            glPushAttrib(GL_ENABLE_BIT)
-            glBegin(GL_LINES)
-            glColor3ub(100, 149, 237)
-            for i in range(2):
-                glVertex3f(MJvalue[i, 1], MJvalue[i, 3], MJvalue[i, 2])
-            glEnd()
-            glPopAttrib()
+                    for i in range(2):
+                        glVertex3f(MJvalue[i, 1], MJvalue[i, 3], MJvalue[i, 2])
+                glEnd()
+                glPopAttrib()
         else:
             glPushAttrib(GL_ENABLE_BIT)
             # glPushAttrib is done to return everything to normal after drawing
@@ -1395,18 +1382,32 @@ class glWidget(QGLWidget, QMainWindow):
 
             # print("Massemble last point = ", Massemble)   Massemble works !
 
-            MJvalue = np.zeros((2,4))
-            print("JnodeValue =", self.joint_nodes)
+            MJvalue = np.zeros((2, 4))
+            # print("JnodeValue =", self.joint_nodes)
             if Massemble is not None:
                 mem = Massemble.shape[0]
-                print("mem = ", mem)
+                # print("mem = ", mem)
                 for i in range(mem):
-                    MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1]-1)][1]
-                    MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2]-1)][1]
-                    MJvalue[0][2] = self.joint_nodes[int(Massemble[i][1]-1)][2]
-                    MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2]-1)][2]
-                    MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1]-1)][3]
-                    MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2]-1)][3]
+                    MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1] - 1)][1]
+                    MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2] - 1)][1]
+                    MJvalue[0][2] = self.joint_nodes[int(Massemble[i][1] - 1)][2]
+                    MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2] - 1)][2]
+                    MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1] - 1)][3]
+                    MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2] - 1)][3]
 
-                    opp = MJvalue[1][2] - MJvalue[0][2]  #element depth in y - dir
-                    adj = MJvalue[1][1] - MJvalue[0][1]  #element length in x - dir
+                    opp = MJvalue[1][2] - MJvalue[0][2]  # element depth in y - dir
+                    adj = MJvalue[1][1] - MJvalue[0][1]  # element length in x - dir
+
+                    angle = np.arctan2(opp, adj)
+
+                    Rz = np.zeros((3, 3))
+
+                    Rz[0][0] = np.cos(angle)
+                    Rz[0][1] = -np.sin(angle)
+                    Rz[1][0] = np.sin(angle)
+                    Rz[1][1] = np.cos(angle)
+                    Rz[2][2] = 1
+
+                    Fhsb1 = (JNodevalue_i[i][8] * np.power(JNodevalue_i[i][8], 3) * JNodevalue_i[i][12]) / (
+                            JNodevalue_i[i][6] * np.power(JNodevalue_i[i][5], 3) + JNodevalue_i[i][8] * np.power(
+                        JNodevalue_i[i][7], 3)

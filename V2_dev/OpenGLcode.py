@@ -1382,32 +1382,68 @@ class glWidget(QGLWidget, QMainWindow):
 
             # print("Massemble last point = ", Massemble)   Massemble works !
 
-            MJvalue = np.zeros((2, 4))
-            # print("JnodeValue =", self.joint_nodes)
-            if Massemble is not None:
-                mem = Massemble.shape[0]
-                # print("mem = ", mem)
-                for i in range(mem):
-                    MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1] - 1)][1]
-                    MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2] - 1)][1]
-                    MJvalue[0][2] = self.joint_nodes[int(Massemble[i][1] - 1)][2]
-                    MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2] - 1)][2]
-                    MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1] - 1)][3]
-                    MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2] - 1)][3]
+            # MJvalue = np.zeros((2, 4))
+            # # print("JnodeValue =", self.joint_nodes)
+            # if Massemble is not None:
+            #     mem = Massemble.shape[0]
+            #     # print("mem = ", mem)
+            #     for i in range(mem):
+            #         MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1] - 1)][1]
+            #         MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2] - 1)][1]
+            #         MJvalue[0][2] = self.joint_nodes[int(Massemble[i][1] - 1)][2]
+            #         MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2] - 1)][2]
+            #         MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1] - 1)][3]
+            #         MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2] - 1)][3]
+            #
+            #         opp = MJvalue[1][2] - MJvalue[0][2]  # element depth in y - dir
+            #         adj = MJvalue[1][1] - MJvalue[0][1]  # element length in x - dir
+            #
+            #         angle = np.arctan2(opp, adj)
+            #
+            #         Rz = np.zeros((3, 3))
+            #
+            #         Rz[0][0] = np.cos(angle)
+            #         Rz[0][1] = -np.sin(angle)
+            #         Rz[1][0] = np.sin(angle)
+            #         Rz[1][1] = np.cos(angle)
+            #         Rz[2][2] = 1
 
-                    opp = MJvalue[1][2] - MJvalue[0][2]  # element depth in y - dir
-                    adj = MJvalue[1][1] - MJvalue[0][1]  # element length in x - dir
+                    # Fhsb1 = (JNodevalue_i[i][8] * np.power(JNodevalue_i[i][8], 3) * JNodevalue_i[i][12]) / (
+                    #         JNodevalue_i[i][6] * np.power(JNodevalue_i[i][5], 3) + JNodevalue_i[i][8] * np.power(
+                    #     JNodevalue_i[i][7], 3))
+                    #
+                    # Fhst1 = JNodevalue_i[i][12] - Fhsb1
+                    #
+                    # Fhsb2 = (JNodevalue_j[i][8] * np.power(JNodevalue_j[i][8], 3) * JNodevalue_j[i][12]) / (
+                    #         JNodevalue_j[i][6] * np.power(JNodevalue_j[i][5], 3) + JNodevalue_j[i][8] * np.power(
+                    #     JNodevalue_j[i][7], 3))
+                    #
+                    # Fhst2 = JNodevalue_j[i][12] - Fhsb2
+                    # j1 = np.zeros((3, 1))
+                    # j2 = np.zeros((3, 1))
+                    # if Rval[i][1] == 1:
+                    #
+                    #     j1[0][0] = (Fhsb1 + Fhst1)
+                    #     j1[1][0] = -(Fhsb1 + Fhst1) * 1.1 / 2
+                    #     j1 = Rz * j1
+                    #     j2[0][0] = (Fhsb1 + Fhst1) * 2
+                    #     j2[1][0] = (Fhsb1 + Fhst1) * 1.1 / 2
+                    #     j2 = Rz * j2
+                    # elif Rval[i][1] == 3:
+                    #
+                    #     j1[0][0] = Fhsb1 + Fhst1
+                    #     j1 = Rz * j1
+                    #     j2[0][0] = (Fhsb1 + Fhst1) * 2
+                    #     j2[1][0] = (Fhsb1 + Fhst1) * 1.1
+                    #     j2 = Rz * j2
+                    # elif Rval[i][1] == 2:
+                    #
+                    #     j1[0][0] = (Fhsb1 + Fhst1)
+                    #     j1[1][0] = -(Fhsb1 + Fhst1) * 1.1
+                    #     j1 = Rz * j1
+                    #     j2[0][0] = (Fhsb1 + Fhst1) * 2
+                    #     j2[1][0] = 0
+                    #     j2 = Rz * j2
+            mnum = BNodevalue.shape[0]
 
-                    angle = np.arctan2(opp, adj)
-
-                    Rz = np.zeros((3, 3))
-
-                    Rz[0][0] = np.cos(angle)
-                    Rz[0][1] = -np.sin(angle)
-                    Rz[1][0] = np.sin(angle)
-                    Rz[1][1] = np.cos(angle)
-                    Rz[2][2] = 1
-
-                    Fhsb1 = (JNodevalue_i[i][8] * np.power(JNodevalue_i[i][8], 3) * JNodevalue_i[i][12]) / (
-                            JNodevalue_i[i][6] * np.power(JNodevalue_i[i][5], 3) + JNodevalue_i[i][8] * np.power(
-                        JNodevalue_i[i][7], 3)
+            

@@ -5,6 +5,7 @@ from PyQt4 import QtGui, QtCore
 from PyQt4 import QtGui
 import DropDownActions
 import OpenGLcode
+import AddNode
 from OpenGL.GL import *
 import SABRE2_GUI
 import numpy as np
@@ -70,7 +71,8 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionZoom_In.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.setZoomIn())
         ui_layout.actionZoom_Out.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.setZoomOut())
         ui_layout.actionWhite_Background.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
-
+        ui_layout.StepRB1.pressed.connect(lambda:AddNode.AddNodeClass.radioButtonState2(self))
+        ui_layout.StepRB2.pressed.connect(lambda:AddNode.AddNodeClass.radioButtonState1(self))
         # Release Tab, first columns of the tables size arrangements
         ui_layout.Torsional_Release.setColumnWidth(0, 62)
         ui_layout.My_release.setColumnWidth(0, 62)

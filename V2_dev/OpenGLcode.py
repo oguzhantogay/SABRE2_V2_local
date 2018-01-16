@@ -5,6 +5,7 @@ from PyQt4.QtGui import *
 from OpenGL.GL import *
 from DropDownActions import ActionClass
 import numpy as np
+
 import sys, os
 
 
@@ -773,7 +774,6 @@ class glWidget(QGLWidget, QMainWindow):
 
         # End node
         # bottom flange centroid to shear center
-
         hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
                          (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2, np.power(bft2, 3))))
         Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
@@ -1446,4 +1446,3 @@ class glWidget(QGLWidget, QMainWindow):
                     #     j2 = Rz * j2
             mnum = BNodevalue.shape[0]
 
-            

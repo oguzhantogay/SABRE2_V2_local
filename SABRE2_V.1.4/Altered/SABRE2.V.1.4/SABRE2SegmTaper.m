@@ -23,6 +23,9 @@ else
          (JNodevalue_i(mnum,4)-JNodevalue_j(mnum,4))^2+(JNodevalue_i(mnum,5)-JNodevalue_j(mnum,5))^2    );
       segLoc = [0, seL];
       segLocstep = [0, seglength ,seL]; 
+      
+%       segLoc 
+%       segLocstep
       bfbs=[JNodevalue_i(mnum,6),JNodevalue_j(mnum,6)];
       tfbs=[JNodevalue_i(mnum,7),JNodevalue_j(mnum,7)];
       bfts=[JNodevalue_i(mnum,8),JNodevalue_j(mnum,8)];
@@ -118,7 +121,16 @@ else
             end            
 
          end
-   end                        
+   end 
+      bfbs
+      tfbs
+      bfts
+      tfts
+      dws
+      tws
+	  Afills
+      segLoc
+      segLocstep
       bfbsb=interp1(segLoc,bfbs,segLocstep);
       tfbsb=interp1(segLoc,tfbs,segLocstep);
       bftsb=interp1(segLoc,bfts,segLocstep);

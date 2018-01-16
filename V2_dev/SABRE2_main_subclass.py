@@ -42,6 +42,28 @@ class SABRE2_main_subclass(QMainWindow):
         self.members_table_values = np.zeros((1, 18))
         self.BNodevalue = None
         self.SNodevalue = None
+        ###  Setting validators for the lineEdit positions
+        validatorDouble = QDoubleValidator()
+        validatorInt = QIntValidator ()
+        ui_layout.AddNodePositionFrom.setValidator(validatorDouble)
+        ui_layout.Insert_row_number_Joint.setValidator(validatorInt)
+        ui_layout.Insert_row_number_Joint_2.setValidator(validatorInt)
+        ui_layout.Insert_row_number_mem_def.setValidator(validatorInt)
+        ui_layout.Delete_row_number_mem_def.setValidator(validatorInt)
+        ui_layout.Copy_from_number_mem_def.setValidator(validatorInt)
+        ui_layout.Insert_after_number_mem_def.setValidator(validatorInt)
+        ui_layout.Member_prop_line_edit.setValidator(validatorInt)
+        ui_layout.Add_Shear_Panel_Line.setValidator(validatorInt)
+        ui_layout.Copy_number_spring.setValidator(validatorInt)
+        ui_layout.Paste_number_spring.setValidator(validatorInt)
+        ui_layout.Inser_number_point_load.setValidator(validatorInt)
+        ui_layout.Delete_number_point_load.setValidator(validatorInt)
+        ui_layout.Inser_number_uni_load.setValidator(validatorInt)
+        ui_layout.Delete_number_uni_load.setValidator(validatorInt)
+        ###
+        ui_layout.AddNodePositionFrom.editingFinished.connect(lambda : AddNode.AddNodeClass.fillTable(self))
+        ui_layout.Members_tabs.currentChanged.connect(lambda : AddNode.AddNodeClass.setAddNodeComboBox(self))
+        ui_layout.AddNodePositionFrom.textChanged.connect(lambda : AddNode.AddNodeClass.setAddNodeComboBox(self))
         ui_layout.actionRender_Line_Element.setCheckable(True)
         ui_layout.actionRender_Selected_Member.setCheckable(True)
         ui_layout.actionRender_All_Members.setCheckable(True)
@@ -216,6 +238,10 @@ class SABRE2_main_subclass(QMainWindow):
                                                                                       flag="copy from"))
         ui_layout.AISC_assign_button.clicked.connect(
             lambda: self.AISC_update_fun(ui_layout.Members_table))
+
+        ui_layout.AISC_assign_button_2.clicked.connect(
+            lambda: AddNode.AddNodeClass.sql_print(self))
+
 
         ui_layout.AISC_assign_button.clicked.connect(
             lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
@@ -1101,6 +1127,7 @@ class LineChanges(QMainWindow):
                           "W6X20", "W6X15", "W6X16", "W6X12", "W6X9", "W6X8.5", "W5X19", "W5X16", "W4X13"]
         for t in cross_sections:
             ui_layout.AISC_database_button.addItem(t)
+            ui_layout.AISC_database_button_2.addItem(t)
 
     def sql_print(self, tableName):
         tableName.blockSignals(True)

@@ -4494,6 +4494,7 @@ end     % iteration end
          NLIAType,HomoType(n,1),Aef(:,n),Phi_Py(:,n),Pt(:,n),Mzt(:,n));
 
    end 
+   Aef
    % ------------------------------------------ Updated SRF E   
    
  

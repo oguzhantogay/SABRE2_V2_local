@@ -15,6 +15,7 @@ class AddNodeClass(QMainWindow):
         self.ui = ui_layout
         AddNodeClass.btnChecked = False
         AddNodeClass.setComboBoxValues = None
+        AddNodeClass.additionalNodeNumber = 1
 
     def setAddNodeComboBox(self):
         row = self.ui.Members_table.rowCount()
@@ -265,7 +266,7 @@ class AddNodeClass(QMainWindow):
             DropDownActions.ActionClass.statusMessage(self, message="Please select the cross-section name!")
 
 
+    def ApplyButton(self):
+        mnum = self.ui.AddNodeMember.currentIndex()
+        nbnode = AddNodeClass.
 
-    #
-    # def ApplyButton(self):
-    #     pass

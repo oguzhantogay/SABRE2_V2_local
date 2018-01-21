@@ -36,6 +36,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.DefinitionTabs.close()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
         SABRE2_main_subclass.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
+        AddNode.AddNodeClass.validatorForTable(self)
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
         SABRE2_main_subclass.Massemble = np.zeros((1, 16))
         self.table_prop = np.zeros((1, 14))
@@ -61,7 +62,6 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Inser_number_uni_load.setValidator(validatorInt)
         ui_layout.Delete_number_uni_load.setValidator(validatorInt)
         ###
-        ui_layout.AddNodePositionFrom.editingFinished.connect(lambda : AddNode.AddNodeClass.fillTable(self))
         ui_layout.Members_tabs.currentChanged.connect(lambda : AddNode.AddNodeClass.setAddNodeComboBox(self))
         ui_layout.AddNodePositionFrom.textChanged.connect(lambda : AddNode.AddNodeClass.setAddNodeComboBox(self))
         ui_layout.actionRender_Line_Element.setCheckable(True)
@@ -239,15 +239,18 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.AISC_assign_button.clicked.connect(
             lambda: self.AISC_update_fun(ui_layout.Members_table))
 
-        ui_layout.AISC_assign_button_2.clicked.connect(
-            lambda: AddNode.AddNodeClass.sql_print(self))
-
 
         ui_layout.AISC_assign_button.clicked.connect(
             lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
         # ui_layout.AISC_assign_button.clicked.connect(lambda : self.m_assemble_updater(ui_layout.Members_table, ))
+        # Add Node Menu Actions and Arrangements
+        ui_layout.AddNodePositionFrom.editingFinished.connect(lambda : AddNode.AddNodeClass.fillTable(self))
 
+        ui_layout.AISC_assign_button_2.clicked.connect(
+            lambda: AddNode.AddNodeClass.sql_print(self))
+
+        ui_layout.AddNodeApply.clicked.connect(lambda : AddNode.AddNodeClass.trialFun(self))
         # Member Properties Table
         ui_layout.Apply_all_member_properties.clicked.connect(
             lambda: MemberPropertiesTable.set_values_with_row(self, ui_layout.Member_Properties_Table,
@@ -389,24 +392,23 @@ class SABRE2_main_subclass(QMainWindow):
         for i in range(row_count):
             Rval[i][0] = Members_values[i][0]
             Rval[i][1] = Members_values[i][3] + 1
+        # print("update = ", self.BNodevalue, "\nshape = ", self.BNodevalue.shape[1])
+        if self.BNodevalue is None:
+            self.BNodevalue = np.zeros((row_count, 1, 2))
+            if row_count == self.BNodevalue.shape[0]:
+                for i in range(row_count):
+                    self.BNodevalue[i][0][0] = i + 1
+                    self.BNodevalue[i][0][1] = 0  # to indicate zero bracing
+        elif self.BNodevalue.shape[2] == 2:
+            self.BNodevalue = np.zeros((row_count, 1, 2))
+            if row_count == self.BNodevalue.shape[0]:
+                for i in range(row_count):
+                    self.BNodevalue[i][0][0] = i + 1
+                    self.BNodevalue[i][0][1] = 0  # to indicate zero bracing
 
-
-        self.BNodevalue = np.zeros((row_count, 1, 2))
-        if row_count == self.BNodevalue.shape[0]:
-            for i in range(row_count):
-                self.BNodevalue[i][0][0] = i + 1
-                self.BNodevalue[i][0][1] = 0  # to indicate zero bracing
-
-        # elif row_count == self.BNodevalue.shape[0]:
-        #     for i in range(row_count):
-        #         self.BNodevalue[i][0][0] = i + 1
-        #         self.BNodevalue[i][0][1] = 0  # to indicate zero bracing
 
         JNodeValue_i = np.zeros((Members_values.shape[0], 14))
         JNodeValue_j = np.zeros((Members_values.shape[0], 14))
-        # if Members_values.shape[0] == 1:
-        #     pass
-        # else:
 
         for i in range(Members_values.shape[0]):
             # i node values
@@ -648,10 +650,6 @@ class SABRE2_main_subclass(QMainWindow):
         return SABRE2_main_subclass.Massemble
         # pass
 
-    def updater(self):
-        Massemble = self.m_assemble_updater(self.ui.Members_table)
-        print("main = ", Massemble)
-
     def resizeEvent(self, event):
         # SABRE2_main_subclass.OpenGLwidget.resized.emit()
         # return super(Window, self).resizeEvent(event)
@@ -870,6 +868,7 @@ class DataCollection(QMainWindow):
             combo_box.currentIndexChanged.connect(
                 lambda:SABRE2_main_subclass.OpenGLwidget.resizeGL(SABRE2_main_subclass.OpenGLwidget.width(),
                                                SABRE2_main_subclass.OpenGLwidget.height()))
+
     def update_table_values(self, tableName, position):
         col = tableName.currentColumn()
         row = tableName.currentRow()

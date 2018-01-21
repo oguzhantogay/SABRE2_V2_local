@@ -1,8 +1,8 @@
 from PyQt4.QtGui import *
-# from scipy.interpolate import interpld
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 import SABRE2_GUI
+import DropDownActions
 import sqlite3 as sq
 import numpy as np
 
@@ -25,7 +25,7 @@ class AddNodeClass(QMainWindow):
             a = list(range(1, row + 1))
             for e in range(len(a)):
                 a[e] = str(a[e])
-            print("a = ", a)
+            # print("a = ", a)
             self.ui.AddNodeMember.clear()
             self.ui.AddNodeMember.addItems(a)
 
@@ -213,20 +213,43 @@ class AddNodeClass(QMainWindow):
         # print("twsb = ", twsb)
         # print("Afillsb = ", Afillsb)
         tableName = self.ui.AddNodeTable
-        item = QTableWidgetItem(str(bfbsb))
-        tableName.setItem(0, 0, item)
-        item = QTableWidgetItem(str(tfbsb))
-        tableName.setItem(0, 1, item)
-        item = QTableWidgetItem(str(bftsb))
-        tableName.setItem(0, 2, item)
-        item = QTableWidgetItem(str(tftsb))
-        tableName.setItem(0, 3, item)
-        item = QTableWidgetItem(str(dwsb))
-        tableName.setItem(0, 4, item)
-        item = QTableWidgetItem(str(twsb))
-        tableName.setItem(0, 5, item)
-        item = QTableWidgetItem(str(Afillsb))
-        tableName.setItem(0, 6, item)
+        validatorDouble = QDoubleValidator()
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(bfbsb))
+        tableName.setCellWidget(0, 0, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(tfbsb))
+        tableName.setCellWidget(0, 1, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(bftsb))
+        tableName.setCellWidget(0, 2, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(tftsb))
+        tableName.setCellWidget(0, 3, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(dwsb))
+        tableName.setCellWidget(0, 4, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(twsb))
+        tableName.setCellWidget(0, 5, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(Afillsb))
+        tableName.setCellWidget(0, 6, item)
+        AddNodeClass.coordinateFill(self)
 
     def sql_print(self):
         tableName = self.ui.AddNodeTable
@@ -251,22 +274,134 @@ class AddNodeClass(QMainWindow):
                 table_prop[0, i] = var1[0]
             # print(cross_section, 'cs_properties = ', table_prop)
             # table values assignment
+            validatorDouble = QDoubleValidator()
             for i in range(7):
                 if i == 0 or i == 2:
-                    tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 0])))
+                    item = QLineEdit()
+                    item.setFrame(False)
+                    item.setValidator(validatorDouble)
+                    item.setText(str(table_prop[0, 0]))
+                    tableName.setCellWidget(row, i, item)
                 elif i == 1 or i == 3:
-                    tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 1])))
+                    item = QLineEdit()
+                    item.setFrame(False)
+                    item.setValidator(validatorDouble)
+                    item.setText(str(table_prop[0, 1]))
+                    tableName.setCellWidget(row, i, item)
                 elif i == 4:
-                    tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 16])))
+                    item = QLineEdit()
+                    item.setFrame(False)
+                    item.setValidator(validatorDouble)
+                    item.setText(str(table_prop[0, 16]))
+                    tableName.setCellWidget(row, i, item)
                 elif i == 5:
-                    tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 3])))
+                    item = QLineEdit()
+                    item.setFrame(False)
+                    item.setValidator(validatorDouble)
+                    item.setText(str(table_prop[0, 3]))
+                    tableName.setCellWidget(row, i, item)
                 else:
-                    tableName.setItem(row, i, QTableWidgetItem(str(table_prop[0, 17])))
+                    item = QLineEdit()
+                    item.setFrame(False)
+                    item.setValidator(validatorDouble)
+                    item.setText(str(table_prop[0, 17]))
+                    tableName.setCellWidget(row, i, item)
         except IndexError:
             DropDownActions.ActionClass.statusMessage(self, message="Please select the cross-section name!")
 
+    def coordinateFill(self):
+        mnum = int(self.ui.AddNodeMember.currentIndex())
+        seglength = self.ui.AddNodePositionFrom.text()
+
+        # print("mnum = ", mnum, "\n", "nbnode = ", nbnode)
+
+        _, _, JNodevalue_i, JNodevalue_j, _, _ = AddNodeClass.memberTableValues(self)
+
+        # print("BNodeValue = ", BNodevalue)
+
+        alpharef = np.zeros((mnum + 1, 2))
+        opp = JNodevalue_j[mnum][3] - JNodevalue_i[mnum][3]  # element depth in y-dir
+        adj = JNodevalue_j[mnum][2] - JNodevalue_i[mnum][2]  # element length in x-dir
+
+        alpharef[mnum][0] = mnum  # Member number
+        alpharef[mnum][1] = np.arctan2(opp, adj)  # Only global frame angle
+
+        memlength = np.sqrt((JNodevalue_i[mnum][2] - JNodevalue_j[mnum][2]) ** 2 + (
+                JNodevalue_i[mnum][3] - JNodevalue_j[mnum][3]) ** 2 + (
+                                    JNodevalue_i[mnum][4] - JNodevalue_j[mnum][4]) ** 2)
+        # print("mem length = ", memlength, "seglength = ", seglength)
+        if np.greater_equal(memlength, seglength):
+            DropDownActions.ActionClass.statusMessage(self,
+                                                      message="Position from i node must be smaller than member length")
+        else:
+            # Rotation
+            Rz = np.zeros((3, 3))
+            Rz[0][0] = np.cos(alpharef[mnum, 1])
+            Rz[0][1] = -np.sin(alpharef[mnum, 1])
+            Rz[1][0] = np.sin(alpharef[mnum, 1])
+            Rz[1][1] = np.cos(alpharef[mnum, 1])
+            Rz[2][2] = 1
+
+            Lb = np.zeros(3)
+            Additive = np.zeros(3)
+            Additive[0] = JNodevalue_i[mnum][2]
+            Additive[1] = JNodevalue_i[mnum][3]
+            Additive[2] = JNodevalue_i[mnum][4]
+            Lb[0] = seglength
+            Lb = np.dot(Rz, Lb) + Additive
+
+            Lb = np.around(Lb * (10 ** 11)) / (10 ** 11)
+
+            self.ui.AddNodeX.setText(str(Lb[0]))
+            self.ui.AddNodeY.setText(str(Lb[1]))
+            self.ui.AddNodeZ.setText(str(Lb[2]))
+            return Lb
+
+    def validatorForTable(self):
+        validatorDouble = QDoubleValidator()
+        for i in range(7):
+            item = QLineEdit()
+            item.setFrame(False)
+            item.setValidator(validatorDouble)
+            self.ui.AddNodeTable.setCellWidget(i, 0, item)
+
+    def memberNumbering(self):
+        mnum = int(self.ui.AddNodeMember.currentIndex())
+        _, _, _, _, BNodevalue, _ = AddNodeClass.memberTableValues(self)
+        nextBnum = np.amax(BNodevalue[mnum][:][1]) + 1
+        return nextBnum
+
+    def readAddNodeTable(self):
+        addNodeTableValues = np.zeros(7)
+        for i in range(7):
+            addNodeTableValues[i] = self.ui.AddNodeTable.cellWidget(0, i).text()
+
+        return addNodeTableValues
 
     def ApplyButton(self):
-        mnum = self.ui.AddNodeMember.currentIndex()
-        nbnode = AddNodeClass.
-
+        mnum = int(self.ui.AddNodeMember.currentIndex())
+        nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())
+        _, _, _, _, BNodevalue, _ = AddNodeClass.memberTableValues(self)
+        nextBum = self.memberNumbering()
+        if np.greater(nbnode, np.amax(BNodevalue[mnum][:][1])):
+            SNodeValue = None
+        else:
+            Lb = self.coordinateFill()
+            addNodeTableValues = self.readAddNodeTable()
+            BNodevalue[mnum][nbnode][0] = mnum
+            BNodevalue[mnum][nbnode][1] = nbnode  # 0 No bracing
+            BNodevalue[mnum][nbnode][2] = Lb[0]
+            BNodevalue[mnum][nbnode][3] = Lb[1]
+            BNodevalue[mnum][nbnode][4] = Lb[2]
+            BNodevalue[mnum][nbnode][5] = addNodeTableValues[0]
+            BNodevalue[mnum][nbnode][6] = addNodeTableValues[1]
+            BNodevalue[mnum][nbnode][7] = addNodeTableValues[2]
+            BNodevalue[mnum][nbnode][8] = addNodeTableValues[3]
+            BNodevalue[mnum][nbnode][9] = addNodeTableValues[4]
+            BNodevalue[mnum][nbnode][10] = addNodeTableValues[5]
+            BNodevalue[mnum][nbnode][11] = BNodevalue[mnum][nbnode][9] + BNodevalue[mnum][nbnode][6] + \
+                                           BNodevalue[mnum][nbnode][8]  # total depth
+            BNodevalue[mnum][nbnode][12] = BNodevalue[mnum][nbnode][9] + (
+                    BNodevalue[mnum][nbnode][6] + BNodevalue[mnum][nbnode][8]) / 2  # flange centroid
+            BNodevalue[mnum][nbnode][13] = addNodeTableValues[6]
+        pass

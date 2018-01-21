@@ -737,6 +737,12 @@
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QTabWidget" name="Members_tabs">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>265</height>
+           </size>
+          </property>
           <property name="currentIndex">
            <number>1</number>
           </property>
@@ -1088,134 +1094,101 @@
            <attribute name="title">
             <string>Add Nodes</string>
            </attribute>
-           <layout class="QVBoxLayout" name="verticalLayout_10">
+           <layout class="QVBoxLayout" name="verticalLayout_9">
             <item>
-             <layout class="QHBoxLayout" name="horizontalLayout_25">
-              <item>
-               <layout class="QFormLayout" name="formLayout">
-                <property name="fieldGrowthPolicy">
-                 <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+             <layout class="QGridLayout" name="gridLayout_2">
+              <property name="sizeConstraint">
+               <enum>QLayout::SetMaximumSize</enum>
+              </property>
+              <item row="1" column="0">
+               <widget class="QLabel" name="AdditionalNodeLabel">
+                <property name="text">
+                 <string>Additional Node Number :</string>
                 </property>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_2">
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QLineEdit" name="AddNodePositionFrom">
+                <property name="maximumSize">
+                 <size>
+                  <width>230</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="AddNodeMember">
+                <property name="maximumSize">
+                 <size>
+                  <width>230</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QComboBox" name="AdditionalNodeNumberComboBox">
+                <property name="maximumSize">
+                 <size>
+                  <width>230</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="currentIndex">
+                 <number>0</number>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="AddPositionLabel">
+                <property name="text">
+                 <string>Pozition of Additional Node from Node i :</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <layout class="QHBoxLayout" name="horizontalLayout_22">
+                <item>
+                 <widget class="QRadioButton" name="StepRB1">
                   <property name="text">
-                   <string>Select Member :</string>
+                   <string>No Step</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="1">
-                 <widget class="QComboBox" name="AddNodeMember">
-                  <property name="maximumSize">
-                   <size>
-                    <width>200</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <item>
-                   <property name="text">
-                    <string>1</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="1" column="0">
-                 <widget class="QLabel" name="label_4">
+                <item>
+                 <widget class="QRadioButton" name="StepRB2">
                   <property name="text">
-                   <string>Additional Node Number :</string>
+                   <string>Step</string>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
                   </property>
                  </widget>
-                </item>
-                <item row="1" column="1">
-                 <widget class="QComboBox" name="AdditionalNodeNumberComboBox">
-                  <property name="maximumSize">
-                   <size>
-                    <width>200</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                  <property name="currentIndex">
-                   <number>0</number>
-                  </property>
-                  <item>
-                   <property name="text">
-                    <string>1</string>
-                   </property>
-                  </item>
-                 </widget>
-                </item>
-                <item row="2" column="0">
-                 <widget class="QLabel" name="label_3">
-                  <property name="text">
-                   <string>Pozition of Additional Node from Node i :</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="1">
-                 <widget class="QLineEdit" name="AddNodePositionFrom">
-                  <property name="maximumSize">
-                   <size>
-                    <width>200</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
-                <item row="3" column="1">
-                 <layout class="QVBoxLayout" name="verticalLayout_9">
-                  <item>
-                   <spacer name="verticalSpacer_7">
-                    <property name="orientation">
-                     <enum>Qt::Vertical</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>20</width>
-                      <height>40</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                  <item>
-                   <layout class="QHBoxLayout" name="horizontalLayout_22">
-                    <item>
-                     <widget class="QRadioButton" name="StepRB1">
-                      <property name="maximumSize">
-                       <size>
-                        <width>100</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>No Step</string>
-                      </property>
-                      <property name="checked">
-                       <bool>true</bool>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QRadioButton" name="StepRB2">
-                      <property name="maximumSize">
-                       <size>
-                        <width>100</width>
-                        <height>16777215</height>
-                       </size>
-                      </property>
-                      <property name="text">
-                       <string>Step</string>
-                      </property>
-                      <property name="checked">
-                       <bool>false</bool>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
-                  </item>
-                 </layout>
                 </item>
                </layout>
               </item>
-              <item>
+              <item row="0" column="0">
+               <widget class="QLabel" name="SelectMemberLabel">
+                <property name="text">
+                 <string>Select Member :</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="2">
                <spacer name="horizontalSpacer_7">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -1228,14 +1201,108 @@
                 </property>
                </spacer>
               </item>
+              <item row="3" column="0">
+               <layout class="QHBoxLayout" name="horizontalLayout_24">
+                <item>
+                 <widget class="QLabel" name="AddNodeLabelX">
+                  <property name="maximumSize">
+                   <size>
+                    <width>60</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>X Coord = </string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="AddNodeX">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>35</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="AddNodeLabelY">
+                  <property name="maximumSize">
+                   <size>
+                    <width>60</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Y Coord =</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="AddNodeY">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>35</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLabel" name="AddNodeLabelZ">
+                  <property name="maximumSize">
+                   <size>
+                    <width>60</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Z Coord = </string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QLineEdit" name="AddNodeZ">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>35</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </item>
              </layout>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_27">
               <item>
                <widget class="QTableWidget" name="AddNodeTable">
+                <property name="minimumSize">
+                 <size>
+                  <width>560</width>
+                  <height>55</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>560</width>
+                  <height>55</height>
+                 </size>
+                </property>
                 <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>70</number>
+                 <number>78</number>
                 </attribute>
                 <row>
                  <property name="text">
@@ -1244,7 +1311,7 @@
                 </row>
                 <column>
                  <property name="text">
-                  <string>bf1_i</string>
+                  <string>bf1</string>
                  </property>
                  <property name="font">
                   <font>
@@ -1255,7 +1322,7 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>tf1_i</string>
+                  <string>tf1</string>
                  </property>
                  <property name="font">
                   <font>
@@ -1266,7 +1333,7 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>bf2_i</string>
+                  <string>bf2</string>
                  </property>
                  <property name="font">
                   <font>
@@ -1277,7 +1344,7 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>tf2_i</string>
+                  <string>tf2</string>
                  </property>
                  <property name="font">
                   <font>
@@ -1288,7 +1355,7 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>dw_i</string>
+                  <string>dw</string>
                  </property>
                  <property name="font">
                   <font>
@@ -1299,7 +1366,7 @@
                 </column>
                 <column>
                  <property name="text">
-                  <string>tw_i</string>
+                  <string>tw</string>
                  </property>
                  <property name="font">
                   <font>
@@ -1331,7 +1398,7 @@
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>550</width>
+                  <width>950</width>
                   <height>20</height>
                  </size>
                 </property>
@@ -1372,9 +1439,12 @@
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
                 </property>
+                <property name="sizeType">
+                 <enum>QSizePolicy::Fixed</enum>
+                </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>30</width>
+                  <width>370</width>
                   <height>20</height>
                  </size>
                 </property>
@@ -1393,11 +1463,11 @@
                  <enum>Qt::Horizontal</enum>
                 </property>
                 <property name="sizeType">
-                 <enum>QSizePolicy::Fixed</enum>
+                 <enum>QSizePolicy::Expanding</enum>
                 </property>
                 <property name="sizeHint" stdset="0">
                  <size>
-                  <width>550</width>
+                  <width>900</width>
                   <height>20</height>
                  </size>
                 </property>

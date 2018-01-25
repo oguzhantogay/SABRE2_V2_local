@@ -250,7 +250,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.AISC_assign_button_2.clicked.connect(
             lambda: AddNode.AddNodeClass.sql_print(self))
 
-        ui_layout.AddNodeApply.clicked.connect(lambda : AddNode.AddNodeClass.trialFun(self))
+        ui_layout.AddNodeApply.clicked.connect(lambda : AddNode.AddNodeClass.ApplyButton(self))
         # Member Properties Table
         ui_layout.Apply_all_member_properties.clicked.connect(
             lambda: MemberPropertiesTable.set_values_with_row(self, ui_layout.Member_Properties_Table,
@@ -387,6 +387,7 @@ class SABRE2_main_subclass(QMainWindow):
                 self.ui.Members_tabs.setCurrentIndex(0)
 
         row_count = tableName.rowCount()
+        # print("row count = ", row_count)
         Rval = np.zeros((row_count, 2))
         #
         for i in range(row_count):
@@ -395,6 +396,7 @@ class SABRE2_main_subclass(QMainWindow):
         # print("update = ", self.BNodevalue, "\nshape = ", self.BNodevalue.shape[1])
         if self.BNodevalue is None:
             self.BNodevalue = np.zeros((row_count, 1, 2))
+            # print("update = ", self.BNodevalue)
             if row_count == self.BNodevalue.shape[0]:
                 for i in range(row_count):
                     self.BNodevalue[i][0][0] = i + 1

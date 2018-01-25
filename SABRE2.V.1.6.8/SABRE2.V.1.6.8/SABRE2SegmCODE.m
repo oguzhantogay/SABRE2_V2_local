@@ -24,20 +24,24 @@ else
          end
       end
    end  
+%    L0
    
    % Sort whole columns with respect to distance from i node
    L1=[];BNodevalueOrder=[];
    
    for i = 1:mem    
       if isequal(max(BNodevalue(i,:,2)),0) % No Bracing
+          fprintf('if # a \n')
 %          for n=1:max(BNodevalue(:,:,2))
             BNodevalueOrder(i,1,1) = L0(i,1,1);
             BNodevalueOrder(i,1,2) = L0(i,1,2);
 %          end
       else
+          fprintf('if # b \n')
          for j = 1:max(BNodevalue(i,:,2))
             L1(j,:) =  L0(i,j,:);   
          end
+%          BNodevalueOrder
          L1 = sortrows(L1,16);
          for j = 1:max(BNodevalue(i,:,2))
             for k = 1:16
@@ -48,7 +52,10 @@ else
       end
    end
    % Reset BNodevalue Using Sorted BNodevalueOrder
+   fprintf('test3')
+%    BNodevalueOrder
    BNodeval=BNodevalueOrder;
+%    L1
    
    % *********************************************************** Sorting E 
   
@@ -68,23 +75,29 @@ else
 % ----------------      Add   Steped elements           ------------------ 
 % ------------------------------------------------------------------------ 
    for i = 1:mem
+       fprintf('\nfor 1')
       if ~isequal(max(BNodeval(i,:,2)),0) % No Bracing  
+          fprintf('\nif # 1')
          p=1;
          for j = 1:max(BNodeval(i,:,2))
+             fprintf('\nfor 2')
             if isequal(round(str2double(get(pdb_coordx_edit,'String'))*10^5)/10^5,round(BNodeval(i,j,3)*10^5)/10^5) ...
                   && isequal(round(str2double(get(pdb_coordy_edit,'String'))*10^5)/10^5,round(BNodeval(i,j,4)*10^5)/10^5) ...
-                  && isequal(round(str2double(get(pdb_coordz_edit,'String'))*10^5)/10^5,round(BNodeval(i,j,5)*10^5)/10^5) 
+                  && isequal(round(str2double(get(pdb_coordz_edit,'String'))*10^5)/10^5,round(BNodeval(i,j,5)*10^5)/10^5)  % if condition 1 - 1
+               fprintf('\n# 1 - 1')
                   
                % ------------------------The first Internal Node Number S
-               if isequal(j,1) % For the first internal node
-                  if isequal(1,max(BNodeval(i,:,2)))
-   
+               if isequal(j,1) % For the first internal node % if condition 2 -1
+                   fprintf('\n# 2 - 1')
+                  if isequal(1,max(BNodeval(i,:,2))) % if condition 3 -1
+                      fprintf('\n# 3 - 1')   
                      if ~isequal(round(JNodevalue_i(i,6)*10^5)/10^5,round(BNodeval(i,j,6)*10^5)/10^5) ... 
                            || ~isequal(round(JNodevalue_i(i,7)*10^5)/10^5,round(BNodeval(i,j,7)*10^5)/10^5) ...
                            || ~isequal(round(JNodevalue_i(i,8)*10^5)/10^5,round(BNodeval(i,j,8)*10^5)/10^5) ...
                            || ~isequal(round(JNodevalue_i(i,9)*10^5)/10^5,round(BNodeval(i,j,9)*10^5)/10^5) ...
-                           || ~isequal(round(JNodevalue_i(i,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5)
-                        % --------------- Calculation the difference of SC S   
+                           || ~isequal(round(JNodevalue_i(i,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5) % if condition 4 - 1
+                       fprintf('\n# 4 - 1') 
+                       % --------------- Calculation the difference of SC S   
                         % Section properties at each element under natural frame
                         bfb1=JNodevalue_i(i,6);bfb2=BNodeval(i,j,6);  % Bottom flange width
                         tfb1=JNodevalue_i(i,7);tfb2=BNodeval(i,j,7);  % Bottom flange thickness
@@ -117,7 +130,8 @@ else
                            + (JNodevalue_j(i,4)-JNodevalue_i(i,4))^2 + (JNodevalue_j(i,5)-JNodevalue_i(i,5))^2 );                         
                         % --------------- Calculation the difference of SC E   
 
-                        if isequal(get(pdb_step_edit,'Value'),1) % No step                           
+                        if isequal(get(pdb_step_edit,'Value'),1) % No step    % if condition 5 - 1 
+                            fprintf('\n# 5 - 1')
                            % original element              
                            BNodevalue(i,p,1)=BNodeval(i,j,1);
                            BNodevalue(i,p,2)=p;
@@ -137,10 +151,12 @@ else
                            BNodevalue(i,p,16)=BNodeval(i,j,15); 
                            p=p+1;
                            
-                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step                        
+                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step      % if condition 5 - 2  
+                            fprintf('\n# 5 - 2')
 
 
-                           if (BNodeval(i,j,16)/2 > s ) && (Af1 >= Af2)
+                           if (BNodeval(i,j,16)/2 > s ) && (Af1 >= Af2) % if condition 6 - 1
+                               fprintf('\n# 6 - 1')
                               % Linear interpolation
                               segLoc = [0, BNodeval(i,j,16)];
                               segLocstep = [0, BNodeval(i,j,16)-s, BNodeval(i,j,16)];                               
@@ -196,7 +212,8 @@ else
                               BNodevalue(i,p,16)=BNodeval(i,j,16)-s;
                               p=p+1;
                               
-                           elseif (BNodeval(i,j,16)/2 > s ) && (Af1 < Af2)  
+                           elseif (BNodeval(i,j,16)/2 > s ) && (Af1 < Af2)  % if condition 6 - 2 
+                               fprintf('\n# 6 - 2')
                               % Linear interpolation
                               %-----
                               segLoc = [BNodeval(i,j,16), L];
@@ -261,8 +278,10 @@ else
                            || ~isequal(round(JNodevalue_j(i,7)*10^5)/10^5,round(BNodeval(i,j,7)*10^5)/10^5) ...
                            || ~isequal(round(JNodevalue_j(i,8)*10^5)/10^5,round(BNodeval(i,j,8)*10^5)/10^5) ...
                            || ~isequal(round(JNodevalue_j(i,9)*10^5)/10^5,round(BNodeval(i,j,9)*10^5)/10^5) ...
-                           || ~isequal(round(JNodevalue_j(i,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5)
-                        % --------------- Calculation the difference of SC S   
+                           || ~isequal(round(JNodevalue_j(i,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5) % if condition 4 - 2 
+                        fprintf('\n# 4 - 2')
+                        
+                       % --------------- Calculation the difference of SC S   
                         % Section properties at each element under natural frame
                         bfb2=JNodevalue_j(i,6);bfb1=BNodeval(i,j,6);  % Bottom flange width
                         tfb2=JNodevalue_j(i,7);tfb1=BNodeval(i,j,7);  % Bottom flange thickness
@@ -296,7 +315,8 @@ else
                            + (JNodevalue_j(i,4)-JNodevalue_i(i,4))^2 + (JNodevalue_j(i,5)-JNodevalue_i(i,5))^2 ); 
                         % --------------- Calculation the difference of SC E   
 
-                        if isequal(get(pdb_step_edit,'Value'),1) % No step                           
+                        if isequal(get(pdb_step_edit,'Value'),1) % No step      % if condition 7 - 1   
+                            fprintf('\n# 7 - 1')
                            % original element              
                            BNodevalue(i,p,1)=BNodeval(i,j,1);
                            BNodevalue(i,p,2)=p;
@@ -316,8 +336,10 @@ else
                            BNodevalue(i,p,16)=BNodeval(i,j,15); 
                            p=p+1;
                            
-                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step                        
-                           if ( abs(L-BNodeval(i,j,16))/2 > s ) && ( Af1 < Af2 )
+                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step   % if condition 7 - 2
+                            fprintf('\n# 7 - 2')
+                           if ( abs(L-BNodeval(i,j,16))/2 > s ) && ( Af1 < Af2 )    % if condition 8 - 1
+                               fprintf('\n# 8 - 1')
                               % Linear interpolation
                               segLoc = [BNodeval(i,j,16), L];
                               segLocstep = [BNodeval(i,j,16), BNodeval(i,j,16)+s, L];                               
@@ -373,7 +395,8 @@ else
                               BNodevalue(i,p,16)=BNodeval(i,j,16)+s;
                               p=p+1; 
                               
-                           elseif ( abs(L-BNodeval(i,j,16))/2 > s ) && ( Af1 >= Af2 )
+                           elseif ( abs(L-BNodeval(i,j,16))/2 > s ) && ( Af1 >= Af2 ) % if condition 8 - 2 
+                               fprintf('\n# 8 - 2')
                               % Linear interpolation
                               %--------------------
                               segLoc = [0, BNodeval(i,j,16)];
@@ -434,7 +457,8 @@ else
                            end % (BNodeval(i,j,16) > 2*s )                                                 
                         end % isequal(get(pdb_step_edit,'Value'),1) % No step
 
-                     else
+                     else % if condition 4 - 3
+                         fprintf('\n# 4 - 3')
                         % original element                
                         BNodevalue(i,p,1)=BNodeval(i,j,1);
                         BNodevalue(i,p,2)=p;
@@ -456,13 +480,15 @@ else
                         
                      end % isequal(1,max(BNodeval(i,:,2)))
   
-                  else % ------------------------ ~max(BNodeval)=1   Oguzhan                  
+                  else % ------------------------ ~max(BNodeval)=1   % if condition 3 - 2
+                      fprintf('\n# 3 - 2')
                        
                      if ~isequal(round(JNodevalue_i(i,6)*10^5)/10^5,round(BNodeval(i,j,6)*10^5)/10^5) ... 
                            || ~isequal(round(JNodevalue_i(i,7)*10^5)/10^5,round(BNodeval(i,j,7)*10^5)/10^5) ...
                            || ~isequal(round(JNodevalue_i(i,8)*10^5)/10^5,round(BNodeval(i,j,8)*10^5)/10^5) ...
                            || ~isequal(round(JNodevalue_i(i,9)*10^5)/10^5,round(BNodeval(i,j,9)*10^5)/10^5) ...
-                           || ~isequal(round(JNodevalue_i(i,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5)
+                           || ~isequal(round(JNodevalue_i(i,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5) % if condition 9 - 1
+                       fprintf('\n# 9 - 1')
                         % --------------- Calculation the difference of SC S   
                         % Section properties at each element under natural frame
                         bfb1=JNodevalue_i(i,6);bfb2=BNodeval(i,j,6);  % Bottom flange width
@@ -494,7 +520,7 @@ else
                         Af2= bfb2*tfb2+bft2*tft2+tw2;
                         % --------------- Calculation the difference of SC E   
 
-                        if isequal(get(pdb_step_edit,'Value'),1) % No step                           
+                        if isequal(get(pdb_step_edit,'Value'),1) % No step       % if condition 10 - 1                    
                            % original element              
                            BNodevalue(i,p,1)=BNodeval(i,j,1);
                            BNodevalue(i,p,2)=p;
@@ -514,9 +540,11 @@ else
                            BNodevalue(i,p,16)=BNodeval(i,j,15); 
                            p=p+1;
                           
-                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step                        
+                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step  % if condition 10 - 2 
+                            fprintf('\n# 10 - 2')
 
-                           if (BNodeval(i,j,16)/2 > s ) && (Af1 >= Af2) 
+                           if (BNodeval(i,j,16)/2 > s ) && (Af1 >= Af2) % if condition 11 - 1
+                               fprintf('\n# 11 - 1')
                               % Linear interpolation
                               segLoc = [0, BNodeval(i,j,16)];
                               segLocstep = [0, BNodeval(i,j,16)-s, BNodeval(i,j,16)];                               
@@ -573,7 +601,8 @@ else
                               BNodevalue(i,p,16)=BNodeval(i,j,16)-s;
                               p=p+1;
                              
-                           elseif (BNodeval(i,j,16)/2 > s ) && (Af1 < Af2)  
+                           elseif (BNodeval(i,j,16)/2 > s ) && (Af1 < Af2)  % if condition 11 - 2
+                               fprintf('\n# 11 - 2')
                               % Linear interpolation
                               %----------------------------
                               segLoc = [BNodeval(i,j,16), BNodeval(i,j+1,16)];
@@ -639,7 +668,8 @@ else
                            || ~isequal(round(BNodeval(i,j,7)*10^5)/10^5,round(BNodeval(i,j+1,7)*10^5)/10^5) ...
                            || ~isequal(round(BNodeval(i,j,8)*10^5)/10^5,round(BNodeval(i,j+1,8)*10^5)/10^5) ...
                            || ~isequal(round(BNodeval(i,j,9)*10^5)/10^5,round(BNodeval(i,j+1,9)*10^5)/10^5) ...
-                           || ~isequal(round(BNodeval(i,j,11)*10^5)/10^5,round(BNodeval(i,j+1,11)*10^5)/10^5)
+                           || ~isequal(round(BNodeval(i,j,11)*10^5)/10^5,round(BNodeval(i,j+1,11)*10^5)/10^5) % if condition 9 - 2
+                       fprintf('\n# 9 - 2')
                         % --------------- Calculation the difference of SC S   
                         % Section properties at each element under natural frame
                         bfb1=BNodeval(i,j,6);bfb2=BNodeval(i,j+1,6);  % Bottom flange width
@@ -671,7 +701,8 @@ else
                         Af2= bfb2*tfb2+bft2*tft2+tw2; 
                         % --------------- Calculation the difference of SC E   
 
-                        if isequal(get(pdb_step_edit,'Value'),1) % No step
+                        if isequal(get(pdb_step_edit,'Value'),1) % No step  % if condition 12 - 1
+                            fprintf('\n# 12 - 1')
                            % original element              
                            BNodevalue(i,p,1)=BNodeval(i,j,1);
                            BNodevalue(i,p,2)=p;
@@ -691,9 +722,11 @@ else
                            BNodevalue(i,p,16)=BNodeval(i,j,16); 
                            p=p+1;         
                           
-                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step
+                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step % if condition 12 -2
+                            fprintf('\n# 12 - 2')
                                                                         
-                           if (abs(BNodeval(i,j,16)-BNodeval(i,j+1,16))/2 > s) && ( Af1 < Af2 )
+                           if (abs(BNodeval(i,j,16)-BNodeval(i,j+1,16))/2 > s) && ( Af1 < Af2 ) % if condition 13 - 1
+                               fprintf('\n# 13 - 1')
                               % Linear interpolation
                               segLoc = [BNodeval(i,j,16), BNodeval(i,j+1,16)];
                               segLocstep = [BNodeval(i,j,16), BNodeval(i,j,16)+s, BNodeval(i,j+1,16)];                              
@@ -749,7 +782,8 @@ else
                               BNodevalue(i,p,16)=BNodeval(i,j+1,16)+s; 
                               p=p+1;   
                               
-                           elseif (abs(BNodeval(i,j,16)-BNodeval(i,j+1,16))/2 > s) && ( Af1 >= Af2 )
+                           elseif (abs(BNodeval(i,j,16)-BNodeval(i,j+1,16))/2 > s) && ( Af1 >= Af2 ) % if condition 13 - 2
+                               fprintf('\n# 13 - 2')
                               % Linear interpolation
                               %---------------------
                               segLoc = [0, BNodeval(i,j,16)];
@@ -810,7 +844,8 @@ else
                            end % (abs(BNodeval(i,j,16)-BNodeval(i,j+1,16)) > 2*s) && ( Af1 < Af2 )
                         end  % isequal(get(pdb_step_edit,'Value'),1) % No step                      
 
-                     else
+                     else % if condition 9 - 3
+                         fprintf('\n# 9 - 3')
                         % original element              
                         BNodevalue(i,p,1)=BNodeval(i,j,1);
                         BNodevalue(i,p,2)=p;
@@ -835,13 +870,15 @@ else
                   % --------------------- The first Internal Node Number E  
 
                   
-               elseif (j > 1) && isequal(j,max(BNodeval(i,:,2))) % For the last internal node
+               elseif (j > 1) && isequal(j,max(BNodeval(i,:,2))) % For the last internal node % if condition 2 - 2
+                   fprintf('\n# 2 - 2')
    
                      if ~isequal(round(JNodevalue_j(i,6)*10^5)/10^5,round(BNodeval(i,j,6)*10^5)/10^5) ... 
                            || ~isequal(round(JNodevalue_j(i,7)*10^5)/10^5,round(BNodeval(i,j,7)*10^5)/10^5) ...
                            || ~isequal(round(JNodevalue_j(i,8)*10^5)/10^5,round(BNodeval(i,j,8)*10^5)/10^5) ...
                            || ~isequal(round(JNodevalue_j(i,9)*10^5)/10^5,round(BNodeval(i,j,9)*10^5)/10^5) ...
-                           || ~isequal(round(JNodevalue_j(i,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5)
+                           || ~isequal(round(JNodevalue_j(i,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5) % if condition 14 - 1
+                       fprintf('\n# 14 - 1')
                         % --------------- Calculation the difference of SC S   
                         % Section properties at each element under natural frame
                         bfb2=JNodevalue_j(i,6);bfb1=BNodeval(i,j,6);  % Bottom flange width
@@ -876,7 +913,8 @@ else
                            + (JNodevalue_j(i,4)-JNodevalue_i(i,4))^2 + (JNodevalue_j(i,5)-JNodevalue_i(i,5))^2 );                         
                         % --------------- Calculation the difference of SC E   
 
-                        if isequal(get(pdb_step_edit,'Value'),1) % No step                           
+                        if isequal(get(pdb_step_edit,'Value'),1) % No step       % if condition 15 - 1 
+                            fprintf('\n# 15 - 1')
                            % original element              
                            BNodevalue(i,p,1)=BNodeval(i,j,1);
                            BNodevalue(i,p,2)=p;
@@ -896,9 +934,11 @@ else
                            BNodevalue(i,p,16)=BNodeval(i,j,16); 
                            p=p+1;
                            
-                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step                        
+                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step     % if condition 15 - 2  
+                            fprintf('\n# 15 - 2')
                        
-                           if ( abs(L-BNodeval(i,j,16))/2 > s ) && ( Af1 < Af2 )
+                           if ( abs(L-BNodeval(i,j,16))/2 > s ) && ( Af1 < Af2 )    % if condition 16 - 1
+                               fprintf('\n# 16 - 1')
                               % Linear interpolation
                               segLoc = [BNodeval(i,j,16), L];
                               segLocstep = [BNodeval(i,j,16), BNodeval(i,j,16)+s, L];                               
@@ -953,7 +993,8 @@ else
                               BNodevalue(i,p,15)=3;
                               BNodevalue(i,p,16)=BNodeval(i,j,16)+s;
                               p=p+1;
-                           elseif ( abs(L-BNodeval(i,j,16))/2 > s ) && ( Af1 >= Af2 )
+                           elseif ( abs(L-BNodeval(i,j,16))/2 > s ) && ( Af1 >= Af2 ) % if condition 16 - 2
+                               fprintf('\n# 16 - 2')
                               % Linear interpolation
                               %-------------------------
                               segLoc = [BNodeval(i,j-1,16), BNodeval(i,j,16)];
@@ -1016,7 +1057,8 @@ else
                            || ~isequal(round(BNodeval(i,j-1,7)*10^5)/10^5,round(BNodeval(i,j,7)*10^5)/10^5) ...
                            || ~isequal(round(BNodeval(i,j-1,8)*10^5)/10^5,round(BNodeval(i,j,8)*10^5)/10^5) ...
                            || ~isequal(round(BNodeval(i,j-1,9)*10^5)/10^5,round(BNodeval(i,j,9)*10^5)/10^5) ...
-                           || ~isequal(round(BNodeval(i,j-1,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5)
+                           || ~isequal(round(BNodeval(i,j-1,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5) % if condition 14 - 2
+                       fprintf('\n# 14 - 2')
 
                         % --------------- Calculation the difference of SC S   
                         % Section properties at each element under natural frame
@@ -1052,7 +1094,8 @@ else
                            + (JNodevalue_j(i,4)-JNodevalue_i(i,4))^2 + (JNodevalue_j(i,5)-JNodevalue_i(i,5))^2 );                           
                         % --------------- Calculation the difference of SC E   
 
-                        if isequal(get(pdb_step_edit,'Value'),1) % No step                           
+                        if isequal(get(pdb_step_edit,'Value'),1) % No step   % if condition 17 - 1
+                            fprintf('\n# 17 - 1')
                            % original element              
                            BNodevalue(i,p,1)=BNodeval(i,j,1);
                            BNodevalue(i,p,2)=p;
@@ -1072,9 +1115,11 @@ else
                            BNodevalue(i,p,16)=BNodeval(i,j,16); 
                            p=p+1;
                            
-                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step                        
+                        elseif isequal(get(pdb_step_edit,'Value'),2) % left step  % if condition 17 - 2 
+                            fprintf('\n# 17 - 2')
                          
-                           if (abs( BNodeval(i,j,16)-BNodeval(i,j-1,16) )/2 > s ) && (Af1 >= Af2) 
+                           if (abs( BNodeval(i,j,16)-BNodeval(i,j-1,16) )/2 > s ) && (Af1 >= Af2) % if condition 18 - 1  
+                               fprintf('\n# 18 - 1')
                               % Linear interpolation
                               segLoc = [BNodeval(i,j-1,16), BNodeval(i,j,16)];
                               segLocstep = [BNodeval(i,j-1,16), BNodeval(i,j,16)-s, BNodeval(i,j,16)];                               
@@ -1129,7 +1174,8 @@ else
                               BNodevalue(i,p,15)=2;
                               BNodevalue(i,p,16)=BNodeval(i,j,16)-s;
                               p=p+1;    
-                           elseif (abs( BNodeval(i,j,16)-BNodeval(i,j-1,16) )/2 > s ) && (Af1 < Af2) 
+                           elseif (abs( BNodeval(i,j,16)-BNodeval(i,j-1,16) )/2 > s ) && (Af1 < Af2) % if condition 18 - 2
+                               fprintf('\n# 18 - 2')
                               % Linear interpolation
                               %---------------------
                               segLoc = [BNodeval(i,j,16), L];
@@ -1189,7 +1235,8 @@ else
                            end % (abs( BNodeval(i,j,16)-BNodeval(i,j-1,16) ) > 2*s ) && (Af1 > Af2)                              
                         end % isequal(get(pdb_step_edit,'Value'),1) % No step                          
    
-                     else
+                     else % if condition 14 - 3 
+                         fprintf('\n# 14 - 3')
                         % original element                
                         BNodevalue(i,p,1)=BNodeval(i,j,1);
                         BNodevalue(i,p,2)=p;
@@ -1212,13 +1259,15 @@ else
                      end
                   % --------------------- The last Internal Node Number E
  
-               else % Other than the first & last internal nodes 
+               else % Other than the first & last internal nodes % if condition 2 - 3
+                   fprintf('\n# 2 - 3')
 
                  if ~isequal(round(BNodeval(i,j-1,6)*10^5)/10^5,round(BNodeval(i,j,6)*10^5)/10^5) ... 
                         || ~isequal(round(BNodeval(i,j-1,7)*10^5)/10^5,round(BNodeval(i,j,7)*10^5)/10^5) ...
                         || ~isequal(round(BNodeval(i,j-1,8)*10^5)/10^5,round(BNodeval(i,j,8)*10^5)/10^5) ...
                         || ~isequal(round(BNodeval(i,j-1,9)*10^5)/10^5,round(BNodeval(i,j,9)*10^5)/10^5) ...
-                        || ~isequal(round(BNodeval(i,j-1,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5)
+                        || ~isequal(round(BNodeval(i,j-1,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5) % if condition 19 - 1
+                    fprintf('\n# 19 - 1')
 
                      % --------------- Calculation the difference of SC S   
                      % Section properties at each element under natural frame
@@ -1251,7 +1300,8 @@ else
                      Af2= bfb2*tfb2+bft2*tft2+tw2;
                      % --------------- Calculation the difference of SC E   
 
-                     if isequal(get(pdb_step_edit,'Value'),1) % No step    
+                     if isequal(get(pdb_step_edit,'Value'),1) % No step  % if condition 20 - 1 
+                        fprintf('\n# 20 - 1')
                         % original element              
                         BNodevalue(i,p,1)=BNodeval(i,j,1);
                         BNodevalue(i,p,2)=p;
@@ -1271,9 +1321,11 @@ else
                         BNodevalue(i,p,16)=BNodeval(i,j,16); 
                         p=p+1;
                            
-                     elseif isequal(get(pdb_step_edit,'Value'),2) % left step                       
+                     elseif isequal(get(pdb_step_edit,'Value'),2) % left step     % if condition 20 - 2
+                         fprintf('\n# 20 - 2')
                      
-                        if (abs(BNodeval(i,j,16)-BNodeval(i,j-1,16))/2 > s ) && (Af1 >= Af2) 
+                        if (abs(BNodeval(i,j,16)-BNodeval(i,j-1,16))/2 > s ) && (Af1 >= Af2) % if condition 21 - 1
+                            fprintf('\n# 21 - 1')
                            % Linear interpolation
                            segLoc = [BNodeval(i,j-1,16), BNodeval(i,j,16)];
                            segLocstep = [BNodeval(i,j-1,16), BNodeval(i,j,16)-s, BNodeval(i,j,16)];                               
@@ -1328,7 +1380,8 @@ else
                            BNodevalue(i,p,15)=2;
                            BNodevalue(i,p,16)=BNodeval(i,j,16)-s;                           
                            p=p+1;    
-                        elseif (abs(BNodeval(i,j,16)-BNodeval(i,j-1,16))/2 > s ) && (Af1 < Af2) 
+                        elseif (abs(BNodeval(i,j,16)-BNodeval(i,j-1,16))/2 > s ) && (Af1 < Af2) % if condition 21 - 2
+                            fprintf('\n# 21 - 2')
                            % Linear interpolation
                            %-------------------
                            segLoc = [BNodeval(i,j,16), BNodeval(i,j+1,16)];
@@ -1392,7 +1445,8 @@ else
                         || ~isequal(round(BNodeval(i,j+1,7)*10^5)/10^5,round(BNodeval(i,j,7)*10^5)/10^5) ...
                         || ~isequal(round(BNodeval(i,j+1,8)*10^5)/10^5,round(BNodeval(i,j,8)*10^5)/10^5) ...
                         || ~isequal(round(BNodeval(i,j+1,9)*10^5)/10^5,round(BNodeval(i,j,9)*10^5)/10^5) ...
-                        || ~isequal(round(BNodeval(i,j+1,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5)
+                        || ~isequal(round(BNodeval(i,j+1,11)*10^5)/10^5,round(BNodeval(i,j,11)*10^5)/10^5) % if condition 19 - 2
+                    fprintf('\n# 19 - 2')
 
                      % --------------- Calculation the difference of SC S   
                      % Section properties at each element under natural frame
@@ -1425,7 +1479,8 @@ else
                      Af2= bfb2*tfb2+bft2*tft2+tw2;
                      % --------------- Calculation the difference of SC E   
 
-                     if isequal(get(pdb_step_edit,'Value'),1) % No step    
+                     if isequal(get(pdb_step_edit,'Value'),1) % No step  % if condition 22 - 1  
+                         fprintf('\n# 22 - 1')
                         % original element              
                         BNodevalue(i,p,1)=BNodeval(i,j,1);
                         BNodevalue(i,p,2)=p;
@@ -1445,9 +1500,11 @@ else
                         BNodevalue(i,p,16)=BNodeval(i,j,16); 
                         p=p+1;
              
-                     elseif isequal(get(pdb_step_edit,'Value'),2) % right step
+                     elseif isequal(get(pdb_step_edit,'Value'),2) % right step  % if condition 22 - 2
+                         fprintf('\n# 22 - 2')
 
-                        if ( abs(BNodeval(i,j+1,16)-BNodeval(i,j,16))/2 > s ) && ( Af1 < Af2 )   
+                        if ( abs(BNodeval(i,j+1,16)-BNodeval(i,j,16))/2 > s ) && ( Af1 < Af2 ) % if condition 23 - 1 
+                            fprintf('\n# 23 - 1')
                            % Linear interpolation
                            segLoc = [BNodeval(i,j,16), BNodeval(i,j+1,16)];
                            segLocstep = [BNodeval(i,j,16), BNodeval(i,j,16)+s, BNodeval(i,j+1,16)];                               
@@ -1502,7 +1559,8 @@ else
                            BNodevalue(i,p,15)=3;
                            BNodevalue(i,p,16)=BNodeval(i,j,16)+s;  
                            p=p+1;  
-                        elseif ( abs(BNodeval(i,j+1,16)-BNodeval(i,j,16))/2 > s ) && ( Af1 >= Af2 )  
+                        elseif ( abs(BNodeval(i,j+1,16)-BNodeval(i,j,16))/2 > s ) && ( Af1 >= Af2 )  % if condition 23 - 2
+                            fprintf('\n# 23 - 2')
                            % Linear interpolation
                            %-----------------------
                            segLoc = [BNodeval(i,j-1,16), BNodeval(i,j,16)];
@@ -1562,7 +1620,8 @@ else
                         end % ( abs(BNodeval(i,j+1,16)-BNodeval(i,j,16)) > 2*s ) && ( Af1 < Af2 )                         
                      end % isequal(get(pdb_step_edit,'Value'),1) % No step
 
-                 else % Other than the internal nodes 
+                 else % Other than the internal nodes % if condition 19 - 3
+                     fprintf('\n# 19 - 3')
                      % original element                
                      BNodevalue(i,p,1)=BNodeval(i,j,1);
                      BNodevalue(i,p,2)=p;
@@ -1585,7 +1644,8 @@ else
 
                end % first internal node end
                
-            else % ~ coordinate 
+            else % ~ coordinate % if condition 1 - 2
+                fprintf('\n# 1 - 2')
                % original element                
                BNodevalue(i,p,1)=BNodeval(i,j,1);
                BNodevalue(i,p,2)=p;

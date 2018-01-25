@@ -56,12 +56,14 @@ else
 %     BNodevalue
     if isempty(BNodevalue(mnum,:,2))
 %       x = 1
-      nextBnum = 0
+      nextBnum = 0;
     else
 %       x = 2 
-      nextBnum = max(BNodevalue(mnum,:,2))+1
+      nextBnum = max(BNodevalue(mnum,:,2))+1;
     end  
 end
+% fprintf('test3')
+% BNodevalue
 % BNodevalue=[mnum nbnode jcoordx jcoordy jcoordz jbfb jbft jtfb jtft jd jtw dw h)
 if isempty(get(pdb_member_name,'String')) ...
       || isnan(str2double(get(pdb_member_name,'String'))) ...
@@ -114,6 +116,8 @@ elseif isempty(get(pdb_bfb_edit,'String')) ...
    set(pt_title_name,'Visible','on')    
 else
    set(pt_title_name,'Visible','off') % Hide BACKGROUND TEXT
+   
+%    nbnode
    if max(BNodevalue(mnum,:,2))<nbnode
       SNodevalue=[];
    end   
@@ -136,7 +140,9 @@ else
    
 end % if end
 
-
+% fprintf('test2')
+% BNodevalue
+% Massemble
 % Automatic Segment numbering or Step member.
 [BNodevalue]=SABRE2SegmCODE(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,BNodevalue,...
    pdb_coordx_edit,pdb_coordy_edit,pdb_coordz_edit,pdb_step_edit,seglength);

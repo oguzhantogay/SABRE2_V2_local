@@ -79,11 +79,11 @@ class AddNodeClass(QMainWindow):
             Afills = (JNodevalue_i[mnum][13], JNodevalue_j[mnum][13])
         else:
             ntap = 0
-            for i in range(max(BNodevalue[mnum][:][1])):
+            for i in range(max(BNodevalue[mnum, :, 1])):
                 if seglength > BNodevalue[mnum][i][15]:
                     ntap = int(i)
 
-            if max(BNodevalue[mnum][:][1]) == 1:
+            if max(BNodevalue[mnum, :, 1]) == 1:
                 if ntap == 0:
                     seL = np.sqrt((JNodevalue_i[mnum][2] - BNodevalue[mnum][ntap + 1][2]) ** 2 + (
                             JNodevalue_i[mnum][3] - BNodevalue[mnum][ntap + 1][3]) ** 2 + (JNodevalue_i[mnum][4] -
@@ -141,7 +141,7 @@ class AddNodeClass(QMainWindow):
                     dws = (JNodevalue_i[mnum][9], BNodevalue[mnum][ntap + 1][9])
                     tws = (JNodevalue_i[mnum][10], BNodevalue[mnum][ntap + 1][10])
                     Afills = (JNodevalue_i[mnum][13], BNodevalue[mnum][ntap + 1][13])
-                elif ntap == max(BNodevalue[mnum][:][1]):
+                elif ntap == max(BNodevalue[mnum, :, 1]):
                     seL = np.sqrt((BNodevalue[mnum][ntap][2] - JNodevalue_j[mnum][2]) ** 2 + (
                             BNodevalue[mnum][ntap][3] - JNodevalue_j[mnum][3]) ** 2 + (
                                           BNodevalue[mnum][ntap][4] - JNodevalue_j[mnum][4]) ** 2)
@@ -313,7 +313,7 @@ class AddNodeClass(QMainWindow):
         mnum = int(self.ui.AddNodeMember.currentIndex())
         seglength = self.ui.AddNodePositionFrom.text()
 
-        # print("mnum = ", mnum, "\n", "nbnode = ", nbnode)
+        # print("mnum = ", mnum, "\n", "seglength = ", seglength)
 
         _, _, JNodevalue_i, JNodevalue_j, _, _ = AddNodeClass.memberTableValues(self)
 
@@ -330,7 +330,7 @@ class AddNodeClass(QMainWindow):
                 JNodevalue_i[mnum][3] - JNodevalue_j[mnum][3]) ** 2 + (
                                     JNodevalue_i[mnum][4] - JNodevalue_j[mnum][4]) ** 2)
         # print("mem length = ", memlength, "seglength = ", seglength)
-        if np.greater_equal(memlength, seglength):
+        if not np.greater_equal(seglength, memlength):
             DropDownActions.ActionClass.statusMessage(self,
                                                       message="Position from i node must be smaller than member length")
         else:
@@ -351,6 +351,7 @@ class AddNodeClass(QMainWindow):
             Lb = np.dot(Rz, Lb) + Additive
 
             Lb = np.around(Lb * (10 ** 11)) / (10 ** 11)
+            # print('Lb in Function = ', Lb)
 
             self.ui.AddNodeX.setText(str(Lb[0]))
             self.ui.AddNodeY.setText(str(Lb[1]))
@@ -368,7 +369,8 @@ class AddNodeClass(QMainWindow):
     def memberNumbering(self):
         mnum = int(self.ui.AddNodeMember.currentIndex())
         _, _, _, _, BNodevalue, _ = AddNodeClass.memberTableValues(self)
-        nextBnum = np.amax(BNodevalue[mnum][:][1]) + 1
+        # print("BNodevalue 1 = ", BNodevalue)
+        nextBnum = np.amax(BNodevalue[mnum, :, 1]) + 1
         return nextBnum
 
     def readAddNodeTable(self):
@@ -381,15 +383,22 @@ class AddNodeClass(QMainWindow):
     def ApplyButton(self):
         mnum = int(self.ui.AddNodeMember.currentIndex())
         nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())
-        _, _, _, _, BNodevalue, _ = AddNodeClass.memberTableValues(self)
-        nextBum = self.memberNumbering()
-        if np.greater(nbnode, np.amax(BNodevalue[mnum][:][1])):
+        Massemble = AddNodeClass.MassembleUpdater(self)
+        _, _, JNodevalue_i, JNodevalue_j, BNodevalue, _ = AddNodeClass.memberTableValues(self)
+        nextBum = AddNodeClass.memberNumbering(self)
+
+        # print("nbnode = ", nbnode, "\n", 'Max BNode 1 =' , np.amax(BNodevalue[mnum, :, 1]))
+        if np.greater(nbnode , np.amax(BNodevalue[mnum, :, 1])):
             SNodeValue = None
         else:
-            Lb = self.coordinateFill()
-            addNodeTableValues = self.readAddNodeTable()
+            import SABRE2_main_subclass
+            Lb = AddNodeClass.coordinateFill(self)
+            # print("Lb = ", Lb)
+            BNodevalue = np.zeros((mnum+1, nbnode+1, 16))
+
+            addNodeTableValues = AddNodeClass.readAddNodeTable(self)
             BNodevalue[mnum][nbnode][0] = mnum
-            BNodevalue[mnum][nbnode][1] = nbnode  # 0 No bracing
+            BNodevalue[mnum][nbnode][1] = nbnode + 1 # 0 No bracing
             BNodevalue[mnum][nbnode][2] = Lb[0]
             BNodevalue[mnum][nbnode][3] = Lb[1]
             BNodevalue[mnum][nbnode][4] = Lb[2]
@@ -404,4 +413,12 @@ class AddNodeClass(QMainWindow):
             BNodevalue[mnum][nbnode][12] = BNodevalue[mnum][nbnode][9] + (
                     BNodevalue[mnum][nbnode][6] + BNodevalue[mnum][nbnode][8]) / 2  # flange centroid
             BNodevalue[mnum][nbnode][13] = addNodeTableValues[6]
-        pass
+
+
+
+        print("BNodevalue function before = ", BNodevalue)
+        import SABRE2SegmCODE
+
+        BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
+
+        print("BNodevalue function = ", BNodevalue)

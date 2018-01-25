@@ -198,7 +198,7 @@ class Ui_SABRE2_V3(object):
         self.AnalysisTabs.addTab(self.AnalysisParameters, _fromUtf8(""))
         self.verticalLayout_8.addWidget(self.AnalysisTabs)
         self.DefinitionTabs = QtGui.QTabWidget(self.centralwidget)
-        self.DefinitionTabs.setMinimumSize(QtCore.QSize(1085, 282))
+        self.DefinitionTabs.setMinimumSize(QtCore.QSize(1085, 295))
         self.DefinitionTabs.setMaximumSize(QtCore.QSize(10000000, 336))
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -310,7 +310,7 @@ class Ui_SABRE2_V3(object):
         self.verticalLayout_2 = QtGui.QVBoxLayout(self.Members_tab)
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
         self.Members_tabs = QtGui.QTabWidget(self.Members_tab)
-        self.Members_tabs.setMinimumSize(QtCore.QSize(0, 265))
+        self.Members_tabs.setMinimumSize(QtCore.QSize(0, 275))
         self.Members_tabs.setObjectName(_fromUtf8("Members_tabs"))
         self.Member_Def = QtGui.QWidget()
         self.Member_Def.setObjectName(_fromUtf8("Member_Def"))
@@ -2481,13 +2481,3 @@ class Ui_SABRE2_V3(object):
         self.actionJoint_Member_Labels.setText(_translate("SABRE2_V3", "Joint & Member Labels", None))
 
 import SABRE2_resources_rc
-
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    SABRE2_V3 = QtGui.QMainWindow()
-    ui = Ui_SABRE2_V3()
-    ui.setupUi(SABRE2_V3)
-    SABRE2_V3.show()
-    sys.exit(app.exec_())
-

@@ -1,7 +1,4 @@
 from PyQt4.QtGui import *
-from PyQt4 import QtCore
-from PyQt4 import QtGui
-import SABRE2_GUI
 import DropDownActions
 import sqlite3 as sq
 import numpy as np
@@ -42,8 +39,157 @@ class AddNodeClass(QMainWindow):
         import SABRE2_main_subclass
         member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
             self, self.ui.Members_table, 3)
-        member_count = member_values.shape[0]
-        return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval
+        # mnum = int(self.ui.AddNodeMember.currentIndex())
+        # if flag_mem_values[mnum][1] == 1 and self.ui.AddNodeTable.item(0,0) is None:
+        #     bfbs = (JNodeValues_i[mnum][5])
+        #     tfbs = (JNodeValues_i[mnum][6])
+        #     bfts = (JNodeValues_i[mnum][7])
+        #     tfts = (JNodeValues_i[mnum][8])
+        #     dws = (JNodeValues_i[mnum][9])
+        #     tws = (JNodeValues_i[mnum][10])
+        #     Afills = (JNodeValues_i[mnum][13])
+        #
+        #     tableName = self.ui.AddNodeTable
+        #     validatorDouble = QDoubleValidator()
+        #     item = QLineEdit()
+        #     item.setFrame(False)
+        #     item.setValidator(validatorDouble)
+        #     item.setText(str(bfbs))
+        #     tableName.setCellWidget(0, 0, item)
+        #     item = QLineEdit()
+        #     item.setFrame(False)
+        #     item.setValidator(validatorDouble)
+        #     item.setText(str(tfbs))
+        #     tableName.setCellWidget(0, 1, item)
+        #     item = QLineEdit()
+        #     item.setFrame(False)
+        #     item.setValidator(validatorDouble)
+        #     item.setText(str(bfts))
+        #     tableName.setCellWidget(0, 2, item)
+        #     item = QLineEdit()
+        #     item.setFrame(False)
+        #     item.setValidator(validatorDouble)
+        #     item.setText(str(tfts))
+        #     tableName.setCellWidget(0, 3, item)
+        #     item = QLineEdit()
+        #     item.setFrame(False)
+        #     item.setValidator(validatorDouble)
+        #     item.setText(str(dws))
+        #     tableName.setCellWidget(0, 4, item)
+        #     item = QLineEdit()
+        #     item.setFrame(False)
+        #     item.setValidator(validatorDouble)
+        #     item.setText(str(tws))
+        #     tableName.setCellWidget(0, 5, item)
+        #     item = QLineEdit()
+        #     item.setFrame(False)
+        #     item.setValidator(validatorDouble)
+        #     item.setText(str(Afills))
+        #     tableName.setCellWidget(0, 6, item)
+        return member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval, flag_mem_values
+
+    def addNodeTableInitiation(self):
+
+        _, JNodeValues_i, _, _, _, flag_mem_values = AddNodeClass.memberTableValues(self)
+        mnum = int(self.ui.AddNodeMember.currentIndex())
+        if self.ui.AddNodeTable.cellWidget(0, 0).text() == '':
+
+            bfbs = (JNodeValues_i[mnum][5])
+            tfbs = (JNodeValues_i[mnum][6])
+            bfts = (JNodeValues_i[mnum][7])
+            tfts = (JNodeValues_i[mnum][8])
+            dws = (JNodeValues_i[mnum][9])
+            tws = (JNodeValues_i[mnum][10])
+            Afills = (JNodeValues_i[mnum][13])
+
+            tableName = self.ui.AddNodeTable
+            validatorDouble = QDoubleValidator()
+            item = QLineEdit()
+            item.setFrame(False)
+            item.setValidator(validatorDouble)
+            item.setText(str(bfbs))
+            tableName.setCellWidget(0, 0, item)
+            item = QLineEdit()
+            item.setFrame(False)
+            item.setValidator(validatorDouble)
+            item.setText(str(tfbs))
+            tableName.setCellWidget(0, 1, item)
+            item = QLineEdit()
+            item.setFrame(False)
+            item.setValidator(validatorDouble)
+            item.setText(str(bfts))
+            tableName.setCellWidget(0, 2, item)
+            item = QLineEdit()
+            item.setFrame(False)
+            item.setValidator(validatorDouble)
+            item.setText(str(tfts))
+            tableName.setCellWidget(0, 3, item)
+            item = QLineEdit()
+            item.setFrame(False)
+            item.setValidator(validatorDouble)
+            item.setText(str(dws))
+            tableName.setCellWidget(0, 4, item)
+            item = QLineEdit()
+            item.setFrame(False)
+            item.setValidator(validatorDouble)
+            item.setText(str(tws))
+            tableName.setCellWidget(0, 5, item)
+            item = QLineEdit()
+            item.setFrame(False)
+            item.setValidator(validatorDouble)
+            item.setText(str(Afills))
+            tableName.setCellWidget(0, 6, item)
+
+    def comboBoxChanged(self):
+
+        _, JNodeValues_i, _, _, _, flag_mem_values = AddNodeClass.memberTableValues(self)
+        mnum = int(self.ui.AddNodeMember.currentIndex())
+
+        bfbs = (JNodeValues_i[mnum][5])
+        tfbs = (JNodeValues_i[mnum][6])
+        bfts = (JNodeValues_i[mnum][7])
+        tfts = (JNodeValues_i[mnum][8])
+        dws = (JNodeValues_i[mnum][9])
+        tws = (JNodeValues_i[mnum][10])
+        Afills = (JNodeValues_i[mnum][13])
+
+        tableName = self.ui.AddNodeTable
+        validatorDouble = QDoubleValidator()
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(bfbs))
+        tableName.setCellWidget(0, 0, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(tfbs))
+        tableName.setCellWidget(0, 1, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(bfts))
+        tableName.setCellWidget(0, 2, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(tfts))
+        tableName.setCellWidget(0, 3, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(dws))
+        tableName.setCellWidget(0, 4, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(tws))
+        tableName.setCellWidget(0, 5, item)
+        item = QLineEdit()
+        item.setFrame(False)
+        item.setValidator(validatorDouble)
+        item.setText(str(Afills))
+        tableName.setCellWidget(0, 6, item)
 
     def MassembleUpdater(self):
         import SABRE2_main_subclass
@@ -55,7 +201,7 @@ class AddNodeClass(QMainWindow):
         mnum = int(self.ui.AddNodeMember.currentIndex())
         seglength = self.ui.AddNodePositionFrom.text()
 
-        member_count, member_values, JNodevalue_i, JNodevalue_j, BNodevalue, Rval = AddNodeClass.memberTableValues(self)
+        member_values, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, _ = AddNodeClass.memberTableValues(self)
         if BNodevalue[mnum][0][1] == 0:
             seL = np.sqrt((JNodevalue_i[mnum][2] - JNodevalue_j[mnum][2]) ** 2 + (
                     JNodevalue_i[mnum][3] - JNodevalue_j[mnum][3]) ** 2 + (
@@ -212,6 +358,7 @@ class AddNodeClass(QMainWindow):
         # print("dwsb = ", dwsb)
         # print("twsb = ", twsb)
         # print("Afillsb = ", Afillsb)
+
         tableName = self.ui.AddNodeTable
         validatorDouble = QDoubleValidator()
         item = QLineEdit()
@@ -315,7 +462,7 @@ class AddNodeClass(QMainWindow):
 
         # print("mnum = ", mnum, "\n", "seglength = ", seglength)
 
-        _, _, JNodevalue_i, JNodevalue_j, _, _ = AddNodeClass.memberTableValues(self)
+        _, JNodevalue_i, JNodevalue_j, _, _, _ = AddNodeClass.memberTableValues(self)
 
         # print("BNodeValue = ", BNodevalue)
 
@@ -368,7 +515,7 @@ class AddNodeClass(QMainWindow):
 
     def memberNumbering(self):
         mnum = int(self.ui.AddNodeMember.currentIndex())
-        _, _, _, _, BNodevalue, _ = AddNodeClass.memberTableValues(self)
+        _, _, _, BNodevalue, _, _ = AddNodeClass.memberTableValues(self)
         # print("BNodevalue 1 = ", BNodevalue)
         nextBnum = np.amax(BNodevalue[mnum, :, 1]) + 1
         return nextBnum
@@ -384,21 +531,21 @@ class AddNodeClass(QMainWindow):
         mnum = int(self.ui.AddNodeMember.currentIndex())
         nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())
         Massemble = AddNodeClass.MassembleUpdater(self)
-        _, _, JNodevalue_i, JNodevalue_j, BNodevalue, _ = AddNodeClass.memberTableValues(self)
+        _, JNodevalue_i, JNodevalue_j, BNodevalue, _, _ = AddNodeClass.memberTableValues(self)
         nextBum = AddNodeClass.memberNumbering(self)
 
         # print("nbnode = ", nbnode, "\n", 'Max BNode 1 =' , np.amax(BNodevalue[mnum, :, 1]))
-        if np.greater(nbnode , np.amax(BNodevalue[mnum, :, 1])):
+        if np.greater(nbnode, np.amax(BNodevalue[mnum, :, 1])):
             SNodeValue = None
         else:
             import SABRE2_main_subclass
             Lb = AddNodeClass.coordinateFill(self)
             # print("Lb = ", Lb)
-            BNodevalue = np.zeros((mnum+1, nbnode+1, 16))
+            BNodevalue = np.zeros((mnum + 1, nbnode + 1, 16))
 
             addNodeTableValues = AddNodeClass.readAddNodeTable(self)
             BNodevalue[mnum][nbnode][0] = mnum
-            BNodevalue[mnum][nbnode][1] = nbnode + 1 # 0 No bracing
+            BNodevalue[mnum][nbnode][1] = nbnode + 1  # 0 No bracing
             BNodevalue[mnum][nbnode][2] = Lb[0]
             BNodevalue[mnum][nbnode][3] = Lb[1]
             BNodevalue[mnum][nbnode][4] = Lb[2]
@@ -414,11 +561,12 @@ class AddNodeClass(QMainWindow):
                     BNodevalue[mnum][nbnode][6] + BNodevalue[mnum][nbnode][8]) / 2  # flange centroid
             BNodevalue[mnum][nbnode][13] = addNodeTableValues[6]
 
-
-
-        print("BNodevalue function before = ", BNodevalue)
+        # print("BNodevalue function before = ", BNodevalue)
         import SABRE2SegmCODE
 
         BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
 
-        print("BNodevalue function = ", BNodevalue)
+        import SABRE2SegmModel
+
+        SABRE2SegmModel.ClassB.renderAddNode(self, BNodevalue)
+        # print("BNodevalue function = ", BNodevalue)

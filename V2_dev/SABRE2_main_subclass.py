@@ -62,12 +62,12 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Inser_number_uni_load.setValidator(validatorInt)
         ui_layout.Delete_number_uni_load.setValidator(validatorInt)
         ###
-        ui_layout.Members_tabs.currentChanged.connect(lambda : AddNode.AddNodeClass.setAddNodeComboBox(self))
-        ui_layout.AddNodePositionFrom.textChanged.connect(lambda : AddNode.AddNodeClass.setAddNodeComboBox(self))
+
+        # ui_layout.AddNodePositionFrom.textChanged.connect(lambda : AddNode.AddNodeClass.setAddNodeComboBox(self))
         ui_layout.actionRender_Line_Element.setCheckable(True)
         ui_layout.actionRender_Selected_Member.setCheckable(True)
         ui_layout.actionRender_All_Members.setCheckable(True)
-        ui_layout.Members_table.setEnabled(False)
+        ui_layout.Members_tab.setEnabled(False)
         ui_layout.verticalLayout_8.insertWidget(0, SABRE2_main_subclass.OpenGLwidget)
         # SABRE2_main_subclass.OpenGLwidget.resizeGL(SABRE2_main_subclass.OpenGLwidget.width(), SABRE2_main_subclass.OpenGLwidget.height())
         # SABRE2_main_subclass.OpenGLwidget.resized.connect(self.someFunction)
@@ -245,7 +245,14 @@ class SABRE2_main_subclass(QMainWindow):
 
         # ui_layout.AISC_assign_button.clicked.connect(lambda : self.m_assemble_updater(ui_layout.Members_table, ))
         # Add Node Menu Actions and Arrangements
-        ui_layout.AddNodePositionFrom.editingFinished.connect(lambda : AddNode.AddNodeClass.fillTable(self))
+        ui_layout.Members_tabs.currentChanged.connect(lambda: AddNode.AddNodeClass.setAddNodeComboBox(self))
+        ui_layout.Members_tabs.currentChanged.connect(lambda: AddNode.AddNodeClass.addNodeTableInitiation(self))
+        ui_layout.AddNodeMember.currentIndexChanged.connect(lambda: AddNode.AddNodeClass.addNodeTableInitiation(self))
+        ui_layout.AddNodeMember.currentIndexChanged.connect(lambda: AddNode.AddNodeClass.comboBoxChanged(self))
+
+        ui_layout.FollowTaper.clicked.connect(lambda : AddNode.AddNodeClass.fillTable(self))
+
+        ui_layout.FollowTaper.clicked.connect(lambda:AddNode.AddNodeClass.coordinateFill(self))
 
         ui_layout.AISC_assign_button_2.clicked.connect(
             lambda: AddNode.AddNodeClass.sql_print(self))
@@ -1238,9 +1245,9 @@ class JointTable(QMainWindow):
             tableName.item(row, col).setText("")
 
         if 0 in val2:
-            self.ui.Members_table.setEnabled(False)
+            self.ui.Members_tab.setEnabled(False)
         else:
-            self.ui.Members_table.setEnabled(True)
+            self.ui.Members_tab.setEnabled(True)
 
             val_unique = np.delete(val1, [0], axis=1)
             val_unique, indices = np.unique(val_unique, axis=0, return_index=True)

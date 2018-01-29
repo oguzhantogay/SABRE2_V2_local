@@ -6,8 +6,6 @@ from OpenGL.GL import *
 from DropDownActions import ActionClass
 import numpy as np
 
-import sys, os
-
 
 class glWidget(QGLWidget, QMainWindow):
     resized = QtCore.pyqtSignal()
@@ -87,12 +85,38 @@ class glWidget(QGLWidget, QMainWindow):
             glVertex3fv(vertices[i, :])
         glEnd()
 
+    def drawAsterisk(self, dx, dy, dz):
+        asterisk_size = self.joint_size * 1.7
+        glCullFace(GL_BACK)
+        glEnable(GL_BLEND)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glBegin(GL_LINES)
+        if self.white_checked:
+            glColor3fv((0, 0, 0))
+        else:
+            glColor3fv((1, 0, 0))
+        glVertex3d(dx + asterisk_size / 2, dy + 0, dz + 0)
+        glVertex3d(dx + -asterisk_size / 2, dy + 0, dz + 0)
+        glVertex3d(dx + 0, dy + asterisk_size / 2, dz + 0)
+        glVertex3d(dx + 0, dy + -asterisk_size / 2, dz + 0)
+        glVertex3d(dx + 0, dy + 0, dz + asterisk_size / 2)
+        glVertex3d(dx + 0, dy + 0, dz + -asterisk_size / 2)
+        glVertex3d(dx + asterisk_size / 2, dy + asterisk_size / 2, dz + asterisk_size / 2)
+        glVertex3d(dx + -asterisk_size / 2, dy + -asterisk_size / 2, dz + -asterisk_size / 2)
+        glVertex3d(dx + -asterisk_size / 2, dy + asterisk_size / 2, dz + asterisk_size / 2)
+        glVertex3d(dx + asterisk_size / 2, dy + -asterisk_size / 2, dz + -asterisk_size / 2)
+        glVertex3d(dx + asterisk_size / 2, dy + -asterisk_size / 2, dz + asterisk_size / 2)
+        glVertex3d(dx + -asterisk_size / 2, dy + asterisk_size / 2, dz + -asterisk_size / 2)
+        glVertex3d(dx + asterisk_size / 2, dy + asterisk_size / 2, dz + -asterisk_size / 2)
+        glVertex3d(dx + -asterisk_size / 2, dy + -asterisk_size / 2, dz + asterisk_size / 2)
+        glEnd()
+
     def referenceLine(self, MJvalue):
         glPushAttrib(GL_ENABLE_BIT)
         glBegin(GL_LINES)
         glColor3ub(100, 149, 237)
         for i in range(2):
-            glVertex3f(MJvalue[i, 1], MJvalue[i, 3], MJvalue[i, 2])
+            glVertex3f(MJvalue[i, 1], MJvalue[i, 2], MJvalue[i, 3])
         glEnd()
         glPopAttrib()
 
@@ -309,9 +333,14 @@ class glWidget(QGLWidget, QMainWindow):
                         # self.Surfaces()
 
         self.render_checked = self.ui.actionRender_All_Members.isChecked()
+        if self.member_count is not None:
+            self.member_count = int(self.member_count)
         if self.render_checked:
             Massemble = self.MassembleUpdater()
-            self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, Massemble)
+            self.renderAllProp(self.member_count, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval,
+                               Massemble)
+            self.drawAsterisk()
+
 
     def normalizeAngle(self, angle):
         while angle < 0:
@@ -411,8 +440,11 @@ class glWidget(QGLWidget, QMainWindow):
                 self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval = self.memberTableValues()
                 if self.render_checked:
                     Massemble = self.MassembleUpdater()
+                    self.member_count = int(self.member_count)
+                    self.renderAllProp(self.member_count, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue,
+                                       self.Rval, Massemble)
+                    self.drawAsterisk()
 
-                    self.renderAllProp(self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval, Massemble)
         except AttributeError:
             pass
 
@@ -526,7 +558,7 @@ class glWidget(QGLWidget, QMainWindow):
                     MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1] - 1)][3]
                     MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2] - 1)][3]
                     for i in range(2):
-                        glVertex3f(MJvalue[i, 1], MJvalue[i, 3], MJvalue[i, 2])
+                        glVertex3f(MJvalue[i, 1], MJvalue[i, 2], MJvalue[i, 3])
                 glEnd()
                 glPopAttrib()
         else:
@@ -575,27 +607,112 @@ class glWidget(QGLWidget, QMainWindow):
 
         return tap1, tap2
 
-    def renderAllProp(self, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, Massemble):
+    def renderAllProp(self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, Massemble):
+        ''' This function works on the rendering all properties of the model'''
+        forTop, forBottom, tf, bf, web, _, _, _, _, _, _, _, _, _ = glWidget.renderProperties(
+            self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval)
+        edges = ((0, 1),
+                 (1, 2),
+                 (2, 3),
+                 (3, 0))
+
+        glColor4f(0, 1, 0, 1)
+        glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=self.font2)
+        glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Flange 2", font=self.font2)
+        glWidget.SurfaceContour(self, tf, edges)
+        glWidget.SurfaceContour(self, web, edges)
+        glWidget.SurfaceContour(self, bf, edges)
+        # self.drawAsterisk()
+        glWidget.Surfaces(self, tf)
+        glWidget.Surfaces(self, web)
+        glWidget.Surfaces(self, bf)
+
+        # print("Massemble last point = ", Massemble)   Massemble works !
+
+        # MJvalue = np.zeros((2, 4))
+        # # print("JnodeValue =", self.joint_nodes)
+        # if Massemble is not None:
+        #     mem = Massemble.shape[0]
+        #     # print("mem = ", mem)
+        #     for i in range(mem):
+        #         MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1] - 1)][1]
+        #         MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2] - 1)][1]
+        #         MJvalue[0][2] = self.joint_nodes[int(Massemble[i][1] - 1)][2]
+        #         MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2] - 1)][2]
+        #         MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1] - 1)][3]
+        #         MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2] - 1)][3]
+        #
+        #         opp = MJvalue[1][2] - MJvalue[0][2]  # element depth in y - dir
+        #         adj = MJvalue[1][1] - MJvalue[0][1]  # element length in x - dir
+        #
+        #         angle = np.arctan2(opp, adj)
+        #
+        #         Rz = np.zeros((3, 3))
+        #
+        #         Rz[0][0] = np.cos(angle)
+        #         Rz[0][1] = -np.sin(angle)
+        #         Rz[1][0] = np.sin(angle)
+        #         Rz[1][1] = np.cos(angle)
+        #         Rz[2][2] = 1
+
+        # Fhsb1 = (JNodevalue_i[i][8] * np.power(JNodevalue_i[i][8], 3) * JNodevalue_i[i][12]) / (
+        #         JNodevalue_i[i][6] * np.power(JNodevalue_i[i][5], 3) + JNodevalue_i[i][8] * np.power(
+        #     JNodevalue_i[i][7], 3))
+        #
+        # Fhst1 = JNodevalue_i[i][12] - Fhsb1
+        #
+        # Fhsb2 = (JNodevalue_j[i][8] * np.power(JNodevalue_j[i][8], 3) * JNodevalue_j[i][12]) / (
+        #         JNodevalue_j[i][6] * np.power(JNodevalue_j[i][5], 3) + JNodevalue_j[i][8] * np.power(
+        #     JNodevalue_j[i][7], 3))
+        #
+        # Fhst2 = JNodevalue_j[i][12] - Fhsb2
+        # j1 = np.zeros((3, 1))
+        # j2 = np.zeros((3, 1))
+        # if Rval[i][1] == 1:
+        #
+        #     j1[0][0] = (Fhsb1 + Fhst1)
+        #     j1[1][0] = -(Fhsb1 + Fhst1) * 1.1 / 2
+        #     j1 = Rz * j1
+        #     j2[0][0] = (Fhsb1 + Fhst1) * 2
+        #     j2[1][0] = (Fhsb1 + Fhst1) * 1.1 / 2
+        #     j2 = Rz * j2
+        # elif Rval[i][1] == 3:
+        #
+        #     j1[0][0] = Fhsb1 + Fhst1
+        #     j1 = Rz * j1
+        #     j2[0][0] = (Fhsb1 + Fhst1) * 2
+        #     j2[1][0] = (Fhsb1 + Fhst1) * 1.1
+        #     j2 = Rz * j2
+        # elif Rval[i][1] == 2:
+        #
+        #     j1[0][0] = (Fhsb1 + Fhst1)
+        #     j1[1][0] = -(Fhsb1 + Fhst1) * 1.1
+        #     j1 = Rz * j1
+        #     j2[0][0] = (Fhsb1 + Fhst1) * 2
+        #     j2[1][0] = 0
+        #     j2 = Rz * j2
+
+    def renderProperties(self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval):
         ''' This function works on the rendering all properties of the model'''
         # self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j
         # print("node values", self.JNodeValues_i, self.JNodeValues_j)
         # print("test", JNodevalue_i)
-        SASSEM = np.zeros((self.member_count, 2, 13))
+        SASSEM = np.zeros((member_count, 2, 13))
         max_b = 0
 
-        for i in range(int(self.member_count)):
+        for i in range(int(member_count)):
             max_c = np.amax(BNodevalue[i, :, 1])
             if max_b < max_c:
                 max_b = max_c
 
-        max_for_NJ_i = max_b + self.member_count
+        max_for_NJ_i = max_b + member_count
         NJ_i = np.zeros((max_for_NJ_i, 13))
         NJ_j = np.zeros((max_for_NJ_i, 13))
 
         # print("Sassem 1 = ", SASSEM)
         for k in range(13):
-            for i in range(int(self.member_count)):
-                # print(int(self.member_count))
+            for i in range(int(member_count)):
+                # print(int(member_count))
                 # print("test1.2",JNodevalue_i[i,k])
                 if np.amax(BNodevalue[i, :, 1]):
                     pass
@@ -628,7 +745,7 @@ class glWidget(QGLWidget, QMainWindow):
 
         q = 1
 
-        for i in range(self.member_count):
+        for i in range(member_count):
             NJ_i[q - 1][0] = q
             NJ_i[q - 1][1] = q
             NJ_i[q - 1][2] = SASSEM[i, 0, 2]
@@ -660,7 +777,7 @@ class glWidget(QGLWidget, QMainWindow):
 
         q = 1
 
-        for i in range(self.member_count):
+        for i in range(member_count):
 
             for j in range(int(np.amax(BNodevalue[i, :, 1]))):
                 NJ_j[q + j - 2][0] = q + j - 1
@@ -702,7 +819,7 @@ class glWidget(QGLWidget, QMainWindow):
 
         # Model Generation
         # Nodes for each element (# ele, #node start, #node end)
-        MI = np.zeros((self.member_count, 3))
+        MI = np.zeros((member_count, 3))
 
         MI[:, 0] = NJ_i[:, 0]
         MI[:, 1] = NJ_i[:, 1]
@@ -711,12 +828,12 @@ class glWidget(QGLWidget, QMainWindow):
         # print(" MI = ", MI)
         # Global frame coordinates at each element.
         # Start node : node(1) and end node : node(2) for each element
-        xg1, xg2 = np.zeros((self.member_count, 1)), np.zeros(
-            (self.member_count, 1))  # element length: xg1(start) xg2(end)
-        yg1, yg2 = np.zeros((self.member_count, 1)), np.zeros(
-            (self.member_count, 1))  # element length: xg1(start) xg2(end)
-        zg1, zg2 = np.zeros((self.member_count, 1)), np.zeros(
-            (self.member_count, 1))  # element length: xg1(start) xg2(end)
+        xg1, xg2 = np.zeros((member_count, 1)), np.zeros(
+            (member_count, 1))  # element length: xg1(start) xg2(end)
+        yg1, yg2 = np.zeros((member_count, 1)), np.zeros(
+            (member_count, 1))  # element length: xg1(start) xg2(end)
+        zg1, zg2 = np.zeros((member_count, 1)), np.zeros(
+            (member_count, 1))  # element length: xg1(start) xg2(end)
 
         xg1[:, 0] = NJ_i[:, 2]
         yg1[:, 0] = NJ_i[:, 3]
@@ -726,13 +843,13 @@ class glWidget(QGLWidget, QMainWindow):
         yg2[:, 0] = NJ_j[:, 3]
         zg2[:, 0] = NJ_j[:, 4]
         # Section properties at each element under natural frame
-        bfb1, bfb2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Bottom flange width
-        tfb1, tfb2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Bottom flange thickness
-        bft1, bft2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Top flange width
-        tft1, tft2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # Top flange thickness
-        Dg1, Dg2 = np.zeros((self.member_count, 1)), np.zeros((self.member_count, 1))  # dw:Web depth (y-dir)
-        hg1, hg2 = np.zeros((self.member_count, 1)), np.zeros(
-            (self.member_count, 1))  # h : Distance between flange centroids
+        bfb1, bfb2 = np.zeros((member_count, 1)), np.zeros((member_count, 1))  # Bottom flange width
+        tfb1, tfb2 = np.zeros((member_count, 1)), np.zeros((member_count, 1))  # Bottom flange thickness
+        bft1, bft2 = np.zeros((member_count, 1)), np.zeros((member_count, 1))  # Top flange width
+        tft1, tft2 = np.zeros((member_count, 1)), np.zeros((member_count, 1))  # Top flange thickness
+        Dg1, Dg2 = np.zeros((member_count, 1)), np.zeros((member_count, 1))  # dw:Web depth (y-dir)
+        hg1, hg2 = np.zeros((member_count, 1)), np.zeros(
+            (member_count, 1))  # h : Distance between flange centroids
 
         bfb1[:, 0] = NJ_i[:, 5]
         tfb1[:, 0] = NJ_i[:, 6]
@@ -810,10 +927,10 @@ class glWidget(QGLWidget, QMainWindow):
         # Preallocationg
 
         MemLength = np.zeros((sn, 1))
-        segnum = np.zeros((self.member_count + 1, 1))
+        segnum = np.zeros((member_count + 1, 1))
         segnum[0][0] = 0  # (Start node number - 1) for each member
 
-        for i in range(self.member_count):
+        for i in range(member_count):
             for k in range(int(np.amax(BNodevalue[i, :, 1] + 1))):
                 # print("test a = ", segnum[i][0], "test b =", segnum[i][0] )
                 if (k + segnum[i][0]) == (segnum[i][0]):
@@ -831,7 +948,7 @@ class glWidget(QGLWidget, QMainWindow):
         q = 0
         val1 = np.zeros((sn, 1))
 
-        for i in range(self.member_count):
+        for i in range(member_count):
             for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                 val1[q + j][0] = Rval[i][1]
 
@@ -846,7 +963,7 @@ class glWidget(QGLWidget, QMainWindow):
         segnum = segnum.astype(int)
         # print("Memlength = ", MemLength)
         # print("Dg1 = ", Dg1, "Dg2 = ", Dg2, "Dst1 = ", Dst1 , "Dst2 = ", Dst2)
-        for i in range(self.member_count):
+        for i in range(member_count):
             if Rval[i][1] == 1:
                 for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                     ys1[k + segnum[i][0]][0] = (Dg1[k + segnum[i][0]][0]) / 2 - Dst1[k + segnum[i][0]][0]
@@ -927,8 +1044,9 @@ class glWidget(QGLWidget, QMainWindow):
         tap2 = np.zeros((3, 1))
 
         for n in range(sn):
-            tap1, tap2 = self.TapedEleLength(NTshe1[n][1], NTshe1[n][2], NTshe1[n][3], NTshe2[n][1], NTshe2[n][2],
-                                             NTshe2[n][3], alpharef[n][1])
+            tap1, tap2 = glWidget.TapedEleLength(self, NTshe1[n][1], NTshe1[n][2], NTshe1[n][3], NTshe2[n][1],
+                                                 NTshe2[n][2],
+                                                 NTshe2[n][3], alpharef[n][1])
             # print("tap1 = ", tap1)
             # print("tap2 = ", tap2)
 
@@ -939,7 +1057,7 @@ class glWidget(QGLWidget, QMainWindow):
         segnum[0, 0] = 0  # (Start node number - 1) for each member
         NG1 = np.zeros((max_for_NJ_i, 3))
         NG2 = np.zeros((max_for_NJ_i, 3))
-        for i in range(self.member_count):
+        for i in range(member_count):
             for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                 NG1[k + segnum[i][0]][0] = NJ_i[segnum[i][0]][2]
                 NG2[k + segnum[i][0]][0] = NJ_i[segnum[i][0]][2]
@@ -1370,79 +1488,5 @@ class glWidget(QGLWidget, QMainWindow):
             forBottom = [np.mean((np.amax(bf[:, 0]), np.amin(bf[:, 0]))),
                          np.mean((np.amax(bf[:, 1]), np.amin(bf[:, 1]))),
                          np.mean((np.amax(bf[:, 2]), np.amin(bf[:, 2])))]
-            glColor4f(0, 1, 0, 1)
-            self.renderText(forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=self.font2)
-            self.renderText(forTop[0], forTop[1], forTop[2], "Flange 2", font=self.font2)
-            self.SurfaceContour(tf, edges)
-            self.SurfaceContour(web, edges)
-            self.SurfaceContour(bf, edges)
-            self.Surfaces(tf)
-            self.Surfaces(web)
-            self.Surfaces(bf)
 
-            # print("Massemble last point = ", Massemble)   Massemble works !
-
-            # MJvalue = np.zeros((2, 4))
-            # # print("JnodeValue =", self.joint_nodes)
-            # if Massemble is not None:
-            #     mem = Massemble.shape[0]
-            #     # print("mem = ", mem)
-            #     for i in range(mem):
-            #         MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1] - 1)][1]
-            #         MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2] - 1)][1]
-            #         MJvalue[0][2] = self.joint_nodes[int(Massemble[i][1] - 1)][2]
-            #         MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2] - 1)][2]
-            #         MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1] - 1)][3]
-            #         MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2] - 1)][3]
-            #
-            #         opp = MJvalue[1][2] - MJvalue[0][2]  # element depth in y - dir
-            #         adj = MJvalue[1][1] - MJvalue[0][1]  # element length in x - dir
-            #
-            #         angle = np.arctan2(opp, adj)
-            #
-            #         Rz = np.zeros((3, 3))
-            #
-            #         Rz[0][0] = np.cos(angle)
-            #         Rz[0][1] = -np.sin(angle)
-            #         Rz[1][0] = np.sin(angle)
-            #         Rz[1][1] = np.cos(angle)
-            #         Rz[2][2] = 1
-
-                    # Fhsb1 = (JNodevalue_i[i][8] * np.power(JNodevalue_i[i][8], 3) * JNodevalue_i[i][12]) / (
-                    #         JNodevalue_i[i][6] * np.power(JNodevalue_i[i][5], 3) + JNodevalue_i[i][8] * np.power(
-                    #     JNodevalue_i[i][7], 3))
-                    #
-                    # Fhst1 = JNodevalue_i[i][12] - Fhsb1
-                    #
-                    # Fhsb2 = (JNodevalue_j[i][8] * np.power(JNodevalue_j[i][8], 3) * JNodevalue_j[i][12]) / (
-                    #         JNodevalue_j[i][6] * np.power(JNodevalue_j[i][5], 3) + JNodevalue_j[i][8] * np.power(
-                    #     JNodevalue_j[i][7], 3))
-                    #
-                    # Fhst2 = JNodevalue_j[i][12] - Fhsb2
-                    # j1 = np.zeros((3, 1))
-                    # j2 = np.zeros((3, 1))
-                    # if Rval[i][1] == 1:
-                    #
-                    #     j1[0][0] = (Fhsb1 + Fhst1)
-                    #     j1[1][0] = -(Fhsb1 + Fhst1) * 1.1 / 2
-                    #     j1 = Rz * j1
-                    #     j2[0][0] = (Fhsb1 + Fhst1) * 2
-                    #     j2[1][0] = (Fhsb1 + Fhst1) * 1.1 / 2
-                    #     j2 = Rz * j2
-                    # elif Rval[i][1] == 3:
-                    #
-                    #     j1[0][0] = Fhsb1 + Fhst1
-                    #     j1 = Rz * j1
-                    #     j2[0][0] = (Fhsb1 + Fhst1) * 2
-                    #     j2[1][0] = (Fhsb1 + Fhst1) * 1.1
-                    #     j2 = Rz * j2
-                    # elif Rval[i][1] == 2:
-                    #
-                    #     j1[0][0] = (Fhsb1 + Fhst1)
-                    #     j1[1][0] = -(Fhsb1 + Fhst1) * 1.1
-                    #     j1 = Rz * j1
-                    #     j2[0][0] = (Fhsb1 + Fhst1) * 2
-                    #     j2[1][0] = 0
-                    #     j2 = Rz * j2
-            mnum = BNodevalue.shape[0]
-
+            return forTop, forBottom, tf, bf, web, Xwtf, Ywtf, Zwtf, Xwweb, Ywweb, Zwweb, Xwbf, Ywbf, Zwbf

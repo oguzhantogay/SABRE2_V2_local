@@ -113,6 +113,7 @@ if isempty(Massemble) % Only Joints
    
 else % ~isempty(Massemble)
    % reset axesm
+   fprintf('\nModel Else')
    cla (axesm,'reset');
    
    mem=length(Massemble(:,1));         % Total number of members
@@ -606,6 +607,16 @@ else % ~isempty(Massemble)
             Zwbf(k,j) = eLbf((k-1)*2+j,3);       
          end
       end 
+      
+      Xwtf
+      Ywtf
+      Zwtf
+      Xwweb
+      Ywweb
+      Zwweb
+      Xwbf
+      Ywbf
+      Zwbf
 
       if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background  
          otf = surf(axesm,Xwtf,Zwtf,Ywtf,'FaceColor',[0.6 0.6 0.6],'Clipping','off', ...

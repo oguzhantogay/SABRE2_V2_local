@@ -1,11 +1,5 @@
 import numpy as np
-from OpenGL.GLU import *
-from PyQt4.QtOpenGL import *
-from PyQt4 import QtCore
 from PyQt4.QtGui import *
-from OpenGL.GL import *
-
-import SABRE2_GUI
 
 
 class ClassA(QMainWindow):
@@ -97,18 +91,16 @@ class ClassA(QMainWindow):
             if not np.isclose(int(np.amax(BNodeval[i, :, 1])), 0):  # No Bracing
                 print("if # 1")
                 p = 0
+                print("max = ", int(np.amax(BNodeval[i, :, 1])))
                 for j in range(int(np.amax(BNodeval[i, :, 1]))):
                     print("for 2")
-                    print("x = ", coord_x, "\ny =", coord_y, "\nz =", coord_z)
-                    print("3 = ", BNodeval[i][j][2], "\n4 =", BNodeval[i][j][3], "\n5 =", BNodeval[i][j][4])
-                    print(np.isclose(coord_x, BNodeval[i][j][2]))
-                    print(np.isclose(coord_y, BNodeval[i][j][3]))
-                    print(np.isclose(coord_z, BNodeval[i][j][4]))
+                    # print("x = ", coord_x, "\ny =", coord_y, "\nz =", coord_z)
+                    # print("3 = ", BNodeval[i][j][2], "\n4 =", BNodeval[i][j][3], "\n5 =", BNodeval[i][j][4])
                     BNodevalue = np.zeros((mem, p + 1, 16))
 
-                    if np.isclose(coord_x, BNodeval[i][j][2])  and \
+                    if np.isclose(coord_x, BNodeval[i][j][2]) and \
                        np.isclose(coord_y, BNodeval[i][j][3]) and \
-                       np.isclose(coord_x, BNodeval[i][j][4]) :  # 1 - 1
+                       np.isclose(coord_z, BNodeval[i][j][4]) :  # 1 - 1
                         print("# 1 - 1")
                         if np.isclose(j, 0):  # 2 - 1
                             print("# 2 - 1")
@@ -168,7 +160,7 @@ class ClassA(QMainWindow):
                                     ys2 = Dg2 / 2 - Dst2  # shear center
 
                                     s = np.abs((ys1 - ys2))  # Difference in shear center
-                                    s = np.amax(s, (np.amax(np.amax(bfb1, bft1), np.amax(bfb2, bft2))) / 10)
+                                    s = max(s, (max(max(bfb1, bft1), max(bfb2, bft2))) / 10)
 
                                     Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
                                     Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
@@ -339,747 +331,15 @@ class ClassA(QMainWindow):
 
                                             p = p + 1
 
-                                    elif not np.isclose(JNodevalue_j[i][5], BNodeval[i][j][5]) or not np.isclose(
-                                            JNodevalue_j[i][6], BNodeval[i][j][6]) or not np.isclose(JNodevalue_j[i][7],
-                                                                                                     BNodeval[i][j][
-                                                                                                         7]) or not np.isclose(
-                                        JNodevalue_j[i][8], BNodeval[i][j][8]) or not np.isclose(JNodevalue_j[i][10],
-                                                                                                 BNodeval[i][j][
-                                                                                                     10]):  # 4 - 2
-
-                                        print("# 4 - 2")
-                                        bfb2 = JNodevalue_j[i][5]  # Bottom flange width
-                                        tfb2 = JNodevalue_j[i][6]  # Bottom flange thickness
-                                        bft2 = JNodevalue_j[i][7]  # Top flange width
-                                        tft2 = JNodevalue_j[i][8]  # Top flange thickness
-                                        Dg2 = JNodevalue_j[i][9]  # dw:Web depth (y-dir)
-                                        tw2 = JNodevalue_j[i][10]  # dw:Web depth (y-dir)
-                                        hg2 = JNodevalue_j[i][12]  # h : Distance between flange centroids
-
-                                        bfb1 = BNodeval[i][j][5]  # Bottom flange width
-                                        tfb1 = BNodeval[i][j][6]  # Bottom flange thickness
-                                        bft1 = BNodeval[i][j][7]  # Top flange width
-                                        tft1 = BNodeval[i][j][8]  # Top flange thickness
-                                        Dg1 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
-                                        tw1 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
-                                        hg1 = BNodeval[i][j][12]  # h : Distance between flange centroids
-
-                                        # Shear center
-                                        # Start node
-                                        # bottom flange centroid to shear center
-                                        hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
-                                                         (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
-                                                                                                             np.power(
-                                                                                                                 bft1,
-                                                                                                                 3))))
-                                        Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
-                                        hst1 = hg1 - hsb1  # top flange centroid to shear center
-                                        Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
-
-                                        # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
-                                        # print("hsb1 = ", hsb1, "hst1 = ", hst1)
-
-                                        # End node
-                                        # bottom flange centroid to shear center
-                                        hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
-                                                         (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
-                                                                                                             np.power(
-                                                                                                                 bft2,
-                                                                                                                 3))))
-                                        Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
-                                        hst2 = hg2 - hsb2  # top flange centroid to shear center
-                                        Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
-                                        # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
-                                        # print("hsb2 = ", hsb2, "hst2 = ", hst2)
-
-                                        ys1 = Dg1 / 2 - Dst1
-                                        ys2 = Dg2 / 2 - Dst2  # shear center
-
-                                        s = np.abs((ys1 - ys2))  # Difference in shear center
-                                        s = np.amax(s, (np.amax(np.amax(bfb1, bft1), np.amax(bfb2, bft2))) / 10)
-
-                                        Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
-                                        Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
-
-                                        L = np.sqrt(((JNodevalue_j[i][2] - JNodevalue_i[i][2]) ** 2 + (
-                                                JNodevalue_j[i][3] - JNodevalue_i[i][3]) ** 2 + (
-                                                             JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
-
-                                        if self.ui.StepRB1.isChecked():  # 7 - 1
-                                            print("# 7 - 1")
-                                            # original element
-                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
-                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                            BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                            BNodevalue[i][p][14] = 1
-                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                            p = p + 1
-
-                                        elif self.ui.StepRB2.isChecked():  # 7 - 2
-                                            print("# 7 - 2")
-                                            if np.greater(abs(L - BNodeval[i][j][15]) / 2,
-                                                          s) and np.greater_equal(Af1, Af2):  # 8 - 1
-                                                print("# 8 - 1")
-                                                segLoc = [BNodeval[i][j][15], L]
-                                                segLocstep = [BNodeval[i][j][15], (BNodeval[i][j][15] + s), L]
-                                                Dgs = [BNodeval[i][j][9], JNodevalue_j[i][9]]
-                                                dts = [BNodeval[i][j][11], JNodevalue_j[i][11]]
-                                                hgs = [BNodeval[i][j][12], JNodevalue_j[i][12]]
-                                                Afills = [BNodeval[i][j][13], JNodevalue_j[i][13]]
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
-
-                                                # Dgsb    = Dgsb[1]
-                                                # dtsb    = dtsb[1]
-                                                # hgsb    = hgsb[1]
-                                                # Afillsb = Afillsb[1]
-
-                                                # original element
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
-
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
-
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
-                                                Lb2[0] = BNodeval[i][j][15] + s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = JNodevalue_j[i][5]
-                                                BNodevalue[i][p][6] = JNodevalue_j[i][6]
-                                                BNodevalue[i][p][7] = JNodevalue_j[i][7]
-                                                BNodevalue[i][p][8] = JNodevalue_j[i][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = JNodevalue_j[i][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 2
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] + s
-                                                p = p + 1
-
-                                            elif np.greater(abs(L - BNodeval[i][j][15]) / 2,
-                                                            s) and np.greater_equal(Af1, Af2):  # 8 - 2
-                                                print("# 8 - 2")
-                                                segLoc = [0, BNodeval[i][j][15]]
-                                                segLocstep = [0, BNodeval[i][j][15] - s, BNodeval[i][j][15]]
-                                                Dgs = [JNodevalue_i[i][9], BNodeval[i][j][9]]
-                                                dts = [JNodevalue_i[i][11], BNodeval[i][j][11]]
-                                                hgs = [JNodevalue_i[i][12], BNodeval[i][j][12]]
-                                                Afills = [JNodevalue_i[i][13], BNodeval[i][j][13]]
-
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = JNodevalue_j[i][5]
-                                                BNodevalue[i][p][6] = JNodevalue_j[i][6]
-                                                BNodevalue[i][p][7] = JNodevalue_j[i][7]
-                                                BNodevalue[i][p][8] = JNodevalue_j[i][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = JNodevalue_j[i][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
-
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
-
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
-                                                Lb2[0] = BNodeval[i][j][15] - s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 2
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] - s
-
-                                                p = p + 1
-
-                                    else:  # 4 - 3
-                                        print("# 4 - 3")
-                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
-                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                        BNodevalue[i][p][14] = 1
-                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                        p = p + 1
-
-                                else:  # ------------------------ ~max(BNodeval)=1 # 3 - 2
-                                    print("# 3 - 2")
-                                    if not np.isclose(JNodevalue_i[i][5], BNodeval[i][j][5]) or not np.isclose(
-                                            JNodevalue_i[i][6], BNodeval[i][j][6]) or not np.isclose(JNodevalue_i[i][7],
-                                                                                                     BNodeval[i][j][
-                                                                                                         7]) or not np.isclose(
-                                        JNodevalue_i[i][8], BNodeval[i][j][8]) or not np.isclose(JNodevalue_i[i][10],
-                                                                                                 BNodeval[i][j][
-                                                                                                     10]):  # 9 - 1
-                                        print("# 9 - 1")
-                                        bfb1 = JNodevalue_i[i][5]  # Bottom flange width
-                                        tfb1 = JNodevalue_i[i][6]  # Bottom flange thickness
-                                        bft1 = JNodevalue_i[i][7]  # Top flange width
-                                        tft1 = JNodevalue_i[i][8]  # Top flange thickness
-                                        Dg1 = JNodevalue_i[i][9]  # dw:Web depth (y-dir)
-                                        tw1 = JNodevalue_i[i][10]  # dw:Web depth (y-dir)
-                                        hg1 = JNodevalue_i[i][12]  # h : Distance between flange centroids
-
-                                        bfb2 = BNodeval[i][j][5]  # Bottom flange width
-                                        tfb2 = BNodeval[i][j][6]  # Bottom flange thickness
-                                        bft2 = BNodeval[i][j][7]  # Top flange width
-                                        tft2 = BNodeval[i][j][8]  # Top flange thickness
-                                        Dg2 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
-                                        tw2 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
-                                        hg2 = BNodeval[i][j][12]  # h : Distance between flange centroids
-
-                                        # Shear center
-                                        # Start node
-                                        # bottom flange centroid to shear center
-                                        hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
-                                                         (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
-                                                                                                             np.power(
-                                                                                                                 bft1,
-                                                                                                                 3))))
-                                        Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
-                                        hst1 = hg1 - hsb1  # top flange centroid to shear center
-                                        Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
-
-                                        # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
-                                        # print("hsb1 = ", hsb1, "hst1 = ", hst1)
-
-                                        # End node
-                                        # bottom flange centroid to shear center
-                                        hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
-                                                         (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
-                                                                                                             np.power(
-                                                                                                                 bft2,
-                                                                                                                 3))))
-                                        Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
-                                        hst2 = hg2 - hsb2  # top flange centroid to shear center
-                                        Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
-                                        # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
-                                        # print("hsb2 = ", hsb2, "hst2 = ", hst2)
-
-                                        ys1 = Dg1 / 2 - Dst1
-                                        ys2 = Dg2 / 2 - Dst2  # shear center
-
-                                        s = np.abs((ys1 - ys2))  # Difference in shear center
-                                        s = np.amax(s, (np.amax(np.amax(bfb1, bft1), np.amax(bfb2, bft2))) / 10)
-
-                                        Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
-                                        Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
-
-                                        if self.ui.StepRB1.isChecked():  # 10 - 1
-                                            # original element
-                                            print("# 10 - 1")
-
-                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
-                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                            BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                            BNodevalue[i][p][14] = 1
-                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                            p = p + 1
-
-                                        elif self.ui.StepRB2.isChecked():  # 10 -2
-                                            print("# 10 - 2")
-                                            if np.greater(BNodeval[i][j][15] / 2,
-                                                          s) and np.greater_equal(Af1, Af2):  # 11 - 1
-                                                print("# 11 - 1")
-                                                segLoc = [0, BNodeval[i][j][15]]
-                                                segLocstep = [0, (BNodeval[i][j][15] - s),
-                                                              BNodeval[i][j][15]]
-                                                Dgs = [JNodevalue_i[i][9], BNodeval[i][j][9]]
-                                                dts = [JNodevalue_i[i][11], BNodeval[i][j][11]]
-                                                hgs = [JNodevalue_i[i][12], BNodeval[i][j][12]]
-                                                Afills = [JNodevalue_i[i][13], BNodeval[i][j][13]]
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
-
-                                                # Dgsb    = Dgsb[1]
-                                                # dtsb    = dtsb[1]
-                                                # hgsb    = hgsb[1]
-                                                # Afillsb = Afillsb[1]
-
-                                                # original element
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
-                                                # add step element
-                                                # Rotation
-
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
-
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
-
-                                                Lb2[0] = BNodeval[i][j][15] - s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = JNodevalue_i[i][5]
-                                                BNodevalue[i][p][6] = JNodevalue_i[i][6]
-                                                BNodevalue[i][p][7] = JNodevalue_i[i][7]
-                                                BNodevalue[i][p][8] = JNodevalue_i[i][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = JNodevalue_i[i][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 2
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] - s
-                                                p = p + 1
-
-                                            elif np.greater(BNodeval[i][j][15] / 2, s) and np.greater(Af2,
-                                                                                                      Af1):  # 11 - 2
-                                                print("# 11 - 2")
-                                                segLoc = [BNodeval[i][j][15], BNodeval[i][j + 1][15]]
-                                                segLocstep = [BNodeval[i][j][15], BNodeval[i][j][15] + s,
-                                                              BNodeval[i][j + 1][15]]
-                                                Dgs = [BNodeval[i][j][9], BNodeval[i][j + 1][9]]
-                                                dts = [BNodeval[i][j][11], BNodeval[i][j + 1][11]]
-                                                hgs = [BNodeval[i][j][12], BNodeval[i][j + 1][12]]
-                                                Afills = [BNodeval[i][j][13], BNodeval[i][j + 1][13]]
-
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
-                                                # original element
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = JNodevalue_i[i][5]
-                                                BNodevalue[i][p][6] = JNodevalue_i[i][6]
-                                                BNodevalue[i][p][7] = JNodevalue_i[i][7]
-                                                BNodevalue[i][p][8] = JNodevalue_i[i][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = JNodevalue_i[i][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
-
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
-
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
-                                                Lb2[0] = BNodeval[i][j][15] + s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = BNodeval[i][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 2
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] + s
-
-                                                p = p + 1
-
-                                    elif not np.isclose(BNodeval[i][j][5], BNodeval[i][j + 1][5]) or not np.isclose(
-                                            BNodeval[i][j][6], BNodeval[i][j + 1][6]) or not np.isclose(
-                                        BNodeval[i][j][7],
-                                        BNodeval[i][j + 1][
-                                            7]) or not np.isclose(
-                                        BNodeval[i][j][8], BNodeval[i][j + 1][8]) or not np.isclose(BNodeval[i][j][10],
-                                                                                                    BNodeval[i][j + 1][
-                                                                                                        10]):  # 9 -2
-
-                                        print("# 9 - 2")
-
-                                        bfb1 = BNodeval[i][j][5]  # Bottom flange width
-                                        tfb1 = BNodeval[i][j][6]  # Bottom flange thickness
-                                        bft1 = BNodeval[i][j][7]  # Top flange width
-                                        tft1 = BNodeval[i][j][8]  # Top flange thickness
-                                        Dg1 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
-                                        tw1 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
-                                        hg1 = BNodeval[i][j][12]  # h : Distance between flange centroids
-
-                                        bfb2 = BNodeval[i][j + 1][5]  # Bottom flange width
-                                        tfb2 = BNodeval[i][j + 1][6]  # Bottom flange thickness
-                                        bft2 = BNodeval[i][j + 1][7]  # Top flange width
-                                        tft2 = BNodeval[i][j + 1][8]  # Top flange thickness
-                                        Dg2 = BNodeval[i][j + 1][9]  # dw:Web depth (y-dir)
-                                        tw2 = BNodeval[i][j + 1][10]  # dw:Web depth (y-dir)
-                                        hg2 = BNodeval[i][j + 1][12]  # h : Distance between flange centroids
-
-                                        # Shear center
-                                        # Start node
-                                        # bottom flange centroid to shear center
-                                        hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
-                                                         (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
-                                                                                                             np.power(
-                                                                                                                 bft1,
-                                                                                                                 3))))
-                                        Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
-                                        hst1 = hg1 - hsb1  # top flange centroid to shear center
-                                        Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
-
-                                        # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
-                                        # print("hsb1 = ", hsb1, "hst1 = ", hst1)
-
-                                        # End node
-                                        # bottom flange centroid to shear center
-                                        hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
-                                                         (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
-                                                                                                             np.power(
-                                                                                                                 bft2,
-                                                                                                                 3))))
-                                        Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
-                                        hst2 = hg2 - hsb2  # top flange centroid to shear center
-                                        Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
-                                        # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
-                                        # print("hsb2 = ", hsb2, "hst2 = ", hst2)
-
-                                        ys1 = Dg1 / 2 - Dst1
-                                        ys2 = Dg2 / 2 - Dst2  # shear center
-
-                                        s = np.abs((ys1 - ys2))  # Difference in shear center
-                                        s = np.amax(s, (np.amax(np.amax(bfb1, bft1), np.amax(bfb2, bft2))) / 10)
-
-                                        Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
-                                        Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
-
-                                        if self.ui.StepRB1.isChecked():  # 12 - 1
-                                            # original element
-                                            print("# 12 - 1")
-
-                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
-                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                            BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                            BNodevalue[i][p][14] = 1
-                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                            p = p + 1
-
-                                        elif self.ui.StepRB2.isChecked():  # 12 - 2
-                                            print("# 12 - 2")
-                                            if np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j + 1][15]) / 2,
-                                                          s) and np.greater(Af2, Af1):  # 13 - 1
-                                                print("# 13 - 1")
-                                                segLoc = [BNodeval[i][j][15], BNodeval[i][j + 1][15]]
-                                                segLocstep = [BNodeval[i][j][15], (BNodeval[i][j][15] + s),
-                                                              BNodeval[i][j + 1][15]]
-                                                Dgs = [BNodeval[i][j][9], BNodeval[i][j + 1][9]]
-                                                dts = [BNodeval[i][j][11], BNodeval[i][j + 1][11]]
-                                                hgs = [BNodeval[i][j][12], BNodeval[i][j + 1][12]]
-                                                Afills = [BNodeval[i][j][13], BNodeval[i][j + 1][13]]
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
-
-                                                # Dgsb    = Dgsb[1]
-                                                # dtsb    = dtsb[1]
-                                                # hgsb    = hgsb[1]
-                                                # Afillsb = Afillsb[1]
-
-                                                # original element
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
-                                                # add step element
-                                                # Rotation
-
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
-
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
-
-                                                Lb2[0] = BNodeval[i][j][15] + s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = BNodeval[i][j + 1][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j + 1][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j + 1][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j + 1][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = BNodeval[i][j + 1][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 2
-                                                BNodevalue[i][p][15] = BNodeval[i][j + 1][15] + s
-                                                p = p + 1
-
-                                            elif np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j + 1][15]) / 2,
-                                                            s) and np.greater_equal(Af1, Af2):  # 13 - 2
-                                                print("# 13 - 2")
-                                                segLoc = [0, BNodeval[i][j][15]]
-                                                segLocstep = [0, BNodeval[i][j][15] - s,
-                                                              BNodeval[i][j][15]]
-                                                Dgs = [JNodevalue_i[i][9], BNodeval[i][j][9]]
-                                                dts = [JNodevalue_i[i][11], BNodeval[i][j][11]]
-                                                hgs = [JNodevalue_i[i][12], BNodeval[i][j][12]]
-                                                Afills = [JNodevalue_i[i][13], BNodeval[i][j][13]]
-
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
-                                                # original element
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = BNodeval[i][j + 1][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j + 1][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j + 1][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j + 1][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = BNodeval[i][j + 1][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
-
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
-
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
-                                                Lb2[0] = BNodeval[i][j][15] - s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 3
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] - s
-
-                                                p = p + 1
-                                    else:  # 9 - 3
-                                        print("# 9 - 3")
-                                        # original element
-                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
-                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                        BNodevalue[i][p][14] = 1
-                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                        p = p + 1
-
-                            elif np.greater(j, 0) and np.isclose(j, np.amax(BNodeval[i, :, 1])):  # 2 - 2
-                                print("# 2 - 2")
-                                if not np.isclose(JNodevalue_j[i][5], BNodeval[i][j][5]) or not np.isclose(
+                                elif not np.isclose(JNodevalue_j[i][5], BNodeval[i][j][5]) or not np.isclose(
                                         JNodevalue_j[i][6], BNodeval[i][j][6]) or not np.isclose(JNodevalue_j[i][7],
                                                                                                  BNodeval[i][j][
                                                                                                      7]) or not np.isclose(
                                     JNodevalue_j[i][8], BNodeval[i][j][8]) or not np.isclose(JNodevalue_j[i][10],
-                                                                                             BNodeval[i][j + 1][
-                                                                                                 10]):  # 14 -1
-                                    print("# 14 - 1")
+                                                                                             BNodeval[i][j][
+                                                                                                 10]):  # 4 - 2
 
+                                    print("# 4 - 2")
                                     bfb2 = JNodevalue_j[i][5]  # Bottom flange width
                                     tfb2 = JNodevalue_j[i][6]  # Bottom flange thickness
                                     bft2 = JNodevalue_j[i][7]  # Top flange width
@@ -1128,7 +388,7 @@ class ClassA(QMainWindow):
                                     ys2 = Dg2 / 2 - Dst2  # shear center
 
                                     s = np.abs((ys1 - ys2))  # Difference in shear center
-                                    s = np.amax(s, (np.amax(np.amax(bfb1, bft1), np.amax(bfb2, bft2))) / 10)
+                                    s = max(s, (max(max(bfb1, bft1), max(bfb2, bft2))) / 10)
 
                                     Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
                                     Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
@@ -1137,8 +397,8 @@ class ClassA(QMainWindow):
                                             JNodevalue_j[i][3] - JNodevalue_i[i][3]) ** 2 + (
                                                          JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
 
-                                    if self.ui.StepRB1.isChecked():  # 15 -1
-                                        print("# 15 - 1")
+                                    if self.ui.StepRB1.isChecked():  # 7 - 1
+                                        print("# 7 - 1")
                                         # original element
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
                                         BNodevalue[i][p][1] = p
@@ -1158,11 +418,11 @@ class ClassA(QMainWindow):
                                         BNodevalue[i][p][15] = BNodeval[i][j][15]
                                         p = p + 1
 
-                                    elif self.ui.StepRB2.isChecked():  # 15- 2
-                                        print("# 15 - 2")
+                                    elif self.ui.StepRB2.isChecked():  # 7 - 2
+                                        print("# 7 - 2")
                                         if np.greater(abs(L - BNodeval[i][j][15]) / 2,
-                                                      s) and np.greater(Af2, Af1):  # 16 -1
-                                            print("# 16 - 1")
+                                                      s) and np.greater_equal(Af1, Af2):  # 8 - 1
+                                            print("# 8 - 1")
                                             segLoc = [BNodeval[i][j][15], L]
                                             segLocstep = [BNodeval[i][j][15], (BNodeval[i][j][15] + s), L]
                                             Dgs = [BNodeval[i][j][9], JNodevalue_j[i][9]]
@@ -1227,20 +487,19 @@ class ClassA(QMainWindow):
                                             BNodevalue[i][p][11] = dtsb[0][1]
                                             BNodevalue[i][p][12] = hgsb[0][1]
                                             BNodevalue[i][p][13] = Afillsb[0][1]
-                                            BNodevalue[i][p][14] = 3
+                                            BNodevalue[i][p][14] = 2
                                             BNodevalue[i][p][15] = BNodeval[i][j][15] + s
                                             p = p + 1
 
-                                        elif np.greater(abs(L - BNodeval[i][j][15]) / 2, s) and np.greater_equal(Af1,
-                                                                                                                 Af2):  # 16 - 2
-                                            print("# 16 - 2")
-                                            segLoc = [BNodeval[i][j - 1][15], BNodeval[i][j][15]]
-                                            segLocstep = [BNodeval[i][j - 1][15], BNodeval[i][j][15] - s,
-                                                          BNodeval[i][j][15]]
-                                            Dgs = [BNodeval[i][j - 1][9], BNodeval[i][j][9]]
-                                            dts = [BNodeval[i][j - 1][11], BNodeval[i][j][11]]
-                                            hgs = [BNodeval[i][j - 1][12], BNodeval[i][j][12]]
-                                            Afills = [BNodeval[i][j - 1][13], BNodeval[i][j][13]]
+                                        elif np.greater(abs(L - BNodeval[i][j][15]) / 2,
+                                                        s) and np.greater_equal(Af1, Af2):  # 8 - 2
+                                            print("# 8 - 2")
+                                            segLoc = [0, BNodeval[i][j][15]]
+                                            segLocstep = [0, BNodeval[i][j][15] - s, BNodeval[i][j][15]]
+                                            Dgs = [JNodevalue_i[i][9], BNodeval[i][j][9]]
+                                            dts = [JNodevalue_i[i][11], BNodeval[i][j][11]]
+                                            hgs = [JNodevalue_i[i][12], BNodeval[i][j][12]]
+                                            Afills = [JNodevalue_i[i][13], BNodeval[i][j][13]]
 
                                             Dgsb = np.interp(segLocstep, segLoc, Dgs)
                                             dtsb = np.interp(segLocstep, segLoc, dts)
@@ -1263,7 +522,489 @@ class ClassA(QMainWindow):
                                             BNodevalue[i][p][13] = BNodeval[i][j][13]
                                             BNodevalue[i][p][14] = 1
                                             BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                            p = p + 1
 
+                                            Rz = np.zeros((3, 3))
+                                            Rz[0][0] = np.cos(alpharef[i, 1])
+                                            Rz[0][1] = -np.sin(alpharef[i, 1])
+                                            Rz[1][0] = np.sin(alpharef[i, 1])
+                                            Rz[1][1] = np.cos(alpharef[i, 1])
+                                            Rz[2][2] = 1
+
+                                            Lb2 = np.zeros(3)
+                                            Additive = np.zeros(3)
+                                            Additive[0] = JNodevalue_i[i][2]
+                                            Additive[1] = JNodevalue_i[i][3]
+                                            Additive[2] = JNodevalue_i[i][4]
+                                            Lb2[0] = BNodeval[i][j][15] - s
+                                            Lb2 = np.dot(Rz, Lb2) + Additive
+
+                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][2] = Lb2[0][0]
+                                            BNodevalue[i][p][3] = Lb2[1][0]
+                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                            BNodevalue[i][p][11] = dtsb[0][1]
+                                            BNodevalue[i][p][12] = hgsb[0][1]
+                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][14] = 2
+                                            BNodevalue[i][p][15] = BNodeval[i][j][15] - s
+
+                                            p = p + 1
+
+                                else:  # 4 - 3
+                                    print("# 4 - 3")
+                                    BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                    BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                    BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                    BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                    BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                    BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                    BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                    BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                    BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                    BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                    BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                    BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                    BNodevalue[i][p][14] = 1
+                                    BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                    p = p + 1
+
+                            else:  # ------------------------ ~max(BNodeval)=1 # 3 - 2
+                                print("# 3 - 2")
+                                if not np.isclose(JNodevalue_i[i][5], BNodeval[i][j][5]) or not np.isclose(
+                                        JNodevalue_i[i][6], BNodeval[i][j][6]) or not np.isclose(JNodevalue_i[i][7],
+                                                                                                 BNodeval[i][j][
+                                                                                                     7]) or not np.isclose(
+                                    JNodevalue_i[i][8], BNodeval[i][j][8]) or not np.isclose(JNodevalue_i[i][10],
+                                                                                             BNodeval[i][j][
+                                                                                                 10]):  # 9 - 1
+                                    print("# 9 - 1")
+                                    bfb1 = JNodevalue_i[i][5]  # Bottom flange width
+                                    tfb1 = JNodevalue_i[i][6]  # Bottom flange thickness
+                                    bft1 = JNodevalue_i[i][7]  # Top flange width
+                                    tft1 = JNodevalue_i[i][8]  # Top flange thickness
+                                    Dg1 = JNodevalue_i[i][9]  # dw:Web depth (y-dir)
+                                    tw1 = JNodevalue_i[i][10]  # dw:Web depth (y-dir)
+                                    hg1 = JNodevalue_i[i][12]  # h : Distance between flange centroids
+
+                                    bfb2 = BNodeval[i][j][5]  # Bottom flange width
+                                    tfb2 = BNodeval[i][j][6]  # Bottom flange thickness
+                                    bft2 = BNodeval[i][j][7]  # Top flange width
+                                    tft2 = BNodeval[i][j][8]  # Top flange thickness
+                                    Dg2 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
+                                    tw2 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
+                                    hg2 = BNodeval[i][j][12]  # h : Distance between flange centroids
+
+                                    # Shear center
+                                    # Start node
+                                    # bottom flange centroid to shear center
+                                    hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
+                                                     (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
+                                                                                                         np.power(
+                                                                                                             bft1,
+                                                                                                             3))))
+                                    Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
+                                    hst1 = hg1 - hsb1  # top flange centroid to shear center
+                                    Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
+
+                                    # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
+                                    # print("hsb1 = ", hsb1, "hst1 = ", hst1)
+
+                                    # End node
+                                    # bottom flange centroid to shear center
+                                    hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
+                                                     (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
+                                                                                                         np.power(
+                                                                                                             bft2,
+                                                                                                             3))))
+                                    Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
+                                    hst2 = hg2 - hsb2  # top flange centroid to shear center
+                                    Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
+                                    # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
+                                    # print("hsb2 = ", hsb2, "hst2 = ", hst2)
+
+                                    ys1 = Dg1 / 2 - Dst1
+                                    ys2 = Dg2 / 2 - Dst2  # shear center
+
+                                    s = np.abs((ys1 - ys2))  # Difference in shear center
+                                    s = max(s, (max(max(bfb1, bft1), max(bfb2, bft2))) / 10)
+
+                                    Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
+                                    Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
+
+                                    if self.ui.StepRB1.isChecked():  # 10 - 1
+                                        # original element
+                                        print("# 10 - 1")
+
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                        BNodevalue[i][p][14] = 1
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                        p = p + 1
+
+                                    elif self.ui.StepRB2.isChecked():  # 10 -2
+                                        print("# 10 - 2")
+                                        if np.greater(BNodeval[i][j][15] / 2,
+                                                      s) and np.greater_equal(Af1, Af2):  # 11 - 1
+                                            print("# 11 - 1")
+                                            segLoc = [0, BNodeval[i][j][15]]
+                                            segLocstep = [0, (BNodeval[i][j][15] - s),
+                                                          BNodeval[i][j][15]]
+                                            Dgs = [JNodevalue_i[i][9], BNodeval[i][j][9]]
+                                            dts = [JNodevalue_i[i][11], BNodeval[i][j][11]]
+                                            hgs = [JNodevalue_i[i][12], BNodeval[i][j][12]]
+                                            Afills = [JNodevalue_i[i][13], BNodeval[i][j][13]]
+                                            Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                            dtsb = np.interp(segLocstep, segLoc, dts)
+                                            hgsb = np.interp(segLocstep, segLoc, hgs)
+                                            Afillsb = np.interp(segLocstep, segLoc, Afills)
+
+                                            # Dgsb    = Dgsb[1]
+                                            # dtsb    = dtsb[1]
+                                            # hgsb    = hgsb[1]
+                                            # Afillsb = Afillsb[1]
+
+                                            # original element
+                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                            BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                            BNodevalue[i][p][14] = 1
+                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                            p = p + 1
+                                            # add step element
+                                            # Rotation
+
+                                            Rz = np.zeros((3, 3))
+                                            Rz[0][0] = np.cos(alpharef[i, 1])
+                                            Rz[0][1] = -np.sin(alpharef[i, 1])
+                                            Rz[1][0] = np.sin(alpharef[i, 1])
+                                            Rz[1][1] = np.cos(alpharef[i, 1])
+                                            Rz[2][2] = 1
+
+                                            Lb2 = np.zeros(3)
+                                            Additive = np.zeros(3)
+                                            Additive[0] = JNodevalue_i[i][2]
+                                            Additive[1] = JNodevalue_i[i][3]
+                                            Additive[2] = JNodevalue_i[i][4]
+
+                                            Lb2[0] = BNodeval[i][j][15] - s
+                                            Lb2 = np.dot(Rz, Lb2) + Additive
+
+                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][2] = Lb2[0][0]
+                                            BNodevalue[i][p][3] = Lb2[1][0]
+                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][5] = JNodevalue_i[i][5]
+                                            BNodevalue[i][p][6] = JNodevalue_i[i][6]
+                                            BNodevalue[i][p][7] = JNodevalue_i[i][7]
+                                            BNodevalue[i][p][8] = JNodevalue_i[i][8]
+                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][10] = JNodevalue_i[i][10]
+                                            BNodevalue[i][p][11] = dtsb[0][1]
+                                            BNodevalue[i][p][12] = hgsb[0][1]
+                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][14] = 2
+                                            BNodevalue[i][p][15] = BNodeval[i][j][15] - s
+                                            p = p + 1
+
+                                        elif np.greater(BNodeval[i][j][15] / 2, s) and np.greater(Af2,
+                                                                                                  Af1):  # 11 - 2
+                                            print("# 11 - 2")
+                                            segLoc = [BNodeval[i][j][15], BNodeval[i][j + 1][15]]
+                                            segLocstep = [BNodeval[i][j][15], BNodeval[i][j][15] + s,
+                                                          BNodeval[i][j + 1][15]]
+                                            Dgs = [BNodeval[i][j][9], BNodeval[i][j + 1][9]]
+                                            dts = [BNodeval[i][j][11], BNodeval[i][j + 1][11]]
+                                            hgs = [BNodeval[i][j][12], BNodeval[i][j + 1][12]]
+                                            Afills = [BNodeval[i][j][13], BNodeval[i][j + 1][13]]
+
+                                            Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                            dtsb = np.interp(segLocstep, segLoc, dts)
+                                            hgsb = np.interp(segLocstep, segLoc, hgs)
+                                            Afillsb = np.interp(segLocstep, segLoc, Afills)
+                                            # original element
+
+                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                            BNodevalue[i][p][5] = JNodevalue_i[i][5]
+                                            BNodevalue[i][p][6] = JNodevalue_i[i][6]
+                                            BNodevalue[i][p][7] = JNodevalue_i[i][7]
+                                            BNodevalue[i][p][8] = JNodevalue_i[i][8]
+                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                            BNodevalue[i][p][10] = JNodevalue_i[i][10]
+                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                            BNodevalue[i][p][14] = 1
+                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                            p = p + 1
+
+                                            Rz = np.zeros((3, 3))
+                                            Rz[0][0] = np.cos(alpharef[i, 1])
+                                            Rz[0][1] = -np.sin(alpharef[i, 1])
+                                            Rz[1][0] = np.sin(alpharef[i, 1])
+                                            Rz[1][1] = np.cos(alpharef[i, 1])
+                                            Rz[2][2] = 1
+
+                                            Lb2 = np.zeros(3)
+                                            Additive = np.zeros(3)
+                                            Additive[0] = JNodevalue_i[i][2]
+                                            Additive[1] = JNodevalue_i[i][3]
+                                            Additive[2] = JNodevalue_i[i][4]
+                                            Lb2[0] = BNodeval[i][j][15] + s
+                                            Lb2 = np.dot(Rz, Lb2) + Additive
+
+                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][2] = Lb2[0][0]
+                                            BNodevalue[i][p][3] = Lb2[1][0]
+                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][10] = BNodeval[i][10]
+                                            BNodevalue[i][p][11] = dtsb[0][1]
+                                            BNodevalue[i][p][12] = hgsb[0][1]
+                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][14] = 2
+                                            BNodevalue[i][p][15] = BNodeval[i][j][15] + s
+
+                                            p = p + 1
+
+                                elif not np.isclose(BNodeval[i][j][5], BNodeval[i][j + 1][5]) or not np.isclose(
+                                        BNodeval[i][j][6], BNodeval[i][j + 1][6]) or not np.isclose(
+                                    BNodeval[i][j][7],
+                                    BNodeval[i][j + 1][
+                                        7]) or not np.isclose(
+                                    BNodeval[i][j][8], BNodeval[i][j + 1][8]) or not np.isclose(BNodeval[i][j][10],
+                                                                                                BNodeval[i][j + 1][
+                                                                                                    10]):  # 9 -2
+
+                                    print("# 9 - 2")
+
+                                    bfb1 = BNodeval[i][j][5]  # Bottom flange width
+                                    tfb1 = BNodeval[i][j][6]  # Bottom flange thickness
+                                    bft1 = BNodeval[i][j][7]  # Top flange width
+                                    tft1 = BNodeval[i][j][8]  # Top flange thickness
+                                    Dg1 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
+                                    tw1 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
+                                    hg1 = BNodeval[i][j][12]  # h : Distance between flange centroids
+
+                                    bfb2 = BNodeval[i][j + 1][5]  # Bottom flange width
+                                    tfb2 = BNodeval[i][j + 1][6]  # Bottom flange thickness
+                                    bft2 = BNodeval[i][j + 1][7]  # Top flange width
+                                    tft2 = BNodeval[i][j + 1][8]  # Top flange thickness
+                                    Dg2 = BNodeval[i][j + 1][9]  # dw:Web depth (y-dir)
+                                    tw2 = BNodeval[i][j + 1][10]  # dw:Web depth (y-dir)
+                                    hg2 = BNodeval[i][j + 1][12]  # h : Distance between flange centroids
+
+                                    # Shear center
+                                    # Start node
+                                    # bottom flange centroid to shear center
+                                    hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
+                                                     (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
+                                                                                                         np.power(
+                                                                                                             bft1,
+                                                                                                             3))))
+                                    Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
+                                    hst1 = hg1 - hsb1  # top flange centroid to shear center
+                                    Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
+
+                                    # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
+                                    # print("hsb1 = ", hsb1, "hst1 = ", hst1)
+
+                                    # End node
+                                    # bottom flange centroid to shear center
+                                    hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
+                                                     (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
+                                                                                                         np.power(
+                                                                                                             bft2,
+                                                                                                             3))))
+                                    Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
+                                    hst2 = hg2 - hsb2  # top flange centroid to shear center
+                                    Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
+                                    # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
+                                    # print("hsb2 = ", hsb2, "hst2 = ", hst2)
+
+                                    ys1 = Dg1 / 2 - Dst1
+                                    ys2 = Dg2 / 2 - Dst2  # shear center
+
+                                    s = np.abs((ys1 - ys2))  # Difference in shear center
+                                    s = max(s, (max(max(bfb1, bft1), max(bfb2, bft2))) / 10)
+
+                                    Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
+                                    Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
+
+                                    if self.ui.StepRB1.isChecked():  # 12 - 1
+                                        # original element
+                                        print("# 12 - 1")
+
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                        BNodevalue[i][p][14] = 1
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                        p = p + 1
+
+                                    elif self.ui.StepRB2.isChecked():  # 12 - 2
+                                        print("# 12 - 2")
+                                        if np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j + 1][15]) / 2,
+                                                      s) and np.greater(Af2, Af1):  # 13 - 1
+                                            print("# 13 - 1")
+                                            segLoc = [BNodeval[i][j][15], BNodeval[i][j + 1][15]]
+                                            segLocstep = [BNodeval[i][j][15], (BNodeval[i][j][15] + s),
+                                                          BNodeval[i][j + 1][15]]
+                                            Dgs = [BNodeval[i][j][9], BNodeval[i][j + 1][9]]
+                                            dts = [BNodeval[i][j][11], BNodeval[i][j + 1][11]]
+                                            hgs = [BNodeval[i][j][12], BNodeval[i][j + 1][12]]
+                                            Afills = [BNodeval[i][j][13], BNodeval[i][j + 1][13]]
+                                            Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                            dtsb = np.interp(segLocstep, segLoc, dts)
+                                            hgsb = np.interp(segLocstep, segLoc, hgs)
+                                            Afillsb = np.interp(segLocstep, segLoc, Afills)
+
+                                            # Dgsb    = Dgsb[1]
+                                            # dtsb    = dtsb[1]
+                                            # hgsb    = hgsb[1]
+                                            # Afillsb = Afillsb[1]
+
+                                            # original element
+                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                            BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                            BNodevalue[i][p][14] = 1
+                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                            p = p + 1
+                                            # add step element
+                                            # Rotation
+
+                                            Rz = np.zeros((3, 3))
+                                            Rz[0][0] = np.cos(alpharef[i, 1])
+                                            Rz[0][1] = -np.sin(alpharef[i, 1])
+                                            Rz[1][0] = np.sin(alpharef[i, 1])
+                                            Rz[1][1] = np.cos(alpharef[i, 1])
+                                            Rz[2][2] = 1
+
+                                            Lb2 = np.zeros(3)
+                                            Additive = np.zeros(3)
+                                            Additive[0] = JNodevalue_i[i][2]
+                                            Additive[1] = JNodevalue_i[i][3]
+                                            Additive[2] = JNodevalue_i[i][4]
+
+                                            Lb2[0] = BNodeval[i][j][15] + s
+                                            Lb2 = np.dot(Rz, Lb2) + Additive
+
+                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][2] = Lb2[0][0]
+                                            BNodevalue[i][p][3] = Lb2[1][0]
+                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][5] = BNodeval[i][j + 1][5]
+                                            BNodevalue[i][p][6] = BNodeval[i][j + 1][6]
+                                            BNodevalue[i][p][7] = BNodeval[i][j + 1][7]
+                                            BNodevalue[i][p][8] = BNodeval[i][j + 1][8]
+                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][10] = BNodeval[i][j + 1][10]
+                                            BNodevalue[i][p][11] = dtsb[0][1]
+                                            BNodevalue[i][p][12] = hgsb[0][1]
+                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][14] = 2
+                                            BNodevalue[i][p][15] = BNodeval[i][j + 1][15] + s
+                                            p = p + 1
+
+                                        elif np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j + 1][15]) / 2,
+                                                        s) and np.greater_equal(Af1, Af2):  # 13 - 2
+                                            print("# 13 - 2")
+                                            segLoc = [0, BNodeval[i][j][15]]
+                                            segLocstep = [0, BNodeval[i][j][15] - s,
+                                                          BNodeval[i][j][15]]
+                                            Dgs = [JNodevalue_i[i][9], BNodeval[i][j][9]]
+                                            dts = [JNodevalue_i[i][11], BNodeval[i][j][11]]
+                                            hgs = [JNodevalue_i[i][12], BNodeval[i][j][12]]
+                                            Afills = [JNodevalue_i[i][13], BNodeval[i][j][13]]
+
+                                            Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                            dtsb = np.interp(segLocstep, segLoc, dts)
+                                            hgsb = np.interp(segLocstep, segLoc, hgs)
+                                            Afillsb = np.interp(segLocstep, segLoc, Afills)
+                                            # original element
+
+                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                            BNodevalue[i][p][5] = BNodeval[i][j + 1][5]
+                                            BNodevalue[i][p][6] = BNodeval[i][j + 1][6]
+                                            BNodevalue[i][p][7] = BNodeval[i][j + 1][7]
+                                            BNodevalue[i][p][8] = BNodeval[i][j + 1][8]
+                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                            BNodevalue[i][p][10] = BNodeval[i][j + 1][10]
+                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                            BNodevalue[i][p][14] = 1
+                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
                                             p = p + 1
 
                                             Rz = np.zeros((3, 3))
@@ -1299,242 +1040,138 @@ class ClassA(QMainWindow):
                                             BNodevalue[i][p][15] = BNodeval[i][j][15] - s
 
                                             p = p + 1
-                                    elif not np.isclose(BNodeval[i][j - 1][5], BNodeval[i][j][5]) or not np.isclose(
-                                            BNodeval[i][j - 1][6], BNodeval[i][j][6]) or not np.isclose(
-                                        BNodeval[i][j - 1][7],
-                                        BNodeval[i][j][
-                                            7]) or not np.isclose(
-                                        BNodeval[i][j - 1][8], BNodeval[i][j][8]) or not np.isclose(
-                                        BNodeval[i][j - 1][10],
-                                        BNodeval[i][j][10]):  # 14 -2
-                                        print("# 14 - 2")
+                                else:  # 9 - 3
+                                    print("# 9 - 3")
+                                    # original element
+                                    BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                    BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                    BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                    BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                    BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                    BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                    BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                    BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                    BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                    BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                    BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                    BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                    BNodevalue[i][p][14] = 1
+                                    BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                    p = p + 1
 
-                                        bfb1 = BNodeval[i][j - 1][5]  # Bottom flange width
-                                        tfb1 = BNodeval[i][j - 1][6]  # Bottom flange thickness
-                                        bft1 = BNodeval[i][j - 1][7]  # Top flange width
-                                        tft1 = BNodeval[i][j - 1][8]  # Top flange thickness
-                                        Dg1 = BNodeval[i][j - 1][9]  # dw:Web depth (y-dir)
-                                        tw1 = BNodeval[i][j - 1][10]  # dw:Web depth (y-dir)
-                                        hg1 = BNodeval[i][j - 1][12]  # h : Distance between flange centroids
+                        elif np.greater(j, 0) and np.isclose(j, np.amax(BNodeval[i, :, 1])):  # 2 - 2
+                            print("# 2 - 2")
+                            if not np.isclose(JNodevalue_j[i][5], BNodeval[i][j][5]) or not np.isclose(
+                                    JNodevalue_j[i][6], BNodeval[i][j][6]) or not np.isclose(JNodevalue_j[i][7],
+                                                                                             BNodeval[i][j][
+                                                                                                 7]) or not np.isclose(
+                                JNodevalue_j[i][8], BNodeval[i][j][8]) or not np.isclose(JNodevalue_j[i][10],
+                                                                                         BNodeval[i][j + 1][
+                                                                                             10]):  # 14 -1
+                                print("# 14 - 1")
 
-                                        bfb2 = BNodeval[i][j][5]  # Bottom flange width
-                                        tfb2 = BNodeval[i][j][6]  # Bottom flange thickness
-                                        bft2 = BNodeval[i][j][7]  # Top flange width
-                                        tft2 = BNodeval[i][j][8]  # Top flange thickness
-                                        Dg2 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
-                                        tw2 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
-                                        hg2 = BNodeval[i][j][12]  # h : Distance between flange centroids
+                                bfb2 = JNodevalue_j[i][5]  # Bottom flange width
+                                tfb2 = JNodevalue_j[i][6]  # Bottom flange thickness
+                                bft2 = JNodevalue_j[i][7]  # Top flange width
+                                tft2 = JNodevalue_j[i][8]  # Top flange thickness
+                                Dg2 = JNodevalue_j[i][9]  # dw:Web depth (y-dir)
+                                tw2 = JNodevalue_j[i][10]  # dw:Web depth (y-dir)
+                                hg2 = JNodevalue_j[i][12]  # h : Distance between flange centroids
 
-                                        # Shear center
-                                        # Start node
-                                        # bottom flange centroid to shear center
-                                        hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
-                                                         (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
-                                                                                                             np.power(
-                                                                                                                 bft1,
-                                                                                                                 3))))
-                                        Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
-                                        hst1 = hg1 - hsb1  # top flange centroid to shear center
-                                        Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
+                                bfb1 = BNodeval[i][j][5]  # Bottom flange width
+                                tfb1 = BNodeval[i][j][6]  # Bottom flange thickness
+                                bft1 = BNodeval[i][j][7]  # Top flange width
+                                tft1 = BNodeval[i][j][8]  # Top flange thickness
+                                Dg1 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
+                                tw1 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
+                                hg1 = BNodeval[i][j][12]  # h : Distance between flange centroids
 
-                                        # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
-                                        # print("hsb1 = ", hsb1, "hst1 = ", hst1)
+                                # Shear center
+                                # Start node
+                                # bottom flange centroid to shear center
+                                hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
+                                                 (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
+                                                                                                     np.power(
+                                                                                                         bft1,
+                                                                                                         3))))
+                                Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
+                                hst1 = hg1 - hsb1  # top flange centroid to shear center
+                                Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
 
-                                        # End node
-                                        # bottom flange centroid to shear center
-                                        hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
-                                                         (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
-                                                                                                             np.power(
-                                                                                                                 bft2,
-                                                                                                                 3))))
-                                        Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
-                                        hst2 = hg2 - hsb2  # top flange centroid to shear center
-                                        Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
-                                        # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
-                                        # print("hsb2 = ", hsb2, "hst2 = ", hst2)
+                                # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
+                                # print("hsb1 = ", hsb1, "hst1 = ", hst1)
 
-                                        ys1 = Dg1 / 2 - Dst1
-                                        ys2 = Dg2 / 2 - Dst2  # shear center
+                                # End node
+                                # bottom flange centroid to shear center
+                                hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
+                                                 (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
+                                                                                                     np.power(
+                                                                                                         bft2,
+                                                                                                         3))))
+                                Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
+                                hst2 = hg2 - hsb2  # top flange centroid to shear center
+                                Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
+                                # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
+                                # print("hsb2 = ", hsb2, "hst2 = ", hst2)
 
-                                        s = np.abs((ys1 - ys2))  # Difference in shear center
-                                        s = np.amax(s, (np.amax(np.amax(bfb1, bft1), np.amax(bfb2, bft2))) / 10)
+                                ys1 = Dg1 / 2 - Dst1
+                                ys2 = Dg2 / 2 - Dst2  # shear center
 
-                                        Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
-                                        Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
+                                s = np.abs((ys1 - ys2))  # Difference in shear center
+                                s = max(s, (max(max(bfb1, bft1), max(bfb2, bft2))) / 10)
 
-                                        L = np.sqrt(((JNodevalue_j[i][2] - JNodevalue_i[i][2]) ** 2 + (
-                                                JNodevalue_j[i][3] - JNodevalue_i[i][3]) ** 2 + (
-                                                             JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
+                                Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
+                                Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
 
-                                        if self.ui.StepRB1.isChecked():  # 17 - 1
-                                            # original element
-                                            print("# 17 - 1")
+                                L = np.sqrt(((JNodevalue_j[i][2] - JNodevalue_i[i][2]) ** 2 + (
+                                        JNodevalue_j[i][3] - JNodevalue_i[i][3]) ** 2 + (
+                                                     JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
 
-                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
-                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                            BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                            BNodevalue[i][p][14] = 1
-                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                            p = p + 1
+                                if self.ui.StepRB1.isChecked():  # 15 -1
+                                    print("# 15 - 1")
+                                    # original element
+                                    BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                    BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                    BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                    BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                    BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                    BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                    BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                    BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                    BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                    BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                    BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                    BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                    BNodevalue[i][p][14] = 1
+                                    BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                    p = p + 1
 
-                                        elif self.ui.StepRB2.isChecked():  # 17 - 2
-                                            print("# 17 - 2")
-                                            if np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j - 1][15]) / 2,
-                                                          s) or not np.greater_equal(Af1, Af2):  # 18 - 1
-                                                print("# 18 - 1")
-                                                segLoc = [BNodeval[i][j - 1][15], BNodeval[i][j][15]]
-                                                segLocstep = [BNodeval[i][j - 1][15], (BNodeval[i][j][15] - s),
-                                                              BNodeval[i][j][15]]
-                                                Dgs = [BNodeval[i][j - 1][9], BNodeval[i][j][9]]
-                                                dts = [BNodeval[i][j - 1][11], BNodeval[i][j][11]]
-                                                hgs = [BNodeval[i][j - 1][12], BNodeval[i][j][12]]
-                                                Afills = [BNodeval[i][j - 1][13], BNodeval[i][j][13]]
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
+                                elif self.ui.StepRB2.isChecked():  # 15- 2
+                                    print("# 15 - 2")
+                                    if np.greater(abs(L - BNodeval[i][j][15]) / 2,
+                                                  s) and np.greater(Af2, Af1):  # 16 -1
+                                        print("# 16 - 1")
+                                        segLoc = [BNodeval[i][j][15], L]
+                                        segLocstep = [BNodeval[i][j][15], (BNodeval[i][j][15] + s), L]
+                                        Dgs = [BNodeval[i][j][9], JNodevalue_j[i][9]]
+                                        dts = [BNodeval[i][j][11], JNodevalue_j[i][11]]
+                                        hgs = [BNodeval[i][j][12], JNodevalue_j[i][12]]
+                                        Afills = [BNodeval[i][j][13], JNodevalue_j[i][13]]
+                                        Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                        dtsb = np.interp(segLocstep, segLoc, dts)
+                                        hgsb = np.interp(segLocstep, segLoc, hgs)
+                                        Afillsb = np.interp(segLocstep, segLoc, Afills)
 
-                                                # Dgsb    = Dgsb[1]
-                                                # dtsb    = dtsb[1]
-                                                # hgsb    = hgsb[1]
-                                                # Afillsb = Afillsb[1]
+                                        # Dgsb    = Dgsb[1]
+                                        # dtsb    = dtsb[1]
+                                        # hgsb    = hgsb[1]
+                                        # Afillsb = Afillsb[1]
 
-                                                # original element
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
-                                                # add step element
-                                                # Rotation
-
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
-
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
-
-                                                Lb2[0] = BNodeval[i][j][15] - s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = BNodeval[i][j - 1][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j - 1][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j - 1][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j - 1][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = BNodeval[i][j - 1][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 2
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] - s
-                                                p = p + 1
-
-                                            elif np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j - 1][15]) / 2,
-                                                            s) and np.greater(Af2, Af1):  # 18 - 2
-                                                print("# 18 - 2")
-                                                segLoc = [BNodeval[i][j][15], L]
-                                                segLocstep = [BNodeval[i][j][15], BNodeval[i][j][15] + s, L]
-                                                Dgs = [BNodeval[i][j][9], JNodevalue_j[i][9]]
-                                                dts = [BNodeval[i][j][11], JNodevalue_j[i][11]]
-                                                hgs = [BNodeval[i][j][12], JNodevalue_j[i][12]]
-                                                Afills = [BNodeval[i][j][13], JNodevalue_j[i][13]]
-
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
-                                                # original element
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = BNodeval[i][j - 1][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j - 1][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j - 1][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j - 1][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = BNodeval[i][j - 1][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
-
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
-
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
-                                                Lb2[0] = BNodeval[i][j][15] + s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
-
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 2
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] + s
-
-                                                p = p + 1
-
-                                    else:  # 14 - 3
-                                        print("# 14 - 3")
+                                        # original element
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
                                         BNodevalue[i][p][1] = p
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
@@ -1553,522 +1190,877 @@ class ClassA(QMainWindow):
                                         BNodevalue[i][p][15] = BNodeval[i][j][15]
                                         p = p + 1
 
-                                else:  # 2 - 3
-                                    print("# 2 - 3")
-                                    if np.isclose(BNodeval[i][j - 1][5], BNodeval[i][j][5]) or not np.isclose(
-                                            BNodeval[i][j - 1][6], BNodeval[i][j][6]) or not np.isclose(
-                                        BNodeval[i][j - 1][7],
-                                        BNodeval[i][j][
-                                            7]) or not np.isclose(
-                                        BNodeval[i][j - 1][8], BNodeval[i][j][8]) or not np.isclose(
-                                        BNodeval[i][j - 1][10],
-                                        BNodeval[i][j][10]):  # 19 - 1
-                                        print("# 19 - 1")
+                                        Rz = np.zeros((3, 3))
+                                        Rz[0][0] = np.cos(alpharef[i, 1])
+                                        Rz[0][1] = -np.sin(alpharef[i, 1])
+                                        Rz[1][0] = np.sin(alpharef[i, 1])
+                                        Rz[1][1] = np.cos(alpharef[i, 1])
+                                        Rz[2][2] = 1
 
-                                        bfb1 = BNodeval[i][j - 1][5]  # Bottom flange width
-                                        tfb1 = BNodeval[i][j - 1][6]  # Bottom flange thickness
-                                        bft1 = BNodeval[i][j - 1][7]  # Top flange width
-                                        tft1 = BNodeval[i][j - 1][8]  # Top flange thickness
-                                        Dg1 = BNodeval[i][j - 1][9]  # dw:Web depth (y-dir)
-                                        tw1 = BNodeval[i][j - 1][10]  # dw:Web depth (y-dir)
-                                        hg1 = BNodeval[i][j - 1][12]  # h : Distance between flange centroids
+                                        Lb2 = np.zeros(3)
+                                        Additive = np.zeros(3)
+                                        Additive[0] = JNodevalue_i[i][2]
+                                        Additive[1] = JNodevalue_i[i][3]
+                                        Additive[2] = JNodevalue_i[i][4]
+                                        Lb2[0] = BNodeval[i][j][15] + s
+                                        Lb2 = np.dot(Rz, Lb2) + Additive
 
-                                        bfb2 = BNodeval[i][j][5]  # Bottom flange width
-                                        tfb2 = BNodeval[i][j][6]  # Bottom flange thickness
-                                        bft2 = BNodeval[i][j][7]  # Top flange width
-                                        tft2 = BNodeval[i][j][8]  # Top flange thickness
-                                        Dg2 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
-                                        tw2 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
-                                        hg2 = BNodeval[i][j][12]  # h : Distance between flange centroids
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = Lb2[0][0]
+                                        BNodevalue[i][p][3] = Lb2[1][0]
+                                        BNodevalue[i][p][4] = Lb2[2][0]
+                                        BNodevalue[i][p][5] = JNodevalue_j[i][5]
+                                        BNodevalue[i][p][6] = JNodevalue_j[i][6]
+                                        BNodevalue[i][p][7] = JNodevalue_j[i][7]
+                                        BNodevalue[i][p][8] = JNodevalue_j[i][8]
+                                        BNodevalue[i][p][9] = Dgsb[0][1]
+                                        BNodevalue[i][p][10] = JNodevalue_j[i][10]
+                                        BNodevalue[i][p][11] = dtsb[0][1]
+                                        BNodevalue[i][p][12] = hgsb[0][1]
+                                        BNodevalue[i][p][13] = Afillsb[0][1]
+                                        BNodevalue[i][p][14] = 3
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15] + s
+                                        p = p + 1
 
-                                        # Shear center
-                                        # Start node
-                                        # bottom flange centroid to shear center
-                                        hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
-                                                         (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
-                                                                                                             np.power(
-                                                                                                                 bft1,
-                                                                                                                 3))))
-                                        Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
-                                        hst1 = hg1 - hsb1  # top flange centroid to shear center
-                                        Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
+                                    elif np.greater(abs(L - BNodeval[i][j][15]) / 2, s) and np.greater_equal(Af1,
+                                                                                                             Af2):  # 16 - 2
+                                        print("# 16 - 2")
+                                        segLoc = [BNodeval[i][j - 1][15], BNodeval[i][j][15]]
+                                        segLocstep = [BNodeval[i][j - 1][15], BNodeval[i][j][15] - s,
+                                                      BNodeval[i][j][15]]
+                                        Dgs = [BNodeval[i][j - 1][9], BNodeval[i][j][9]]
+                                        dts = [BNodeval[i][j - 1][11], BNodeval[i][j][11]]
+                                        hgs = [BNodeval[i][j - 1][12], BNodeval[i][j][12]]
+                                        Afills = [BNodeval[i][j - 1][13], BNodeval[i][j][13]]
 
-                                        # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
-                                        # print("hsb1 = ", hsb1, "hst1 = ", hst1)
+                                        Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                        dtsb = np.interp(segLocstep, segLoc, dts)
+                                        hgsb = np.interp(segLocstep, segLoc, hgs)
+                                        Afillsb = np.interp(segLocstep, segLoc, Afills)
 
-                                        # End node
-                                        # bottom flange centroid to shear center
-                                        hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
-                                                         (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
-                                                                                                             np.power(
-                                                                                                                 bft2,
-                                                                                                                 3))))
-                                        Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
-                                        hst2 = hg2 - hsb2  # top flange centroid to shear center
-                                        Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
-                                        # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
-                                        # print("hsb2 = ", hsb2, "hst2 = ", hst2)
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                        BNodevalue[i][p][5] = JNodevalue_j[i][5]
+                                        BNodevalue[i][p][6] = JNodevalue_j[i][6]
+                                        BNodevalue[i][p][7] = JNodevalue_j[i][7]
+                                        BNodevalue[i][p][8] = JNodevalue_j[i][8]
+                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                        BNodevalue[i][p][10] = JNodevalue_j[i][10]
+                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                        BNodevalue[i][p][14] = 1
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
 
-                                        ys1 = Dg1 / 2 - Dst1
-                                        ys2 = Dg2 / 2 - Dst2  # shear center
+                                        p = p + 1
 
-                                        s = np.abs((ys1 - ys2))  # Difference in shear center
-                                        s = np.amax(s, (np.amax(np.amax(bfb1, bft1), np.amax(bfb2, bft2))) / 10)
+                                        Rz = np.zeros((3, 3))
+                                        Rz[0][0] = np.cos(alpharef[i, 1])
+                                        Rz[0][1] = -np.sin(alpharef[i, 1])
+                                        Rz[1][0] = np.sin(alpharef[i, 1])
+                                        Rz[1][1] = np.cos(alpharef[i, 1])
+                                        Rz[2][2] = 1
 
-                                        Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
-                                        Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
+                                        Lb2 = np.zeros(3)
+                                        Additive = np.zeros(3)
+                                        Additive[0] = JNodevalue_i[i][2]
+                                        Additive[1] = JNodevalue_i[i][3]
+                                        Additive[2] = JNodevalue_i[i][4]
+                                        Lb2[0] = BNodeval[i][j][15] - s
+                                        Lb2 = np.dot(Rz, Lb2) + Additive
 
-                                        if self.ui.StepRB1.isChecked():  # 20 - 1
-                                            # original element
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = Lb2[0][0]
+                                        BNodevalue[i][p][3] = Lb2[1][0]
+                                        BNodevalue[i][p][4] = Lb2[2][0]
+                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                        BNodevalue[i][p][9] = Dgsb[0][1]
+                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                        BNodevalue[i][p][11] = dtsb[0][1]
+                                        BNodevalue[i][p][12] = hgsb[0][1]
+                                        BNodevalue[i][p][13] = Afillsb[0][1]
+                                        BNodevalue[i][p][14] = 3
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15] - s
 
-                                            print("# 20 - 1")
+                                        p = p + 1
+                            elif not np.isclose(BNodeval[i][j - 1][5], BNodeval[i][j][5]) or not np.isclose(
+                                    BNodeval[i][j - 1][6], BNodeval[i][j][6]) or not np.isclose(
+                                BNodeval[i][j - 1][7],
+                                BNodeval[i][j][
+                                    7]) or not np.isclose(
+                                BNodeval[i][j - 1][8], BNodeval[i][j][8]) or not np.isclose(
+                                BNodeval[i][j - 1][10],
+                                BNodeval[i][j][10]):  # 14 -2
+                                print("# 14 - 2")
 
-                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
-                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                            BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                            BNodevalue[i][p][14] = 1
-                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                            p = p + 1
+                                bfb1 = BNodeval[i][j - 1][5]  # Bottom flange width
+                                tfb1 = BNodeval[i][j - 1][6]  # Bottom flange thickness
+                                bft1 = BNodeval[i][j - 1][7]  # Top flange width
+                                tft1 = BNodeval[i][j - 1][8]  # Top flange thickness
+                                Dg1 = BNodeval[i][j - 1][9]  # dw:Web depth (y-dir)
+                                tw1 = BNodeval[i][j - 1][10]  # dw:Web depth (y-dir)
+                                hg1 = BNodeval[i][j - 1][12]  # h : Distance between flange centroids
 
-                                        elif self.ui.StepRB2.isChecked():  # 20 - 2
+                                bfb2 = BNodeval[i][j][5]  # Bottom flange width
+                                tfb2 = BNodeval[i][j][6]  # Bottom flange thickness
+                                bft2 = BNodeval[i][j][7]  # Top flange width
+                                tft2 = BNodeval[i][j][8]  # Top flange thickness
+                                Dg2 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
+                                tw2 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
+                                hg2 = BNodeval[i][j][12]  # h : Distance between flange centroids
 
-                                            print("# 20 - 1")
-                                            if np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j - 1][15]) / 2,
-                                                          s) or not np.greater_equal(Af1, Af2):  # 21 - 1
-                                                print("# 21 - 1")
+                                # Shear center
+                                # Start node
+                                # bottom flange centroid to shear center
+                                hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
+                                                 (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
+                                                                                                     np.power(
+                                                                                                         bft1,
+                                                                                                         3))))
+                                Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
+                                hst1 = hg1 - hsb1  # top flange centroid to shear center
+                                Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
 
-                                                segLoc = [BNodeval[i][j - 1][15], BNodeval[i][j][15]]
-                                                segLocstep = [BNodeval[i][j - 1][15], (BNodeval[i][j][15] - s),
-                                                              BNodeval[i][j][15]]
-                                                Dgs = [BNodeval[i][j - 1][9], BNodeval[i][j][9]]
-                                                dts = [BNodeval[i][j - 1][11], BNodeval[i][j][11]]
-                                                hgs = [BNodeval[i][j - 1][12], BNodeval[i][j][12]]
-                                                Afills = [BNodeval[i][j - 1][13], BNodeval[i][j][13]]
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
+                                # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
+                                # print("hsb1 = ", hsb1, "hst1 = ", hst1)
 
-                                                # Dgsb    = Dgsb[1]
-                                                # dtsb    = dtsb[1]
-                                                # hgsb    = hgsb[1]
-                                                # Afillsb = Afillsb[1]
+                                # End node
+                                # bottom flange centroid to shear center
+                                hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
+                                                 (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
+                                                                                                     np.power(
+                                                                                                         bft2,
+                                                                                                         3))))
+                                Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
+                                hst2 = hg2 - hsb2  # top flange centroid to shear center
+                                Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
+                                # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
+                                # print("hsb2 = ", hsb2, "hst2 = ", hst2)
 
-                                                # original element
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
-                                                # add step element
-                                                # Rotation
+                                ys1 = Dg1 / 2 - Dst1
+                                ys2 = Dg2 / 2 - Dst2  # shear center
 
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
+                                s = np.abs((ys1 - ys2))  # Difference in shear center
+                                s = max(s, (max(max(bfb1, bft1), max(bfb2, bft2))) / 10)
 
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
+                                Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
+                                Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
 
-                                                Lb2[0] = BNodeval[i][j][15] - s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
+                                L = np.sqrt(((JNodevalue_j[i][2] - JNodevalue_i[i][2]) ** 2 + (
+                                        JNodevalue_j[i][3] - JNodevalue_i[i][3]) ** 2 + (
+                                                     JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
 
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = BNodeval[i][j - 1][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j - 1][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j - 1][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j - 1][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = BNodeval[i][j - 1][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 2
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] - s
-                                                p = p + 1
+                                if self.ui.StepRB1.isChecked():  # 17 - 1
+                                    # original element
+                                    print("# 17 - 1")
 
-                                            elif np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j - 1][15]) / 2,
-                                                            s) and np.greater(Af2, Af1):  # 21 - 2
-                                                print("# 21 - 2")
+                                    BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                    BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                    BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                    BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                    BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                    BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                    BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                    BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                    BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                    BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                    BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                    BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                    BNodevalue[i][p][14] = 1
+                                    BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                    p = p + 1
 
-                                                segLoc = [BNodeval[i][j][15], BNodeval[i][j + 1][15]]
-                                                segLocstep = [BNodeval[i][j][15], BNodeval[i][j][15] + s,
-                                                              BNodeval[i][j + 1][15]]
-                                                Dgs = [BNodeval[i][j][9], BNodeval[i][j + 1][9]]
-                                                dts = [BNodeval[i][j][11], BNodeval[i][j + 1][11]]
-                                                hgs = [BNodeval[i][j][12], BNodeval[i][j + 1][12]]
-                                                Afills = [BNodeval[i][j][13], BNodeval[i][j + 1][13]]
+                                elif self.ui.StepRB2.isChecked():  # 17 - 2
+                                    print("# 17 - 2")
+                                    if np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j - 1][15]) / 2,
+                                                  s) or not np.greater_equal(Af1, Af2):  # 18 - 1
+                                        print("# 18 - 1")
+                                        segLoc = [BNodeval[i][j - 1][15], BNodeval[i][j][15]]
+                                        segLocstep = [BNodeval[i][j - 1][15], (BNodeval[i][j][15] - s),
+                                                      BNodeval[i][j][15]]
+                                        Dgs = [BNodeval[i][j - 1][9], BNodeval[i][j][9]]
+                                        dts = [BNodeval[i][j - 1][11], BNodeval[i][j][11]]
+                                        hgs = [BNodeval[i][j - 1][12], BNodeval[i][j][12]]
+                                        Afills = [BNodeval[i][j - 1][13], BNodeval[i][j][13]]
+                                        Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                        dtsb = np.interp(segLocstep, segLoc, dts)
+                                        hgsb = np.interp(segLocstep, segLoc, hgs)
+                                        Afillsb = np.interp(segLocstep, segLoc, Afills)
 
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
-                                                # original element
+                                        # Dgsb    = Dgsb[1]
+                                        # dtsb    = dtsb[1]
+                                        # hgsb    = hgsb[1]
+                                        # Afillsb = Afillsb[1]
 
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = BNodeval[i][j - 1][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j - 1][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j - 1][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j - 1][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = BNodeval[i][j - 1][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
+                                        # original element
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                        BNodevalue[i][p][14] = 1
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                        p = p + 1
+                                        # add step element
+                                        # Rotation
 
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
+                                        Rz = np.zeros((3, 3))
+                                        Rz[0][0] = np.cos(alpharef[i, 1])
+                                        Rz[0][1] = -np.sin(alpharef[i, 1])
+                                        Rz[1][0] = np.sin(alpharef[i, 1])
+                                        Rz[1][1] = np.cos(alpharef[i, 1])
+                                        Rz[2][2] = 1
 
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
-                                                Lb2[0] = BNodeval[i][j][15] + s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
+                                        Lb2 = np.zeros(3)
+                                        Additive = np.zeros(3)
+                                        Additive[0] = JNodevalue_i[i][2]
+                                        Additive[1] = JNodevalue_i[i][3]
+                                        Additive[2] = JNodevalue_i[i][4]
 
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 2
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] + s
+                                        Lb2[0] = BNodeval[i][j][15] - s
+                                        Lb2 = np.dot(Rz, Lb2) + Additive
 
-                                                p = p + 1
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = Lb2[0][0]
+                                        BNodevalue[i][p][3] = Lb2[1][0]
+                                        BNodevalue[i][p][4] = Lb2[2][0]
+                                        BNodevalue[i][p][5] = BNodeval[i][j - 1][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j - 1][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j - 1][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j - 1][8]
+                                        BNodevalue[i][p][9] = Dgsb[0][1]
+                                        BNodevalue[i][p][10] = BNodeval[i][j - 1][10]
+                                        BNodevalue[i][p][11] = dtsb[0][1]
+                                        BNodevalue[i][p][12] = hgsb[0][1]
+                                        BNodevalue[i][p][13] = Afillsb[0][1]
+                                        BNodevalue[i][p][14] = 2
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15] - s
+                                        p = p + 1
 
-                                    elif np.isclose(BNodeval[i][j + 1][5], BNodeval[i][j][5]) or not np.isclose(
-                                            BNodeval[i][j + 1][6], BNodeval[i][j][6]) or not np.isclose(
-                                        BNodeval[i][j + 1][7],
-                                        BNodeval[i][j][
-                                            7]) or not np.isclose(
-                                        BNodeval[i][j + 1][8], BNodeval[i][j][8]) or not np.isclose(
-                                        BNodeval[i][j + 1][10],
-                                        BNodeval[i][j][10]):  # 19 - 2
+                                    elif np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j - 1][15]) / 2,
+                                                    s) and np.greater(Af2, Af1):  # 18 - 2
+                                        print("# 18 - 2")
+                                        segLoc = [BNodeval[i][j][15], L]
+                                        segLocstep = [BNodeval[i][j][15], BNodeval[i][j][15] + s, L]
+                                        Dgs = [BNodeval[i][j][9], JNodevalue_j[i][9]]
+                                        dts = [BNodeval[i][j][11], JNodevalue_j[i][11]]
+                                        hgs = [BNodeval[i][j][12], JNodevalue_j[i][12]]
+                                        Afills = [BNodeval[i][j][13], JNodevalue_j[i][13]]
 
-                                        print("# 19 - 2")
+                                        Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                        dtsb = np.interp(segLocstep, segLoc, dts)
+                                        hgsb = np.interp(segLocstep, segLoc, hgs)
+                                        Afillsb = np.interp(segLocstep, segLoc, Afills)
+                                        # original element
 
-                                        bfb1 = BNodeval[i][j][5]  # Bottom flange width
-                                        tfb1 = BNodeval[i][j][6]  # Bottom flange thickness
-                                        bft1 = BNodeval[i][j][7]  # Top flange width
-                                        tft1 = BNodeval[i][j][8]  # Top flange thickness
-                                        Dg1 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
-                                        tw1 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
-                                        hg1 = BNodeval[i][j][12]  # h : Distance between flange centroids
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                        BNodevalue[i][p][5] = BNodeval[i][j - 1][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j - 1][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j - 1][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j - 1][8]
+                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                        BNodevalue[i][p][10] = BNodeval[i][j - 1][10]
+                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                        BNodevalue[i][p][14] = 1
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                        p = p + 1
 
-                                        bfb2 = BNodeval[i][j + 1][5]  # Bottom flange width
-                                        tfb2 = BNodeval[i][j + 1][6]  # Bottom flange thickness
-                                        bft2 = BNodeval[i][j + 1][7]  # Top flange width
-                                        tft2 = BNodeval[i][j + 1][8]  # Top flange thickness
-                                        Dg2 = BNodeval[i][j + 1][9]  # dw:Web depth (y-dir)
-                                        tw2 = BNodeval[i][j + 1][10]  # dw:Web depth (y-dir)
-                                        hg2 = BNodeval[i][j + 1][12]  # h : Distance between flange centroids
+                                        Rz = np.zeros((3, 3))
+                                        Rz[0][0] = np.cos(alpharef[i, 1])
+                                        Rz[0][1] = -np.sin(alpharef[i, 1])
+                                        Rz[1][0] = np.sin(alpharef[i, 1])
+                                        Rz[1][1] = np.cos(alpharef[i, 1])
+                                        Rz[2][2] = 1
 
-                                        # Shear center
-                                        # Start node
-                                        # bottom flange centroid to shear center
-                                        hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
-                                                         (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
-                                                                                                             np.power(
-                                                                                                                 bft1,
-                                                                                                                 3))))
-                                        Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
-                                        hst1 = hg1 - hsb1  # top flange centroid to shear center
-                                        Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
+                                        Lb2 = np.zeros(3)
+                                        Additive = np.zeros(3)
+                                        Additive[0] = JNodevalue_i[i][2]
+                                        Additive[1] = JNodevalue_i[i][3]
+                                        Additive[2] = JNodevalue_i[i][4]
+                                        Lb2[0] = BNodeval[i][j][15] + s
+                                        Lb2 = np.dot(Rz, Lb2) + Additive
 
-                                        # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
-                                        # print("hsb1 = ", hsb1, "hst1 = ", hst1)
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = Lb2[0][0]
+                                        BNodevalue[i][p][3] = Lb2[1][0]
+                                        BNodevalue[i][p][4] = Lb2[2][0]
+                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                        BNodevalue[i][p][9] = Dgsb[0][1]
+                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                        BNodevalue[i][p][11] = dtsb[0][1]
+                                        BNodevalue[i][p][12] = hgsb[0][1]
+                                        BNodevalue[i][p][13] = Afillsb[0][1]
+                                        BNodevalue[i][p][14] = 2
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15] + s
 
-                                        # End node
-                                        # bottom flange centroid to shear center
-                                        hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
-                                                         (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
-                                                                                                             np.power(
-                                                                                                                 bft2,
-                                                                                                                 3))))
-                                        Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
-                                        hst2 = hg2 - hsb2  # top flange centroid to shear center
-                                        Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
-                                        # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
-                                        # print("hsb2 = ", hsb2, "hst2 = ", hst2)
+                                        p = p + 1
 
-                                        ys1 = Dg1 / 2 - Dst1
-                                        ys2 = Dg2 / 2 - Dst2  # shear center
+                            else:  # 14 - 3
+                                print("# 14 - 3")
+                                BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                BNodevalue[i][p][1] = p
+                                BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                BNodevalue[i][p][14] = 1
+                                BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                p = p + 1
 
-                                        s = np.abs((ys1 - ys2))  # Difference in shear center
-                                        s = np.amax(s, (np.amax(np.amax(bfb1, bft1), np.amax(bfb2, bft2))) / 10)
+                        else:  # 2 - 3
+                            print("# 2 - 3")
+                            if np.isclose(BNodeval[i][j - 1][5], BNodeval[i][j][5]) or not np.isclose(
+                                    BNodeval[i][j - 1][6], BNodeval[i][j][6]) or not np.isclose(
+                                BNodeval[i][j - 1][7],
+                                BNodeval[i][j][
+                                    7]) or not np.isclose(
+                                BNodeval[i][j - 1][8], BNodeval[i][j][8]) or not np.isclose(
+                                BNodeval[i][j - 1][10],
+                                BNodeval[i][j][10]):  # 19 - 1
+                                print("# 19 - 1")
 
-                                        Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
-                                        Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
+                                bfb1 = BNodeval[i][j - 1][5]  # Bottom flange width
+                                tfb1 = BNodeval[i][j - 1][6]  # Bottom flange thickness
+                                bft1 = BNodeval[i][j - 1][7]  # Top flange width
+                                tft1 = BNodeval[i][j - 1][8]  # Top flange thickness
+                                Dg1 = BNodeval[i][j - 1][9]  # dw:Web depth (y-dir)
+                                tw1 = BNodeval[i][j - 1][10]  # dw:Web depth (y-dir)
+                                hg1 = BNodeval[i][j - 1][12]  # h : Distance between flange centroids
 
-                                        if self.ui.StepRB1.isChecked():  # 22 - 1
-                                            # original
-                                            print("# 22 - 1")
+                                bfb2 = BNodeval[i][j][5]  # Bottom flange width
+                                tfb2 = BNodeval[i][j][6]  # Bottom flange thickness
+                                bft2 = BNodeval[i][j][7]  # Top flange width
+                                tft2 = BNodeval[i][j][8]  # Top flange thickness
+                                Dg2 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
+                                tw2 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
+                                hg2 = BNodeval[i][j][12]  # h : Distance between flange centroids
 
-                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
-                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                            BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                            BNodevalue[i][p][14] = 1
-                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                            p = p + 1
+                                # Shear center
+                                # Start node
+                                # bottom flange centroid to shear center
+                                hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
+                                                 (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
+                                                                                                     np.power(
+                                                                                                         bft1,
+                                                                                                         3))))
+                                Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
+                                hst1 = hg1 - hsb1  # top flange centroid to shear center
+                                Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
 
-                                        elif self.ui.StepRB2.isChecked():  # 22 - 2
-                                            print("# 22 - 2")
-                                            if np.greater(abs(BNodeval[i][j + 1][15] - BNodeval[i][j][15]) / 2,
-                                                          s) or not np.greater(Af2, Af1):  # 23 - 1
-                                                print("# 23 - 1")
-                                                segLoc = [BNodeval[i][j][15], BNodeval[i][j + 1][15]]
-                                                segLocstep = [BNodeval[i][j][15], (BNodeval[i][j][15] + s),
-                                                              BNodeval[i][j + 1][15]]
-                                                Dgs = [BNodeval[i][j][9], BNodeval[i][j + 1][9]]
-                                                dts = [BNodeval[i][j][11], BNodeval[i][j + 1][11]]
-                                                hgs = [BNodeval[i][j][12], BNodeval[i][j + 1][12]]
-                                                Afills = [BNodeval[i][j][13], BNodeval[i][j + 1][13]]
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
+                                # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
+                                # print("hsb1 = ", hsb1, "hst1 = ", hst1)
 
-                                                # Dgsb    = Dgsb[1]
-                                                # dtsb    = dtsb[1]
-                                                # hgsb    = hgsb[1]
-                                                # Afillsb = Afillsb[1]
+                                # End node
+                                # bottom flange centroid to shear center
+                                hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
+                                                 (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
+                                                                                                     np.power(
+                                                                                                         bft2,
+                                                                                                         3))))
+                                Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
+                                hst2 = hg2 - hsb2  # top flange centroid to shear center
+                                Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
+                                # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
+                                # print("hsb2 = ", hsb2, "hst2 = ", hst2)
 
-                                                # original element
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
-                                                # add step element
-                                                # Rotation
+                                ys1 = Dg1 / 2 - Dst1
+                                ys2 = Dg2 / 2 - Dst2  # shear center
 
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
+                                s = np.abs((ys1 - ys2))  # Difference in shear center
+                                s = max(s, (max(max(bfb1, bft1), max(bfb2, bft2))) / 10)
 
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
+                                Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
+                                Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
 
-                                                Lb2[0] = BNodeval[i][j][15] + s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
+                                if self.ui.StepRB1.isChecked():  # 20 - 1
+                                    # original element
 
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = BNodeval[i][j + 1][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j + 1][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j + 1][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j + 1][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = BNodeval[i][j + 1][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 3
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] + s
-                                                p = p + 1
+                                    print("# 20 - 1")
 
-                                            elif np.greater(abs(BNodeval[i][j + 1][15] - BNodeval[i][j][15]) / 2,
-                                                            s) and np.greater_equal(Af1, Af2):  # 23 - 2
-                                                print("# 23 - 2")
-                                                segLoc = [BNodeval[i][j - 1][15], BNodeval[i][j][15]]
-                                                segLocstep = [BNodeval[i][j - 1][15], BNodeval[i][j][15] - s,
-                                                              BNodeval[i][j][15]]
-                                                Dgs = [BNodeval[i][j - 1][9], BNodeval[i][j][9]]
-                                                dts = [BNodeval[i][j - 1][11], BNodeval[i][j][11]]
-                                                hgs = [BNodeval[i][j - 1][12], BNodeval[i][j][12]]
-                                                Afills = [BNodeval[i][j - 1][13], BNodeval[i][j][13]]
+                                    BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                    BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                    BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                    BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                    BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                    BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                    BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                    BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                    BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                    BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                    BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                    BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                    BNodevalue[i][p][14] = 1
+                                    BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                    p = p + 1
 
-                                                Dgsb = np.interp(segLocstep, segLoc, Dgs)
-                                                dtsb = np.interp(segLocstep, segLoc, dts)
-                                                hgsb = np.interp(segLocstep, segLoc, hgs)
-                                                Afillsb = np.interp(segLocstep, segLoc, Afills)
-                                                # original element
+                                elif self.ui.StepRB2.isChecked():  # 20 - 2
 
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                                BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                                BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                                BNodevalue[i][p][5] = BNodeval[i][j + 1][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j + 1][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j + 1][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j + 1][8]
-                                                BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                                BNodevalue[i][p][10] = BNodeval[i][j + 1][10]
-                                                BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                                BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                                BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                                BNodevalue[i][p][14] = 1
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                                p = p + 1
+                                    print("# 20 - 1")
+                                    if np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j - 1][15]) / 2,
+                                                  s) or not np.greater_equal(Af1, Af2):  # 21 - 1
+                                        print("# 21 - 1")
 
-                                                Rz = np.zeros((3, 3))
-                                                Rz[0][0] = np.cos(alpharef[i, 1])
-                                                Rz[0][1] = -np.sin(alpharef[i, 1])
-                                                Rz[1][0] = np.sin(alpharef[i, 1])
-                                                Rz[1][1] = np.cos(alpharef[i, 1])
-                                                Rz[2][2] = 1
+                                        segLoc = [BNodeval[i][j - 1][15], BNodeval[i][j][15]]
+                                        segLocstep = [BNodeval[i][j - 1][15], (BNodeval[i][j][15] - s),
+                                                      BNodeval[i][j][15]]
+                                        Dgs = [BNodeval[i][j - 1][9], BNodeval[i][j][9]]
+                                        dts = [BNodeval[i][j - 1][11], BNodeval[i][j][11]]
+                                        hgs = [BNodeval[i][j - 1][12], BNodeval[i][j][12]]
+                                        Afills = [BNodeval[i][j - 1][13], BNodeval[i][j][13]]
+                                        Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                        dtsb = np.interp(segLocstep, segLoc, dts)
+                                        hgsb = np.interp(segLocstep, segLoc, hgs)
+                                        Afillsb = np.interp(segLocstep, segLoc, Afills)
 
-                                                Lb2 = np.zeros(3)
-                                                Additive = np.zeros(3)
-                                                Additive[0] = JNodevalue_i[i][2]
-                                                Additive[1] = JNodevalue_i[i][3]
-                                                Additive[2] = JNodevalue_i[i][4]
-                                                Lb2[0] = BNodeval[i][j][15] - s
-                                                Lb2 = np.dot(Rz, Lb2) + Additive
+                                        # Dgsb    = Dgsb[1]
+                                        # dtsb    = dtsb[1]
+                                        # hgsb    = hgsb[1]
+                                        # Afillsb = Afillsb[1]
 
-                                                BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                                BNodevalue[i][p][1] = p
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
-                                                BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                                BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                                BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                                BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
-                                                BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
-                                                BNodevalue[i][p][14] = 3
-                                                BNodevalue[i][p][15] = BNodeval[i][j][15] - s
+                                        # original element
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                        BNodevalue[i][p][14] = 1
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                        p = p + 1
+                                        # add step element
+                                        # Rotation
 
-                                                p = p + 1
-                                        else:  # other than the internal nodes # 19 - 3
-                                            print("# 19 - 3")
-                                            BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
-                                            BNodevalue[i][p][2] = BNodeval[i][j][2]
-                                            BNodevalue[i][p][3] = BNodeval[i][j][3]
-                                            BNodevalue[i][p][4] = BNodeval[i][j][4]
-                                            BNodevalue[i][p][5] = BNodeval[i][j][5]
-                                            BNodevalue[i][p][6] = BNodeval[i][j][6]
-                                            BNodevalue[i][p][7] = BNodeval[i][j][7]
-                                            BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = BNodeval[i][j][9]
-                                            BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = BNodeval[i][j][11]
-                                            BNodevalue[i][p][12] = BNodeval[i][j][12]
-                                            BNodevalue[i][p][13] = BNodeval[i][j][13]
-                                            BNodevalue[i][p][14] = 1
-                                            BNodevalue[i][p][15] = BNodeval[i][j][15]
-                                            p = p + 1
+                                        Rz = np.zeros((3, 3))
+                                        Rz[0][0] = np.cos(alpharef[i, 1])
+                                        Rz[0][1] = -np.sin(alpharef[i, 1])
+                                        Rz[1][0] = np.sin(alpharef[i, 1])
+                                        Rz[1][1] = np.cos(alpharef[i, 1])
+                                        Rz[2][2] = 1
 
-                        else:  # 1 - 2
-                            print("# 1 - 2")
+                                        Lb2 = np.zeros(3)
+                                        Additive = np.zeros(3)
+                                        Additive[0] = JNodevalue_i[i][2]
+                                        Additive[1] = JNodevalue_i[i][3]
+                                        Additive[2] = JNodevalue_i[i][4]
 
-                            BNodevalue[i][p][0] = BNodeval[i][j][0]
-                            BNodevalue[i][p][1] = p
-                            BNodevalue[i][p][2] = BNodeval[i][j][2]
-                            BNodevalue[i][p][3] = BNodeval[i][j][3]
-                            BNodevalue[i][p][4] = BNodeval[i][j][4]
-                            BNodevalue[i][p][5] = BNodeval[i][j][5]
-                            BNodevalue[i][p][6] = BNodeval[i][j][6]
-                            BNodevalue[i][p][7] = BNodeval[i][j][7]
-                            BNodevalue[i][p][8] = BNodeval[i][j][8]
-                            BNodevalue[i][p][9] = BNodeval[i][j][9]
-                            BNodevalue[i][p][10] = BNodeval[i][j][10]
-                            BNodevalue[i][p][11] = BNodeval[i][j][11]
-                            BNodevalue[i][p][12] = BNodeval[i][j][12]
-                            BNodevalue[i][p][13] = BNodeval[i][j][13]
-                            BNodevalue[i][p][14] = 1
-                            BNodevalue[i][p][15] = BNodeval[i][j][15]
-                            p = p + 1
+                                        Lb2[0] = BNodeval[i][j][15] - s
+                                        Lb2 = np.dot(Rz, Lb2) + Additive
 
-        print("BNodevalue after if conditions = ", BNodevalue)
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = Lb2[0][0]
+                                        BNodevalue[i][p][3] = Lb2[1][0]
+                                        BNodevalue[i][p][4] = Lb2[2][0]
+                                        BNodevalue[i][p][5] = BNodeval[i][j - 1][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j - 1][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j - 1][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j - 1][8]
+                                        BNodevalue[i][p][9] = Dgsb[0][1]
+                                        BNodevalue[i][p][10] = BNodeval[i][j - 1][10]
+                                        BNodevalue[i][p][11] = dtsb[0][1]
+                                        BNodevalue[i][p][12] = hgsb[0][1]
+                                        BNodevalue[i][p][13] = Afillsb[0][1]
+                                        BNodevalue[i][p][14] = 2
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15] - s
+                                        p = p + 1
+
+                                    elif np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j - 1][15]) / 2,
+                                                    s) and np.greater(Af2, Af1):  # 21 - 2
+                                        print("# 21 - 2")
+
+                                        segLoc = [BNodeval[i][j][15], BNodeval[i][j + 1][15]]
+                                        segLocstep = [BNodeval[i][j][15], BNodeval[i][j][15] + s,
+                                                      BNodeval[i][j + 1][15]]
+                                        Dgs = [BNodeval[i][j][9], BNodeval[i][j + 1][9]]
+                                        dts = [BNodeval[i][j][11], BNodeval[i][j + 1][11]]
+                                        hgs = [BNodeval[i][j][12], BNodeval[i][j + 1][12]]
+                                        Afills = [BNodeval[i][j][13], BNodeval[i][j + 1][13]]
+
+                                        Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                        dtsb = np.interp(segLocstep, segLoc, dts)
+                                        hgsb = np.interp(segLocstep, segLoc, hgs)
+                                        Afillsb = np.interp(segLocstep, segLoc, Afills)
+                                        # original element
+
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                        BNodevalue[i][p][5] = BNodeval[i][j - 1][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j - 1][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j - 1][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j - 1][8]
+                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                        BNodevalue[i][p][10] = BNodeval[i][j - 1][10]
+                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                        BNodevalue[i][p][14] = 1
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                        p = p + 1
+
+                                        Rz = np.zeros((3, 3))
+                                        Rz[0][0] = np.cos(alpharef[i, 1])
+                                        Rz[0][1] = -np.sin(alpharef[i, 1])
+                                        Rz[1][0] = np.sin(alpharef[i, 1])
+                                        Rz[1][1] = np.cos(alpharef[i, 1])
+                                        Rz[2][2] = 1
+
+                                        Lb2 = np.zeros(3)
+                                        Additive = np.zeros(3)
+                                        Additive[0] = JNodevalue_i[i][2]
+                                        Additive[1] = JNodevalue_i[i][3]
+                                        Additive[2] = JNodevalue_i[i][4]
+                                        Lb2[0] = BNodeval[i][j][15] + s
+                                        Lb2 = np.dot(Rz, Lb2) + Additive
+
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = Lb2[0][0]
+                                        BNodevalue[i][p][3] = Lb2[1][0]
+                                        BNodevalue[i][p][4] = Lb2[2][0]
+                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                        BNodevalue[i][p][9] = Dgsb[0][1]
+                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                        BNodevalue[i][p][11] = dtsb[0][1]
+                                        BNodevalue[i][p][12] = hgsb[0][1]
+                                        BNodevalue[i][p][13] = Afillsb[0][1]
+                                        BNodevalue[i][p][14] = 2
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15] + s
+
+                                        p = p + 1
+
+                            elif np.isclose(BNodeval[i][j + 1][5], BNodeval[i][j][5]) or not np.isclose(
+                                    BNodeval[i][j + 1][6], BNodeval[i][j][6]) or not np.isclose(
+                                BNodeval[i][j + 1][7],
+                                BNodeval[i][j][
+                                    7]) or not np.isclose(
+                                BNodeval[i][j + 1][8], BNodeval[i][j][8]) or not np.isclose(
+                                BNodeval[i][j + 1][10],
+                                BNodeval[i][j][10]):  # 19 - 2
+
+                                print("# 19 - 2")
+
+                                bfb1 = BNodeval[i][j][5]  # Bottom flange width
+                                tfb1 = BNodeval[i][j][6]  # Bottom flange thickness
+                                bft1 = BNodeval[i][j][7]  # Top flange width
+                                tft1 = BNodeval[i][j][8]  # Top flange thickness
+                                Dg1 = BNodeval[i][j][9]  # dw:Web depth (y-dir)
+                                tw1 = BNodeval[i][j][10]  # dw:Web depth (y-dir)
+                                hg1 = BNodeval[i][j][12]  # h : Distance between flange centroids
+
+                                bfb2 = BNodeval[i][j + 1][5]  # Bottom flange width
+                                tfb2 = BNodeval[i][j + 1][6]  # Bottom flange thickness
+                                bft2 = BNodeval[i][j + 1][7]  # Top flange width
+                                tft2 = BNodeval[i][j + 1][8]  # Top flange thickness
+                                Dg2 = BNodeval[i][j + 1][9]  # dw:Web depth (y-dir)
+                                tw2 = BNodeval[i][j + 1][10]  # dw:Web depth (y-dir)
+                                hg2 = BNodeval[i][j + 1][12]  # h : Distance between flange centroids
+
+                                # Shear center
+                                # Start node
+                                # bottom flange centroid to shear center
+                                hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
+                                                 (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1,
+                                                                                                     np.power(
+                                                                                                         bft1,
+                                                                                                         3))))
+                                Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
+                                hst1 = hg1 - hsb1  # top flange centroid to shear center
+                                Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
+
+                                # print("tft1 =",  tft1, "bft1 = ", bft1, "hg1 = ", hg1, "tfb1 = ", tfb1, "bfb2 = ", bfb1)
+                                # print("hsb1 = ", hsb1, "hst1 = ", hst1)
+
+                                # End node
+                                # bottom flange centroid to shear center
+                                hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
+                                                 (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2,
+                                                                                                     np.power(
+                                                                                                         bft2,
+                                                                                                         3))))
+                                Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
+                                hst2 = hg2 - hsb2  # top flange centroid to shear center
+                                Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
+                                # print("tft2 =", tft2, "bft2 = ", bft2, "hg2 = ", hg2, "tfb2 = ", tfb2, "bfb2 = ", bfb2)
+                                # print("hsb2 = ", hsb2, "hst2 = ", hst2)
+
+                                ys1 = Dg1 / 2 - Dst1
+                                ys2 = Dg2 / 2 - Dst2  # shear center
+
+                                s = np.abs((ys1 - ys2))  # Difference in shear center
+                                s = max(s, (max(max(bfb1, bft1), max(bfb2, bft2))) / 10)
+
+                                Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
+                                Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
+
+                                if self.ui.StepRB1.isChecked():  # 22 - 1
+                                    # original
+                                    print("# 22 - 1")
+
+                                    BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                    BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                    BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                    BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                    BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                    BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                    BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                    BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                    BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                    BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                    BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                    BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                    BNodevalue[i][p][14] = 1
+                                    BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                    p = p + 1
+
+                                elif self.ui.StepRB2.isChecked():  # 22 - 2
+                                    print("# 22 - 2")
+                                    if np.greater(abs(BNodeval[i][j + 1][15] - BNodeval[i][j][15]) / 2,
+                                                  s) or not np.greater(Af2, Af1):  # 23 - 1
+                                        print("# 23 - 1")
+                                        segLoc = [BNodeval[i][j][15], BNodeval[i][j + 1][15]]
+                                        segLocstep = [BNodeval[i][j][15], (BNodeval[i][j][15] + s),
+                                                      BNodeval[i][j + 1][15]]
+                                        Dgs = [BNodeval[i][j][9], BNodeval[i][j + 1][9]]
+                                        dts = [BNodeval[i][j][11], BNodeval[i][j + 1][11]]
+                                        hgs = [BNodeval[i][j][12], BNodeval[i][j + 1][12]]
+                                        Afills = [BNodeval[i][j][13], BNodeval[i][j + 1][13]]
+                                        Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                        dtsb = np.interp(segLocstep, segLoc, dts)
+                                        hgsb = np.interp(segLocstep, segLoc, hgs)
+                                        Afillsb = np.interp(segLocstep, segLoc, Afills)
+
+                                        # Dgsb    = Dgsb[1]
+                                        # dtsb    = dtsb[1]
+                                        # hgsb    = hgsb[1]
+                                        # Afillsb = Afillsb[1]
+
+                                        # original element
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                        BNodevalue[i][p][14] = 1
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                        p = p + 1
+                                        # add step element
+                                        # Rotation
+
+                                        Rz = np.zeros((3, 3))
+                                        Rz[0][0] = np.cos(alpharef[i, 1])
+                                        Rz[0][1] = -np.sin(alpharef[i, 1])
+                                        Rz[1][0] = np.sin(alpharef[i, 1])
+                                        Rz[1][1] = np.cos(alpharef[i, 1])
+                                        Rz[2][2] = 1
+
+                                        Lb2 = np.zeros(3)
+                                        Additive = np.zeros(3)
+                                        Additive[0] = JNodevalue_i[i][2]
+                                        Additive[1] = JNodevalue_i[i][3]
+                                        Additive[2] = JNodevalue_i[i][4]
+
+                                        Lb2[0] = BNodeval[i][j][15] + s
+                                        Lb2 = np.dot(Rz, Lb2) + Additive
+
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = Lb2[0][0]
+                                        BNodevalue[i][p][3] = Lb2[1][0]
+                                        BNodevalue[i][p][4] = Lb2[2][0]
+                                        BNodevalue[i][p][5] = BNodeval[i][j + 1][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j + 1][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j + 1][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j + 1][8]
+                                        BNodevalue[i][p][9] = Dgsb[0][1]
+                                        BNodevalue[i][p][10] = BNodeval[i][j + 1][10]
+                                        BNodevalue[i][p][11] = dtsb[0][1]
+                                        BNodevalue[i][p][12] = hgsb[0][1]
+                                        BNodevalue[i][p][13] = Afillsb[0][1]
+                                        BNodevalue[i][p][14] = 3
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15] + s
+                                        p = p + 1
+
+                                    elif np.greater(abs(BNodeval[i][j + 1][15] - BNodeval[i][j][15]) / 2,
+                                                    s) and np.greater_equal(Af1, Af2):  # 23 - 2
+                                        print("# 23 - 2")
+                                        segLoc = [BNodeval[i][j - 1][15], BNodeval[i][j][15]]
+                                        segLocstep = [BNodeval[i][j - 1][15], BNodeval[i][j][15] - s,
+                                                      BNodeval[i][j][15]]
+                                        Dgs = [BNodeval[i][j - 1][9], BNodeval[i][j][9]]
+                                        dts = [BNodeval[i][j - 1][11], BNodeval[i][j][11]]
+                                        hgs = [BNodeval[i][j - 1][12], BNodeval[i][j][12]]
+                                        Afills = [BNodeval[i][j - 1][13], BNodeval[i][j][13]]
+
+                                        Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                                        dtsb = np.interp(segLocstep, segLoc, dts)
+                                        hgsb = np.interp(segLocstep, segLoc, hgs)
+                                        Afillsb = np.interp(segLocstep, segLoc, Afills)
+                                        # original element
+
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                        BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                        BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                        BNodevalue[i][p][5] = BNodeval[i][j + 1][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j + 1][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j + 1][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j + 1][8]
+                                        BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                        BNodevalue[i][p][10] = BNodeval[i][j + 1][10]
+                                        BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                        BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                        BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                        BNodevalue[i][p][14] = 1
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                        p = p + 1
+
+                                        Rz = np.zeros((3, 3))
+                                        Rz[0][0] = np.cos(alpharef[i, 1])
+                                        Rz[0][1] = -np.sin(alpharef[i, 1])
+                                        Rz[1][0] = np.sin(alpharef[i, 1])
+                                        Rz[1][1] = np.cos(alpharef[i, 1])
+                                        Rz[2][2] = 1
+
+                                        Lb2 = np.zeros(3)
+                                        Additive = np.zeros(3)
+                                        Additive[0] = JNodevalue_i[i][2]
+                                        Additive[1] = JNodevalue_i[i][3]
+                                        Additive[2] = JNodevalue_i[i][4]
+                                        Lb2[0] = BNodeval[i][j][15] - s
+                                        Lb2 = np.dot(Rz, Lb2) + Additive
+
+                                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][2] = Lb2[0][0]
+                                        BNodevalue[i][p][3] = Lb2[1][0]
+                                        BNodevalue[i][p][4] = Lb2[2][0]
+                                        BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                        BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                        BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                        BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                        BNodevalue[i][p][9] = Dgsb[0][1]
+                                        BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                        BNodevalue[i][p][11] = dtsb[0][1]
+                                        BNodevalue[i][p][12] = hgsb[0][1]
+                                        BNodevalue[i][p][13] = Afillsb[0][1]
+                                        BNodevalue[i][p][14] = 3
+                                        BNodevalue[i][p][15] = BNodeval[i][j][15] - s
+
+                                        p = p + 1
+                            else:  # other than the internal nodes # 19 - 3
+                                print("# 19 - 3")
+                                BNodevalue[i][p][0] = BNodeval[i][j][0]
+                                BNodevalue[i][p][1] = p
+                                BNodevalue[i][p][2] = BNodeval[i][j][2]
+                                BNodevalue[i][p][3] = BNodeval[i][j][3]
+                                BNodevalue[i][p][4] = BNodeval[i][j][4]
+                                BNodevalue[i][p][5] = BNodeval[i][j][5]
+                                BNodevalue[i][p][6] = BNodeval[i][j][6]
+                                BNodevalue[i][p][7] = BNodeval[i][j][7]
+                                BNodevalue[i][p][8] = BNodeval[i][j][8]
+                                BNodevalue[i][p][9] = BNodeval[i][j][9]
+                                BNodevalue[i][p][10] = BNodeval[i][j][10]
+                                BNodevalue[i][p][11] = BNodeval[i][j][11]
+                                BNodevalue[i][p][12] = BNodeval[i][j][12]
+                                BNodevalue[i][p][13] = BNodeval[i][j][13]
+                                BNodevalue[i][p][14] = 1
+                                BNodevalue[i][p][15] = BNodeval[i][j][15]
+                                p = p + 1
+
+                    else:  # 1 - 2
+                        print("# 1 - 2")
+
+                        BNodevalue[i][p][0] = BNodeval[i][j][0]
+                        BNodevalue[i][p][1] = p
+                        BNodevalue[i][p][2] = BNodeval[i][j][2]
+                        BNodevalue[i][p][3] = BNodeval[i][j][3]
+                        BNodevalue[i][p][4] = BNodeval[i][j][4]
+                        BNodevalue[i][p][5] = BNodeval[i][j][5]
+                        BNodevalue[i][p][6] = BNodeval[i][j][6]
+                        BNodevalue[i][p][7] = BNodeval[i][j][7]
+                        BNodevalue[i][p][8] = BNodeval[i][j][8]
+                        BNodevalue[i][p][9] = BNodeval[i][j][9]
+                        BNodevalue[i][p][10] = BNodeval[i][j][10]
+                        BNodevalue[i][p][11] = BNodeval[i][j][11]
+                        BNodevalue[i][p][12] = BNodeval[i][j][12]
+                        BNodevalue[i][p][13] = BNodeval[i][j][13]
+                        BNodevalue[i][p][14] = 1
+                        BNodevalue[i][p][15] = BNodeval[i][j][15]
+                        p = p + 1
+
+        # print("BNodevalue after if conditions = ", BNodevalue)
         # ADD Step E
         # Sorting S
 
         L0 = BNodevalue  # Initial Data Set
         # Distance from i node
-
+        # print('mem = ', mem)
         for i in range(mem):
             if not np.isclose(np.amax(BNodevalue[i, :, 1]), 0):
                 for j in range(np.amax(BNodevalue[i, :, 1])):
@@ -2083,24 +2075,29 @@ class ClassA(QMainWindow):
                         L0[i][j][15] = np.sqrt((dX0[j][0]) ** 2 + (dY0[j][0]) ** 2 + (dZ0[j][0]) ** 2)
 
         # Sort whole columns with respect to distance from i node
-        BNodevalueOrder = np.zeros((mem, 1, 2))
-        L1 = np.zeros((int(np.amax(BNodevalue[i, :, 1])), 16))
+        # print('L0 = ', L0)
+        BNodevalueOrder = np.zeros((mem, 1, 16))
+        L1 = np.zeros((int(np.amax(BNodevalue[i, :, 1]))+1, 16))
+        # print("L1 = ", L1)
+        # print("L0 = ", L0)
         for i in range(mem):
-            if np.amax(BNodevalue[i, :, 1]) == 0:
-                BNodevalueOrder[i][0][1] = L0[i][0][1]
-                BNodevalueOrder[i][0][1] = L0[i][0][1]
-            else:
-                for j in range(np.amax(BNodevalue[i, :, 1])):
-                    L1[j][:] = L0[i][j][:]
+            for j in range(int(np.amax(BNodevalue[i, :, 1]))+1):
+                print('test = ', L0[i][j][:])
+                L1[j][:] = L0[i][j][:]
+                # print('L1 = ', L1)
 
-                L1 = L0[L0[:, 0].argsort(),]
+            L1 = L1[L1[:,0].argsort()]
+            # print("L1 = ", L1)
 
-                for j in range(np.amax(BNodevalue[i, :, 1])):
-                    for k in range(16):
-                        BNodevalueOrder[i][j][k] = L1[j][k]
+            for j in range(int(np.amax(BNodevalue[i, :, 1]))+1):
+                for k in range(16):
+                    BNodevalueOrder[i][j][k] = L1[j][k]
 
-                L1[:][:] = None
+        del(L1)
 
+        # print('test bnode end =', BNodevalueOrder)
         BNodevalue = BNodevalueOrder
+
+        # print("BNodevalue at the end in conditions = ", BNodevalue)
 
         return BNodevalue

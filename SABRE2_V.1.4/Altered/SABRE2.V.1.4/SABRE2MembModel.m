@@ -115,9 +115,6 @@ else % ~isempty(Massemble)
          SASSEM(i,max(BNodevalue(i,:,2))+2,k) =JNodevalue_j(i,k);
       end
    end
-   
-%    fprintf('sassem final')
-%    SASSEM
 
    % NJ_i : Start Node ; NJ_j : End Node for SASSEM
    NJ_i=[]; NJ_j=[];
@@ -279,7 +276,7 @@ else % ~isempty(Massemble)
    % Preallocationg
    MemLength = zeros(sn,1);
    segnum(1,1)=0; % (Start node number - 1) for each member
-%    segnum
+   segnum
    for i = 1:mem
       for k = 1:(max(BNodevalue(i,:,2))+1)
 %          fprintf('test1')

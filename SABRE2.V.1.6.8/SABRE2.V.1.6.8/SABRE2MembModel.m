@@ -200,9 +200,6 @@ else % ~isempty(Massemble)
 
    % Nodes for each element (# ele, #node start, #node end) 
    MI=[NJ_i(:,1),NJ_i(:,2),NJ_j(:,2)];
-   print('test MI 1 = ')
-   MI
-   NJ_i
    % Global frame coordinates at each element.
    % Start node : node(1) and end node : node(2) for each element
    xg1=NJ_i(:,3);xg2=NJ_j(:,3);  % element length : xg1(start) xg2(end)

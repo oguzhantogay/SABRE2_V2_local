@@ -113,7 +113,7 @@ if isempty(Massemble) % Only Joints
    
 else % ~isempty(Massemble)
    % reset axesm
-   fprintf('\nModel Else')
+%    fprintf('\nModel Else')
    cla (axesm,'reset');
    
    mem=length(Massemble(:,1));         % Total number of members
@@ -132,7 +132,7 @@ else % ~isempty(Massemble)
          SASSEM(i,max(BNodevalue(i,:,2))+2,k) =JNodevalue_j(i,k);
       end
    end
-   SASSEM
+%    SASSEM
    % NJ_i : Start Node ; NJ_j : End Node for SASSEM
    NJ_i=[]; NJ_j=[];
    % *********************************************** Njbode
@@ -213,10 +213,10 @@ else % ~isempty(Massemble)
 %    NJ_i
 %    NJ_j
    % Nodes for each element (# ele, #node start, #node end)  
-   BNodevalue
+%    BNodevalue
    MI=[NJ_i(:,1),NJ_i(:,2),NJ_j(:,2)];
-   MI
-   NJ_i
+%    MI
+%    NJ_i
    % Global frame coordinates at each element.
    % Start node : node(1) and end node : node(2) for each element
    xg1=NJ_i(:,3);xg2=NJ_j(:,3);  % element length : xg1(start) xg2(end)
@@ -278,16 +278,21 @@ else % ~isempty(Massemble)
    % Preallocationg
    MemLength = zeros(sn,1);
    segnum(1,1)=0; % (Start node number - 1) for each member
+   
    for i = 1:mem
       for k = 1:(max(BNodevalue(i,:,2))+1)
          if isequal(k+segnum(i,1),segnum(i,1)+1)
+             fprintf('\nif1')
             MemLength(k+segnum(i,1),1)=L0(k+segnum(i,1),1);
          else
+             fprintf('\nif2')
             MemLength(k+segnum(i,1),1)=MemLength(k+segnum(i,1)-1,1)+L0(k+segnum(i,1),1);
          end
       end
       segnum(i+1,1) = segnum(i,1) + (max(BNodevalue(i,:,2))+1);
-   end   
+   end
+   MemLength
+   segnum
    % -- Calculate Initial Member x-dir Nodal Coordinates for Each Member E
 
    % Set up reference axis for each segments

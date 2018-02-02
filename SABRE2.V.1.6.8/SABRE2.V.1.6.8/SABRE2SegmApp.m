@@ -146,8 +146,8 @@ end % if end
 % Automatic Segment numbering or Step member.
 [BNodevalue]=SABRE2SegmCODE(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,BNodevalue,...
    pdb_coordx_edit,pdb_coordy_edit,pdb_coordz_edit,pdb_step_edit,seglength);
-fprintf('test3')
-BNodevalue
+% fprintf('test3')
+% BNodevalue
 % ************************************************************************
 % **************             Initial Setting              ****************
 % ************************************************************************ 
@@ -163,7 +163,7 @@ set(pdb_step_edit,'Value',1)
 % ************************************************************************
 % *********************             Plot              ********************
 % ************************************************************************ 
-fprintf('\nApp')
+% fprintf('\nApp')
 SABRE2SegmModel(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
    Rval,BNodevalue,LabType,axesm,vstm);
 

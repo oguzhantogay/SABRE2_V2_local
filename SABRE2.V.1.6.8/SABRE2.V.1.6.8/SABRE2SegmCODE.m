@@ -31,17 +31,14 @@ else
    
    for i = 1:mem    
       if isequal(max(BNodevalue(i,:,2)),0) % No Bracing
-          fprintf('if # a \n')
 %          for n=1:max(BNodevalue(:,:,2))
             BNodevalueOrder(i,1,1) = L0(i,1,1);
             BNodevalueOrder(i,1,2) = L0(i,1,2);
 %          end
       else
-          fprintf('if # b \n')
          for j = 1:max(BNodevalue(i,:,2))
             L1(j,:) =  L0(i,j,:);   
          end
-%          BNodevalueOrder
          L1 = sortrows(L1,16);
          for j = 1:max(BNodevalue(i,:,2))
             for k = 1:16
@@ -52,8 +49,6 @@ else
       end
    end
    % Reset BNodevalue Using Sorted BNodevalueOrder
-   fprintf('test3')
-%    BNodevalueOrder
    BNodeval=BNodevalueOrder;
 %    L1
    

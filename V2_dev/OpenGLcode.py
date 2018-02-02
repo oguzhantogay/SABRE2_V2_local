@@ -939,9 +939,10 @@ class glWidget(QGLWidget, QMainWindow):
 
         # Initial Member x-dir Nodal Coordinates for Each Member
         # Preallocationg
+        print('Bnode in render fun = ', BNodevalue)
 
         MemLength = np.zeros((sn, 1))
-        segnum = np.zeros((NJ_i[:, 0].shape[0] + 1, 1))
+        segnum = np.zeros((member_count + 1, 1))
         segnum[0][0] = 0  # (Start node number - 1) for each member
 
         for i in range(NJ_i[:, 0].shape[0]):

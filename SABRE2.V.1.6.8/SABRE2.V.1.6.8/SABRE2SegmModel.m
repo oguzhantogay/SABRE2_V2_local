@@ -132,7 +132,7 @@ else % ~isempty(Massemble)
          SASSEM(i,max(BNodevalue(i,:,2))+2,k) =JNodevalue_j(i,k);
       end
    end
-
+   SASSEM
    % NJ_i : Start Node ; NJ_j : End Node for SASSEM
    NJ_i=[]; NJ_j=[];
    % *********************************************** Njbode
@@ -210,9 +210,13 @@ else % ~isempty(Massemble)
    % ---------------------------------------------------------------------
    % ----------------------      Model generation       ------------------
    % ---------------------------------------------------------------------
-
+%    NJ_i
+%    NJ_j
    % Nodes for each element (# ele, #node start, #node end)  
+   BNodevalue
    MI=[NJ_i(:,1),NJ_i(:,2),NJ_j(:,2)];
+   MI
+   NJ_i
    % Global frame coordinates at each element.
    % Start node : node(1) and end node : node(2) for each element
    xg1=NJ_i(:,3);xg2=NJ_j(:,3);  % element length : xg1(start) xg2(end)
@@ -608,15 +612,15 @@ else % ~isempty(Massemble)
          end
       end 
       
-      Xwtf
-      Ywtf
-      Zwtf
-      Xwweb
-      Ywweb
-      Zwweb
-      Xwbf
-      Ywbf
-      Zwbf
+%       Xwtf
+%       Ywtf
+%       Zwtf
+%       Xwweb
+%       Ywweb
+%       Zwweb
+%       Xwbf
+%       Ywbf
+%       Zwbf
 
       if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background  
          otf = surf(axesm,Xwtf,Zwtf,Ywtf,'FaceColor',[0.6 0.6 0.6],'Clipping','off', ...
@@ -899,6 +903,7 @@ else % ~isempty(Massemble)
    zmin=min(zmin-xa*0.4,-xa*0.8);
 
    delete(findobj('Tag','axis'));
+   xa
    if isequal(LabType(1,3),0)
    if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background   
       plot3(axesm,[0 xa*0.8],[0,0],[0,0],'Color','k','linewidth',1,'Tag','axis','HitTest','off','PickableParts','none');

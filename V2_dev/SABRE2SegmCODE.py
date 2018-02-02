@@ -62,7 +62,6 @@ class ClassA(QMainWindow):
 
                 L1[:][:] = None
         BNodeval = BNodevalueOrder
-        print("BNodeval", BNodeval)
 
         ##########################
         #### Stepped Members #####
@@ -173,7 +172,7 @@ class ClassA(QMainWindow):
                                         print("# 5 - 1")
                                         # original element
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -215,7 +214,7 @@ class ClassA(QMainWindow):
 
                                             # original element
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = BNodeval[i][j][2]
                                             BNodevalue[i][p][3] = BNodeval[i][j][3]
                                             BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -248,7 +247,7 @@ class ClassA(QMainWindow):
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0][0]
                                             BNodevalue[i][p][3] = Lb2[1][0]
                                             BNodevalue[i][p][4] = Lb2[2][0]
@@ -280,7 +279,7 @@ class ClassA(QMainWindow):
                                             Afillsb = np.interp(segLocstep, segLoc, Afills)
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = BNodeval[i][j][2]
                                             BNodevalue[i][p][3] = BNodeval[i][j][3]
                                             BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -313,7 +312,7 @@ class ClassA(QMainWindow):
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0][0]
                                             BNodevalue[i][p][3] = Lb2[1][0]
                                             BNodevalue[i][p][4] = Lb2[2][0]
@@ -401,7 +400,7 @@ class ClassA(QMainWindow):
                                         print("# 7 - 1")
                                         # original element
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -441,7 +440,7 @@ class ClassA(QMainWindow):
 
                                             # original element
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = BNodeval[i][j][2]
                                             BNodevalue[i][p][3] = BNodeval[i][j][3]
                                             BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -474,7 +473,7 @@ class ClassA(QMainWindow):
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0][0]
                                             BNodevalue[i][p][3] = Lb2[1][0]
                                             BNodevalue[i][p][4] = Lb2[2][0]
@@ -507,7 +506,7 @@ class ClassA(QMainWindow):
                                             Afillsb = np.interp(segLocstep, segLoc, Afills)
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = BNodeval[i][j][2]
                                             BNodevalue[i][p][3] = BNodeval[i][j][3]
                                             BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -540,7 +539,7 @@ class ClassA(QMainWindow):
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0][0]
                                             BNodevalue[i][p][3] = Lb2[1][0]
                                             BNodevalue[i][p][4] = Lb2[2][0]
@@ -561,7 +560,7 @@ class ClassA(QMainWindow):
                                 else:  # 4 - 3
                                     print("# 4 - 3")
                                     BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][1] = p + 1
                                     BNodevalue[i][p][2] = BNodeval[i][j][2]
                                     BNodevalue[i][p][3] = BNodeval[i][j][3]
                                     BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -646,7 +645,7 @@ class ClassA(QMainWindow):
                                         print("# 10 - 1")
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -687,7 +686,7 @@ class ClassA(QMainWindow):
 
                                             # original element
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = BNodeval[i][j][2]
                                             BNodevalue[i][p][3] = BNodeval[i][j][3]
                                             BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -723,7 +722,7 @@ class ClassA(QMainWindow):
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0][0]
                                             BNodevalue[i][p][3] = Lb2[1][0]
                                             BNodevalue[i][p][4] = Lb2[2][0]
@@ -758,7 +757,7 @@ class ClassA(QMainWindow):
                                             # original element
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = BNodeval[i][j][2]
                                             BNodevalue[i][p][3] = BNodeval[i][j][3]
                                             BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -791,7 +790,7 @@ class ClassA(QMainWindow):
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0][0]
                                             BNodevalue[i][p][3] = Lb2[1][0]
                                             BNodevalue[i][p][4] = Lb2[2][0]
@@ -878,7 +877,7 @@ class ClassA(QMainWindow):
                                         print("# 12 - 1")
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -919,7 +918,7 @@ class ClassA(QMainWindow):
 
                                             # original element
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = BNodeval[i][j][2]
                                             BNodevalue[i][p][3] = BNodeval[i][j][3]
                                             BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -955,7 +954,7 @@ class ClassA(QMainWindow):
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0][0]
                                             BNodevalue[i][p][3] = Lb2[1][0]
                                             BNodevalue[i][p][4] = Lb2[2][0]
@@ -990,7 +989,7 @@ class ClassA(QMainWindow):
                                             # original element
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = BNodeval[i][j][2]
                                             BNodevalue[i][p][3] = BNodeval[i][j][3]
                                             BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1023,7 +1022,7 @@ class ClassA(QMainWindow):
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                            BNodevalue[i][p][1] = p
+                                            BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0][0]
                                             BNodevalue[i][p][3] = Lb2[1][0]
                                             BNodevalue[i][p][4] = Lb2[2][0]
@@ -1044,7 +1043,7 @@ class ClassA(QMainWindow):
                                     print("# 9 - 3")
                                     # original element
                                     BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][1] = p + 1
                                     BNodevalue[i][p][2] = BNodeval[i][j][2]
                                     BNodevalue[i][p][3] = BNodeval[i][j][3]
                                     BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1133,7 +1132,7 @@ class ClassA(QMainWindow):
                                     print("# 15 - 1")
                                     # original element
                                     BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][1] = p + 1
                                     BNodevalue[i][p][2] = BNodeval[i][j][2]
                                     BNodevalue[i][p][3] = BNodeval[i][j][3]
                                     BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1173,7 +1172,7 @@ class ClassA(QMainWindow):
 
                                         # original element
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1206,7 +1205,7 @@ class ClassA(QMainWindow):
                                         Lb2 = np.dot(Rz, Lb2) + Additive
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = Lb2[0][0]
                                         BNodevalue[i][p][3] = Lb2[1][0]
                                         BNodevalue[i][p][4] = Lb2[2][0]
@@ -1240,7 +1239,7 @@ class ClassA(QMainWindow):
                                         Afillsb = np.interp(segLocstep, segLoc, Afills)
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1274,7 +1273,7 @@ class ClassA(QMainWindow):
                                         Lb2 = np.dot(Rz, Lb2) + Additive
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = Lb2[0][0]
                                         BNodevalue[i][p][3] = Lb2[1][0]
                                         BNodevalue[i][p][4] = Lb2[2][0]
@@ -1363,7 +1362,7 @@ class ClassA(QMainWindow):
                                     print("# 17 - 1")
 
                                     BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][1] = p + 1
                                     BNodevalue[i][p][2] = BNodeval[i][j][2]
                                     BNodevalue[i][p][3] = BNodeval[i][j][3]
                                     BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1404,7 +1403,7 @@ class ClassA(QMainWindow):
 
                                         # original element
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1440,7 +1439,7 @@ class ClassA(QMainWindow):
                                         Lb2 = np.dot(Rz, Lb2) + Additive
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = Lb2[0][0]
                                         BNodevalue[i][p][3] = Lb2[1][0]
                                         BNodevalue[i][p][4] = Lb2[2][0]
@@ -1474,7 +1473,7 @@ class ClassA(QMainWindow):
                                         # original element
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1507,7 +1506,7 @@ class ClassA(QMainWindow):
                                         Lb2 = np.dot(Rz, Lb2) + Additive
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = Lb2[0][0]
                                         BNodevalue[i][p][3] = Lb2[1][0]
                                         BNodevalue[i][p][4] = Lb2[2][0]
@@ -1528,7 +1527,7 @@ class ClassA(QMainWindow):
                             else:  # 14 - 3
                                 print("# 14 - 3")
                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                BNodevalue[i][p][1] = p
+                                BNodevalue[i][p][1] = p + 1
                                 BNodevalue[i][p][2] = BNodeval[i][j][2]
                                 BNodevalue[i][p][3] = BNodeval[i][j][3]
                                 BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1616,7 +1615,7 @@ class ClassA(QMainWindow):
                                     print("# 20 - 1")
 
                                     BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][1] = p + 1
                                     BNodevalue[i][p][2] = BNodeval[i][j][2]
                                     BNodevalue[i][p][3] = BNodeval[i][j][3]
                                     BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1659,7 +1658,7 @@ class ClassA(QMainWindow):
 
                                         # original element
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1695,7 +1694,7 @@ class ClassA(QMainWindow):
                                         Lb2 = np.dot(Rz, Lb2) + Additive
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = Lb2[0][0]
                                         BNodevalue[i][p][3] = Lb2[1][0]
                                         BNodevalue[i][p][4] = Lb2[2][0]
@@ -1731,7 +1730,7 @@ class ClassA(QMainWindow):
                                         # original element
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1764,7 +1763,7 @@ class ClassA(QMainWindow):
                                         Lb2 = np.dot(Rz, Lb2) + Additive
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = Lb2[0][0]
                                         BNodevalue[i][p][3] = Lb2[1][0]
                                         BNodevalue[i][p][4] = Lb2[2][0]
@@ -1851,7 +1850,7 @@ class ClassA(QMainWindow):
                                     print("# 22 - 1")
 
                                     BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                    BNodevalue[i][p][1] = p
+                                    BNodevalue[i][p][1] = p + 1
                                     BNodevalue[i][p][2] = BNodeval[i][j][2]
                                     BNodevalue[i][p][3] = BNodeval[i][j][3]
                                     BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1892,7 +1891,7 @@ class ClassA(QMainWindow):
 
                                         # original element
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1928,7 +1927,7 @@ class ClassA(QMainWindow):
                                         Lb2 = np.dot(Rz, Lb2) + Additive
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = Lb2[0][0]
                                         BNodevalue[i][p][3] = Lb2[1][0]
                                         BNodevalue[i][p][4] = Lb2[2][0]
@@ -1963,7 +1962,7 @@ class ClassA(QMainWindow):
                                         # original element
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -1996,7 +1995,7 @@ class ClassA(QMainWindow):
                                         Lb2 = np.dot(Rz, Lb2) + Additive
 
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                        BNodevalue[i][p][1] = p
+                                        BNodevalue[i][p][1] = p + 1
                                         BNodevalue[i][p][2] = Lb2[0][0]
                                         BNodevalue[i][p][3] = Lb2[1][0]
                                         BNodevalue[i][p][4] = Lb2[2][0]
@@ -2016,7 +2015,7 @@ class ClassA(QMainWindow):
                             else:  # other than the internal nodes # 19 - 3
                                 print("# 19 - 3")
                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
-                                BNodevalue[i][p][1] = p
+                                BNodevalue[i][p][1] = p + 1
                                 BNodevalue[i][p][2] = BNodeval[i][j][2]
                                 BNodevalue[i][p][3] = BNodeval[i][j][3]
                                 BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -2037,7 +2036,7 @@ class ClassA(QMainWindow):
                         print("# 1 - 2")
 
                         BNodevalue[i][p][0] = BNodeval[i][j][0]
-                        BNodevalue[i][p][1] = p
+                        BNodevalue[i][p][1] = p + 1
                         BNodevalue[i][p][2] = BNodeval[i][j][2]
                         BNodevalue[i][p][3] = BNodeval[i][j][3]
                         BNodevalue[i][p][4] = BNodeval[i][j][4]
@@ -2063,12 +2062,12 @@ class ClassA(QMainWindow):
         # print('mem = ', mem)
         for i in range(mem):
             if not np.isclose(np.amax(BNodevalue[i, :, 1]), 0):
-                for j in range(np.amax(BNodevalue[i, :, 1])):
-                    dX0 = np.zeros((np.amax(BNodevalue[i, :, 1])), 1)
-                    dY0 = np.zeros((np.amax(BNodevalue[i, :, 1])), 1)
-                    dZ0 = np.zeros((np.amax(BNodevalue[i, :, 1])), 1)
+                for j in range(int(np.amax(BNodevalue[i, :, 1]))):
+                    dX0 = np.zeros((int(np.amax(BNodevalue[i, :, 1])), 1))
+                    dY0 = np.zeros((int(np.amax(BNodevalue[i, :, 1])), 1))
+                    dZ0 = np.zeros((int(np.amax(BNodevalue[i, :, 1])), 1))
 
-                    for j in range(np.amax(BNodevalue[i, :, 1])):
+                    for j in range(int(np.amax(BNodevalue[i, :, 1]))):
                         dX0[j][0] = JNodevalue_i[i][2] - BNodevalue[i][j][2]
                         dY0[j][0] = JNodevalue_i[i][3] - BNodevalue[i][j][3]
                         dZ0[j][0] = JNodevalue_i[i][4] - BNodevalue[i][j][4]
@@ -2077,19 +2076,19 @@ class ClassA(QMainWindow):
         # Sort whole columns with respect to distance from i node
         # print('L0 = ', L0)
         BNodevalueOrder = np.zeros((mem, 1, 16))
-        L1 = np.zeros((int(np.amax(BNodevalue[i, :, 1]))+1, 16))
+        L1 = np.zeros((int(np.amax(BNodevalue[i, :, 1])), 16))
         # print("L1 = ", L1)
         # print("L0 = ", L0)
         for i in range(mem):
-            for j in range(int(np.amax(BNodevalue[i, :, 1]))+1):
-                print('test = ', L0[i][j][:])
+            for j in range(int(np.amax(BNodevalue[i, :, 1]))):
+                # print('test = ', L0[i][j][:])
                 L1[j][:] = L0[i][j][:]
                 # print('L1 = ', L1)
 
             L1 = L1[L1[:,0].argsort()]
             # print("L1 = ", L1)
 
-            for j in range(int(np.amax(BNodevalue[i, :, 1]))+1):
+            for j in range(int(np.amax(BNodevalue[i, :, 1]))):
                 for k in range(16):
                     BNodevalueOrder[i][j][k] = L1[j][k]
 

@@ -5,6 +5,7 @@ from PyQt4.QtGui import *
 from OpenGL.GL import *
 from DropDownActions import ActionClass
 import numpy as np
+import AddNode
 
 
 class glWidget(QGLWidget, QMainWindow):
@@ -21,7 +22,7 @@ class glWidget(QGLWidget, QMainWindow):
         self.setMouseTracking(False)
         self.object = 0
         self.diam = 0
-        self.white_checked = True
+        glWidget.white_checked = True
 
         self.xRot = 0
         self.yRot = 0
@@ -37,8 +38,9 @@ class glWidget(QGLWidget, QMainWindow):
         self.right = 0
         self.bottom = 0
         self.top = 0
+        glWidget.add_node_flag = 0
 
-        self.joint_size = 0.015
+        glWidget.joint_size = 0.015
         self.initial_zoom = 2
         self.font = QFont()
         self.font.setPointSize(11)
@@ -63,7 +65,7 @@ class glWidget(QGLWidget, QMainWindow):
         glBegin(GL_LINES)
         for edge in edges:
             for vertex in edge:
-                if self.white_checked:
+                if glWidget.white_checked:
                     glColor3fv((0, 0, 0))
                 else:
                     glColor3fv((0.66274, 0.66274, 0.66274))
@@ -77,7 +79,7 @@ class glWidget(QGLWidget, QMainWindow):
         for i in range(4):
             # print("i = ", i)
             # print("vertices = ", vertices[i,:])
-            if self.white_checked:
+            if glWidget.white_checked:
                 glColor4f(0, 0, 0, 0.26)
             else:
                 glColor4f(1, 1, 1, 0.26)
@@ -85,22 +87,26 @@ class glWidget(QGLWidget, QMainWindow):
             glVertex3fv(vertices[i, :])
         glEnd()
 
-    def drawAsterisk(self, dx, dy, dz):
-        asterisk_size = self.joint_size * 1.7
+    def drawAsterisk(self, dx, dy, dz, flag = 'Asterisk'):
+        asterisk_size = glWidget.joint_size * 1.7
         glCullFace(GL_BACK)
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glBegin(GL_LINES)
-        if self.white_checked:
+
+        if glWidget.white_checked:
             glColor3fv((0, 0, 0))
         else:
             glColor3fv((1, 0, 0))
-        glVertex3d(dx + asterisk_size / 2, dy + 0, dz + 0)
-        glVertex3d(dx + -asterisk_size / 2, dy + 0, dz + 0)
-        glVertex3d(dx + 0, dy + asterisk_size / 2, dz + 0)
-        glVertex3d(dx + 0, dy + -asterisk_size / 2, dz + 0)
-        glVertex3d(dx + 0, dy + 0, dz + asterisk_size / 2)
-        glVertex3d(dx + 0, dy + 0, dz + -asterisk_size / 2)
+
+        if flag == 'Asterisk':
+            glVertex3d(dx + asterisk_size / 2, dy + 0, dz + 0)
+            glVertex3d(dx + -asterisk_size / 2, dy + 0, dz + 0)
+            glVertex3d(dx + 0, dy + asterisk_size / 2, dz + 0)
+            glVertex3d(dx + 0, dy + -asterisk_size / 2, dz + 0)
+            glVertex3d(dx + 0, dy + 0, dz + asterisk_size / 2)
+            glVertex3d(dx + 0, dy + 0, dz + -asterisk_size / 2)
+
         glVertex3d(dx + asterisk_size / 2, dy + asterisk_size / 2, dz + asterisk_size / 2)
         glVertex3d(dx + -asterisk_size / 2, dy + -asterisk_size / 2, dz + -asterisk_size / 2)
         glVertex3d(dx + -asterisk_size / 2, dy + asterisk_size / 2, dz + asterisk_size / 2)
@@ -110,6 +116,8 @@ class glWidget(QGLWidget, QMainWindow):
         glVertex3d(dx + asterisk_size / 2, dy + asterisk_size / 2, dz + -asterisk_size / 2)
         glVertex3d(dx + -asterisk_size / 2, dy + -asterisk_size / 2, dz + asterisk_size / 2)
         glEnd()
+
+
 
     def referenceLine(self, MJvalue):
         glPushAttrib(GL_ENABLE_BIT)
@@ -132,11 +140,11 @@ class glWidget(QGLWidget, QMainWindow):
             gluQuadricNormals(Q, GL_SMOOTH)
             gluQuadricTexture(Q, GL_TRUE)
             glTranslatef(self.joint_nodes[x][1], self.joint_nodes[x][2], 0)
-            if self.white_checked:
+            if glWidget.white_checked:
                 glColor3fv((0, 0, 0))
             else:
                 glColor3f(1.0, 1.0, 1.0)
-            gluSphere(Q, self.joint_size, 32, 32)
+            gluSphere(Q, glWidget.joint_size, 32, 32)
 
             glPopMatrix()
 
@@ -301,14 +309,14 @@ class glWidget(QGLWidget, QMainWindow):
             self.Joints(i)
             if self.ui.actionJoint_Member_Labels.isChecked():
                 if self.ui.Joints_Table.item(i, 1) is not None and self.ui.Joints_Table.item(i, 2) is not None:
-                    if self.white_checked:
+                    if glWidget.white_checked:
                         glColor3f(0, 0, 0)
                     else:
                         glColor3f(1, 1, 1)
 
                     joint_text = "J" + str(int(self.joint_nodes[i][0]))
-                    self.renderText(self.joint_nodes[i][1] - self.joint_size,
-                                    self.joint_nodes[i][2] + self.joint_size, 0, joint_text, font=self.font)
+                    self.renderText(self.joint_nodes[i][1] - glWidget.joint_size,
+                                    self.joint_nodes[i][2] + glWidget.joint_size, 0, joint_text, font=self.font)
 
         if self.member_count is None:
             pass
@@ -318,7 +326,7 @@ class glWidget(QGLWidget, QMainWindow):
                 if self.ui.actionJoint_Member_Labels.isChecked():
                     if self.ui.Members_table.item(i, 1) is not None and self.ui.Members_table.item(i,
                                                                                                    2) is not None:
-                        if self.white_checked:
+                        if glWidget.white_checked:
                             glColor3f(0, 0, 0)
                         else:
                             glColor3f(1, 1, 1)
@@ -329,9 +337,6 @@ class glWidget(QGLWidget, QMainWindow):
                         joint_text = "M" + str(int(self.member_values[i][0]))
                         self.renderText(text_x, text_y, 0, joint_text, font=self.font)
 
-                        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-                        # self.Surfaces()
-
         self.render_checked = self.ui.actionRender_All_Members.isChecked()
         if self.member_count is not None:
             self.member_count = int(self.member_count)
@@ -339,8 +344,6 @@ class glWidget(QGLWidget, QMainWindow):
             Massemble = self.MassembleUpdater()
             self.renderAllProp(self.member_count, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval,
                                Massemble)
-            self.drawAsterisk()
-
 
     def normalizeAngle(self, angle):
         while angle < 0:
@@ -383,10 +386,10 @@ class glWidget(QGLWidget, QMainWindow):
                     self.joint_nodes[int(size_joint - 1)][1],
                     self.joint_nodes[int(size_joint - 1)][
                         2]) - 100)
-                self.joint_size = 3 * 0.35
+                glWidget.joint_size = 3 * 0.35
             else:
 
-                self.joint_size = 2 * 0.35
+                glWidget.joint_size = 2 * 0.35
                 self.zPos += (
                         max(self.joint_nodes[0][1], self.joint_nodes[0][2]) - max(
                     self.joint_nodes[int(size_joint - 1)][1],
@@ -432,7 +435,14 @@ class glWidget(QGLWidget, QMainWindow):
         none_checker = self.noneDetector(self.ui.Joints_Table)
         self.render_checked = self.ui.actionRender_All_Members.isChecked()
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
+        # if flag == 'Add Node x':
+        #     glWidget.add_node_flag = 1
+        # elif flag =='Add Node Asterisk':
+        #     glWidget.add_node_flag = 2
+        # else:
+        #     pass
         # print("row number =", row)
+        # flag = 'General Section Render', dx = 0, dy = 0, dz = 0
         try:
             if self.ui.Members_table.item(row, 1) is None:
                 pass
@@ -441,35 +451,41 @@ class glWidget(QGLWidget, QMainWindow):
                 if self.render_checked:
                     Massemble = self.MassembleUpdater()
                     self.member_count = int(self.member_count)
+                    # if glWidget.add_node_flag == 1:
+                    #     self.drawAsterisk(dx, dy, dz, flag = 'x')
+                    # elif glWidget.add_node_flag == 2:
+                    #     self.drawAsterisk(dx, dy, dz)
+                    # else:
+                    #     pass
+
                     self.renderAllProp(self.member_count, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue,
                                        self.Rval, Massemble)
-                    self.drawAsterisk()
 
         except AttributeError:
             pass
 
-        self.white_checked = self.ui.actionWhite_Background.isChecked()
+        glWidget.white_checked = self.ui.actionWhite_Background.isChecked()
         self.diam = max(max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1]),
                         (max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])))
         self.diam_x = max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1])
         self.diam_y = max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])
 
         if self.joint_nodes_length == 1 or self.diam == 0:
-            self.joint_size = 0.015
+            glWidget.joint_size = 0.015
             self.xPos = 0
             self.yPos = 0
         elif none_checker:
             pass
         elif max(abs(self.joint_nodes[:, 2])) != 0:
-            self.joint_size = self.diam / 150 * 1.8
+            glWidget.joint_size = self.diam / 150 * 1.8
             self.xPos = -min((self.joint_nodes[:, 1])) - self.diam_x / 2
             self.yPos = -min(self.joint_nodes[:, 2]) - self.diam_y / 2
         else:
-            self.joint_size = self.diam / 150
+            glWidget.joint_size = self.diam / 150
             self.xPos = -min(abs(self.joint_nodes[:, 1])) - self.diam_x / 2
             self.yPos = -min(self.joint_nodes[:, 2]) - self.diam_y / 2
 
-        # print("joint size = ", self.joint_size, "xpos = ", self.xPos, "ypos = ", self.yPos)
+        # print("joint size = ", glWidget.joint_size, "xpos = ", self.xPos, "ypos = ", self.yPos)
 
         if self.joint_nodes.shape[0] == 1:
             self.initial_zoom = 2
@@ -488,7 +504,7 @@ class glWidget(QGLWidget, QMainWindow):
             self.resizeGL(self.width(), self.height())
             self.updateGL()
 
-        if self.white_checked:
+        if glWidget.white_checked:
             glClearColor(1, 1, 1, 1)
             self.updateGL()
         else:
@@ -697,7 +713,6 @@ class glWidget(QGLWidget, QMainWindow):
         # self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j
         # print("node values", self.JNodeValues_i, self.JNodeValues_j)
         # print("test", JNodevalue_i)
-        SASSEM = np.zeros((member_count, 2, 13))
         max_b = 0
 
         for i in range(int(member_count)):
@@ -705,27 +720,24 @@ class glWidget(QGLWidget, QMainWindow):
             if max_b < max_c:
                 max_b = max_c
 
-        max_for_NJ_i = max_b + member_count
+        # print('max_b = ', max_b, 'max_c = ', max_c,'member = ', member_count)
+        max_for_NJ_i = int(max_b + member_count)
+        SASSEM = np.zeros((member_count, max_for_NJ_i + 1, 13))
         NJ_i = np.zeros((max_for_NJ_i, 13))
         NJ_j = np.zeros((max_for_NJ_i, 13))
 
-        # print("Sassem 1 = ", SASSEM)
         for k in range(13):
             for i in range(int(member_count)):
                 # print(int(member_count))
                 # print("test1.2",JNodevalue_i[i,k])
-                if np.amax(BNodevalue[i, :, 1]):
+                SASSEM[i][0][k] = JNodevalue_i[i][k]
+                if np.isclose(np.amax(BNodevalue[i, :, 1]), 0):
                     pass
                 else:
-                    SASSEM[i][0][k] = JNodevalue_i[i][k]
+                    for j in range(int(np.amax(BNodevalue[i, :, 1]))):
+                        SASSEM[i][j + 1][k] = BNodevalue[i, j, k]
 
-                    if np.amax(BNodevalue[i, :, 1]) == 0:
-                        pass
-                    else:
-                        for j in range(np.amax(BNodevalue[i, :, 1])):
-                            SASSEM[i][j + 1][k] = BNodevalue[i, j, k]
-
-                SASSEM[i][int(np.amax(BNodevalue[i, :, 1])) + 1][k] = JNodevalue_j[i][k]
+                SASSEM[i][int(np.amax(BNodevalue[i, :, 1]))+1][k] = JNodevalue_j[i][k]
 
         # print("sassem values = ", SASSEM)
         # print("sassem 1 values = ", SASSEM[:,:,0])
@@ -759,68 +771,71 @@ class glWidget(QGLWidget, QMainWindow):
             NJ_i[q - 1][10] = SASSEM[i, 0, 10]
             NJ_i[q - 1][11] = SASSEM[i, 0, 11]
             NJ_i[q - 1][12] = SASSEM[i, 0, 12]
+            # print("NJ_i_1 = ", NJ_i)
             for j in range(int(np.amax(BNodevalue[i, :, 1]))):
-                NJ_i[q - 1 + j][0] = q + j + 1
-                NJ_i[q - 1 + j][1] = q + j + 1
-                NJ_i[q - 1 + j][2] = SASSEM[i, j + 0, 2]
-                NJ_i[q - 1 + j][3] = SASSEM[i, j + 0, 3]
-                NJ_i[q - 1 + j][4] = SASSEM[i, j + 0, 4]
-                NJ_i[q - 1 + j][5] = SASSEM[i, j + 0, 5]
-                NJ_i[q - 1 + j][6] = SASSEM[i, j + 0, 6]
-                NJ_i[q - 1 + j][7] = SASSEM[i, j + 0, 7]
-                NJ_i[q - 1 + j][8] = SASSEM[i, j + 0, 8]
-                NJ_i[q - 1 + j][9] = SASSEM[i, j + 0, 9]
-                NJ_i[q - 1 + j][10] = SASSEM[i, j + 0, 10]
-                NJ_i[q - 1 + j][11] = SASSEM[i, j + 0, 11]
-                NJ_i[q - 1 + j][12] = SASSEM[i, j + 0, 12]
+                NJ_i[q + j][0] = q + j + 1
+                NJ_i[q + j][1] = q + j + 1
+                NJ_i[q + j][2] = SASSEM[i, j+1, 2]
+                NJ_i[q + j][3] = SASSEM[i, j+1, 3]
+                NJ_i[q + j][4] = SASSEM[i, j+1, 4]
+                NJ_i[q + j][5] = SASSEM[i, j+1, 5]
+                NJ_i[q + j][6] = SASSEM[i, j+1, 6]
+                NJ_i[q + j][7] = SASSEM[i, j+1, 7]
+                NJ_i[q + j][8] = SASSEM[i, j+1, 8]
+                NJ_i[q + j][9] = SASSEM[i, j+1, 9]
+                NJ_i[q + j][10] = SASSEM[i, j +1, 10]
+                NJ_i[q + j][11] = SASSEM[i, j +1, 11]
+                NJ_i[q + j][12] = SASSEM[i, j +1, 12]
             q = int(np.amax(BNodevalue[i, :, 1]) + q + 1)
-
+        # print("NJ_i_2 = ", NJ_i)
         q = 1
 
         for i in range(member_count):
 
             for j in range(int(np.amax(BNodevalue[i, :, 1]))):
-                NJ_j[q + j - 2][0] = q + j - 1
-                NJ_j[q + j - 2][1] = q + j
-                NJ_j[q + j - 2][2] = SASSEM[i, j + 1, 2]
-                NJ_j[q + j - 2][3] = SASSEM[i, j + 1, 3]
-                NJ_j[q + j - 2][4] = SASSEM[i, j + 1, 4]
-                NJ_j[q + j - 2][5] = SASSEM[i, j + 1, 5]
-                NJ_j[q + j - 2][6] = SASSEM[i, j + 1, 6]
-                NJ_j[q + j - 2][7] = SASSEM[i, j + 1, 7]
-                NJ_j[q + j - 2][8] = SASSEM[i, j + 1, 8]
-                NJ_j[q + j - 2][9] = SASSEM[i, j + 1, 9]
-                NJ_j[q + j - 2][10] = SASSEM[i, j + 1, 10]
-                NJ_j[q + j - 2][11] = SASSEM[i, j + 1, 11]
-                NJ_j[q + j - 2][12] = SASSEM[i, j + 1, 12]
+                NJ_j[q + j - 1][0] = q + j
+                NJ_j[q + j - 1][1] = q + j + 1
+                NJ_j[q + j - 1][2] = SASSEM[i, j + 1, 2]
+                NJ_j[q + j - 1][3] = SASSEM[i, j + 1, 3]
+                NJ_j[q + j - 1][4] = SASSEM[i, j + 1, 4]
+                NJ_j[q + j - 1][5] = SASSEM[i, j + 1, 5]
+                NJ_j[q + j - 1][6] = SASSEM[i, j + 1, 6]
+                NJ_j[q + j - 1][7] = SASSEM[i, j + 1, 7]
+                NJ_j[q + j - 1][8] = SASSEM[i, j + 1, 8]
+                NJ_j[q + j - 1][9] = SASSEM[i, j + 1, 9]
+                NJ_j[q + j - 1][10] = SASSEM[i, j + 1, 10]
+                NJ_j[q + j - 1][11] = SASSEM[i, j + 1, 11]
+                NJ_j[q + j - 1][12] = SASSEM[i, j + 1, 12]
 
             # print("q before = ", q)
             q = int(np.amax(BNodevalue[i, :, 1])) + q + 1
-            sec_dim = int(np.amax(BNodevalue[i, :, 1]))
+            b_node_number = int(np.amax(BNodevalue[i, :, 1]))
             NJ_j[q - 2][0] = q - 1
             NJ_j[q - 2][1] = q
-            NJ_j[q - 2][2] = SASSEM[i, sec_dim + 1, 2]
-            NJ_j[q - 2][3] = SASSEM[i, sec_dim + 1, 3]
-            NJ_j[q - 2][4] = SASSEM[i, sec_dim + 1, 4]
-            NJ_j[q - 2][5] = SASSEM[i, sec_dim + 1, 5]
-            NJ_j[q - 2][6] = SASSEM[i, sec_dim + 1, 6]
-            NJ_j[q - 2][7] = SASSEM[i, sec_dim + 1, 7]
-            NJ_j[q - 2][8] = SASSEM[i, sec_dim + 1, 8]
-            NJ_j[q - 2][9] = SASSEM[i, sec_dim + 1, 9]
-            NJ_j[q - 2][10] = SASSEM[i, sec_dim + 1, 10]
-            NJ_j[q - 2][11] = SASSEM[i, sec_dim + 1, 11]
-            NJ_j[q - 2][12] = SASSEM[i, sec_dim + 1, 12]
+            NJ_j[q - 2][2] =  SASSEM[i, b_node_number + 1 , 2]
+            NJ_j[q - 2][3] =  SASSEM[i, b_node_number + 1 , 3]
+            NJ_j[q - 2][4] =  SASSEM[i, b_node_number + 1 , 4]
+            NJ_j[q - 2][5] =  SASSEM[i, b_node_number + 1 , 5]
+            NJ_j[q - 2][6] =  SASSEM[i, b_node_number + 1 , 6]
+            NJ_j[q - 2][7] =  SASSEM[i, b_node_number + 1 , 7]
+            NJ_j[q - 2][8] =  SASSEM[i, b_node_number + 1 , 8]
+            NJ_j[q - 2][9] =  SASSEM[i, b_node_number + 1 , 9]
+            NJ_j[q - 2][10] = SASSEM[i, b_node_number + 1 , 10]
+            NJ_j[q - 2][11] = SASSEM[i, b_node_number + 1 , 11]
+            NJ_j[q - 2][12] = SASSEM[i, b_node_number + 1 , 12]
         #     print("q after = ", q)
         #
         #
-        # print("NJ_i = ", NJ_i, "NJ_j", NJ_j)
+
+        # print("NJ_i = ", NJ_i, "\nNJ_j", NJ_j)
+        # print("NJ_i = ", NJ_i[:,0], "\nNJ_j", NJ_j[:,0])
 
         sn = int(np.amax(NJ_i[:, 0]))  # Total Segment Number
 
         # Model Generation
         # Nodes for each element (# ele, #node start, #node end)
-        MI = np.zeros((member_count, 3))
-
+        MI = np.zeros((NJ_i[:, 0].shape[0], 3))
+        # print('MI = ', MI)
         MI[:, 0] = NJ_i[:, 0]
         MI[:, 1] = NJ_i[:, 1]
         MI[:, 2] = NJ_j[:, 1]
@@ -828,12 +843,12 @@ class glWidget(QGLWidget, QMainWindow):
         # print(" MI = ", MI)
         # Global frame coordinates at each element.
         # Start node : node(1) and end node : node(2) for each element
-        xg1, xg2 = np.zeros((member_count, 1)), np.zeros(
-            (member_count, 1))  # element length: xg1(start) xg2(end)
-        yg1, yg2 = np.zeros((member_count, 1)), np.zeros(
-            (member_count, 1))  # element length: xg1(start) xg2(end)
-        zg1, zg2 = np.zeros((member_count, 1)), np.zeros(
-            (member_count, 1))  # element length: xg1(start) xg2(end)
+        xg1, xg2 = np.zeros((NJ_i[:, 0].shape[0], 1)), np.zeros(
+            (NJ_i[:, 0].shape[0], 1))  # element length: xg1(start) xg2(end)
+        yg1, yg2 = np.zeros((NJ_i[:, 0].shape[0], 1)), np.zeros(
+            (NJ_i[:, 0].shape[0], 1))  # element length: xg1(start) xg2(end)
+        zg1, zg2 = np.zeros((NJ_i[:, 0].shape[0], 1)), np.zeros(
+            (NJ_i[:, 0].shape[0], 1))  # element length: xg1(start) xg2(end)
 
         xg1[:, 0] = NJ_i[:, 2]
         yg1[:, 0] = NJ_i[:, 3]
@@ -843,13 +858,12 @@ class glWidget(QGLWidget, QMainWindow):
         yg2[:, 0] = NJ_j[:, 3]
         zg2[:, 0] = NJ_j[:, 4]
         # Section properties at each element under natural frame
-        bfb1, bfb2 = np.zeros((member_count, 1)), np.zeros((member_count, 1))  # Bottom flange width
-        tfb1, tfb2 = np.zeros((member_count, 1)), np.zeros((member_count, 1))  # Bottom flange thickness
-        bft1, bft2 = np.zeros((member_count, 1)), np.zeros((member_count, 1))  # Top flange width
-        tft1, tft2 = np.zeros((member_count, 1)), np.zeros((member_count, 1))  # Top flange thickness
-        Dg1, Dg2 = np.zeros((member_count, 1)), np.zeros((member_count, 1))  # dw:Web depth (y-dir)
-        hg1, hg2 = np.zeros((member_count, 1)), np.zeros(
-            (member_count, 1))  # h : Distance between flange centroids
+        bfb1, bfb2 = np.zeros((NJ_i[:, 0].shape[0], 1)), np.zeros((NJ_i[:, 0].shape[0], 1))  # Bottom flange width
+        tfb1, tfb2 = np.zeros((NJ_i[:, 0].shape[0], 1)), np.zeros((NJ_i[:, 0].shape[0], 1))  # Bottom flange thickness
+        bft1, bft2 = np.zeros((NJ_i[:, 0].shape[0], 1)), np.zeros((NJ_i[:, 0].shape[0], 1))  # Top flange width
+        tft1, tft2 = np.zeros((NJ_i[:, 0].shape[0], 1)), np.zeros((NJ_i[:, 0].shape[0], 1))  # Top flange thickness
+        Dg1, Dg2 =   np.zeros((NJ_i[:, 0].shape[0], 1)), np.zeros((NJ_i[:, 0].shape[0], 1))  # dw:Web depth (y-dir)
+        hg1, hg2 =   np.zeros((NJ_i[:, 0].shape[0], 1)), np.zeros((NJ_i[:, 0].shape[0], 1))  # h : Distance between flange centroids
 
         bfb1[:, 0] = NJ_i[:, 5]
         tfb1[:, 0] = NJ_i[:, 6]
@@ -927,10 +941,10 @@ class glWidget(QGLWidget, QMainWindow):
         # Preallocationg
 
         MemLength = np.zeros((sn, 1))
-        segnum = np.zeros((member_count + 1, 1))
+        segnum = np.zeros((NJ_i[:, 0].shape[0] + 1, 1))
         segnum[0][0] = 0  # (Start node number - 1) for each member
 
-        for i in range(member_count):
+        for i in range(NJ_i[:, 0].shape[0]):
             for k in range(int(np.amax(BNodevalue[i, :, 1] + 1))):
                 # print("test a = ", segnum[i][0], "test b =", segnum[i][0] )
                 if (k + segnum[i][0]) == (segnum[i][0]):
@@ -948,7 +962,7 @@ class glWidget(QGLWidget, QMainWindow):
         q = 0
         val1 = np.zeros((sn, 1))
 
-        for i in range(member_count):
+        for i in range(NJ_i[:, 0].shape[0]):
             for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                 val1[q + j][0] = Rval[i][1]
 
@@ -963,7 +977,7 @@ class glWidget(QGLWidget, QMainWindow):
         segnum = segnum.astype(int)
         # print("Memlength = ", MemLength)
         # print("Dg1 = ", Dg1, "Dg2 = ", Dg2, "Dst1 = ", Dst1 , "Dst2 = ", Dst2)
-        for i in range(member_count):
+        for i in range(NJ_i[:, 0].shape[0]):
             if Rval[i][1] == 1:
                 for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                     ys1[k + segnum[i][0]][0] = (Dg1[k + segnum[i][0]][0]) / 2 - Dst1[k + segnum[i][0]][0]
@@ -1057,7 +1071,7 @@ class glWidget(QGLWidget, QMainWindow):
         segnum[0, 0] = 0  # (Start node number - 1) for each member
         NG1 = np.zeros((max_for_NJ_i, 3))
         NG2 = np.zeros((max_for_NJ_i, 3))
-        for i in range(member_count):
+        for i in range(NJ_i[:, 0].shape[0]):
             for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                 NG1[k + segnum[i][0]][0] = NJ_i[segnum[i][0]][2]
                 NG2[k + segnum[i][0]][0] = NJ_i[segnum[i][0]][2]

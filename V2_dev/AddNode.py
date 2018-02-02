@@ -13,6 +13,7 @@ class AddNodeClass(QMainWindow):
         AddNodeClass.btnChecked = False
         AddNodeClass.setComboBoxValues = None
         AddNodeClass.additionalNodeNumber = 1
+        AddNodeClass.apply_button_pressed = False
 
     def setAddNodeComboBox(self):
         row = self.ui.Members_table.rowCount()
@@ -494,6 +495,7 @@ class AddNodeClass(QMainWindow):
             Additive[0] = JNodevalue_i[mnum][2]
             Additive[1] = JNodevalue_i[mnum][3]
             Additive[2] = JNodevalue_i[mnum][4]
+            print
             Lb[0] = seglength
             Lb = np.dot(Rz, Lb) + Additive
 
@@ -527,7 +529,14 @@ class AddNodeClass(QMainWindow):
 
         return addNodeTableValues
 
+    def returnPressed(self):
+        print('in fun = ', AddNodeClass.apply_button_pressed)
+        return AddNodeClass.apply_button_pressed
+
     def ApplyButton(self):
+        '''executes when the apply button pressed in the Add Nodes menu'''
+
+        AddNodeClass.apply_button_pressed = True
         mnum = int(self.ui.AddNodeMember.currentIndex())
         nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())
         Massemble = AddNodeClass.MassembleUpdater(self)
@@ -544,7 +553,7 @@ class AddNodeClass(QMainWindow):
             BNodevalue = np.zeros((mnum + 1, nbnode + 1, 16))
 
             addNodeTableValues = AddNodeClass.readAddNodeTable(self)
-            BNodevalue[mnum][nbnode][0] = mnum
+            BNodevalue[mnum][nbnode][0] = mnum +1
             BNodevalue[mnum][nbnode][1] = nbnode + 1  # 0 No bracing
             BNodevalue[mnum][nbnode][2] = Lb[0]
             BNodevalue[mnum][nbnode][3] = Lb[1]
@@ -566,7 +575,10 @@ class AddNodeClass(QMainWindow):
 
         BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
 
+        # print("BNodevalue function after = ", BNodevalue)
         import SABRE2SegmModel
 
-        SABRE2SegmModel.ClassB.renderAddNode(self, BNodevalue)
+        flag, dx, dy, dz = SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
+        # print('flag = ',flag, '\ndx = ', dx, '\ndy = ', dy, 'dz = ', dz)
+        SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
         # print("BNodevalue function = ", BNodevalue)

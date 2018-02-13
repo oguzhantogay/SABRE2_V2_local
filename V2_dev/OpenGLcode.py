@@ -625,6 +625,7 @@ class glWidget(QGLWidget, QMainWindow):
 
     def renderAllProp(self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, Massemble):
         ''' This function works on the rendering all properties of the model'''
+        print('Bnode in render all fun = ', BNodevalue)
         forTop, forBottom, tf, bf, web, _, _, _, _, _, _, _, _, _ = glWidget.renderProperties(
             self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval)
         edges = ((0, 1),
@@ -632,6 +633,7 @@ class glWidget(QGLWidget, QMainWindow):
                  (2, 3),
                  (3, 0))
 
+        # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
         glColor4f(0, 1, 0, 1)
         glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=self.font2)
         glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Flange 2", font=self.font2)
@@ -939,20 +941,20 @@ class glWidget(QGLWidget, QMainWindow):
 
         # Initial Member x-dir Nodal Coordinates for Each Member
         # Preallocationg
-        print('Bnode in render fun = ', BNodevalue)
+        # print('Bnode in render fun = ', BNodevalue)
 
         MemLength = np.zeros((sn, 1))
         segnum = np.zeros((member_count + 1, 1))
         segnum[0][0] = 0  # (Start node number - 1) for each member
 
-        for i in range(NJ_i[:, 0].shape[0]):
+        for i in range(member_count):
             for k in range(int(np.amax(BNodevalue[i, :, 1] + 1))):
                 # print("test a = ", segnum[i][0], "test b =", segnum[i][0] )
                 if (k + segnum[i][0]) == (segnum[i][0]):
                     MemLength[int(k + segnum[i][0])][0] = L0[int(k + segnum[i][0])][0]
                 else:
                     MemLength[int(k + segnum[i][0])][0] = MemLength[int(k + segnum[i][0]) - 1][0] + \
-                                                          L0[k + segnum[i][0]][0]
+                                                          L0[int(k + segnum[i][0])][0]
 
             segnum[i + 1][0] = segnum[i][0] + int(np.amax(BNodevalue[i, :, 1] + 1))
 
@@ -963,7 +965,7 @@ class glWidget(QGLWidget, QMainWindow):
         q = 0
         val1 = np.zeros((sn, 1))
 
-        for i in range(NJ_i[:, 0].shape[0]):
+        for i in range(member_count):
             for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                 val1[q + j][0] = Rval[i][1]
 
@@ -978,7 +980,7 @@ class glWidget(QGLWidget, QMainWindow):
         segnum = segnum.astype(int)
         # print("Memlength = ", MemLength)
         # print("Dg1 = ", Dg1, "Dg2 = ", Dg2, "Dst1 = ", Dst1 , "Dst2 = ", Dst2)
-        for i in range(NJ_i[:, 0].shape[0]):
+        for i in range(member_count):
             if Rval[i][1] == 1:
                 for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                     ys1[k + segnum[i][0]][0] = (Dg1[k + segnum[i][0]][0]) / 2 - Dst1[k + segnum[i][0]][0]
@@ -1072,7 +1074,7 @@ class glWidget(QGLWidget, QMainWindow):
         segnum[0, 0] = 0  # (Start node number - 1) for each member
         NG1 = np.zeros((max_for_NJ_i, 3))
         NG2 = np.zeros((max_for_NJ_i, 3))
-        for i in range(NJ_i[:, 0].shape[0]):
+        for i in range(member_count):
             for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                 NG1[k + segnum[i][0]][0] = NJ_i[segnum[i][0]][2]
                 NG2[k + segnum[i][0]][0] = NJ_i[segnum[i][0]][2]
@@ -1489,7 +1491,7 @@ class glWidget(QGLWidget, QMainWindow):
             bf[3][0] = Xwbf[1][1]
             bf[3][1] = Ywbf[1][1]
             bf[3][2] = Zwbf[1][1]
-            # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
+            print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
 
             edges = ((0, 1),
                      (1, 2),

@@ -27,11 +27,11 @@ class AddNodeCoordCS(QMainWindow, QGLWidget):
         # Additional Node Plotting
 
         for j in range(member_count):
-            print('for')
+            # print('for')
             if not np.isclose(BNodevalue[j][0][1], 0):
-                print('if not')
+                # print('if not')
                 for i in range(int(np.amax(BNodevalue[j, :, 1])) + 1):
-                    print('for 2')
+                    # print('for 2')
                     dx = BNodevalue[j][i][2]
                     dy = -BNodevalue[j][i][4]
                     dz = BNodevalue[j][i][3]
@@ -129,4 +129,4 @@ class AddNodeCoordCS(QMainWindow, QGLWidget):
         ymin = min((ymin - (xa * 0.4)), (-xa * 0.8))
         zmin = min((zmin - (xa * 0.4)), (-xa * 0.8))
 
-        print('xa = ', xa)
+        # print('xa = ', xa)

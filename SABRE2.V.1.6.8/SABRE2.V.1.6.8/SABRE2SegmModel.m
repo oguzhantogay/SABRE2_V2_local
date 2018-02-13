@@ -291,8 +291,8 @@ else % ~isempty(Massemble)
       end
       segnum(i+1,1) = segnum(i,1) + (max(BNodevalue(i,:,2))+1);
    end
-   MemLength
-   segnum
+%    MemLength
+%    segnum
    % -- Calculate Initial Member x-dir Nodal Coordinates for Each Member E
 
    % Set up reference axis for each segments
@@ -617,15 +617,15 @@ else % ~isempty(Massemble)
          end
       end 
       
-%       Xwtf
-%       Ywtf
-%       Zwtf
-%       Xwweb
-%       Ywweb
-%       Zwweb
-%       Xwbf
-%       Ywbf
-%       Zwbf
+      Xwtf
+      Ywtf
+      Zwtf
+      Xwweb
+      Ywweb
+      Zwweb
+      Xwbf
+      Ywbf
+      Zwbf
 
       if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background  
          otf = surf(axesm,Xwtf,Zwtf,Ywtf,'FaceColor',[0.6 0.6 0.6],'Clipping','off', ...

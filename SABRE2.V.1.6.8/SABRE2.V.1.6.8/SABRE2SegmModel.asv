@@ -13,8 +13,8 @@ flagmode=0;
 if strcmp(get(gca,'CameraViewAngleMode'),'auto')
   flagmode=1;
 end
-% fprintf('\ntest_model')
-%    BNodevalue
+fprintf('\ntest_model')
+   BNodevalue
 if isempty(JNodevalue) 
    % reset axesm
    cla (axesm,'reset');   
@@ -206,8 +206,6 @@ else % ~isempty(Massemble)
    end
 
    sn = max(NJ_i(:,1)); % Total segment number.
-%    fprintf('segment number')
-%    sn
    
    % ***************************************** Assemble Member & Bracing E
    % ---------------------------------------------------------------------
@@ -432,8 +430,6 @@ else % ~isempty(Massemble)
    % ----------------    Undeformed 3D rendering       -------------------
    % ---------------------------------------------------------------------
 %    Evalue = [];
-   fprintf('Rval = ')
-   val1
    for i = 1:sn 
       Rz=[cos(alpharef(i,2)) -sin(alpharef(i,2)) 0; ...
       sin(alpharef(i,2)) cos(alpharef(i,2)) 0; ...
@@ -621,7 +617,7 @@ else % ~isempty(Massemble)
             Zwbf(k,j) = eLbf((k-1)*2+j,3);       
          end
       end 
-      fprintf('test segm model')
+      
       Xwtf
       Ywtf
       Zwtf

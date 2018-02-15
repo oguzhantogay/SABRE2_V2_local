@@ -5461,6 +5461,9 @@ function pdb_apply_pushbutton_Callback(hObject, eventdata)
       pdb_member_name,pdb_type_name,pdb_coordx_edit,pdb_coordy_edit,...
       pdb_coordz_edit,pdb_length_edit,pdb_bfb_edit,pdb_tfb_edit,...
       pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit,pdb_step_edit,LabType,axesm,vstm);
+  
+  fprintf('SNODE')
+  SNodevalue
 end % function end 
 % --------------------------------------------------------------------
 function pdb_cancel_pushbutton_Callback(hObject, eventdata)  

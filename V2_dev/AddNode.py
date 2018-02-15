@@ -1,4 +1,5 @@
 from PyQt4.QtGui import *
+from PyQt4 import QtGui
 import DropDownActions
 import sqlite3 as sq
 import numpy as np
@@ -94,7 +95,6 @@ class AddNodeClass(QMainWindow):
         _, JNodeValues_i, _, _, _, flag_mem_values = AddNodeClass.memberTableValues(self)
         mnum = int(self.ui.AddNodeMember.currentIndex())
         if self.ui.AddNodeTable.cellWidget(0, 0).text() == '':
-
             bfbs = (JNodeValues_i[mnum][5])
             tfbs = (JNodeValues_i[mnum][6])
             bfts = (JNodeValues_i[mnum][7])
@@ -533,6 +533,36 @@ class AddNodeClass(QMainWindow):
         print('in fun = ', AddNodeClass.apply_button_pressed)
         return AddNodeClass.apply_button_pressed
 
+    def additiveNodeAfterApply(self, BNodevalue, mnum):
+        r = BNodevalue[mnum, :, 1].shape[0]
+        # print('count = ', self.ui.AdditionalNodeNumberComboBox.count(), r)
+        if r == self.ui.AdditionalNodeNumberComboBox.count():
+            self.ui.AdditionalNodeNumberComboBox.addItem(str(r+1))
+
+    def removeNodeDialog(self):
+        added_node_count = self.ui.AdditionalNodeNumberComboBox.count()
+        if added_node_count == 1:
+            import DropDownActions
+            DropDownActions.ActionClass.statusMessage(self,
+                                                      message='Node #1 has not been defined before!')
+            return False
+        else:
+            import SABRE2_GUI
+            remove_added_node = QtGui.QMessageBox()
+            remove_added_node.setWindowTitle("Remove Selected Node?")
+            remove_added_node.setIcon(QtGui.QMessageBox.Critical)
+            remove_added_node.setTextFormat(SABRE2_GUI.QtCore.Qt.RichText)
+            # about_box.setIconPixmap(QtGui.QPixmap(ComicTaggerSettings.getGraphic('about.png'))) #include image
+            remove_added_node.setText("""Do you want to remove the selected node?""")
+            remove_added_node.setStandardButtons(SABRE2_GUI.QtGui.QMessageBox.Yes | SABRE2_GUI.QtGui.QMessageBox.No)
+            # about_box.setStandardButtons(SABRE2_GUI.QtGui.QMessageBox.No)
+            ret_val = remove_added_node.exec_()
+            if ret_val == SABRE2_GUI.QtGui.QMessageBox.Yes:
+                return True
+            else:
+                return False
+        # print('message box result = ', ret_val)
+
     def ApplyButton(self):
         '''executes when the apply button pressed in the Add Nodes menu'''
 
@@ -553,7 +583,7 @@ class AddNodeClass(QMainWindow):
             BNodevalue = np.zeros((mnum + 1, nbnode + 1, 16))
 
             addNodeTableValues = AddNodeClass.readAddNodeTable(self)
-            BNodevalue[mnum][nbnode][0] = mnum +1
+            BNodevalue[mnum][nbnode][0] = mnum + 1
             BNodevalue[mnum][nbnode][1] = nbnode + 1  # 0 No bracing
             BNodevalue[mnum][nbnode][2] = Lb[0]
             BNodevalue[mnum][nbnode][3] = Lb[1]
@@ -570,7 +600,7 @@ class AddNodeClass(QMainWindow):
                     BNodevalue[mnum][nbnode][6] + BNodevalue[mnum][nbnode][8]) / 2  # flange centroid
             BNodevalue[mnum][nbnode][13] = addNodeTableValues[6]
 
-        # print("BNodevalue function before = ", BNodevalue)
+        print("BNodevalue function before = ", BNodevalue)
         import SABRE2SegmCODE
 
         BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
@@ -581,4 +611,76 @@ class AddNodeClass(QMainWindow):
         flag, dx, dy, dz = SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
         # print('flag = ',flag, '\ndx = ', dx, '\ndy = ', dy, 'dz = ', dz)
         SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
+        AddNodeClass.additiveNodeAfterApply(self, BNodevalue, mnum)
         # print("BNodevalue function = ", BNodevalue)
+
+
+class SegmRemove(QMainWindow):
+    """ This class removes previously added nodes"""
+
+    def __init__(self, ui_layout, parent=None):
+        super(SegmRemove, self).__init__(parent)
+        self.ui = ui_layout
+
+    def removeNode(self):
+        Massemble = AddNodeClass.MassembleUpdater(self)
+        _, JNodevalue_i, JNodevalue_j, BNodevalue, _, _ = AddNodeClass.memberTableValues(self)
+
+        import SABRE2SegmCODE
+
+        BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
+
+        # remove selected node
+        nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())  # specifies the selected node current index
+        memnum = int(self.ui.AddNodeMember.currentIndex())  # specifies the selected node current index
+
+        BNodevalue[memnum, nbnode, :] = 0
+
+        BNodedev = np.zeros((1, int(np.amax(BNodevalue[memnum, :, 1])), 16))
+
+        for i in range(int(BNodevalue[memnum, :, 1].shape[0])):
+            BNodedev[0, i, 0] = 0
+            BNodedev[0, i, 1] = 0
+            BNodedev[0, i, 2] = 0
+            BNodedev[0, i, 3] = 0
+            BNodedev[0, i, 4] = 0
+            BNodedev[0, i, 5] = 0
+            BNodedev[0, i, 6] = 0
+            BNodedev[0, i, 7] = 0
+            BNodedev[0, i, 8] = 0
+            BNodedev[0, i, 9] = 0
+            BNodedev[0, i, 10]= 0
+            BNodedev[0, i, 11]= 0
+            BNodedev[0, i, 12]= 0
+            BNodedev[0, i, 13]= 0
+            BNodedev[0, i, 14]= 0
+            BNodedev[0, i, 15]= 0
+
+        p = 0
+
+        for i in range(int(BNodevalue[memnum, :, 1].shape[0])):
+            BNodedev[0, p, 0] = BNodevalue[memnum, i, 1]
+            BNodedev[0, p, 1] = BNodevalue[memnum, i, 2]
+            BNodedev[0, p, 2] = BNodevalue[memnum, i, 3]
+            BNodedev[0, p, 3] = BNodevalue[memnum, i, 4]
+            BNodedev[0, p, 4] = BNodevalue[memnum, i, 5]
+            BNodedev[0, p, 5] = BNodevalue[memnum, i, 6]
+            BNodedev[0, p, 6] = BNodevalue[memnum, i, 7]
+            BNodedev[0, p, 7] = BNodevalue[memnum, i, 8]
+            BNodedev[0, p, 8] = BNodevalue[memnum, i, 9]
+            BNodedev[0, p, 9] = BNodevalue[memnum, i, 10]
+            BNodedev[0, p, 10]= BNodevalue[memnum, i, 11]
+            BNodedev[0, p, 11]= BNodevalue[memnum, i, 12]
+            BNodedev[0, p, 12]= BNodevalue[memnum, i, 13]
+            BNodedev[0, p, 13]= BNodevalue[memnum, i, 14]
+            BNodedev[0, p, 14]= BNodevalue[memnum, i, 15]
+            BNodedev[0, p, 15]= BNodevalue[memnum, i, 16]
+
+            p += 1
+
+        BNodevalue[memnum,:,:] = BNodedev[memnum,:,:]
+
+
+        #handle SNODE later
+
+

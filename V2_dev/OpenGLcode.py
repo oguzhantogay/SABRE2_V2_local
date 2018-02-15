@@ -625,7 +625,7 @@ class glWidget(QGLWidget, QMainWindow):
 
     def renderAllProp(self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, Massemble):
         ''' This function works on the rendering all properties of the model'''
-        print('Bnode in render all fun = ', BNodevalue)
+
         forTop, forBottom, tf, bf, web, _, _, _, _, _, _, _, _, _ = glWidget.renderProperties(
             self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval)
         edges = ((0, 1),
@@ -727,6 +727,11 @@ class glWidget(QGLWidget, QMainWindow):
         SASSEM = np.zeros((member_count, max_for_NJ_i + 1, 13))
         NJ_i = np.zeros((max_for_NJ_i, 13))
         NJ_j = np.zeros((max_for_NJ_i, 13))
+
+        from SABRE2SegmCODE import ClassA
+        Massemble = glWidget.MassembleUpdater(self)
+        BNodevalue = ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
+        # print('Bnode in render all fun = ', BNodevalue)
 
         for k in range(13):
             for i in range(int(member_count)):
@@ -833,6 +838,7 @@ class glWidget(QGLWidget, QMainWindow):
         # print("NJ_i = ", NJ_i[:,0], "\nNJ_j", NJ_j[:,0])
 
         sn = int(np.amax(NJ_i[:, 0]))  # Total Segment Number
+        # print('segment number = ',sn)
 
         # Model Generation
         # Nodes for each element (# ele, #node start, #node end)
@@ -980,6 +986,7 @@ class glWidget(QGLWidget, QMainWindow):
         segnum = segnum.astype(int)
         # print("Memlength = ", MemLength)
         # print("Dg1 = ", Dg1, "Dg2 = ", Dg2, "Dst1 = ", Dst1 , "Dst2 = ", Dst2)
+        print('Rval in memcount = ', Rval)
         for i in range(member_count):
             if Rval[i][1] == 1:
                 for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
@@ -1118,8 +1125,10 @@ class glWidget(QGLWidget, QMainWindow):
         SN3, SN7, SN10, SN14 = np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3))
         # print("memlength 1 = ", MemLength1)
         # print("memlength 2 = ", MemLength2)
+        # print('val1 = ', val1)
+        print('sn = ', sn)
         for i in range(sn):
-
+            print('i = ', i)
             Rz[0][0] = np.cos(alpharef[i, 1])
             Rz[0][1] = -np.sin(alpharef[i, 1])
             Rz[1][0] = np.sin(alpharef[i, 1])
@@ -1127,7 +1136,7 @@ class glWidget(QGLWidget, QMainWindow):
             Rz[2][2] = 1
             # print("Rz = ", Rz)
             # print("Rval  = ", Rval)
-            if Rval[i][1] == 1:
+            if val1[i][0] == 1:
                 # *************************** Rotation
                 # print("before1")
                 # print("SN1", SN1)
@@ -1237,7 +1246,7 @@ class glWidget(QGLWidget, QMainWindow):
                 SN13 = SN13 + NG2[i, :]
                 SN14 = SN14 + NG2[i, :]
 
-            elif Rval[i][1] == 2:
+            elif val1[i][1] == 2:
                 # *************************** Rotation
                 # bottom flange start node
                 SN1[0, :] = [MemLength1[i, 0], (-Dg1[i, 0]), (zg1[i, 0] + bfb1[i, 0] / 2)]
@@ -1310,7 +1319,7 @@ class glWidget(QGLWidget, QMainWindow):
                 SN13 = SN13 + NG2[i, :]
                 SN14 = SN14 + NG2[i, :]
 
-            elif Rval[i][1] == 3:
+            elif val1[i][1] == 3:
                 # *************************** Rotation
                 # bottom flange start node
 
@@ -1492,11 +1501,12 @@ class glWidget(QGLWidget, QMainWindow):
             bf[3][1] = Ywbf[1][1]
             bf[3][2] = Zwbf[1][1]
             print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
-
-            edges = ((0, 1),
-                     (1, 2),
-                     (2, 3),
-                     (3, 0))
+            # print('test 2 ')
+            #
+            # edges = ((0, 1),
+            #          (1, 2),
+            #          (2, 3),
+            #          (3, 0))
 
             # text identifier :
             forTop = [np.mean((np.amax(tf[:, 0]), np.amin(tf[:, 0]))), np.mean((np.amax(tf[:, 1]), np.amin(tf[:, 1]))),
@@ -1505,5 +1515,23 @@ class glWidget(QGLWidget, QMainWindow):
             forBottom = [np.mean((np.amax(bf[:, 0]), np.amin(bf[:, 0]))),
                          np.mean((np.amax(bf[:, 1]), np.amin(bf[:, 1]))),
                          np.mean((np.amax(bf[:, 2]), np.amin(bf[:, 2])))]
+            if self.render_checked:
+                edges = ((0, 1),
+                         (1, 2),
+                         (2, 3),
+                         (3, 0))
 
-            return forTop, forBottom, tf, bf, web, Xwtf, Ywtf, Zwtf, Xwweb, Ywweb, Zwweb, Xwbf, Ywbf, Zwbf
+                # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
+                glColor4f(0, 1, 0, 1)
+                glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=self.font2)
+                glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Flange 2", font=self.font2)
+                glWidget.SurfaceContour(self, tf, edges)
+                glWidget.SurfaceContour(self, web, edges)
+                glWidget.SurfaceContour(self, bf, edges)
+                # self.drawAsterisk()
+                glWidget.Surfaces(self, tf)
+                glWidget.Surfaces(self, web)
+                glWidget.Surfaces(self, bf)
+
+
+        return forTop, forBottom, tf, bf, web, Xwtf, Ywtf, Zwtf, Xwweb, Ywweb, Zwweb, Xwbf, Ywbf, Zwbf

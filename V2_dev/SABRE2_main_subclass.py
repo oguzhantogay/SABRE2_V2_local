@@ -119,7 +119,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionQuit.triggered.connect(qApp.quit)
 
         # Help dropdown actions
-        ui_layout.actionAbout.triggered.connect(lambda: DropDownActions('uidesign').AboutAct())
+        ui_layout.actionAbout.triggered.connect(lambda: DropDownActions.ActionClass('uidesign').AboutAct())
 
         # Joint Table Arrangements
 
@@ -173,6 +173,9 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Members_table.itemChanged.connect(
             lambda: self.update_members_table(ui_layout.Members_table,
                                               self.Members_table_position))
+
+        ui_layout.RemoveAddedNodePB.clicked.connect(
+            lambda: AddNode.AddNodeClass.removeNodeDialog(self))
 
         ui_layout.Members_table.itemChanged.connect(
             lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())

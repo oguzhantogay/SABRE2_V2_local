@@ -233,7 +233,7 @@ class ActionClass(QMainWindow):
                                                                                              self.ui.Point_load_table,
                                                                                              combo_flag=0)
 
-        filename = 'test.npz'
+        filename = 'test1.npz'
         file = open(filename, 'wb')
 
         np.savez(file, joint_values=self.joint_values,
@@ -259,7 +259,7 @@ class ActionClass(QMainWindow):
 
         self.OpenGLwidget = OpenGLcode.glWidget(self.ui)
 
-        filename = 'test.npz'
+        filename = 'test1.npz'
 
         aa = np.load(filename)
 
@@ -290,7 +290,6 @@ class ActionClass(QMainWindow):
         # shape_point_data_values = int(self.point_data_values.shape[0])
 
         # filling for joints table
-
         for i in range(shape_joint_table):
 
             if i == (shape_joint_table - 1):
@@ -299,9 +298,10 @@ class ActionClass(QMainWindow):
                 self.ui.Joints_Table.blockSignals(True)
 
             if shape_joint_table > 2:
-                for i in range(shape_joint_table - 2):
-                    SABRE2_main_subclass.JointTable.add_new_row(self, self.ui.Joints_Table,
-                                                                self.ui.Insert_row_number_Joint, "last")
+                if shape_joint_table != self.ui.Joints_Table.rowCount():
+                    for i in range(shape_joint_table - 2):
+                        SABRE2_main_subclass.JointTable.add_new_row(self, self.ui.Joints_Table,
+                                                                    self.ui.Insert_row_number_Joint, "last")
 
             for j in range(2):
                 item = QTableWidgetItem(str(self.joint_values[i][j + 1]))
@@ -314,7 +314,32 @@ class ActionClass(QMainWindow):
 
         # print("member shape = ", shape_members_table_values)
 
+        self.ui.Members_table.blockSignals(True)
+
         for i in range(shape_members_table_values):
+
+            for j in range(1, 18):
+
+                if j == 3 and i == 0:
+                    SABRE2_main_subclass.DataCollection.Assign_comboBox(self, self.ui.Members_table, self.Members_table_options,
+                                                                        self.Members_table_position, self.members_table_values[0][3])
+                elif j == 1 or j == 2:
+                    item = QTableWidgetItem(str(int(self.members_table_values[i][j])))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.ui.Members_table.setItem(i, j, item)
+
+                elif i == (shape_members_table_values - 1) and j == 17:
+                    self.ui.Members_table.blockSignals(False)
+                    item = QTableWidgetItem(str(self.members_table_values[i][j]))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.ui.Members_table.setItem(i, j, item)
+
+                else:
+                    item = QTableWidgetItem(str(self.members_table_values[i][j]))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.ui.Members_table.setItem(i, j, item)
+
+
 
             if shape_members_table_values > 1:
                 # print("test 1")
@@ -324,24 +349,3 @@ class ActionClass(QMainWindow):
                                                                   self.Members_table_position,
                                                                   self.ui.Insert_row_number_mem_def, "last",
                                                                   combo_values=self.members_table_values[:, 3])
-
-            for j in range(1, 18):
-                if j == 17:
-                    self.ui.Members_table.blockSignals(False)
-                    self.ui.Members_table.setCurrentCell(i, j)
-                    # self.OpenGLwidget.updateTheWidget()
-                    # self.OpenGLwidget.resizeGL(self.OpenGLwidget.width(), self.OpenGLwidget.height())
-                else:
-                    self.ui.Members_table.blockSignals(True)
-
-                if j == 3 and i == 0:
-                    SABRE2_main_subclass.DataCollection.Assign_comboBox(self, self.ui.Members_table, self.Members_table_options,
-                                       self.Members_table_position, self.members_table_values[0][3])
-                elif j == 1 or j == 2:
-                    item = QTableWidgetItem(str(int(self.members_table_values[i][j])))
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
-                    self.ui.Members_table.setItem(i, j, item)
-                else:
-                    item = QTableWidgetItem(str(self.members_table_values[i][j]))
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
-                    self.ui.Members_table.setItem(i, j, item)

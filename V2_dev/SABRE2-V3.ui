@@ -1100,13 +1100,6 @@
               <property name="sizeConstraint">
                <enum>QLayout::SetMaximumSize</enum>
               </property>
-              <item row="2" column="0">
-               <widget class="QLabel" name="AddPositionLabel">
-                <property name="text">
-                 <string>Pozition of Additional Node from Node i :</string>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="1">
                <widget class="QComboBox" name="AdditionalNodeNumberComboBox">
                 <property name="maximumSize">
@@ -1116,13 +1109,15 @@
                  </size>
                 </property>
                 <property name="currentIndex">
-                 <number>0</number>
+                 <number>-1</number>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>1</string>
-                 </property>
-                </item>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="AddPositionLabel">
+                <property name="text">
+                 <string>Pozition of Additional Node from Node i :</string>
+                </property>
                </widget>
               </item>
               <item row="2" column="1">
@@ -1132,6 +1127,28 @@
                   <width>230</width>
                   <height>16777215</height>
                  </size>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QComboBox" name="AddNodeMember">
+                <property name="maximumSize">
+                 <size>
+                  <width>230</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <item>
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                </item>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QLabel" name="AdditionalNodeLabel">
+                <property name="text">
+                 <string>Additional Node Number :</string>
                 </property>
                </widget>
               </item>
@@ -1217,27 +1234,25 @@
                 </item>
                </layout>
               </item>
-              <item row="0" column="1">
-               <widget class="QComboBox" name="AddNodeMember">
-                <property name="maximumSize">
-                 <size>
-                  <width>230</width>
-                  <height>16777215</height>
-                 </size>
+              <item row="1" column="3">
+               <widget class="QPushButton" name="RemoveAddedNodePB">
+                <property name="text">
+                 <string>Remove Selected</string>
                 </property>
-                <item>
-                 <property name="text">
-                  <string>1</string>
-                 </property>
-                </item>
                </widget>
               </item>
-              <item row="0" column="0">
-               <widget class="QLabel" name="SelectMemberLabel">
-                <property name="text">
-                 <string>Select Member :</string>
+              <item row="0" column="5">
+               <spacer name="horizontalSpacer_7">
+                <property name="orientation">
+                 <enum>Qt::Horizontal</enum>
                 </property>
-               </widget>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
               </item>
               <item row="3" column="1">
                <layout class="QHBoxLayout" name="horizontalLayout_22">
@@ -1263,14 +1278,21 @@
                 </item>
                </layout>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="AdditionalNodeLabel">
+              <item row="0" column="0">
+               <widget class="QLabel" name="SelectMemberLabel">
                 <property name="text">
-                 <string>Additional Node Number :</string>
+                 <string>Select Member :</string>
                 </property>
                </widget>
               </item>
-              <item row="2" column="2">
+              <item row="1" column="2">
+               <widget class="QPushButton" name="addNodePushButton">
+                <property name="text">
+                 <string>Add Node</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2" colspan="2">
                <widget class="QPushButton" name="FollowTaper">
                 <property name="styleSheet">
                  <string notr="true">QPushButton{
@@ -1278,26 +1300,6 @@ rgb(170, 255, 255)}</string>
                 </property>
                 <property name="text">
                  <string>Follow Taper!</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="4">
-               <spacer name="horizontalSpacer_7">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
-                </property>
-                <property name="sizeHint" stdset="0">
-                 <size>
-                  <width>40</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </spacer>
-              </item>
-              <item row="1" column="2">
-               <widget class="QPushButton" name="RemoveAddedNodePB">
-                <property name="text">
-                 <string>Remove Selected</string>
                 </property>
                </widget>
               </item>

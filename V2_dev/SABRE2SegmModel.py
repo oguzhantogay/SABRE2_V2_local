@@ -20,30 +20,28 @@ class AddNodeCoordCS(QMainWindow, QGLWidget):
 
         member_count, member_values, JNodevalue_i, JNodevalue_j, _, Rval = glWidget.memberTableValues(self)
 
-
-        _, _, tf, bf, web, _, _, _, _, _, _, _, _, _ = glWidget.renderProperties(
-            self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval)
-
         # Additional Node Plotting
-
+        flag = 'No Added Node'
+        dx = 0
+        dy = 0
+        dz = 0
         for j in range(member_count):
-            # print('for')
+            # print('for add node')
             if not np.isclose(BNodevalue[j][0][1], 0):
-                # print('if not')
-                for i in range(int(np.amax(BNodevalue[j, :, 1])) + 1):
-                    # print('for 2')
+                # print('if not add node')
+                for i in range(int(np.amax(BNodevalue[j, :, 1]))):
+                    # print('i = ', i, 'j = ', j)
+                    # print('for 2 add node')
                     dx = BNodevalue[j][i][2]
                     dy = -BNodevalue[j][i][4]
                     dz = BNodevalue[j][i][3]
+                    print('dx =', dx, 'dy =', dy,'dz =', dz)
                     if np.isclose(BNodevalue[j][i][14], 1):
                         flag = 'Add Node x'
+                        glWidget.drawAsterisk(self,dx,dy,dz, flag)
                     else:
-                        flag = 'Add Node asterisk'
-                    print('flag = ', flag, '\ndx = ', dx, '\ndy = ', dy, 'dz = ', dz)
-
-                    return flag, dx, dy, dz  # solve problem with more than one added node
-
-
+                        flag = 'Asterisk'
+                        glWidget.drawAsterisk(self,dx,dy,dz, flag)
 
     def added_node_drawing_properties(self,BNodevalue):
         ''' This function is used to obtain the added point cross-section properties'''

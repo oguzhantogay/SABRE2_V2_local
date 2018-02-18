@@ -44,12 +44,12 @@ class glWidget(QGLWidget, QMainWindow):
         self.initial_zoom = 2
         self.font = QFont()
         self.font.setPointSize(11)
-        self.font2 = QFont()
-        self.font2.setPointSize(7)
+        glWidget.font2 = QFont()
+        glWidget.font2.setPointSize(7)
         self.lastPos = QtCore.QPoint()
         self.parameters = []
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval = None, None, None, None, None, None
+        glWidget.member_count, glWidget.member_values, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval = None, None, None, None, None, None
 
         self.Massemble = None
         self.joint_i = 1
@@ -57,8 +57,8 @@ class glWidget(QGLWidget, QMainWindow):
 
         self.line_checked = False
         self.selected_checked = False
-        self.render_checked = False
-        # print("values = ", self.member_count, self.member_values)
+        glWidget.render_checked = False
+        # print("values = ", glWidget.member_count, glWidget.member_values)
 
     def SurfaceContour(self, vertices, edges):
         glDisable(GL_CULL_FACE)
@@ -88,6 +88,7 @@ class glWidget(QGLWidget, QMainWindow):
         glEnd()
 
     def drawAsterisk(self, dx, dy, dz, flag = 'Asterisk'):
+        # print('draw asterisk test')
         asterisk_size = glWidget.joint_size * 1.7
         glCullFace(GL_BACK)
         glEnable(GL_BLEND)
@@ -116,8 +117,6 @@ class glWidget(QGLWidget, QMainWindow):
         glVertex3d(dx + asterisk_size / 2, dy + asterisk_size / 2, dz + -asterisk_size / 2)
         glVertex3d(dx + -asterisk_size / 2, dy + -asterisk_size / 2, dz + asterisk_size / 2)
         glEnd()
-
-
 
     def referenceLine(self, MJvalue):
         glPushAttrib(GL_ENABLE_BIT)
@@ -318,10 +317,10 @@ class glWidget(QGLWidget, QMainWindow):
                     self.renderText(self.joint_nodes[i][1] - glWidget.joint_size,
                                     self.joint_nodes[i][2] + glWidget.joint_size, 0, joint_text, font=self.font)
 
-        if self.member_count is None:
+        if glWidget.member_count is None:
             pass
         else:
-            for i in range(self.member_count):
+            for i in range(glWidget.member_count):
                 self.memberOnly(i)
                 if self.ui.actionJoint_Member_Labels.isChecked():
                     if self.ui.Members_table.item(i, 1) is not None and self.ui.Members_table.item(i,
@@ -334,15 +333,17 @@ class glWidget(QGLWidget, QMainWindow):
                                                                       self.joint_nodes[self.joint_i][1]) / 2
                         text_y = self.joint_nodes[self.joint_i][2] + (self.joint_nodes[self.joint_j][2] -
                                                                       self.joint_nodes[self.joint_i][2]) / 2
-                        joint_text = "M" + str(int(self.member_values[i][0]))
+                        joint_text = "M" + str(int(glWidget.member_values[i][0]))
                         self.renderText(text_x, text_y, 0, joint_text, font=self.font)
 
-        self.render_checked = self.ui.actionRender_All_Members.isChecked()
-        if self.member_count is not None:
-            self.member_count = int(self.member_count)
-        if self.render_checked:
+        glWidget.render_checked = self.ui.actionRender_All_Members.isChecked()
+        # glWidget.BNodevalue = self.BNodeValueUpdater()
+        # print('paint GL BNodevalue = ', glWidget.BNodevalue)
+        if glWidget.member_count is not None:
+            glWidget.member_count = int(glWidget.member_count)
+        if glWidget.render_checked:
             Massemble = self.MassembleUpdater()
-            self.renderAllProp(self.member_count, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval,
+            self.renderAllProp(glWidget.member_count, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval,
                                Massemble)
 
     def normalizeAngle(self, angle):
@@ -431,10 +432,18 @@ class glWidget(QGLWidget, QMainWindow):
         pass
 
     def updateTheWidget(self):
+        # print('update the widget')
+        self.ui.Members_table.blockSignals(False)
         row = self.ui.Members_table.currentRow()
+        if row == -1:
+            self.ui.Members_table.setCurrentCell(0,1)
+            row = self.ui.Members_table.currentRow()
         none_checker = self.noneDetector(self.ui.Joints_Table)
-        self.render_checked = self.ui.actionRender_All_Members.isChecked()
+        glWidget.render_checked = self.ui.actionRender_All_Members.isChecked()
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
+        if glWidget.BNodevalue is not None:
+            glWidget.BNodevalue = self.BNodeValueUpdater()
+            # print('update The Widget = ', glWidget.BNodevalue)
         # if flag == 'Add Node x':
         #     glWidget.add_node_flag = 1
         # elif flag =='Add Node Asterisk':
@@ -443,14 +452,18 @@ class glWidget(QGLWidget, QMainWindow):
         #     pass
         # print("row number =", row)
         # flag = 'General Section Render', dx = 0, dy = 0, dz = 0
+        # print('row =' , row)
+        # print(self.ui.Members_table.item(row, 1))
         try:
             if self.ui.Members_table.item(row, 1) is None:
                 pass
             else:
-                self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue, self.Rval = self.memberTableValues()
-                if self.render_checked:
+                glWidget.member_count, glWidget.member_values, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval = self.memberTableValues()
+                glWidget.BNodevalue = self.BNodeValueUpdater()
+                # print('update the widget = ', glWidget.BNodevalue )
+                if glWidget.render_checked:
                     Massemble = self.MassembleUpdater()
-                    self.member_count = int(self.member_count)
+                    glWidget.member_count = int(glWidget.member_count)
                     # if glWidget.add_node_flag == 1:
                     #     self.drawAsterisk(dx, dy, dz, flag = 'x')
                     # elif glWidget.add_node_flag == 2:
@@ -458,12 +471,11 @@ class glWidget(QGLWidget, QMainWindow):
                     # else:
                     #     pass
 
-                    self.renderAllProp(self.member_count, self.JNodeValues_i, self.JNodeValues_j, self.BNodevalue,
-                                       self.Rval, Massemble)
+                    self.renderAllProp(glWidget.member_count, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue,
+                                       glWidget.Rval, Massemble)
 
         except AttributeError:
             pass
-
         glWidget.white_checked = self.ui.actionWhite_Background.isChecked()
         self.diam = max(max(self.joint_nodes[:, 1]) - min(self.joint_nodes[:, 1]),
                         (max(self.joint_nodes[:, 2]) - min(self.joint_nodes[:, 2])))
@@ -536,6 +548,20 @@ class glWidget(QGLWidget, QMainWindow):
                                                                                  flag="OpenGL")
         return Massemble
 
+    def BNodeValueUpdater(self):
+        from AddNode import AddNodeClass
+        _, _, JNodeValues_i, JNodeValues_j, BNodevalue, _ = glWidget.memberTableValues(self)
+
+        Massemble = glWidget.MassembleUpdater(self)
+
+        # print("BNodevalue function in OpenGLCode before = ", BNodevalue)
+
+        BNodevalue = AddNodeClass.ApplyButton(self)
+
+        # print("BNodevalue function in OpenGLCode = ", BNodevalue)
+
+        return BNodevalue
+
     def noneDetector(self, tableName):
         row_count = tableName.rowCount()
         return_value = False
@@ -559,8 +585,8 @@ class glWidget(QGLWidget, QMainWindow):
             MJvalue = np.zeros((2, 4))
             # print("JnodeValue =", self.joint_nodes)
             if Massemble is not None:
-                self.joint_i = int(self.member_values[x][1] - 1)
-                self.joint_j = int(self.member_values[x][2] - 1)
+                self.joint_i = int(glWidget.member_values[x][1] - 1)
+                self.joint_j = int(glWidget.member_values[x][2] - 1)
                 mem = Massemble.shape[0]
                 # print("mem = ", mem)
                 glPushAttrib(GL_ENABLE_BIT)
@@ -585,10 +611,10 @@ class glWidget(QGLWidget, QMainWindow):
             glEnable(GL_LINE_STIPPLE)
             glBegin(GL_LINES)
 
-            self.joint_i = int(self.member_values[x][1] - 1)
-            self.joint_j = int(self.member_values[x][2] - 1)
+            self.joint_i = int(glWidget.member_values[x][1] - 1)
+            self.joint_j = int(glWidget.member_values[x][2] - 1)
 
-            # print("test = ", self.member_values[x][1],self.member_values[x][2], 0)
+            # print("test = ", glWidget.member_values[x][1],glWidget.member_values[x][2], 0)
             glColor3ub(100, 149, 237)
 
             glVertex3f(self.joint_nodes[self.joint_i][1], self.joint_nodes[self.joint_i][2], 0)
@@ -625,95 +651,8 @@ class glWidget(QGLWidget, QMainWindow):
 
     def renderAllProp(self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, Massemble):
         ''' This function works on the rendering all properties of the model'''
-
-        forTop, forBottom, tf, bf, web, _, _, _, _, _, _, _, _, _ = glWidget.renderProperties(
-            self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval)
-        edges = ((0, 1),
-                 (1, 2),
-                 (2, 3),
-                 (3, 0))
-
-        # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
-        glColor4f(0, 1, 0, 1)
-        glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=self.font2)
-        glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Flange 2", font=self.font2)
-        glWidget.SurfaceContour(self, tf, edges)
-        glWidget.SurfaceContour(self, web, edges)
-        glWidget.SurfaceContour(self, bf, edges)
-        # self.drawAsterisk()
-        glWidget.Surfaces(self, tf)
-        glWidget.Surfaces(self, web)
-        glWidget.Surfaces(self, bf)
-
-        # print("Massemble last point = ", Massemble)   Massemble works !
-
-        # MJvalue = np.zeros((2, 4))
-        # # print("JnodeValue =", self.joint_nodes)
-        # if Massemble is not None:
-        #     mem = Massemble.shape[0]
-        #     # print("mem = ", mem)
-        #     for i in range(mem):
-        #         MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1] - 1)][1]
-        #         MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2] - 1)][1]
-        #         MJvalue[0][2] = self.joint_nodes[int(Massemble[i][1] - 1)][2]
-        #         MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2] - 1)][2]
-        #         MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1] - 1)][3]
-        #         MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2] - 1)][3]
-        #
-        #         opp = MJvalue[1][2] - MJvalue[0][2]  # element depth in y - dir
-        #         adj = MJvalue[1][1] - MJvalue[0][1]  # element length in x - dir
-        #
-        #         angle = np.arctan2(opp, adj)
-        #
-        #         Rz = np.zeros((3, 3))
-        #
-        #         Rz[0][0] = np.cos(angle)
-        #         Rz[0][1] = -np.sin(angle)
-        #         Rz[1][0] = np.sin(angle)
-        #         Rz[1][1] = np.cos(angle)
-        #         Rz[2][2] = 1
-
-        # Fhsb1 = (JNodevalue_i[i][8] * np.power(JNodevalue_i[i][8], 3) * JNodevalue_i[i][12]) / (
-        #         JNodevalue_i[i][6] * np.power(JNodevalue_i[i][5], 3) + JNodevalue_i[i][8] * np.power(
-        #     JNodevalue_i[i][7], 3))
-        #
-        # Fhst1 = JNodevalue_i[i][12] - Fhsb1
-        #
-        # Fhsb2 = (JNodevalue_j[i][8] * np.power(JNodevalue_j[i][8], 3) * JNodevalue_j[i][12]) / (
-        #         JNodevalue_j[i][6] * np.power(JNodevalue_j[i][5], 3) + JNodevalue_j[i][8] * np.power(
-        #     JNodevalue_j[i][7], 3))
-        #
-        # Fhst2 = JNodevalue_j[i][12] - Fhsb2
-        # j1 = np.zeros((3, 1))
-        # j2 = np.zeros((3, 1))
-        # if Rval[i][1] == 1:
-        #
-        #     j1[0][0] = (Fhsb1 + Fhst1)
-        #     j1[1][0] = -(Fhsb1 + Fhst1) * 1.1 / 2
-        #     j1 = Rz * j1
-        #     j2[0][0] = (Fhsb1 + Fhst1) * 2
-        #     j2[1][0] = (Fhsb1 + Fhst1) * 1.1 / 2
-        #     j2 = Rz * j2
-        # elif Rval[i][1] == 3:
-        #
-        #     j1[0][0] = Fhsb1 + Fhst1
-        #     j1 = Rz * j1
-        #     j2[0][0] = (Fhsb1 + Fhst1) * 2
-        #     j2[1][0] = (Fhsb1 + Fhst1) * 1.1
-        #     j2 = Rz * j2
-        # elif Rval[i][1] == 2:
-        #
-        #     j1[0][0] = (Fhsb1 + Fhst1)
-        #     j1[1][0] = -(Fhsb1 + Fhst1) * 1.1
-        #     j1 = Rz * j1
-        #     j2[0][0] = (Fhsb1 + Fhst1) * 2
-        #     j2[1][0] = 0
-        #     j2 = Rz * j2
-
-    def renderProperties(self, member_count, JNodevalue_i, JNodevalue_j, BNodevalue, Rval):
-        ''' This function works on the rendering all properties of the model'''
-        # self.member_count, self.member_values, self.JNodeValues_i, self.JNodeValues_j
-        # print("node values", self.JNodeValues_i, self.JNodeValues_j)
+        # glWidget.member_count, glWidget.member_values, glWidget.JNodeValues_i, glWidget.JNodeValues_j
+        # print("node values", glWidget.JNodeValues_i, glWidget.JNodeValues_j)
         # print("test", JNodevalue_i)
         max_b = 0
 
@@ -986,7 +925,7 @@ class glWidget(QGLWidget, QMainWindow):
         segnum = segnum.astype(int)
         # print("Memlength = ", MemLength)
         # print("Dg1 = ", Dg1, "Dg2 = ", Dg2, "Dst1 = ", Dst1 , "Dst2 = ", Dst2)
-        print('Rval in memcount = ', Rval)
+        # print('Rval in memcount = ', Rval)
         for i in range(member_count):
             if Rval[i][1] == 1:
                 for k in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
@@ -1126,9 +1065,9 @@ class glWidget(QGLWidget, QMainWindow):
         # print("memlength 1 = ", MemLength1)
         # print("memlength 2 = ", MemLength2)
         # print('val1 = ', val1)
-        print('sn = ', sn)
+        # print('sn = ', sn)
         for i in range(sn):
-            print('i = ', i)
+            # print('i = ', i)
             Rz[0][0] = np.cos(alpharef[i, 1])
             Rz[0][1] = -np.sin(alpharef[i, 1])
             Rz[1][0] = np.sin(alpharef[i, 1])
@@ -1500,7 +1439,7 @@ class glWidget(QGLWidget, QMainWindow):
             bf[3][0] = Xwbf[1][1]
             bf[3][1] = Ywbf[1][1]
             bf[3][2] = Zwbf[1][1]
-            print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
+            # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
             # print('test 2 ')
             #
             # edges = ((0, 1),
@@ -1515,7 +1454,7 @@ class glWidget(QGLWidget, QMainWindow):
             forBottom = [np.mean((np.amax(bf[:, 0]), np.amin(bf[:, 0]))),
                          np.mean((np.amax(bf[:, 1]), np.amin(bf[:, 1]))),
                          np.mean((np.amax(bf[:, 2]), np.amin(bf[:, 2])))]
-            if self.render_checked:
+            if glWidget.render_checked:
                 edges = ((0, 1),
                          (1, 2),
                          (2, 3),
@@ -1523,8 +1462,8 @@ class glWidget(QGLWidget, QMainWindow):
 
                 # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
                 glColor4f(0, 1, 0, 1)
-                glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=self.font2)
-                glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Flange 2", font=self.font2)
+                glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=glWidget.font2)
+                glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Flange 2", font=glWidget.font2)
                 glWidget.SurfaceContour(self, tf, edges)
                 glWidget.SurfaceContour(self, web, edges)
                 glWidget.SurfaceContour(self, bf, edges)
@@ -1532,6 +1471,3 @@ class glWidget(QGLWidget, QMainWindow):
                 glWidget.Surfaces(self, tf)
                 glWidget.Surfaces(self, web)
                 glWidget.Surfaces(self, bf)
-
-
-        return forTop, forBottom, tf, bf, web, Xwtf, Ywtf, Zwtf, Xwweb, Ywweb, Zwweb, Xwbf, Ywbf, Zwbf

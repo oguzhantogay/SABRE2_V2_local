@@ -459,7 +459,7 @@ class AddNodeClass(QMainWindow):
 
     def coordinateFill(self):
         mnum = int(self.ui.AddNodeMember.currentIndex())
-        seglength = self.ui.AddNodePositionFrom.text()
+        seglength = float(self.ui.AddNodePositionFrom.text())
 
         # print("mnum = ", mnum, "\n", "seglength = ", seglength)
 
@@ -477,8 +477,8 @@ class AddNodeClass(QMainWindow):
         memlength = np.sqrt((JNodevalue_i[mnum][2] - JNodevalue_j[mnum][2]) ** 2 + (
                 JNodevalue_i[mnum][3] - JNodevalue_j[mnum][3]) ** 2 + (
                                     JNodevalue_i[mnum][4] - JNodevalue_j[mnum][4]) ** 2)
-        # print("mem length = ", memlength, "seglength = ", seglength)
-        if not np.greater_equal(seglength, memlength):
+        # print("mem length = ", memlength, "\nseglength = ", seglength)
+        if np.greater_equal(seglength, memlength):
             DropDownActions.ActionClass.statusMessage(self,
                                                       message="Position from i node must be smaller than member length")
         else:
@@ -495,7 +495,6 @@ class AddNodeClass(QMainWindow):
             Additive[0] = JNodevalue_i[mnum][2]
             Additive[1] = JNodevalue_i[mnum][3]
             Additive[2] = JNodevalue_i[mnum][4]
-            print
             Lb[0] = seglength
             Lb = np.dot(Rz, Lb) + Additive
 
@@ -505,6 +504,7 @@ class AddNodeClass(QMainWindow):
             self.ui.AddNodeX.setText(str(Lb[0]))
             self.ui.AddNodeY.setText(str(Lb[1]))
             self.ui.AddNodeZ.setText(str(Lb[2]))
+            # print('Lb__= ', Lb)
             return Lb
 
     def validatorForTable(self):
@@ -529,15 +529,11 @@ class AddNodeClass(QMainWindow):
 
         return addNodeTableValues
 
-    def returnPressed(self):
-        print('in fun = ', AddNodeClass.apply_button_pressed)
-        return AddNodeClass.apply_button_pressed
+    def addNodePushFun(self):
 
-    def additiveNodeAfterApply(self, BNodevalue, mnum):
-        r = BNodevalue[mnum, :, 1].shape[0]
-        # print('count = ', self.ui.AdditionalNodeNumberComboBox.count(), r)
-        if r == self.ui.AdditionalNodeNumberComboBox.count():
-            self.ui.AdditionalNodeNumberComboBox.addItem(str(r+1))
+        added_node_number = int(self.ui.AdditionalNodeNumberComboBox.count())
+        self.ui.AdditionalNodeNumberComboBox.addItem(str(added_node_number+1))
+        self.ui.addNodePushButton.setEnabled(False)
 
     def removeNodeDialog(self):
         added_node_count = self.ui.AdditionalNodeNumberComboBox.count()
@@ -565,21 +561,24 @@ class AddNodeClass(QMainWindow):
 
     def ApplyButton(self):
         '''executes when the apply button pressed in the Add Nodes menu'''
-
+        self.ui.addNodePushButton.setEnabled(True)
         AddNodeClass.apply_button_pressed = True
         mnum = int(self.ui.AddNodeMember.currentIndex())
         nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())
         Massemble = AddNodeClass.MassembleUpdater(self)
         _, JNodevalue_i, JNodevalue_j, BNodevalue, _, _ = AddNodeClass.memberTableValues(self)
         nextBum = AddNodeClass.memberNumbering(self)
+        try:
+            float(self.ui.AddNodePositionFrom.text())  # test for the node i is filled or not ?
 
-        # print("nbnode = ", nbnode, "\n", 'Max BNode 1 =' , np.amax(BNodevalue[mnum, :, 1]))
-        if np.greater(nbnode, np.amax(BNodevalue[mnum, :, 1])):
-            SNodeValue = None
-        else:
+            # print("nbnode = ", nbnode, "\n", 'Max BNode 1 =' , np.amax(BNodevalue[mnum, :, 1]))
+            print('Apply button before = ', BNodevalue,'nbnode =',  nbnode)
+            if np.greater(nbnode, np.amax(BNodevalue[mnum, :, 1])):
+                SNodeValue = None
+
             import SABRE2_main_subclass
             Lb = AddNodeClass.coordinateFill(self)
-            # print("Lb = ", Lb)
+            print("Lb = ", Lb)
             BNodevalue = np.zeros((mnum + 1, nbnode + 1, 16))
 
             addNodeTableValues = AddNodeClass.readAddNodeTable(self)
@@ -600,19 +599,22 @@ class AddNodeClass(QMainWindow):
                     BNodevalue[mnum][nbnode][6] + BNodevalue[mnum][nbnode][8]) / 2  # flange centroid
             BNodevalue[mnum][nbnode][13] = addNodeTableValues[6]
 
-        print("BNodevalue function before = ", BNodevalue)
-        import SABRE2SegmCODE
+            print("BNodevalue function before = ", BNodevalue)
+            import SABRE2SegmCODE
 
-        BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
+            BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
 
-        # print("BNodevalue function after = ", BNodevalue)
-        import SABRE2SegmModel
+            # print("BNodevalue function after = ", BNodevalue)
+            import SABRE2SegmModel
 
-        flag, dx, dy, dz = SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
-        # print('flag = ',flag, '\ndx = ', dx, '\ndy = ', dy, 'dz = ', dz)
-        SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
-        AddNodeClass.additiveNodeAfterApply(self, BNodevalue, mnum)
-        # print("BNodevalue function = ", BNodevalue)
+            SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
+
+            SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
+            print("BNodevalue apply button = ", BNodevalue)
+        except ValueError:
+            DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
+
+        return BNodevalue
 
 
 class SegmRemove(QMainWindow):

@@ -41,7 +41,7 @@ class SABRE2_main_subclass(QMainWindow):
         SABRE2_main_subclass.Massemble = np.zeros((1, 16))
         self.table_prop = np.zeros((1, 14))
         self.members_table_values = np.zeros((1, 18))
-        self.BNodevalue = None
+        SABRE2_main_subclass.BNodevalue = None
         self.SNodevalue = None
         ###  Setting validators for the lineEdit positions
         validatorDouble = QDoubleValidator()
@@ -123,8 +123,8 @@ class SABRE2_main_subclass(QMainWindow):
 
         # Joint Table Arrangements
 
-        ui_layout.Joints_Table.itemChanged.connect(
-            lambda: self.update_joints_table(ui_layout.Joints_Table))
+        # ui_layout.Joints_Table.itemChanged.connect(
+        #     lambda: self.update_joints_table(ui_layout.Joints_Table))
 
         ui_layout.Joints_Table.itemChanged.connect(
             lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
@@ -253,6 +253,8 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.AddNodeMember.currentIndexChanged.connect(lambda: AddNode.AddNodeClass.addNodeTableInitiation(self))
         ui_layout.AddNodeMember.currentIndexChanged.connect(lambda: AddNode.AddNodeClass.comboBoxChanged(self))
 
+        ui_layout.addNodePushButton.clicked.connect(lambda: AddNode.AddNodeClass.addNodePushFun(self))
+
         ui_layout.FollowTaper.clicked.connect(lambda : AddNode.AddNodeClass.fillTable(self))
 
         ui_layout.FollowTaper.clicked.connect(lambda:AddNode.AddNodeClass.coordinateFill(self))
@@ -261,6 +263,9 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: AddNode.AddNodeClass.sql_print(self))
 
         ui_layout.AddNodeApply.clicked.connect(lambda : AddNode.AddNodeClass.ApplyButton(self))
+
+        ui_layout.AddNodeApply.clicked.connect(lambda : SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
+
         # Member Properties Table
         ui_layout.Apply_all_member_properties.clicked.connect(
             lambda: MemberPropertiesTable.set_values_with_row(self, ui_layout.Member_Properties_Table,
@@ -403,20 +408,20 @@ class SABRE2_main_subclass(QMainWindow):
         for i in range(row_count):
             Rval[i][0] = Members_values[i][0]
             Rval[i][1] = Members_values[i][3] + 1
-        # print("update = ", self.BNodevalue, "\nshape = ", self.BNodevalue.shape[1])
-        if self.BNodevalue is None:
-            self.BNodevalue = np.zeros((row_count, 1, 2))
-            # print("update = ", self.BNodevalue)
-            if row_count == self.BNodevalue.shape[0]:
+        # print("update = ", SABRE2_main_subclass.BNodevalue, "\nshape = ", SABRE2_main_subclass.BNodevalue.shape[1])
+        if SABRE2_main_subclass.BNodevalue is None:
+            SABRE2_main_subclass.BNodevalue = np.zeros((row_count, 1, 2))
+            # print("update = ", SABRE2_main_subclass.BNodevalue)
+            if row_count == SABRE2_main_subclass.BNodevalue.shape[0]:
                 for i in range(row_count):
-                    self.BNodevalue[i][0][0] = i + 1
-                    self.BNodevalue[i][0][1] = 0  # to indicate zero bracing
-        elif self.BNodevalue.shape[2] == 2:
-            self.BNodevalue = np.zeros((row_count, 1, 2))
-            if row_count == self.BNodevalue.shape[0]:
+                    SABRE2_main_subclass.BNodevalue[i][0][0] = i + 1
+                    SABRE2_main_subclass.BNodevalue[i][0][1] = 0  # to indicate zero bracing
+        elif SABRE2_main_subclass.BNodevalue.shape[2] == 2:
+            SABRE2_main_subclass.BNodevalue = np.zeros((row_count, 1, 2))
+            if row_count == SABRE2_main_subclass.BNodevalue.shape[0]:
                 for i in range(row_count):
-                    self.BNodevalue[i][0][0] = i + 1
-                    self.BNodevalue[i][0][1] = 0  # to indicate zero bracing
+                    SABRE2_main_subclass.BNodevalue[i][0][0] = i + 1
+                    SABRE2_main_subclass.BNodevalue[i][0][1] = 0  # to indicate zero bracing
 
 
         JNodeValue_i = np.zeros((Members_values.shape[0], 14))
@@ -463,7 +468,7 @@ class SABRE2_main_subclass(QMainWindow):
 
         # print("main screen node i", JNodeValue_i)
         # print("main screen node j", JNodeValue_j)
-        return Members_values, JNodeValue_i, JNodeValue_j, current_row, self.BNodevalue, flag_mem_values, Rval
+        return Members_values, JNodeValue_i, JNodeValue_j, current_row, SABRE2_main_subclass.BNodevalue, flag_mem_values, Rval
 
     def AISC_update_fun(self, tableName):
         # tableName.blockSignals(True)
@@ -993,48 +998,52 @@ class TableChanges(QMainWindow):
 
     def add_new_row(self, tableName, options, position, lineName, flag, combo_values=None):
         row_position = tableName.rowCount()
-        combo_box = QtGui.QComboBox()
-        if flag == "last":
-            tableName.insertRow(row_position)
+        member_count = combo_values.shape[0]
+        # print('member count' , member_count)
+        # print('row pos = ', row_position)
+        if member_count > row_position:
+            combo_box = QtGui.QComboBox()
+            if flag == "last":
+                tableName.insertRow(row_position)
 
-            val = 0
-            item = QTableWidgetItem(str(val))
-            tableName.setItem(row_position, position, item)
-            for t in options:
-                combo_box.addItem(t)
+                val = 0
+                item = QTableWidgetItem(str(val))
+                tableName.setItem(row_position, position, item)
+                for t in options:
+                    combo_box.addItem(t)
+                # print('combo box value = ', combo_values)
+                tableName.setCellWidget(row_position, position, combo_box)
+                if combo_values is None:
+                    pass
+                else:
+                    combo_box.setCurrentIndex(combo_values[row_position-1])
+                combo_box.currentIndexChanged.connect(
+                    lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
 
-            tableName.setCellWidget(row_position, position, combo_box)
-            if combo_values is None:
-                pass
+                item1 = QTableWidgetItem(str(row_position + 1))
+                item1.setTextAlignment(QtCore.Qt.AlignCenter)
+                item1.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                tableName.setItem(row_position, 0, item1)
             else:
-                combo_box.setCurrentIndex(combo_values[row_position])
-            combo_box.currentIndexChanged.connect(
-                lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
+                row_number = DataCollection.update_lineedit_values(self, lineName)
+                tableName.insertRow(row_number)
+                val = 0
 
-            item1 = QTableWidgetItem(str(row_position + 1))
-            item1.setTextAlignment(QtCore.Qt.AlignCenter)
-            item1.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-            tableName.setItem(row_position, 0, item1)
-        else:
-            row_number = DataCollection.update_lineedit_values(self, lineName)
-            tableName.insertRow(row_number)
-            val = 0
+                item = QTableWidgetItem(str(val))
+                tableName.setItem(row_number, position, item)
 
-            item = QTableWidgetItem(str(val))
-            tableName.setItem(row_number, position, item)
+                for i in range(row_position + 2):
+                    item = QTableWidgetItem(str(i + 1))
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                    tableName.setItem(i, 0, item)
 
-            for i in range(row_position + 2):
-                item = QTableWidgetItem(str(i + 1))
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                tableName.setItem(i, 0, item)
+                for t in options:
+                    combo_box.addItem(t)
 
-            for t in options:
-                combo_box.addItem(t)
-
-            tableName.setCellWidget(row_number, position, combo_box)
-            combo_box.currentIndexChanged.connect(
-                lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
+                tableName.setCellWidget(row_number, position, combo_box)
+                combo_box.currentIndexChanged.connect(
+                    lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
 
     def delete_row(self, tableName, lineName, flag):
         row_position = tableName.rowCount()

@@ -26,7 +26,7 @@ class ClassA(QMainWindow):
     def BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble):
         # print("Massemble = ", Massemble)
         # _, _, JNodevalue_i, JNodevalue_j, BNodevalue, _ = ClassA.memberTableValues(self)
-        # print('shape BNode = ', BNodevalue.shape[2])
+        # print('shape BNode = ', BNodevalue)
         if BNodevalue.shape[2] == 2:
             pass
         else:

@@ -62,7 +62,7 @@ else
       nextBnum = max(BNodevalue(mnum,:,2))+1;
     end  
 end
-% fprintf('test3')
+% fprintf('test3') 
 % BNodevalue
 % BNodevalue=[mnum nbnode jcoordx jcoordy jcoordz jbfb jbft jtfb jtft jd jtw dw h)
 if isempty(get(pdb_member_name,'String')) ...

@@ -285,8 +285,8 @@ else % ~isempty(Massemble)
    NTshe1=zeros(sn,4);NTshe2=zeros(sn,4);
    segnum(1,1)=0;          % (Start node number - 1) for each member
    ys1=zeros(sn,1);ys2=zeros(sn,1);
-   fprintf('Rval = ') 
-   Rval
+%    fprintf('Rval = ') 
+%    Rval
    for i = 1:mem
       switch Rval(i,2) 
 
@@ -409,10 +409,10 @@ else % ~isempty(Massemble)
    % ----------------    Undeformed 3D rendering       -------------------
    % ---------------------------------------------------------------------
 %    Evalue = [];
-   fprintf('test val1 =')
-   val1
-   fprintf('test sn = ')
-   sn
+%    fprintf('test val1 =')
+%    val1
+%    fprintf('test sn = ')
+%    sn
    for i = 1:sn 
       Rz=[cos(alpharef(i,2)) -sin(alpharef(i,2)) 0; ...
       sin(alpharef(i,2)) cos(alpharef(i,2)) 0; ...
@@ -612,7 +612,7 @@ else % ~isempty(Massemble)
             Zwbf(k,j) = eLbf((k-1)*2+j,3);       
          end
       end 
-      fprintf('test first model')
+%       fprintf('test first model')
 %       Xwtf
 %       Ywtf
 %       Zwtf

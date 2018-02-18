@@ -5385,6 +5385,9 @@ function pde_apply_pushbutton_Callback(hObject, eventdata)
       pde_bfti_edit,pde_tfti_edit,pde_dwi_edit,pde_twi_edit,pde_bfbj_edit,...
       pde_tfbj_edit,pde_bftj_edit,pde_tftj_edit,pde_dwj_edit,pde_twj_edit,pde_fili_edit,pde_filj_edit,...
       pde_reference_edit,pde_jointi_radiobutton,pde_jointj_radiobutton,axesm,pde_wsname_edit,LabType,vstm);   
+  
+   fprintf('test2')
+   BNodevalue 
  end % function end
  % --------------------------------------------------------------------
 function pde_cancel_pushbutton_Callback(hObject, eventdata) 
@@ -5462,8 +5465,11 @@ function pdb_apply_pushbutton_Callback(hObject, eventdata)
       pdb_coordz_edit,pdb_length_edit,pdb_bfb_edit,pdb_tfb_edit,...
       pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit,pdb_step_edit,LabType,axesm,vstm);
   
-  fprintf('SNODE')
-  SNodevalue
+   fprintf('test')
+   BNodevalue 
+%   
+%   fprintf('SNODE')
+%   SNodevalue
 end % function end 
 % --------------------------------------------------------------------
 function pdb_cancel_pushbutton_Callback(hObject, eventdata)  

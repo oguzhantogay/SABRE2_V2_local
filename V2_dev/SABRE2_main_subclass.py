@@ -250,8 +250,10 @@ class SABRE2_main_subclass(QMainWindow):
         # Add Node Menu Actions and Arrangements
         ui_layout.Members_tabs.currentChanged.connect(lambda: AddNode.AddNodeClass.setAddNodeComboBox(self))
         ui_layout.Members_tabs.currentChanged.connect(lambda: AddNode.AddNodeClass.addNodeTableInitiation(self))
+
         ui_layout.AddNodeMember.currentIndexChanged.connect(lambda: AddNode.AddNodeClass.addNodeTableInitiation(self))
         ui_layout.AddNodeMember.currentIndexChanged.connect(lambda: AddNode.AddNodeClass.comboBoxChanged(self))
+        ui_layout.AddNodeMember.currentIndexChanged.connect(lambda: AddNode.AddNodeClass.setAddedNodeComboBox(self))
 
         ui_layout.addNodePushButton.clicked.connect(lambda: AddNode.AddNodeClass.addNodePushFun(self))
 

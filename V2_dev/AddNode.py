@@ -15,6 +15,7 @@ class AddNodeClass(QMainWindow):
         AddNodeClass.setComboBoxValues = None
         AddNodeClass.additionalNodeNumber = 1
         AddNodeClass.apply_button_pressed = False
+        AddNodeClass.added_node_information = np.zeros((int(self.ui.AddNodeMember.count()),2))
 
     def setAddNodeComboBox(self):
         row = self.ui.Members_table.rowCount()
@@ -27,6 +28,35 @@ class AddNodeClass(QMainWindow):
             # print("a = ", a)
             self.ui.AddNodeMember.clear()
             self.ui.AddNodeMember.addItems(a)
+
+    def addedNodeInformationArrayUpdate(self):
+        current_member = int(self.ui.AddNodeMember.currentIndex())
+        current_added_node_number = int(self.ui.AdditionalNodeNumberComboBox.count())
+        self.added_node_information[current_member][1] = current_added_node_number
+
+        for i in range(int(self.ui.AddNodeMember.count())):
+            AddNodeClass.added_node_information[i][0] = i + 1
+
+        # print('added node information = ', AddNodeClass.added_node_information)
+
+    def setAddedNodeComboBox(self):
+
+
+        current_member = int(self.ui.AddNodeMember.currentIndex())
+        if current_member == -1:
+            pass
+        else:
+            added_node_count= self.added_node_information[current_member][1]
+            print('added node count = ',  self.added_node_information)
+            if added_node_count == 0:
+                self.ui.AdditionalNodeNumberComboBox.clear()
+            else:
+                list_items = list(range(1, added_node_count))
+                for e in range(len(list_items)):
+                    list_items[e] = str(list_items[e])
+                self.ui.AdditionalNodeNumberComboBox.clear()
+                self.ui.AdditionalNodeNumberComboBox.addItems(list_items)
+
 
     def radioButtonState1(self):
         AddNodeClass.btnChecked = self.ui.StepRB1.isChecked()
@@ -572,13 +602,13 @@ class AddNodeClass(QMainWindow):
             float(self.ui.AddNodePositionFrom.text())  # test for the node i is filled or not ?
 
             # print("nbnode = ", nbnode, "\n", 'Max BNode 1 =' , np.amax(BNodevalue[mnum, :, 1]))
-            print('Apply button before = ', BNodevalue,'nbnode =',  nbnode)
+            # print('Apply button before = ', BNodevalue,'nbnode =',  nbnode)
             if np.greater(nbnode, np.amax(BNodevalue[mnum, :, 1])):
                 SNodeValue = None
 
             import SABRE2_main_subclass
             Lb = AddNodeClass.coordinateFill(self)
-            print("Lb = ", Lb)
+            # print("Lb = ", Lb)
             BNodevalue = np.zeros((mnum + 1, nbnode + 1, 16))
 
             addNodeTableValues = AddNodeClass.readAddNodeTable(self)
@@ -599,7 +629,7 @@ class AddNodeClass(QMainWindow):
                     BNodevalue[mnum][nbnode][6] + BNodevalue[mnum][nbnode][8]) / 2  # flange centroid
             BNodevalue[mnum][nbnode][13] = addNodeTableValues[6]
 
-            print("BNodevalue function before = ", BNodevalue)
+            # print("BNodevalue function before = ", BNodevalue)
             import SABRE2SegmCODE
 
             BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
@@ -607,10 +637,11 @@ class AddNodeClass(QMainWindow):
             # print("BNodevalue function after = ", BNodevalue)
             import SABRE2SegmModel
 
-            SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
+            # SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
 
             SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
-            print("BNodevalue apply button = ", BNodevalue)
+            # print("BNodevalue apply button = ", BNodevalue)
+            self.addedNodeInformationArrayUpdate(self)
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
 

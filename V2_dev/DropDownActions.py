@@ -334,6 +334,15 @@ class ActionClass(QMainWindow):
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     self.ui.Members_table.setItem(i, j, item)
 
+                    # Add node menu member drop down set-up
+                    from AddNode import AddNodeClass
+
+                    AddNodeClass.setAddNodeComboBox(self)
+
+                    # Add node menu table initiation
+
+                    AddNodeClass.addNodeTableInitiation(self)
+
                 else:
                     item = QTableWidgetItem(str(self.members_table_values[i][j]))
                     item.setTextAlignment(QtCore.Qt.AlignCenter)

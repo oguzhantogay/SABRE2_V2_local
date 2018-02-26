@@ -39,6 +39,13 @@ class h5_Class:
 
         file_open.close()
 
+    def read_array(self, database_name, file_name = 'process.h5'):
+
+        file_read = h5py.File(file_name, 'r')
+
+        array_name = file_read[database_name][:]
+
+        return array_name
 
 
 

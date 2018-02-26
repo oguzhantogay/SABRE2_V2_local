@@ -8,8 +8,10 @@ app = QApplication(sys.argv)
 window = SABRE2_main_subclass(Ui_SABRE2_V3())
 window.show()
 
+import atexit
+import os
+atexit.register(lambda : os.remove('process.h5'))
+
 
 sys.exit(app.exec_())
 
-# self.OpenGLwidget = OpenGLcode.glWidget(self)
-        # ui_layout.verticalLayout_8.insertWidget(0,self.OpenGLwidget)

@@ -360,5 +360,3 @@ class ActionClass(QMainWindow):
                                                                   self.Members_table_position,
                                                                   self.ui.Insert_row_number_mem_def, "last",
                                                                   combo_values=self.members_table_values[:, 3])
-
-    def general_file_saver(self):

@@ -3,6 +3,8 @@ from PyQt4 import QtGui
 import DropDownActions
 import sqlite3 as sq
 import numpy as np
+import h5_file
+from pathlib import Path
 
 
 class AddNodeClass(QMainWindow):
@@ -43,7 +45,10 @@ class AddNodeClass(QMainWindow):
 
 
         current_member = int(self.ui.AddNodeMember.currentIndex())
-        if current_member == -1:
+        current_added_node_text = self.ui.AdditionalNodeNumberComboBox.currentText()
+        print('current text = ', current_added_node_text)
+
+        if current_member == -1 or current_added_node_text == '':
             pass
         else:
             added_node_count= self.added_node_information[current_member][1]
@@ -630,9 +635,19 @@ class AddNodeClass(QMainWindow):
             BNodevalue[mnum][nbnode][13] = addNodeTableValues[6]
 
             # print("BNodevalue function before = ", BNodevalue)
+
+            if Path('process.h5').is_file():
+
+                BNodevalue = h5_file.h5_Class.read_array(self, 'Bracing Node')
+                print('BNode from H5 = ', BNodevalue)
+
+            else:
+                print('first added node')
             import SABRE2SegmCODE
 
             BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
+
+            h5_file.h5_Class.save_on_file(self,BNodevalue,'Bracing Node')
 
             # print("BNodevalue function after = ", BNodevalue)
             import SABRE2SegmModel

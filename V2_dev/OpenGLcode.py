@@ -441,19 +441,6 @@ class glWidget(QGLWidget, QMainWindow):
         none_checker = self.noneDetector(self.ui.Joints_Table)
         glWidget.render_checked = self.ui.actionRender_All_Members.isChecked()
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        if glWidget.BNodevalue is not None:
-            glWidget.BNodevalue = self.BNodeValueUpdater()
-            # print('update The Widget = ', glWidget.BNodevalue)
-        # if flag == 'Add Node x':
-        #     glWidget.add_node_flag = 1
-        # elif flag =='Add Node Asterisk':
-        #     glWidget.add_node_flag = 2
-        # else:
-        #     pass
-        # print("row number =", row)
-        # flag = 'General Section Render', dx = 0, dy = 0, dz = 0
-        # print('row =' , row)
-        # print(self.ui.Members_table.item(row, 1))
         try:
             if self.ui.Members_table.item(row, 1) is None:
                 pass

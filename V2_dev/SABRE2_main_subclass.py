@@ -174,6 +174,8 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: self.update_members_table(ui_layout.Members_table,
                                               self.Members_table_position))
 
+
+
         ui_layout.RemoveAddedNodePB.clicked.connect(
             lambda: AddNode.AddNodeClass.removeNodeDialog(self))
 

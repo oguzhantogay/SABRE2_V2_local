@@ -6,8 +6,7 @@ from PyQt4 import QtGui
 import DropDownActions
 import OpenGLcode
 import AddNode
-from OpenGL.GL import *
-import SABRE2_GUI
+import h5_file
 import numpy as np
 import sqlite3 as sq
 
@@ -36,6 +35,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.DefinitionTabs.close()  # to hide problem definition tabs
         ui_layout.AnalysisTabs.close()  # to hide analysis tabs
         SABRE2_main_subclass.OpenGLwidget = OpenGLcode.glWidget(ui_layout)
+        h5_file.h5_Class.generate_file(self)
         AddNode.AddNodeClass.validatorForTable(self)
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
         SABRE2_main_subclass.Massemble = np.zeros((1, 16))

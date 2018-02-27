@@ -21,38 +21,65 @@ class AddNodeClass(QMainWindow):
 
     def setAddNodeComboBox(self):
         row = self.ui.Members_table.rowCount()
+        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        print('added node info set add  = ', added_node_information)
+        number_of_added_node = added_node_information[0][1]
+
         if row == 1:
-            pass
+            if number_of_added_node == 0:
+                pass
+            else:
+                b = list(range(1, number_of_added_node))
+                for e in range(len(b)):
+                    b[e] = str(b[e])
+                self.ui.AdditionalNodeNumberComboBox.clear()
+                self.ui.AdditionalNodeNumberComboBox.addItems(a)
         else:
             a = list(range(1, row + 1))
+
             for e in range(len(a)):
                 a[e] = str(a[e])
+
             # print("a = ", a)
             self.ui.AddNodeMember.clear()
             self.ui.AddNodeMember.addItems(a)
+            if number_of_added_node == 0:
+                pass
+            else:
+                b = list(range(1, number_of_added_node))
+                for e in range(len(b)):
+                    b[e] = str(b[e])
+                self.ui.AdditionalNodeNumberComboBox.clear()
+                self.ui.AdditionalNodeNumberComboBox.addItems(a)
 
     def addedNodeInformationArrayUpdate(self):
         current_member = int(self.ui.AddNodeMember.currentIndex())
+
         current_added_node_number = int(self.ui.AdditionalNodeNumberComboBox.count())
-        self.added_node_information[current_member][1] = current_added_node_number
+
+        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+
+        added_node_information[current_member][1] = current_added_node_number
 
         for i in range(int(self.ui.AddNodeMember.count())):
-            AddNodeClass.added_node_information[i][0] = i + 1
+            added_node_information[i][0] = i + 1
+
+        h5_file.h5_Class.update_array(self,'added_node_information', added_node_information)
 
         # print('added node information = ', AddNodeClass.added_node_information)
 
     def setAddedNodeComboBox(self):
 
-
         current_member = int(self.ui.AddNodeMember.currentIndex())
         current_added_node_text = self.ui.AdditionalNodeNumberComboBox.currentText()
-        print('current text = ', current_added_node_text)
+        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        print('added node infor setAdded = ', added_node_information)
 
         if current_member == -1 or current_added_node_text == '':
             pass
         else:
-            added_node_count= self.added_node_information[current_member][1]
-            print('added node count = ',  self.added_node_information)
+            added_node_count= added_node_information[current_member][1]
+            print('added node count = ',  added_node_count)
             if added_node_count == 0:
                 self.ui.AdditionalNodeNumberComboBox.clear()
             else:
@@ -636,13 +663,13 @@ class AddNodeClass(QMainWindow):
 
             # print("BNodevalue function before = ", BNodevalue)
 
-            if Path('process.h5').is_file():
-
-                BNodevalue = h5_file.h5_Class.read_array(self, 'Bracing Node')
-                print('BNode from H5 = ', BNodevalue)
-
-            else:
-                print('first added node')
+            # if Path('process.h5').is_file():
+            #
+            #     BNodevalue = h5_file.h5_Class.read_array(self, 'Bracing Node')
+            #     print('BNode from H5 = ', BNodevalue)
+            #
+            # else:
+            #     print('first added node')
             import SABRE2SegmCODE
 
             BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
@@ -656,7 +683,7 @@ class AddNodeClass(QMainWindow):
 
             SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
             # print("BNodevalue apply button = ", BNodevalue)
-            self.addedNodeInformationArrayUpdate(self)
+            AddNodeClass.addedNodeInformationArrayUpdate(self)
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
 

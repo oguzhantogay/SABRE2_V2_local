@@ -5386,8 +5386,8 @@ function pde_apply_pushbutton_Callback(hObject, eventdata)
       pde_tfbj_edit,pde_bftj_edit,pde_tftj_edit,pde_dwj_edit,pde_twj_edit,pde_fili_edit,pde_filj_edit,...
       pde_reference_edit,pde_jointi_radiobutton,pde_jointj_radiobutton,axesm,pde_wsname_edit,LabType,vstm);   
   
-   fprintf('test2')
-   BNodevalue 
+%    fprintf('test2')
+%    BNodevalue 
  end % function end
  % --------------------------------------------------------------------
 function pde_cancel_pushbutton_Callback(hObject, eventdata) 

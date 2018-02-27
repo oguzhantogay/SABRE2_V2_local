@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f0ee3103-6d08-4b17-8e91-429164a7cb7a" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2.m" afterPath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2.m" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/AddNode.py" afterPath="$PROJECT_DIR$/V2_dev/AddNode.py" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2_main.py" afterPath="$PROJECT_DIR$/V2_dev/SABRE2_main.py" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" afterPath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/h5_file.py" afterPath="$PROJECT_DIR$/V2_dev/h5_file.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -132,8 +127,8 @@
       <file leaf-file-name="AddNode.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/V2_dev/AddNode.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="30" column="17" lean-forward="true" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+            <state relative-caret-position="95">
+              <caret line="25" column="52" lean-forward="false" selection-start-line="25" selection-start-column="52" selection-end-line="25" selection-end-column="52" />
               <folding>
                 <element signature="e#0#25#0" expanded="true" />
                 <element signature="e#3583#3685#0" expanded="false" />
@@ -762,7 +757,14 @@
       <option name="project" value="LOCAL" />
       <updated>1519624741697</updated>
     </task>
-    <option name="localTasksCounter" value="41" />
+    <task id="LOCAL-00041" summary="update on h5 and AddNode file">
+      <created>1519733965842</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1519733965842</updated>
+    </task>
+    <option name="localTasksCounter" value="42" />
     <servers />
   </component>
   <component name="TodoView">
@@ -835,7 +837,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Joint Table multiplication check works&#10;Members table tied to the Joint Table" />
     <MESSAGE value="Transfer" />
     <MESSAGE value="Massemble works with all aspects" />
     <MESSAGE value="SASSEM works" />
@@ -860,7 +861,8 @@
     <MESSAGE value="h5 file operator python file is added, further tests required" />
     <MESSAGE value="update on h5 file for read class" />
     <MESSAGE value="update on deleting h5 file with exiting." />
-    <option name="LAST_COMMIT_MESSAGE" value="update on deleting h5 file with exiting." />
+    <MESSAGE value="update on h5 and AddNode file" />
+    <option name="LAST_COMMIT_MESSAGE" value="update on h5 and AddNode file" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1396,8 +1398,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/AddNode.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="30" column="17" lean-forward="true" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+        <state relative-caret-position="95">
+          <caret line="25" column="52" lean-forward="false" selection-start-line="25" selection-start-column="52" selection-end-line="25" selection-end-column="52" />
           <folding>
             <element signature="e#0#25#0" expanded="true" />
             <element signature="e#3583#3685#0" expanded="false" />

@@ -1,0 +1,260 @@
+>>> import h5py
+C:\Python3.6\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+>>> import os
+>>> os.environ["TF_CPP_MIN_LOG_LEVEL"]="3"
+>>> import h5py
+>>> import numpy as np
+>>> a = np.random.random(size=(100,20))
+>>> a
+array([[0.2015524 , 0.3359297 , 0.99962507, ..., 0.07629707, 0.62844381,
+        0.08235045],
+       [0.20000334, 0.56765876, 0.10198802, ..., 0.5349043 , 0.63418127,
+        0.10058047],
+       [0.89130466, 0.94847164, 0.16482002, ..., 0.04837275, 0.71340571,
+        0.5842185 ],
+       ...,
+       [0.13195352, 0.58117507, 0.23973446, ..., 0.45416512, 0.55974099,
+        0.00200737],
+       [0.62014767, 0.31810337, 0.61988934, ..., 0.65551368, 0.08567223,
+        0.00151237],
+       [0.22092564, 0.18471173, 0.55684877, ..., 0.73914483, 0.6020434 ,
+        0.06857696]])
+>>> a
+array([[0.2015524 , 0.3359297 , 0.99962507, ..., 0.07629707, 0.62844381,
+        0.08235045],
+       [0.20000334, 0.56765876, 0.10198802, ..., 0.5349043 , 0.63418127,
+        0.10058047],
+       [0.89130466, 0.94847164, 0.16482002, ..., 0.04837275, 0.71340571,
+        0.5842185 ],
+       ...,
+       [0.13195352, 0.58117507, 0.23973446, ..., 0.45416512, 0.55974099,
+        0.00200737],
+       [0.62014767, 0.31810337, 0.61988934, ..., 0.65551368, 0.08567223,
+        0.00151237],
+       [0.22092564, 0.18471173, 0.55684877, ..., 0.73914483, 0.6020434 ,
+        0.06857696]])
+>>> h5f = h5py.File('test_h5.h5', 'w')
+>>> h5f.create_dataset('a', data = a)
+<HDF5 dataset "a": shape (100, 20), type "<f8">
+>>> h5f.close()
+>>> h5f = h5py.File('test_h5.h5','r')
+>>> b = h5f['dataset_1'][:]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "h5py\_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py\_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "C:\Python3.6\lib\site-packages\h5py\_hl\group.py", line 169, in __getitem__
+    oid = h5o.open(self.id, self._e(name), lapl=self._lapl)
+  File "h5py\_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py\_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "h5py\h5o.pyx", line 190, in h5py.h5o.open
+KeyError: "Unable to open object (Object 'dataset_1' doesn't exist)"
+>>> b = h5f['a'][:]
+>>> h5f.close()
+>>> print(b)
+[[0.2015524  0.3359297  0.99962507 ... 0.07629707 0.62844381 0.08235045]
+ [0.20000334 0.56765876 0.10198802 ... 0.5349043  0.63418127 0.10058047]
+ [0.89130466 0.94847164 0.16482002 ... 0.04837275 0.71340571 0.5842185 ]
+ ...
+ [0.13195352 0.58117507 0.23973446 ... 0.45416512 0.55974099 0.00200737]
+ [0.62014767 0.31810337 0.61988934 ... 0.65551368 0.08567223 0.00151237]
+ [0.22092564 0.18471173 0.55684877 ... 0.73914483 0.6020434  0.06857696]]
+>>> h5f = h5py.File('test_h5.h5','a')
+>>> h5f.create_dataset('b', data = c)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'c' is not defined
+>>> h5f.create_dataset('c', data = b)
+<HDF5 dataset "c": shape (100, 20), type "<f8">
+>>> h5f.close()
+>>> h5f = h5py.File('test_h5.h5','r')
+>>> d = h5f['c'][:]
+>>> print(d)
+[[0.2015524  0.3359297  0.99962507 ... 0.07629707 0.62844381 0.08235045]
+ [0.20000334 0.56765876 0.10198802 ... 0.5349043  0.63418127 0.10058047]
+ [0.89130466 0.94847164 0.16482002 ... 0.04837275 0.71340571 0.5842185 ]
+ ...
+ [0.13195352 0.58117507 0.23973446 ... 0.45416512 0.55974099 0.00200737]
+ [0.62014767 0.31810337 0.61988934 ... 0.65551368 0.08567223 0.00151237]
+ [0.22092564 0.18471173 0.55684877 ... 0.73914483 0.6020434  0.06857696]]
+>>> h5f.close()
+>>> x = np.zeros((3,3))
+>>> change = h5py.File('test_h5.h5','a')
+>>> change['c'][:] = x
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "h5py\_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py\_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "C:\Python3.6\lib\site-packages\h5py\_hl\dataset.py", line 629, in __setitem__
+    for fspace in selection.broadcast(mshape):
+  File "C:\Python3.6\lib\site-packages\h5py\_hl\selections.py", line 299, in broadcast
+    raise TypeError("Can't broadcast %s -> %s" % (target_shape, count))
+TypeError: Can't broadcast (3, 3) -> (100, 20)
+>>> change['c'] = x
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "h5py\_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py\_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "C:\Python3.6\lib\site-packages\h5py\_hl\group.py", line 292, in __setitem__
+    h5o.link(ds.id, self.id, name, lcpl=lcpl)
+  File "h5py\_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py\_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "h5py\h5o.pyx", line 202, in h5py.h5o.link
+RuntimeError: Unable to create link (Name already exists)
+>>> change.del['c']
+  File "<stdin>", line 1
+    change.del['c']
+             ^
+SyntaxError: invalid syntax
+>>> h5py.delete change['c']
+  File "<stdin>", line 1
+    h5py.delete change['c']
+                     ^
+SyntaxError: invalid syntax
+>>> h5py.delete change['c'][:]
+  File "<stdin>", line 1
+    h5py.delete change['c'][:]
+                     ^
+SyntaxError: invalid syntax
+>>> change.__delitem__['c']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'method' object is not subscriptable
+>>> change.__delitem__('c')
+>>> h5f.create_dataset('c', data = x)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "C:\Python3.6\lib\site-packages\h5py\_hl\group.py", line 108, in create_dataset
+    dsid = dataset.make_new_dset(self, shape, dtype, data, **kwds)
+  File "C:\Python3.6\lib\site-packages\h5py\_hl\dataset.py", line 137, in make_new_dset
+    dset_id = h5d.create(parent.id, None, tid, sid, dcpl=dcpl)
+  File "h5py\_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py\_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "h5py\h5d.pyx", line 79, in h5py.h5d.create
+ValueError: Not a location id (Invalid object id)
+>>> change.close()
+>>> h5f = h5py.File('test_h5.h5','r')
+>>> b = h5f['c'][:]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "h5py\_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py\_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "C:\Python3.6\lib\site-packages\h5py\_hl\group.py", line 169, in __getitem__
+    oid = h5o.open(self.id, self._e(name), lapl=self._lapl)
+  File "h5py\_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py\_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "h5py\h5o.pyx", line 190, in h5py.h5o.open
+KeyError: "Unable to open object (Object 'c' doesn't exist)"
+>>> h5f.close()
+>>> dele = h5py.File('test_h5.h5','a')
+>>> dele.create_dataset('c', data = x)
+<HDF5 dataset "c": shape (3, 3), type "<f8">
+>>> dele.close()
+>>> dele_ = h5py.File('test_h5.h5','r')
+>>> t = dele_['c'][:]
+>>> print(t)
+[[0. 0. 0.]
+ [0. 0. 0.]
+ [0. 0. 0.]]
+>>> t = dele_['a'][:]
+>>> print(t)
+[[0.2015524  0.3359297  0.99962507 ... 0.07629707 0.62844381 0.08235045]
+ [0.20000334 0.56765876 0.10198802 ... 0.5349043  0.63418127 0.10058047]
+ [0.89130466 0.94847164 0.16482002 ... 0.04837275 0.71340571 0.5842185 ]
+ ...
+ [0.13195352 0.58117507 0.23973446 ... 0.45416512 0.55974099 0.00200737]
+ [0.62014767 0.31810337 0.61988934 ... 0.65551368 0.08567223 0.00151237]
+ [0.22092564 0.18471173 0.55684877 ... 0.73914483 0.6020434  0.06857696]]
+>>> u = dele_['c'][:]
+>>> print(u)
+[[0. 0. 0.]
+ [0. 0. 0.]
+ [0. 0. 0.]]
+>>>
+
+
+
+PS C:\Users\Python\Desktop> python
+Python 3.6.3 |Anaconda, Inc.| (default, Oct 15 2017, 03:27:45) [MSC v.1900 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import os
+>>> import numpy
+>>> import h5py
+C:\Python3.6\lib\site-packages\h5py\__init__.py:34: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+>>> os.environ["TF_CPP_MIN_LOG_LEVEL"]="3"
+>>> import h5py
+>>> x = numpy.zeros((4,4))
+>>> y = numpy.ones((4,4))
+>>> open1 = h5py.File('test2_h5.h5', 'w')
+>>> open1.create_dataset('1', data = x)
+<HDF5 dataset "1": shape (4, 4), type "<f8">
+>>> open1.create_dataset('1', data = y)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "C:\Python3.6\lib\site-packages\h5py\_hl\group.py", line 111, in create_dataset
+    self[name] = dset
+  File "h5py\_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py\_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "C:\Python3.6\lib\site-packages\h5py\_hl\group.py", line 276, in __setitem__
+    h5o.link(obj.id, self.id, name, lcpl=lcpl, lapl=self._lapl)
+  File "h5py\_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py\_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "h5py\h5o.pyx", line 202, in h5py.h5o.link
+RuntimeError: Unable to create link (Name already exists)
+>>> open1.create_dataset('2', data = y)
+<HDF5 dataset "2": shape (4, 4), type "<f8">
+>>> open1.keys()
+KeysView(<HDF5 file "test2_h5.h5" (mode r+)>)
+>>> read = open1.keys()
+>>> print(read)
+KeysView(<HDF5 file "test2_h5.h5" (mode r+)>)
+>>> list(read)
+['1', '2']
+>>> open1.close()
+>>> open2 = h5py,File('test2_h5.h5', 'r')
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'File' is not defined
+>>> open1 = h5py.File('test2_h5.h5', 'r')
+>>> t = open1['1'][:]
+>>> u = open1['2'][:]
+>>> print(t,'\n',u)
+[[0. 0. 0. 0.]
+ [0. 0. 0. 0.]
+ [0. 0. 0. 0.]
+ [0. 0. 0. 0.]]
+ [[1. 1. 1. 1.]
+ [1. 1. 1. 1.]
+ [1. 1. 1. 1.]
+ [1. 1. 1. 1.]]
+>>> open1.close()
+>>> open2 = h5py.File('test2_h5.h5', 'a')
+>>> open2.__delitem__['1']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'method' object is not subscriptable
+>>> open2.__delitem__('1')
+>>> open2.create_dataset('1', data = y)
+<HDF5 dataset "1": shape (4, 4), type "<f8">
+>>> open2.close()
+>>> open3 = h5py.File('test2_h5.h5', 'r')
+>>> t = open3['1'][:]
+>>> t = open3['2'][:]
+>>> t = open3['1'][:]
+>>> u = open3['2'][:]
+>>> print(t,'\n','\n',u)
+[[1. 1. 1. 1.]
+ [1. 1. 1. 1.]
+ [1. 1. 1. 1.]
+ [1. 1. 1. 1.]]
+
+ [[1. 1. 1. 1.]
+ [1. 1. 1. 1.]
+ [1. 1. 1. 1.]
+ [1. 1. 1. 1.]]
+
+
+
+

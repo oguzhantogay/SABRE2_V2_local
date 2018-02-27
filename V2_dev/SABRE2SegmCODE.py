@@ -90,13 +90,13 @@ class ClassA(QMainWindow):
             ###############################
 
             for i in range(mem):
-                print("for 1")
+                # print("for 1")
                 if not np.isclose(int(np.amax(BNodeval[i, :, 1])), 0):  # No Bracing
-                    print("if # 1")
+                    # print("if # 1")
                     p = 0
-                    print("max = ", int(np.amax(BNodeval[i, :, 1])))
+                    # print("max = ", int(np.amax(BNodeval[i, :, 1])))
                     for j in range(int(np.amax(BNodeval[i, :, 1]))):
-                        print("for 2")
+                        # print("for 2")
                         # print("x = ", coord_x, "\ny =", coord_y, "\nz =", coord_z)
                         # print("3 = ", BNodeval[i][j][2], "\n4 =", BNodeval[i][j][3], "\n5 =", BNodeval[i][j][4])
                         BNodevalue = np.zeros((mem, p + 1, 16))
@@ -104,11 +104,11 @@ class ClassA(QMainWindow):
                         if np.isclose(coord_x, BNodeval[i][j][2]) and \
                            np.isclose(coord_y, BNodeval[i][j][3]) and \
                            np.isclose(coord_z, BNodeval[i][j][4]) :  # 1 - 1
-                            print("# 1 - 1")
+                            # print("# 1 - 1")
                             if np.isclose(j, 0):  # 2 - 1
-                                print("# 2 - 1")
+                                # print("# 2 - 1")
                                 if np.isclose(int(np.amax(BNodeval[i, :, 1])), 1):  # be careful with indexing # 3 - 1
-                                    print("# 3 - 1")
+                                    # print("# 3 - 1")
                                     if not np.isclose(JNodevalue_i[i][5], BNodeval[i][j][5]) or not np.isclose(
                                             JNodevalue_i[i][6], BNodeval[i][j][6]) or not np.isclose(JNodevalue_i[i][7],
                                                                                                      BNodeval[i][j][
@@ -116,7 +116,7 @@ class ClassA(QMainWindow):
                                         JNodevalue_i[i][8], BNodeval[i][j][8]) or not np.isclose(JNodevalue_i[i][10],
                                                                                                  BNodeval[i][j][
                                                                                                      10]):  # 4 - 1
-                                        print("# 4 - 1")
+                                        # print("# 4 - 1")
                                         bfb1 = JNodevalue_i[i][5]  # Bottom flange width
                                         tfb1 = JNodevalue_i[i][6]  # Bottom flange thickness
                                         bft1 = JNodevalue_i[i][7]  # Top flange width
@@ -173,7 +173,7 @@ class ClassA(QMainWindow):
                                                              JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
 
                                         if self.ui.StepRB1.isChecked():  # 5 - 1
-                                            print("# 5 - 1")
+                                            # print("# 5 - 1")
                                             # original element
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1

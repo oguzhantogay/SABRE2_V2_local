@@ -89,7 +89,7 @@ class AddNodeClass(QMainWindow):
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         added_node_count = added_node_information[current_member][1]
         # print('added node array =', added_node_information)
-        print('current_member = ', current_member, 'added node count = ', added_node_count)
+        # print('current_member = ', current_member, 'added node count = ', added_node_count)
 
         if current_member == -1:
             pass
@@ -650,8 +650,9 @@ class AddNodeClass(QMainWindow):
         AddNodeClass.apply_button_pressed = True
         mnum = int(self.ui.AddNodeMember.currentIndex())
         nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())
-        print('mnum = ', mnum, 'nbnode = ', nbnode)
+        # print('mnum = ', mnum, 'nbnode = ', nbnode)
         Massemble = AddNodeClass.MassembleUpdater(self)
+        print('apply button massemble = ', Massemble)
         _, JNodevalue_i, JNodevalue_j, BNodevalue, _, _ = AddNodeClass.memberTableValues(self)
         nextBum = AddNodeClass.memberNumbering(self)
         try:

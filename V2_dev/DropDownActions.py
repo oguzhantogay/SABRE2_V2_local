@@ -354,7 +354,7 @@ class ActionClass(QMainWindow):
 
             if shape_members_table_values > 1:
                 # print("test 1")
-                for i in range(shape_joint_table - 1):
+                for i in range(shape_members_table_values - 1):
                     SABRE2_main_subclass.TableChanges.add_new_row(self, self.ui.Members_table,
                                                                   self.Members_table_options,
                                                                   self.Members_table_position,

@@ -5,6 +5,8 @@ function [BNodevalue]=SABRE2SegmCODE(JNodevalue,Massemble,...
 % ************************************************************************
 % *********              Reordering Segment nodes         ****************
 % ************************************************************************
+fprintf('segment code massemble')
+Massemble
 if isempty(JNodevalue)||isempty(Massemble)||isempty(BNodevalue) ...
       || isempty(JNodevalue_i) || isempty(JNodevalue_j)
    mem =[];

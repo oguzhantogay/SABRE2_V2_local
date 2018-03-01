@@ -9,24 +9,9 @@ class ClassA(QMainWindow):
         super(ClassA, self).__init__(parent)
         self.ui = ui_layout
 
-    def MassembleUpdater(self):
-        import SABRE2_main_subclass
-        Massemble = SABRE2_main_subclass.SABRE2_main_subclass.m_assemble_updater(self, self.ui.Members_table,
-                                                                                 flag="OpenGL")
-        return Massemble
-
-    def memberTableValues(self):
-
-        import SABRE2_main_subclass
-        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
-            self, self.ui.Members_table, 3)
-        member_count = member_values.shape[0]
-        return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval
-
     def BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble):
-        # print("Massemble = ", Massemble)
-        # _, _, JNodevalue_i, JNodevalue_j, BNodevalue, _ = ClassA.memberTableValues(self)
-        # print('shape BNode = ', BNodevalue)
+        # print("Massemble in BNodevalueUpdater= ", Massemble)
+        print('shape BNode = ', BNodevalue)
         if BNodevalue.shape[2] == 2:
             pass
         else:

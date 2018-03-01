@@ -89,7 +89,7 @@ class AddNodeClass(QMainWindow):
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         added_node_count = added_node_information[current_member][1]
         # print('added node array =', added_node_information)
-        print('current_member = ', current_member, 'added node count = ', added_node_count)
+        # print('current_member = ', current_member, 'added node count = ', added_node_count)
 
         if current_member == -1:
             pass
@@ -117,7 +117,7 @@ class AddNodeClass(QMainWindow):
     def memberTableValues(self):
 
         import SABRE2_main_subclass
-        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
+        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue,flag_mem_values,_= SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
             self, self.ui.Members_table, 3)
         # mnum = int(self.ui.AddNodeMember.currentIndex())
         # if flag_mem_values[mnum][1] == 1 and self.ui.AddNodeTable.item(0,0) is None:
@@ -166,11 +166,10 @@ class AddNodeClass(QMainWindow):
         #     item.setValidator(validatorDouble)
         #     item.setText(str(Afills))
         #     tableName.setCellWidget(0, 6, item)
-        return member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval, flag_mem_values
+        return member_values, JNodeValues_i, JNodeValues_j, BNodevalue,flag_mem_values
 
     def addNodeTableInitiation(self):
-
-        _, JNodeValues_i, _, _, _, flag_mem_values = AddNodeClass.memberTableValues(self)
+        _, JNodeValues_i, _, _, flag_mem_values = AddNodeClass.memberTableValues(self)
         mnum = int(self.ui.AddNodeMember.currentIndex())
         if self.ui.AddNodeTable.cellWidget(0, 0).text() == '':
             bfbs = (JNodeValues_i[mnum][5])
@@ -220,8 +219,7 @@ class AddNodeClass(QMainWindow):
             tableName.setCellWidget(0, 6, item)
 
     def comboBoxChanged(self):
-
-        _, JNodeValues_i, _, _, _, flag_mem_values = AddNodeClass.memberTableValues(self)
+        _, JNodeValues_i, _, _,  flag_mem_values = AddNodeClass.memberTableValues(self)
         mnum = int(self.ui.AddNodeMember.currentIndex())
 
         bfbs = (JNodeValues_i[mnum][5])
@@ -272,9 +270,9 @@ class AddNodeClass(QMainWindow):
 
     def MassembleUpdater(self):
         import SABRE2_main_subclass
-        Massemble = SABRE2_main_subclass.SABRE2_main_subclass.m_assemble_updater(self, self.ui.Members_table,
-                                                                                 flag="OpenGL")
-        return Massemble
+        members_table, _, _, _, _, _, _ = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self,self.ui.Members_table,3)
+        member_assembly = members_table[:,:3]
+        return member_assembly
 
     def fillTable(self):
         mnum = int(self.ui.AddNodeMember.currentIndex())
@@ -282,7 +280,7 @@ class AddNodeClass(QMainWindow):
         if seglength == '':
             pass
         else:
-            member_values, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, _ = AddNodeClass.memberTableValues(self)
+            member_values, JNodevalue_i, JNodevalue_j, BNodevalue, _ = AddNodeClass.memberTableValues(self)
             if BNodevalue[mnum][0][1] == 0:
                 seL = np.sqrt((JNodevalue_i[mnum][2] - JNodevalue_j[mnum][2]) ** 2 + (
                         JNodevalue_i[mnum][3] - JNodevalue_j[mnum][3]) ** 2 + (
@@ -540,15 +538,16 @@ class AddNodeClass(QMainWindow):
             DropDownActions.ActionClass.statusMessage(self, message="Please select the cross-section name!")
 
     def coordinateFill(self):
+        # print('coordinate FIll works')
         mnum = int(self.ui.AddNodeMember.currentIndex())
         try:
             seglength = float(self.ui.AddNodePositionFrom.text())
 
             # print("mnum = ", mnum, "\n", "seglength = ", seglength)
+            _, JNodevalue_i, JNodevalue_j, _, _ = AddNodeClass.memberTableValues(self)
 
-            _, JNodevalue_i, JNodevalue_j, _, _, _ = AddNodeClass.memberTableValues(self)
-
-            # print("BNodeValue = ", BNodevalue)
+            # print("JNodevalue_i = ", JNodevalue_i)
+            # print("JNodevalue_j = ", JNodevalue_j)
 
             alpharef = np.zeros((mnum + 1, 2))
             opp = JNodevalue_j[mnum][3] - JNodevalue_i[mnum][3]  # element depth in y-dir
@@ -587,7 +586,7 @@ class AddNodeClass(QMainWindow):
                 self.ui.AddNodeX.setText(str(Lb[0]))
                 self.ui.AddNodeY.setText(str(Lb[1]))
                 self.ui.AddNodeZ.setText(str(Lb[2]))
-                # print('Lb__= ', Lb)
+                print('Lb__= ', Lb)
                 return Lb
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message='Please Enter the Segment Length')
@@ -650,10 +649,9 @@ class AddNodeClass(QMainWindow):
         AddNodeClass.apply_button_pressed = True
         mnum = int(self.ui.AddNodeMember.currentIndex())
         nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())
-        print('mnum = ', mnum, 'nbnode = ', nbnode)
-        Massemble = AddNodeClass.MassembleUpdater(self)
-        _, JNodevalue_i, JNodevalue_j, BNodevalue, _, _ = AddNodeClass.memberTableValues(self)
-        nextBum = AddNodeClass.memberNumbering(self)
+        # print('mnum = ', mnum, 'nbnode = ', nbnode)
+        members_table, JNodevalue_i, JNodevalue_j, BNodevalue,_= AddNodeClass.memberTableValues(self)
+        Massemble = members_table[:, :3]
         try:
             float(self.ui.AddNodePositionFrom.text())  # test for the node i is filled or not ?
 
@@ -661,54 +659,54 @@ class AddNodeClass(QMainWindow):
             # print('Apply button before = ', BNodevalue,'nbnode =',  nbnode)
             if np.greater(nbnode, np.amax(BNodevalue[mnum, :, 1])):
                 SNodeValue = None
+            else:
+                import SABRE2_main_subclass
+                Lb = AddNodeClass.coordinateFill(self)
+                print("Lb = ", Lb)
+                BNodevalue = np.zeros((mnum + 1, nbnode + 1, 16))
 
-            import SABRE2_main_subclass
-            Lb = AddNodeClass.coordinateFill(self)
-            # print("Lb = ", Lb)
-            BNodevalue = np.zeros((mnum + 1, nbnode + 1, 16))
+                addNodeTableValues = AddNodeClass.readAddNodeTable(self)
+                BNodevalue[mnum][nbnode][0] = mnum + 1
+                BNodevalue[mnum][nbnode][1] = nbnode + 1  # 0 No bracing
+                BNodevalue[mnum][nbnode][2] = Lb[0]
+                BNodevalue[mnum][nbnode][3] = Lb[1]
+                BNodevalue[mnum][nbnode][4] = Lb[2]
+                BNodevalue[mnum][nbnode][5] = addNodeTableValues[0]
+                BNodevalue[mnum][nbnode][6] = addNodeTableValues[1]
+                BNodevalue[mnum][nbnode][7] = addNodeTableValues[2]
+                BNodevalue[mnum][nbnode][8] = addNodeTableValues[3]
+                BNodevalue[mnum][nbnode][9] = addNodeTableValues[4]
+                BNodevalue[mnum][nbnode][10] = addNodeTableValues[5]
+                BNodevalue[mnum][nbnode][11] = BNodevalue[mnum][nbnode][9] + BNodevalue[mnum][nbnode][6] + \
+                                               BNodevalue[mnum][nbnode][8]  # total depth
+                BNodevalue[mnum][nbnode][12] = BNodevalue[mnum][nbnode][9] + (
+                        BNodevalue[mnum][nbnode][6] + BNodevalue[mnum][nbnode][8]) / 2  # flange centroid
+                BNodevalue[mnum][nbnode][13] = addNodeTableValues[6]
 
-            addNodeTableValues = AddNodeClass.readAddNodeTable(self)
-            BNodevalue[mnum][nbnode][0] = mnum + 1
-            BNodevalue[mnum][nbnode][1] = nbnode + 1  # 0 No bracing
-            BNodevalue[mnum][nbnode][2] = Lb[0]
-            BNodevalue[mnum][nbnode][3] = Lb[1]
-            BNodevalue[mnum][nbnode][4] = Lb[2]
-            BNodevalue[mnum][nbnode][5] = addNodeTableValues[0]
-            BNodevalue[mnum][nbnode][6] = addNodeTableValues[1]
-            BNodevalue[mnum][nbnode][7] = addNodeTableValues[2]
-            BNodevalue[mnum][nbnode][8] = addNodeTableValues[3]
-            BNodevalue[mnum][nbnode][9] = addNodeTableValues[4]
-            BNodevalue[mnum][nbnode][10] = addNodeTableValues[5]
-            BNodevalue[mnum][nbnode][11] = BNodevalue[mnum][nbnode][9] + BNodevalue[mnum][nbnode][6] + \
-                                           BNodevalue[mnum][nbnode][8]  # total depth
-            BNodevalue[mnum][nbnode][12] = BNodevalue[mnum][nbnode][9] + (
-                    BNodevalue[mnum][nbnode][6] + BNodevalue[mnum][nbnode][8]) / 2  # flange centroid
-            BNodevalue[mnum][nbnode][13] = addNodeTableValues[6]
+                # print("BNodevalue function before = ", BNodevalue)
 
-            # print("BNodevalue function before = ", BNodevalue)
+                # if Path('process.h5').is_file():
+                #
+                #     BNodevalue = h5_file.h5_Class.read_array(self, 'Bracing Node')
+                #     print('BNode from H5 = ', BNodevalue)
+                #
+                # else:
+                #     print('first added node')
+                import SABRE2SegmCODE
 
-            # if Path('process.h5').is_file():
-            #
-            #     BNodevalue = h5_file.h5_Class.read_array(self, 'Bracing Node')
-            #     print('BNode from H5 = ', BNodevalue)
-            #
-            # else:
-            #     print('first added node')
-            import SABRE2SegmCODE
+                BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j,
+                                                                     Massemble)
 
-            BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j,
-                                                                 Massemble)
+                h5_file.h5_Class.save_on_file(self, BNodevalue, 'Bracing Node')
 
-            h5_file.h5_Class.save_on_file(self, BNodevalue, 'Bracing Node')
+                # print("BNodevalue function after = ", BNodevalue)
+                import SABRE2SegmModel
 
-            # print("BNodevalue function after = ", BNodevalue)
-            import SABRE2SegmModel
+                # SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
 
-            # SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
-
-            SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
-            AddNodeClass.addedNodeInformationArrayUpdate(self)
-            print("BNodevalue apply button = ", BNodevalue)
+                SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
+                AddNodeClass.addedNodeInformationArrayUpdate(self)
+                print("BNodevalue apply button = ", BNodevalue)
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
 
@@ -723,9 +721,9 @@ class SegmRemove(QMainWindow):
         self.ui = ui_layout
 
     def removeNode(self):
-        Massemble = AddNodeClass.MassembleUpdater(self)
-        _, JNodevalue_i, JNodevalue_j, BNodevalue, _, _ = AddNodeClass.memberTableValues(self)
 
+        members_table, JNodevalue_i, JNodevalue_j, BNodevalue= AddNodeClass.memberTableValues(self)
+        Massemble = members_table[:, :3]
         import SABRE2SegmCODE
 
         BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)

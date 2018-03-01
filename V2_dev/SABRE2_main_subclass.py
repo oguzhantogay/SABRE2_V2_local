@@ -469,7 +469,7 @@ class SABRE2_main_subclass(QMainWindow):
 
         # print("Rval", Rval)
         self.members_table_values = Members_values
-
+        # print('self.members_table_values', self.members_table_values)
         # print("main screen node i", JNodeValue_i)
         # print("main screen node j", JNodeValue_j)
         return Members_values, JNodeValue_i, JNodeValue_j, current_row, SABRE2_main_subclass.BNodevalue, flag_mem_values, Rval

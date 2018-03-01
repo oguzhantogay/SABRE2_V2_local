@@ -9,6 +9,7 @@ function [BNodevalue,SNodevalue]=SABRE2SegmApp(JNodevalue,...
 % **********               Additional Node             *******************
 % ************************************************************************
 % Get Member number and Bracing node number
+
 mnum = round(str2double(get(pdb_member_name,'String')));
 nbnode = round(str2double(get(pdb_type_name,'String')));
 seglength = str2double(get(pdb_length_edit,'String'));
@@ -62,8 +63,9 @@ else
       nextBnum = max(BNodevalue(mnum,:,2))+1;
     end  
 end
-% fprintf('test3') 
-% BNodevalue
+
+
+
 % BNodevalue=[mnum nbnode jcoordx jcoordy jcoordz jbfb jbft jtfb jtft jd jtw dw h)
 if isempty(get(pdb_member_name,'String')) ...
       || isnan(str2double(get(pdb_member_name,'String'))) ...
@@ -116,8 +118,9 @@ elseif isempty(get(pdb_bfb_edit,'String')) ...
    set(pt_title_name,'Visible','on')    
 else
    set(pt_title_name,'Visible','off') % Hide BACKGROUND TEXT
-   
-%    nbnode
+   fprintf('test3') 
+   BNodevalue
+
    if max(BNodevalue(mnum,:,2))<nbnode
       SNodevalue=[];
    end   
@@ -140,8 +143,8 @@ else
    
 end % if end
 
-% fprintf('test2')
-% BNodevalue
+fprintf('test2')
+BNodevalue
 % Massemble
 % Automatic Segment numbering or Step member.
 [BNodevalue]=SABRE2SegmCODE(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,BNodevalue,...

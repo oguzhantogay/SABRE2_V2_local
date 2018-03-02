@@ -42,9 +42,10 @@ else
       else
          for j = 1:max(BNodevalue(i,:,2))
             L1(j,:) =  L0(i,j,:);   
+%             L1(j,:)
+%             L0(i,j,:)
          end
-         L1 = sortrows(L1,16);
-         L1
+         L1 = sortrows(L1,16);         
          for j = 1:max(BNodevalue(i,:,2))
             for k = 1:16
                BNodevalueOrder(i,j,k) = L1(j,k);
@@ -53,8 +54,6 @@ else
          L1(:,:)=[];
       end
    end
-   L0
-   L1   
    % Reset BNodevalue Using Sorted BNodevalueOrder
    BNodeval=BNodevalueOrder;
 %    L1

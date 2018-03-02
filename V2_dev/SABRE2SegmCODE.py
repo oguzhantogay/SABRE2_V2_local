@@ -38,12 +38,8 @@ class ClassA(QMainWindow):
                     BNodevalueOrder[i][0][1] = L0[i][0][1]
                     BNodevalueOrder[i][0][1] = L0[i][0][1]
                 else:
-                    print("if # b ")
-                    print('L1 = ', L1)
-                    print('L0 = ', L0)
-                    # print(' np amax code 2= ', BNodevalue)
+                    # print("if # b ")
                     for j in range(int(np.amax(BNodevalue[i, :, 1]))):
-                        print('in segm code , j and i= ', j , i)
                         L1[j][:] = L0[i][j][:]
 
                     L1 = L1[L1[:, 0].argsort(),]
@@ -53,7 +49,6 @@ class ClassA(QMainWindow):
                     for j in range(int(np.amax(BNodevalue[i, :, 1]))):
                         for k in range(16):
                             BNodevalueOrder[i][j][k] = L1[j][k]
-                            # print("BNodevalueorder 2 = ", BNodevalueOrder)
 
                     L1[:][:] = None
             BNodeval = BNodevalueOrder
@@ -79,27 +74,27 @@ class ClassA(QMainWindow):
             ###############################
             #### Add Stepped Elements #####
             ###############################
-
+            # print('bnode val before for 1 = ', BNodevalue)
             for i in range(mem):
-                # print("for 1")
+                print("for 1")
                 if not np.isclose(int(np.amax(BNodeval[i, :, 1])), 0):  # No Bracing
                     # print("if # 1")
                     p = 0
                     # print("max = ", int(np.amax(BNodeval[i, :, 1])))
                     for j in range(int(np.amax(BNodeval[i, :, 1]))):
-                        # print("for 2")
+                        print("for 2")
                         # print("x = ", coord_x, "\ny =", coord_y, "\nz =", coord_z)
                         # print("3 = ", BNodeval[i][j][2], "\n4 =", BNodeval[i][j][3], "\n5 =", BNodeval[i][j][4])
-                        BNodevalue = np.zeros((mem, p + 1, 16))
+                        # BNodevalue = np.zeros((mem, p + 1, 16))
 
                         if np.isclose(coord_x, BNodeval[i][j][2]) and \
                                 np.isclose(coord_y, BNodeval[i][j][3]) and \
                                 np.isclose(coord_z, BNodeval[i][j][4]) :  # 1 - 1
-                            # print("# 1 - 1")
+                            print("# 1 - 1")
                             if np.isclose(j, 0):  # 2 - 1
-                                # print("# 2 - 1")
+                                print("# 2 - 1")
                                 if np.isclose(int(np.amax(BNodeval[i, :, 1])), 1):  # be careful with indexing # 3 - 1
-                                    # print("# 3 - 1")
+                                    print("# 3 - 1")
                                     if not np.isclose(JNodevalue_i[i][5], BNodeval[i][j][5]) or not np.isclose(
                                             JNodevalue_i[i][6], BNodeval[i][j][6]) or not np.isclose(JNodevalue_i[i][7],
                                                                                                      BNodeval[i][j][
@@ -107,7 +102,7 @@ class ClassA(QMainWindow):
                                         JNodevalue_i[i][8], BNodeval[i][j][8]) or not np.isclose(JNodevalue_i[i][10],
                                                                                                  BNodeval[i][j][
                                                                                                      10]):  # 4 - 1
-                                        # print("# 4 - 1")
+                                        print("# 4 - 1")
                                         bfb1 = JNodevalue_i[i][5]  # Bottom flange width
                                         tfb1 = JNodevalue_i[i][6]  # Bottom flange thickness
                                         bft1 = JNodevalue_i[i][7]  # Top flange width
@@ -163,8 +158,10 @@ class ClassA(QMainWindow):
                                                 JNodevalue_j[i][3] - JNodevalue_i[i][3]) ** 2 + (
                                                              JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
 
+                                        print('BNodevalue before # 5 - 1 = ', BNodevalue)
+
                                         if self.ui.StepRB1.isChecked():  # 5 - 1
-                                            # print("# 5 - 1")
+                                            print("# 5 - 1")
                                             # original element
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
@@ -2048,10 +2045,9 @@ class ClassA(QMainWindow):
                             BNodevalue[i][p][15] = BNodeval[i][j][15]
                             p = p + 1
 
-            # print("BNodevalue after if conditions = ", BNodevalue)
             # ADD Step E
             # Sorting S
-
+            # print('BNodevalue after if conditions = ', BNodevalue)
             L0 = BNodevalue  # Initial Data Set
             # Distance from i node
             # print('mem = ', mem)
@@ -2070,11 +2066,12 @@ class ClassA(QMainWindow):
 
             # Sort whole columns with respect to distance from i node
             # print('L0 = ', L0)
-            BNodevalueOrder = np.zeros((mem, 1, 16))
-            L1 = np.zeros((int(np.amax(BNodevalue[i, :, 1])), 16))
+            BNodevalueOrder = BNodevalue
+
             # print("L1 = ", L1)
             # print("L0 = ", L0)
             for i in range(mem):
+                L1 = np.zeros((int(np.amax(BNodevalue[i, :, 1])), 16))
                 for j in range(int(np.amax(BNodevalue[i, :, 1]))):
                     # print('test = ', L0[i][j][:])
                     L1[j][:] = L0[i][j][:]

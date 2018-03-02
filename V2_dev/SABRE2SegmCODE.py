@@ -11,7 +11,7 @@ class ClassA(QMainWindow):
 
     def BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble):
         # print("Massemble in BNodevalueUpdater= ", Massemble)
-        print('shape BNode = ', BNodevalue),9
+        # print('updater beginning BNode = ', BNodevalue)
         if BNodevalue.shape[2] == 2:
             pass
         else:
@@ -30,16 +30,22 @@ class ClassA(QMainWindow):
                         L0[i][j][15] = np.sqrt((dX0[j][0]) ** 2 + (dY0[j][0]) ** 2 + (dZ0[j][0]) ** 2)
 
             BNodevalueOrder = np.zeros((mem, 1, 16))
-            L1 = np.zeros((np.amax(int(BNodevalue[i, :, 1])), 16))
+
             for i in range(mem):
+                L1 = np.zeros((np.amax(int(BNodevalue[i, :, 1])), 16))
                 if np.amax(BNodevalue[i, :, 1]) == 0:
                     # print("if # a ")
                     BNodevalueOrder[i][0][1] = L0[i][0][1]
                     BNodevalueOrder[i][0][1] = L0[i][0][1]
                 else:
-                    # print("if # b ")
+                    print("if # b ")
+                    print('L1 = ', L1)
+                    print('L0 = ', L0)
+                    # print(' np amax code 2= ', BNodevalue)
                     for j in range(int(np.amax(BNodevalue[i, :, 1]))):
+                        print('in segm code , j and i= ', j , i)
                         L1[j][:] = L0[i][j][:]
+
                     L1 = L1[L1[:, 0].argsort(),]
                     # print("L1 = ", L1)
                     # print("BNodevalueorder = ", BNodevalueOrder)
@@ -87,8 +93,8 @@ class ClassA(QMainWindow):
                         BNodevalue = np.zeros((mem, p + 1, 16))
 
                         if np.isclose(coord_x, BNodeval[i][j][2]) and \
-                           np.isclose(coord_y, BNodeval[i][j][3]) and \
-                           np.isclose(coord_z, BNodeval[i][j][4]) :  # 1 - 1
+                                np.isclose(coord_y, BNodeval[i][j][3]) and \
+                                np.isclose(coord_z, BNodeval[i][j][4]) :  # 1 - 1
                             # print("# 1 - 1")
                             if np.isclose(j, 0):  # 2 - 1
                                 # print("# 2 - 1")

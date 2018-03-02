@@ -671,7 +671,7 @@ class AddNodeClass(QMainWindow):
 
                 # print('Apply button before = ', BNodevalue)
                 addNodeTableValues = AddNodeClass.readAddNodeTable(self)
-                BNodevalue[mnum][nbnode][0] = mnum + 1
+                BNodevalue[:, nbnode, 0] = Massemble[:,0]
                 BNodevalue[mnum][nbnode][1] = nbnode + 1  # 0 No bracing
                 BNodevalue[mnum][nbnode][2] = Lb[0]
                 BNodevalue[mnum][nbnode][3] = Lb[1]
@@ -709,7 +709,7 @@ class AddNodeClass(QMainWindow):
 
                 SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
                 AddNodeClass.addedNodeInformationArrayUpdate(self)
-                print("BNodevalue apply button = ", BNodevalue)
+                # print("BNodevalue apply button = ", BNodevalue)
                 h5_file.h5_Class.update_array(self, 'BNodevalue', BNodevalue)
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")

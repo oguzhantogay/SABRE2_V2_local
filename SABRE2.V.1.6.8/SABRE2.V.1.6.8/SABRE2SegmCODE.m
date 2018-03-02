@@ -5,8 +5,10 @@ function [BNodevalue]=SABRE2SegmCODE(JNodevalue,Massemble,...
 % ************************************************************************
 % *********              Reordering Segment nodes         ****************
 % ************************************************************************
-fprintf('segment code massemble')
-Massemble
+% fprintf('segment code massemble')
+% Massemble
+% fprintf('segm code bnode = ')
+% BNodevalue
 if isempty(JNodevalue)||isempty(Massemble)||isempty(BNodevalue) ...
       || isempty(JNodevalue_i) || isempty(JNodevalue_j)
    mem =[];
@@ -30,7 +32,7 @@ else
    
    % Sort whole columns with respect to distance from i node
    L1=[];BNodevalueOrder=[];
-   
+
    for i = 1:mem    
       if isequal(max(BNodevalue(i,:,2)),0) % No Bracing
 %          for n=1:max(BNodevalue(:,:,2))
@@ -42,6 +44,7 @@ else
             L1(j,:) =  L0(i,j,:);   
          end
          L1 = sortrows(L1,16);
+         L1
          for j = 1:max(BNodevalue(i,:,2))
             for k = 1:16
                BNodevalueOrder(i,j,k) = L1(j,k);
@@ -50,6 +53,8 @@ else
          L1(:,:)=[];
       end
    end
+   L0
+   L1   
    % Reset BNodevalue Using Sorted BNodevalueOrder
    BNodeval=BNodevalueOrder;
 %    L1

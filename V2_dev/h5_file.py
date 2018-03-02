@@ -12,7 +12,11 @@ class h5_Class:
 
         added_node_information[0][0] = 1
 
+        BNodevalue = np.zeros((1,1,1))
+
         file_open.create_dataset('added_node_information', data=added_node_information)
+
+        file_open.create_dataset('BNodevalue', data=BNodevalue)
 
         file_open.close()
 

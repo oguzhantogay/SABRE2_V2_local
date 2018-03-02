@@ -586,7 +586,7 @@ class AddNodeClass(QMainWindow):
                 self.ui.AddNodeX.setText(str(Lb[0]))
                 self.ui.AddNodeY.setText(str(Lb[1]))
                 self.ui.AddNodeZ.setText(str(Lb[2]))
-                print('Lb__= ', Lb)
+                # print('Lb__= ', Lb)
                 return Lb
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message='Please Enter the Segment Length')
@@ -652,19 +652,24 @@ class AddNodeClass(QMainWindow):
         # print('mnum = ', mnum, 'nbnode = ', nbnode)
         members_table, JNodevalue_i, JNodevalue_j, BNodevalue,_= AddNodeClass.memberTableValues(self)
         Massemble = members_table[:, :3]
+        total_member_number = Massemble.shape[0]
         try:
             float(self.ui.AddNodePositionFrom.text())  # test for the node i is filled or not ?
 
             # print("nbnode = ", nbnode, "\n", 'Max BNode 1 =' , np.amax(BNodevalue[mnum, :, 1]))
-            # print('Apply button before = ', BNodevalue,'nbnode =',  nbnode)
+            # ,'\n','nbnode =',  nbnode)
+
+            # BNodevalue = h5_file.h5_Class.read_array(self,'BNodevalue')
             if np.greater(nbnode, np.amax(BNodevalue[mnum, :, 1])):
                 SNodeValue = None
             else:
                 import SABRE2_main_subclass
                 Lb = AddNodeClass.coordinateFill(self)
-                print("Lb = ", Lb)
-                BNodevalue = np.zeros((mnum + 1, nbnode + 1, 16))
+                if BNodevalue.shape[2] != 16:
+                    # print("Lb = ", Lb)
+                    BNodevalue = np.zeros((total_member_number, nbnode + 1, 16))
 
+                # print('Apply button before = ', BNodevalue)
                 addNodeTableValues = AddNodeClass.readAddNodeTable(self)
                 BNodevalue[mnum][nbnode][0] = mnum + 1
                 BNodevalue[mnum][nbnode][1] = nbnode + 1  # 0 No bracing
@@ -697,8 +702,6 @@ class AddNodeClass(QMainWindow):
                 BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j,
                                                                      Massemble)
 
-                h5_file.h5_Class.save_on_file(self, BNodevalue, 'Bracing Node')
-
                 # print("BNodevalue function after = ", BNodevalue)
                 import SABRE2SegmModel
 
@@ -707,6 +710,7 @@ class AddNodeClass(QMainWindow):
                 SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
                 AddNodeClass.addedNodeInformationArrayUpdate(self)
                 print("BNodevalue apply button = ", BNodevalue)
+                h5_file.h5_Class.update_array(self, 'BNodevalue', BNodevalue)
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
 

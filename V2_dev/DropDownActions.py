@@ -263,8 +263,6 @@ class ActionClass(QMainWindow):
 
         aa = np.load(filename)
 
-
-
         self.joint_values = aa['joint_values']
         self.member_properties_values = aa['member_properties_values']
         self.members_table_values = aa['members_table_values']
@@ -336,15 +334,6 @@ class ActionClass(QMainWindow):
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     self.ui.Members_table.setItem(i, j, item)
 
-                    # Add node menu member drop down set-up
-                    from AddNode import AddNodeClass
-
-                    AddNodeClass.setAddNodeComboBox(self)
-
-                    # Add node menu table initiation
-
-                    AddNodeClass.addNodeTableInitiation(self)
-
                 else:
                     item = QTableWidgetItem(str(self.members_table_values[i][j]))
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
@@ -354,7 +343,7 @@ class ActionClass(QMainWindow):
 
             if shape_members_table_values > 1:
                 # print("test 1")
-                for i in range(shape_members_table_values - 1):
+                for i in range(shape_joint_table - 1):
                     SABRE2_main_subclass.TableChanges.add_new_row(self, self.ui.Members_table,
                                                                   self.Members_table_options,
                                                                   self.Members_table_position,

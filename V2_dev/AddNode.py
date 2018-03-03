@@ -482,7 +482,7 @@ class AddNodeClass(QMainWindow):
 
     def fill_table_with_known(self):
         BNodevalue = h5_file.h5_Class.read_array(self,'BNodevalue')
-        print('Bnode = ' , BNodevalue)
+        # print('Bnode = ' , BNodevalue)
         if BNodevalue.shape[2] ==16:
             member_number = self.ui.AddNodeMember.currentIndex()
             add_node_number = self.ui.AdditionalNodeNumberComboBox.currentIndex()
@@ -514,9 +514,6 @@ class AddNodeClass(QMainWindow):
                 DropDownActions.ActionClass.statusMessage(self, message="Please enter the Position from the i node!")
 
                 self.ui.AddNodePositionFrom.setText('')
-
-
-
 
     def sql_print(self):
         tableName = self.ui.AddNodeTable
@@ -662,27 +659,29 @@ class AddNodeClass(QMainWindow):
         self.ui.addNodePushButton.setEnabled(False)
 
     def removeNodeDialog(self):
-        added_node_count = self.ui.AdditionalNodeNumberComboBox.count()
-        if added_node_count == 1:
-            import DropDownActions
-            DropDownActions.ActionClass.statusMessage(self,
-                                                      message='Node #1 has not been defined before!')
-            return False
-        else:
+        BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
+        current_selected_node = self.ui.AdditionalNodeNumberComboBox.currentIndex()
+        current_member = self.ui.AddNodeMember.currentIndex()
+        import DropDownActions
+        try:
+            remove_added_node =  BNodevalue[current_member][current_selected_node][1]
             import SABRE2_GUI
             remove_added_node = QtGui.QMessageBox()
-            remove_added_node.setWindowTitle("Remove Selected Node?")
+            remove_added_node.setWindowTitle('Remove Selected Node?')
             remove_added_node.setIcon(QtGui.QMessageBox.Critical)
             remove_added_node.setTextFormat(SABRE2_GUI.QtCore.Qt.RichText)
             # about_box.setIconPixmap(QtGui.QPixmap(ComicTaggerSettings.getGraphic('about.png'))) #include image
-            remove_added_node.setText("""Do you want to remove the selected node?""")
+            remove_added_node.setText('Do you want to remove the Added Node Number ' + str(current_selected_node+1)+ ' of Member ' + str(current_member+1) + '?')
             remove_added_node.setStandardButtons(SABRE2_GUI.QtGui.QMessageBox.Yes | SABRE2_GUI.QtGui.QMessageBox.No)
-            # about_box.setStandardButtons(SABRE2_GUI.QtGui.QMessageBox.No)
             ret_val = remove_added_node.exec_()
             if ret_val == SABRE2_GUI.QtGui.QMessageBox.Yes:
-                return True
+                pass
             else:
-                return False
+                return
+
+        except IndexError:
+            DropDownActions.ActionClass.statusMessage(self,
+                                                      message=('Added number ' + str(current_selected_node+1)+ ' of Member ' + str(current_member+1) + ' is removed!'))
         # print('message box result = ', ret_val)
 
     def ApplyButton(self):
@@ -698,7 +697,6 @@ class AddNodeClass(QMainWindow):
         total_member_number = Massemble.shape[0]
         try:
             float(self.ui.AddNodePositionFrom.text())  # test for the node i is filled or not ?
-
 
             BNodevalue_read = h5_file.h5_Class.read_array(self,'BNodevalue')
             if BNodevalue_read.shape[2] > BNodevalue.shape[2]:
@@ -778,8 +776,8 @@ class SegmRemove(QMainWindow):
         self.ui = ui_layout
 
     def removeNode(self):
-
-        members_table, JNodevalue_i, JNodevalue_j, BNodevalue= AddNodeClass.memberTableValues(self)
+        BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
+        members_table, JNodevalue_i, JNodevalue_j, _, _= AddNodeClass.memberTableValues(self)
         Massemble = members_table[:, :3]
         import SABRE2SegmCODE
 

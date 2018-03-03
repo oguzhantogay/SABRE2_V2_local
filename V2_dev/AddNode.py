@@ -57,6 +57,7 @@ class AddNodeClass(QMainWindow):
                 self.ui.AdditionalNodeNumberComboBox.clear()
                 self.ui.AdditionalNodeNumberComboBox.addItems(a)
 
+
     def addedNodeInformationArrayUpdate(self):
         current_member = int(self.ui.AddNodeMember.currentIndex())
 
@@ -479,6 +480,44 @@ class AddNodeClass(QMainWindow):
             tableName.setCellWidget(0, 6, item)
             AddNodeClass.coordinateFill(self)
 
+    def fill_table_with_known(self):
+        BNodevalue = h5_file.h5_Class.read_array(self,'BNodevalue')
+        print('Bnode = ' , BNodevalue)
+        if BNodevalue.shape[2] ==16:
+            member_number = self.ui.AddNodeMember.currentIndex()
+            add_node_number = self.ui.AdditionalNodeNumberComboBox.currentIndex()
+            print('member = ', member_number, 'add_node = ', add_node_number)
+            try:
+                table = np.zeros((1,7))
+
+                table[0][0] = BNodevalue[member_number][add_node_number][5]
+                table[0][1] = BNodevalue[member_number][add_node_number][6]
+                table[0][2] = BNodevalue[member_number][add_node_number][7]
+                table[0][3] = BNodevalue[member_number][add_node_number][8]
+                table[0][4] = BNodevalue[member_number][add_node_number][9]
+                table[0][5] = BNodevalue[member_number][add_node_number][10]
+                table[0][6] = BNodevalue[member_number][add_node_number][13]
+                if self.ui.AdditionalNodeNumberComboBox.currentText() == '':
+                    self.ui.AddNodePositionFrom.setText('')
+                else:
+                    self.ui.AddNodePositionFrom.setText(str(BNodevalue[member_number][add_node_number][2]))
+                    tableName = self.ui.AddNodeTable
+                    validatorDouble = QDoubleValidator()
+                    for i in range(7):
+                        item = QLineEdit()
+                        item.setFrame(False)
+                        item.setValidator(validatorDouble)
+                        item.setText(str(table[0][i]))
+                        tableName.setCellWidget(0, i, item)
+                    DropDownActions.ActionClass.statusMessage(self, message="")
+            except IndexError:
+                DropDownActions.ActionClass.statusMessage(self, message="Please enter the Position from the i node!")
+
+                self.ui.AddNodePositionFrom.setText('')
+
+
+
+
     def sql_print(self):
         tableName = self.ui.AddNodeTable
         conn = sq.connect('AISC_data.db')
@@ -616,7 +655,10 @@ class AddNodeClass(QMainWindow):
     def addNodePushFun(self):
 
         added_node_number = int(self.ui.AdditionalNodeNumberComboBox.count())
+        # print('added node number = ', added_node_number)
         self.ui.AdditionalNodeNumberComboBox.addItem(str(added_node_number + 1))
+        self.ui.AdditionalNodeNumberComboBox.setCurrentIndex(added_node_number)
+        self.ui.AddNodePositionFrom.setText('')
         self.ui.addNodePushButton.setEnabled(False)
 
     def removeNodeDialog(self):
@@ -645,6 +687,7 @@ class AddNodeClass(QMainWindow):
 
     def ApplyButton(self):
         '''executes when the apply button pressed in the Add Nodes menu'''
+        # print('apply pressed')
         self.ui.addNodePushButton.setEnabled(True)
         AddNodeClass.apply_button_pressed = True
         mnum = int(self.ui.AddNodeMember.currentIndex())
@@ -660,14 +703,14 @@ class AddNodeClass(QMainWindow):
             BNodevalue_read = h5_file.h5_Class.read_array(self,'BNodevalue')
             if BNodevalue_read.shape[2] > BNodevalue.shape[2]:
                 BNodevalue = BNodevalue_read
-                print('BNodevalue read = ' , BNodevalue_read)
-            print("nbnode = ", nbnode, "\n", 'Max BNode 1 =' , BNodevalue)
+                # print('BNodevalue read = ' , BNodevalue_read)
+            # print("nbnode = ", nbnode, "\n", 'Max BNode 1 =' , BNodevalue)
 
             if np.greater(nbnode, np.amax(BNodevalue[mnum, :, 1])):
-                print('apply button if condition 1 ')
+                # print('apply button if condition 1 ')
                 SNodeValue = None
             else:
-                print('apply button else')
+                # print('apply button else')
                 import SABRE2_main_subclass
                 Lb = AddNodeClass.coordinateFill(self)
                 if BNodevalue.shape[2] != 16:
@@ -695,7 +738,7 @@ class AddNodeClass(QMainWindow):
                         BNodevalue[mnum][nbnode][6] + BNodevalue[mnum][nbnode][8]) / 2  # flange centroid
                 BNodevalue[mnum][nbnode][13] = addNodeTableValues[6]
 
-                print("BNodevalue function before = ", BNodevalue)
+                # print("BNodevalue function before = ", BNodevalue)
 
                 # if Path('process.h5').is_file():
                 #
@@ -709,15 +752,18 @@ class AddNodeClass(QMainWindow):
                 BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j,
                                                                      Massemble)
 
-                # print("BNodevalue function after = ", BNodevalue)
+                print("BNodevalue function after = ", BNodevalue)
                 import SABRE2SegmModel
 
                 # SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
 
-                SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
+                # SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
                 AddNodeClass.addedNodeInformationArrayUpdate(self)
                 # print("BNodevalue apply button = ", BNodevalue)
                 h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
+                test_array = h5_file.h5_Class.read_array(self, 'BNodevalue')
+                print('test array = ', test_array)
+
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
 

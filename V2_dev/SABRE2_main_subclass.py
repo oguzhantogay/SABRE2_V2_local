@@ -257,6 +257,8 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.AddNodeMember.currentIndexChanged.connect(lambda: AddNode.AddNodeClass.comboBoxChanged(self))
         ui_layout.AddNodeMember.currentIndexChanged.connect(lambda: AddNode.AddNodeClass.setAddedNodeComboBox(self))
 
+        ui_layout.AdditionalNodeNumberComboBox.currentIndexChanged.connect(lambda: AddNode.AddNodeClass.fill_table_with_known(self))
+
         ui_layout.addNodePushButton.clicked.connect(lambda: AddNode.AddNodeClass.addNodePushFun(self))
 
         ui_layout.FollowTaper.clicked.connect(lambda : AddNode.AddNodeClass.fillTable(self))

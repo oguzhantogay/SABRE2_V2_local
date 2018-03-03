@@ -446,7 +446,7 @@ class glWidget(QGLWidget, QMainWindow):
                 pass
             else:
                 glWidget.member_count, glWidget.member_values, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval = self.memberTableValues()
-                glWidget.BNodevalue = self.BNodeValueUpdater()
+                # glWidget.BNodevalue = self.BNodeValueUpdater()
                 # print('update the widget = ', glWidget.BNodevalue )
                 if glWidget.render_checked:
                     Massemble = self.MassembleUpdater()
@@ -535,19 +535,19 @@ class glWidget(QGLWidget, QMainWindow):
                                                                                  flag="OpenGL")
         return Massemble
 
-    def BNodeValueUpdater(self):
-        from AddNode import AddNodeClass
-        _, _, JNodeValues_i, JNodeValues_j, BNodevalue, _ = glWidget.memberTableValues(self)
-
-        Massemble = glWidget.MassembleUpdater(self)
-
-        # print("BNodevalue function in OpenGLCode before = ", BNodevalue)
-
-        BNodevalue = AddNodeClass.ApplyButton(self)
-
-        # print("BNodevalue function in OpenGLCode = ", BNodevalue)
-
-        return BNodevalue
+    # def BNodeValueUpdater(self):
+    #     from AddNode import AddNodeClass
+    #     _, _, JNodeValues_i, JNodeValues_j, BNodevalue, _ = glWidget.memberTableValues(self)
+    #
+    #     Massemble = glWidget.MassembleUpdater(self)
+    #
+    #     # print("BNodevalue function in OpenGLCode before = ", BNodevalue)
+    #
+    #     BNodevalue = AddNodeClass.ApplyButton(self)
+    #
+    #     # print("BNodevalue function in OpenGLCode = ", BNodevalue)
+    #
+    #     return BNodevalue
 
     def noneDetector(self, tableName):
         row_count = tableName.rowCount()

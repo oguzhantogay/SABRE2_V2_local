@@ -486,7 +486,7 @@ class AddNodeClass(QMainWindow):
         if BNodevalue.shape[2] ==16:
             member_number = self.ui.AddNodeMember.currentIndex()
             add_node_number = self.ui.AdditionalNodeNumberComboBox.currentIndex()
-            print('member = ', member_number, 'add_node = ', add_node_number)
+            # print('member = ', member_number, 'add_node = ', add_node_number)
             try:
                 table = np.zeros((1,7))
 
@@ -664,7 +664,7 @@ class AddNodeClass(QMainWindow):
         current_member = self.ui.AddNodeMember.currentIndex()
         import DropDownActions
         try:
-            remove_added_node =  BNodevalue[current_member][current_selected_node][1]
+            remove_added_node_test =  BNodevalue[current_member][current_selected_node][1]
             import SABRE2_GUI
             remove_added_node = QtGui.QMessageBox()
             remove_added_node.setWindowTitle('Remove Selected Node?')
@@ -675,7 +675,7 @@ class AddNodeClass(QMainWindow):
             remove_added_node.setStandardButtons(SABRE2_GUI.QtGui.QMessageBox.Yes | SABRE2_GUI.QtGui.QMessageBox.No)
             ret_val = remove_added_node.exec_()
             if ret_val == SABRE2_GUI.QtGui.QMessageBox.Yes:
-                pass
+                SegmRemove.removeNode(self)
             else:
                 return
 
@@ -750,7 +750,7 @@ class AddNodeClass(QMainWindow):
                 BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j,
                                                                      Massemble)
 
-                print("BNodevalue function after = ", BNodevalue)
+                # print("BNodevalue function after = ", BNodevalue)
                 import SABRE2SegmModel
 
                 # SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
@@ -759,8 +759,8 @@ class AddNodeClass(QMainWindow):
                 AddNodeClass.addedNodeInformationArrayUpdate(self)
                 # print("BNodevalue apply button = ", BNodevalue)
                 h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
-                test_array = h5_file.h5_Class.read_array(self, 'BNodevalue')
-                print('test array = ', test_array)
+                # test_array = h5_file.h5_Class.read_array(self, 'BNodevalue')
+                # print('test array = ', test_array)
 
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
@@ -779,58 +779,83 @@ class SegmRemove(QMainWindow):
         BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
         members_table, JNodevalue_i, JNodevalue_j, _, _= AddNodeClass.memberTableValues(self)
         Massemble = members_table[:, :3]
-        import SABRE2SegmCODE
-
-        BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
-
         # remove selected node
         nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())  # specifies the selected node current index
         memnum = int(self.ui.AddNodeMember.currentIndex())  # specifies the selected node current index
 
-        BNodevalue[memnum, nbnode, :] = 0
+        # import SABRE2SegmCODE
+        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        # total added node count of current member
+        total_number = added_node_information[memnum][1]
+        added_node_information[memnum][1] = added_node_information[memnum][1] - 1
+        h5_file.h5_Class.update_array(self, added_node_information, 'added_node_information')
+        # print('added node information = ', added_node_information)
+        print('total number = ' , total_number, 'nbnode = ', nbnode)
 
-        BNodedev = np.zeros((1, int(np.amax(BNodevalue[memnum, :, 1])), 16))
+        b = list(range(1, int(added_node_information[memnum][1] + 1)))
+        for e in range(len(b)):
+            b[e] = str(b[e])
+        self.ui.AdditionalNodeNumberComboBox.clear()
+        self.ui.AdditionalNodeNumberComboBox.addItems(b)
 
-        for i in range(int(BNodevalue[memnum, :, 1].shape[0])):
-            BNodedev[0, i, 0] = 0
-            BNodedev[0, i, 1] = 0
-            BNodedev[0, i, 2] = 0
-            BNodedev[0, i, 3] = 0
-            BNodedev[0, i, 4] = 0
-            BNodedev[0, i, 5] = 0
-            BNodedev[0, i, 6] = 0
-            BNodedev[0, i, 7] = 0
-            BNodedev[0, i, 8] = 0
-            BNodedev[0, i, 9] = 0
-            BNodedev[0, i, 10] = 0
-            BNodedev[0, i, 11] = 0
-            BNodedev[0, i, 12] = 0
-            BNodedev[0, i, 13] = 0
-            BNodedev[0, i, 14] = 0
-            BNodedev[0, i, 15] = 0
+        # total added node count of current member
+        if total_number < (nbnode + 1):
+            for i in range(2, 16):
+                BNodevalue[memnum][nbnode][i] = 0
+        else:
+            BNodevalue = np.delete(BNodevalue,nbnode, axis=1)
 
-        p = 0
+        BNodevalue[memnum,:,1] = np.arange(added_node_information[memnum][1]) + 1
+        h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
+        print('test remove = ', BNodevalue)
+        # BNodevalue[memnum, nbnode, :] = 0
 
-        for i in range(int(BNodevalue[memnum, :, 1].shape[0])):
-            BNodedev[0, p, 0] = BNodevalue[memnum, i, 1]
-            BNodedev[0, p, 1] = BNodevalue[memnum, i, 2]
-            BNodedev[0, p, 2] = BNodevalue[memnum, i, 3]
-            BNodedev[0, p, 3] = BNodevalue[memnum, i, 4]
-            BNodedev[0, p, 4] = BNodevalue[memnum, i, 5]
-            BNodedev[0, p, 5] = BNodevalue[memnum, i, 6]
-            BNodedev[0, p, 6] = BNodevalue[memnum, i, 7]
-            BNodedev[0, p, 7] = BNodevalue[memnum, i, 8]
-            BNodedev[0, p, 8] = BNodevalue[memnum, i, 9]
-            BNodedev[0, p, 9] = BNodevalue[memnum, i, 10]
-            BNodedev[0, p, 10] = BNodevalue[memnum, i, 11]
-            BNodedev[0, p, 11] = BNodevalue[memnum, i, 12]
-            BNodedev[0, p, 12] = BNodevalue[memnum, i, 13]
-            BNodedev[0, p, 13] = BNodevalue[memnum, i, 14]
-            BNodedev[0, p, 14] = BNodevalue[memnum, i, 15]
-            BNodedev[0, p, 15] = BNodevalue[memnum, i, 16]
+        # BNodedev = np.zeros((1, int(np.amax(BNodevalue[memnum, :, 1])), 16))
 
-            p += 1
-
-        BNodevalue[memnum, :, :] = BNodedev[memnum, :, :]
-
-        # handle SNODE later
+        # for i in range(int(BNodevalue[memnum, :, 1].shape[0])):
+        #     for i in range(16):
+        #         BNodedev[0, i, 0] = 0
+        #     BNodedev[0, i, 1] = 0
+        #     BNodedev[0, i, 2] = 0
+        #     BNodedev[0, i, 3] = 0
+        #     BNodedev[0, i, 4] = 0
+        #     BNodedev[0, i, 5] = 0
+        #     BNodedev[0, i, 6] = 0
+        #     BNodedev[0, i, 7] = 0
+        #     BNodedev[0, i, 8] = 0
+        #     BNodedev[0, i, 9] = 0
+        #     BNodedev[0, i, 10] = 0
+        #     BNodedev[0, i, 11] = 0
+        #     BNodedev[0, i, 12] = 0
+        #     BNodedev[0, i, 13] = 0
+        #     BNodedev[0, i, 14] = 0
+        #     BNodedev[0, i, 15] = 0
+        #
+        # p = 0
+        #
+        # for i in range(int(BNodevalue[memnum, :, 1].shape[0])):
+        #     BNodedev[0, p, 0] = BNodevalue[memnum, i, 1]
+        #     BNodedev[0, p, 1] = BNodevalue[memnum, i, 2]
+        #     BNodedev[0, p, 2] = BNodevalue[memnum, i, 3]
+        #     BNodedev[0, p, 3] = BNodevalue[memnum, i, 4]
+        #     BNodedev[0, p, 4] = BNodevalue[memnum, i, 5]
+        #     BNodedev[0, p, 5] = BNodevalue[memnum, i, 6]
+        #     BNodedev[0, p, 6] = BNodevalue[memnum, i, 7]
+        #     BNodedev[0, p, 7] = BNodevalue[memnum, i, 8]
+        #     BNodedev[0, p, 8] = BNodevalue[memnum, i, 9]
+        #     BNodedev[0, p, 9] = BNodevalue[memnum, i, 10]
+        #     BNodedev[0, p, 10] = BNodevalue[memnum, i, 11]
+        #     BNodedev[0, p, 11] = BNodevalue[memnum, i, 12]
+        #     BNodedev[0, p, 12] = BNodevalue[memnum, i, 13]
+        #     BNodedev[0, p, 13] = BNodevalue[memnum, i, 14]
+        #     BNodedev[0, p, 14] = BNodevalue[memnum, i, 15]
+        #     BNodedev[0, p, 15] = BNodevalue[memnum, i, 16]
+        #
+        #     p += 1
+        #
+        # BNodevalue[memnum, :, :] = BNodedev[memnum, :, :]
+        # # handle SNODE later
+        #
+        # BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
+        #
+        # print('remove node BNodevalue = ', BNodevalue)

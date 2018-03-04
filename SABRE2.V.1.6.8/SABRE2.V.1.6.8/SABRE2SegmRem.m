@@ -30,6 +30,7 @@ else
    if ~isempty(BNodevalue)
       BNodevalue(mnum,nbnode,:) = 0;       % Remove BNodevalue
       BNodev=[];
+      
       for i=1:length(BNodevalue(mnum,:,1))
             BNodev(mnum,i,1)=0;
             BNodev(mnum,i,2)=0;
@@ -48,6 +49,8 @@ else
             BNodev(mnum,i,15)=0; 
             BNodev(mnum,i,16)=0; 
       end   
+%       fprintf('test__ ')
+%       BNodev
 
       p=0;
       for i=1:length(BNodevalue(mnum,:,1))
@@ -154,7 +157,8 @@ set(pdb_step_edit,'Value',1)
 % ************************************************************************
 % *********************             Plot              ********************
 % ************************************************************************ 
-
+fprintf('test remove')
+BNodevalue
 SABRE2SegmModel(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,...
    Rval,BNodevalue,LabType,axesm,vstm);
 SNodevalue=[];

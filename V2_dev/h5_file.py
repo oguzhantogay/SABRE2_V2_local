@@ -14,9 +14,13 @@ class h5_Class:
 
         BNodevalue = np.zeros((1,1,1))
 
+        SNodevalue = np.zeros((1,1,1))
+
         file_open.create_dataset('added_node_information', data=added_node_information)
 
         file_open.create_dataset('BNodevalue', data=BNodevalue)
+
+        file_open.create_dataset('SNodevalue', data=SNodevalue)
 
         file_open.close()
 

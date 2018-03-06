@@ -44,19 +44,21 @@ else
             for j=1:(max(BNodevalue(i,:,2))+1)
                SNodevalue(i,j,1)=i;
                SNodevalue(i,j,2)=j;
-               SNodevalue(i,j,3)=str2double(get(pamen_assign_edit,'String'));
-               SNodevalue(i,j,4)=str2double(get(pame_assign_edit,'String'));
-               SNodevalue(i,j,5)=str2double(get(pamg_assign_edit, 'String'));
-               SNodevalue(i,j,6)=str2double(get(pamfy_assign_edit, 'String'));
-               SNodevalue(i,j,7)=str2double(get(pamrho_assign_edit, 'String'));
-               SNodevalue(i,j,8)=str2double(get(pamfyfi_assign_edit, 'String'));
-               SNodevalue(i,j,9)=str2double(get(pamfyw_assign_edit, 'String'));
-               SNodevalue(i,j,10)=str2double(get(pamfyfo_assign_edit, 'String'));
+               SNodevalue(i,j,3)=str2double(get(pamen_assign_edit,'String')); %number of elements
+               SNodevalue(i,j,4)=str2double(get(pame_assign_edit,'String')); % E
+               SNodevalue(i,j,5)=str2double(get(pamg_assign_edit, 'String')); % G
+               SNodevalue(i,j,6)=str2double(get(pamfy_assign_edit, 'String')); % Fy
+               SNodevalue(i,j,7)=str2double(get(pamrho_assign_edit, 'String')); % Density
+               SNodevalue(i,j,8)=str2double(get(pamfyfi_assign_edit, 'String')); % Fy_1
+               SNodevalue(i,j,9)=str2double(get(pamfyw_assign_edit, 'String')); % Fy_w
+               SNodevalue(i,j,10)=str2double(get(pamfyfo_assign_edit, 'String')); % Fy_2
                SNodevalue(i,j,11)=HomoType;
             end  
          end
+         fprintf('SNodevalue in AssiAll =')
+         SNodevalue
       end
-      
+     
    else
 
       if ~isempty(Massemble) && ~isempty(BNodevalue) 

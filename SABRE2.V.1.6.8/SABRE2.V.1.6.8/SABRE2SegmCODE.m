@@ -195,6 +195,11 @@ else
                                  0 0 1];                           
                               Lb2 =[BNodeval(i,j,16)-s;0;0];
                               Lb2 = Rz*Lb2+[JNodevalue_i(i,3);JNodevalue_i(i,4);JNodevalue_i(i,5)]; 
+                              Lb2
+                              Dgsb
+                              dtsb
+                              hgsb
+                              Afillsb
                               BNodevalue(i,p,1)=BNodeval(i,j,1);
                               BNodevalue(i,p,2)=p;
                               BNodevalue(i,p,3)=Lb2(1,1);
@@ -212,7 +217,8 @@ else
                               BNodevalue(i,p,15)=2;
                               BNodevalue(i,p,16)=BNodeval(i,j,16)-s;
                               p=p+1;
-                              
+                              BNodevalue
+                              BNodeval
                            elseif (BNodeval(i,j,16)/2 > s ) && (Af1 < Af2)  % if condition 6 - 2 
                                fprintf('\n# 6 - 2')
                               % Linear interpolation

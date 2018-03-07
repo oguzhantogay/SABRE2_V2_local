@@ -51,7 +51,7 @@ class glWidget(QGLWidget, QMainWindow):
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
         glWidget.member_count, glWidget.member_values, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval = None, None, None, None, None, None
 
-        self.Massemble = None
+        glWidget.Massemble = None
         self.joint_i = 1
         self.joint_j = 2
 
@@ -296,6 +296,7 @@ class glWidget(QGLWidget, QMainWindow):
         pass
 
     def paintGL(self):
+        # print('paint GL')
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
         glTranslated(self.xPos, self.yPos, self.zPos)
@@ -342,9 +343,8 @@ class glWidget(QGLWidget, QMainWindow):
         if glWidget.member_count is not None:
             glWidget.member_count = int(glWidget.member_count)
         if glWidget.render_checked:
-            Massemble = self.MassembleUpdater()
             self.renderAllProp(glWidget.member_count, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval,
-                               Massemble)
+                               glWidget.Massemble)
 
     def normalizeAngle(self, angle):
         while angle < 0:
@@ -447,9 +447,9 @@ class glWidget(QGLWidget, QMainWindow):
             else:
                 glWidget.member_count, glWidget.member_values, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval = self.memberTableValues()
                 # glWidget.BNodevalue = self.BNodeValueUpdater()
-                # print('update the widget = ', glWidget.BNodevalue )
+                # print('update the widget = ', glWidget.member_values[:, :3] )
                 if glWidget.render_checked:
-                    Massemble = self.MassembleUpdater()
+                    glWidget.Massemble = glWidget.member_values[:, :3]
                     glWidget.member_count = int(glWidget.member_count)
                     # if glWidget.add_node_flag == 1:
                     #     self.drawAsterisk(dx, dy, dz, flag = 'x')
@@ -459,7 +459,7 @@ class glWidget(QGLWidget, QMainWindow):
                     #     pass
 
                     self.renderAllProp(glWidget.member_count, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue,
-                                       glWidget.Rval, Massemble)
+                                       glWidget.Rval, glWidget.Massemble)
 
         except AttributeError:
             pass
@@ -529,11 +529,12 @@ class glWidget(QGLWidget, QMainWindow):
         member_count = member_values.shape[0]
         return member_count, member_values, JNodeValues_i, JNodeValues_j, BNodevalue, Rval
 
-    def MassembleUpdater(self):
-        import SABRE2_main_subclass
-        Massemble = SABRE2_main_subclass.SABRE2_main_subclass.m_assemble_updater(self, self.ui.Members_table,
-                                                                                 flag="OpenGL")
-        return Massemble
+    # def MassembleUpdater(self):
+    #     import SABRE2_main_subclass
+    #     print('executed OpenGLcode Massemble Updater=')
+    #     Massemble = SABRE2_main_subclass.SABRE2_main_subclass.m_assemble_updater(self, self.ui.Members_table,
+    #                                                                              flag="OpenGL")
+    #     return Massemble
 
     # def BNodeValueUpdater(self):
     #     from AddNode import AddNodeClass
@@ -568,26 +569,29 @@ class glWidget(QGLWidget, QMainWindow):
         elif self.ui.Members_table.item(x, 2) is None:
             pass
         elif render_checked:
-            Massemble = self.MassembleUpdater()
+
             MJvalue = np.zeros((2, 4))
             # print("JnodeValue =", self.joint_nodes)
-            if Massemble is not None:
+            if glWidget.Massemble is not None:
                 self.joint_i = int(glWidget.member_values[x][1] - 1)
                 self.joint_j = int(glWidget.member_values[x][2] - 1)
-                mem = Massemble.shape[0]
+                mem = glWidget.Massemble.shape[0]
                 # print("mem = ", mem)
                 glPushAttrib(GL_ENABLE_BIT)
                 glBegin(GL_LINES)
                 glColor3ub(100, 149, 237)
+                # print('Massemble = ', glWidget.Massemble)
+                # print('joint_nodes = ', self.joint_nodes)
                 for i in range(mem):
-                    MJvalue[0][1] = self.joint_nodes[int(Massemble[i][1] - 1)][1]
-                    MJvalue[1][1] = self.joint_nodes[int(Massemble[i][2] - 1)][1]
-                    MJvalue[0][2] = self.joint_nodes[int(Massemble[i][1] - 1)][2]
-                    MJvalue[1][2] = self.joint_nodes[int(Massemble[i][2] - 1)][2]
-                    MJvalue[0][3] = self.joint_nodes[int(Massemble[i][1] - 1)][3]
-                    MJvalue[1][3] = self.joint_nodes[int(Massemble[i][2] - 1)][3]
+                    MJvalue[0][1] = self.joint_nodes[int(glWidget.Massemble[i][1] - 1)][1]
+                    MJvalue[1][1] = self.joint_nodes[int(glWidget.Massemble[i][2] - 1)][1]
+                    MJvalue[0][2] = self.joint_nodes[int(glWidget.Massemble[i][1] - 1)][2]
+                    MJvalue[1][2] = self.joint_nodes[int(glWidget.Massemble[i][2] - 1)][2]
+                    MJvalue[0][3] = self.joint_nodes[int(glWidget.Massemble[i][1] - 1)][3]
+                    MJvalue[1][3] = self.joint_nodes[int(glWidget.Massemble[i][2] - 1)][3]
                     for i in range(2):
                         glVertex3f(MJvalue[i, 1], MJvalue[i, 2], MJvalue[i, 3])
+                print('MJvalue in member only =', MJvalue)
                 glEnd()
                 glPopAttrib()
         else:
@@ -655,8 +659,7 @@ class glWidget(QGLWidget, QMainWindow):
         NJ_j = np.zeros((max_for_NJ_i, 13))
 
         from SABRE2SegmCODE import ClassA
-        Massemble = glWidget.MassembleUpdater(self)
-        BNodevalue = ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
+        BNodevalue = ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, glWidget.Massemble)
         # print('Bnode in render all fun = ', BNodevalue)
 
         for k in range(13):

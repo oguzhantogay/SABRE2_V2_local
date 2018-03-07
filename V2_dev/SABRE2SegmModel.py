@@ -39,10 +39,8 @@ class AddNodeCoordCS(QMainWindow, QGLWidget):
                     print('dx =', dx, 'dy =', dy,'dz =', dz)
                     if np.isclose(BNodevalue[j][i][14], 1):
                         flag = 'Add Node x'
-                        glWidget.drawAsterisk(self,dx,dy,dz, flag)
                     else:
                         flag = 'Asterisk'
-                        glWidget.drawAsterisk(self,dx,dy,dz, flag)
 
     def added_node_drawing_properties(self,BNodevalue):
         ''' This function is used to obtain the added point cross-section properties'''

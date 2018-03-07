@@ -10,6 +10,8 @@ class ClassA(QMainWindow):
         self.ui = ui_layout
 
     def BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble):
+        is_step_checked  = self.ui.StepRB2.isChecked()
+        # print('is_checked = ', is_step_checked)
         # print("Massemble in BNodevalueUpdater= ", Massemble)
         # print('updater beginning BNode = ', BNodevalue)
         if BNodevalue.shape[2] == 2:
@@ -238,23 +240,33 @@ class ClassA(QMainWindow):
                                                 Additive[2] = JNodevalue_i[i][4]
                                                 Lb2[0] = BNodeval[i][j][15] - s
                                                 Lb2 = np.dot(Rz, Lb2) + Additive
+                                                # print('LB2 # 6 - 1 =', Lb2)
+                                                
+                                                print('Dgsb # 6 - 1 =', Dgsb)
+                                                print('dtsb # 6 - 1 =', dtsb)
+                                                print('hgsb # 6 - 1 =', hgsb)
+                                                print('Afillsb # 6 - 1 =', Afillsb)
 
+                                                BNodevalue = np.insert(BNodevalue,p,0,axis = 1)
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
+                                                BNodevalue[i][p][2] = Lb2[0]
+                                                BNodevalue[i][p][3] = Lb2[1]
+                                                BNodevalue[i][p][4] = Lb2[2]
                                                 BNodevalue[i][p][5] = JNodevalue_i[i][5]
                                                 BNodevalue[i][p][6] = JNodevalue_i[i][6]
                                                 BNodevalue[i][p][7] = JNodevalue_i[i][7]
                                                 BNodevalue[i][p][8] = JNodevalue_i[i][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
+                                                BNodevalue[i][p][9] = Dgsb[1]
                                                 BNodevalue[i][p][10] = JNodevalue_i[i][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
+                                                BNodevalue[i][p][11] = dtsb[1]
+                                                BNodevalue[i][p][12] = hgsb[1]
+                                                BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 2
                                                 BNodevalue[i][p][15] = BNodeval[i][j][15] - s
+                                                print('BNodevalue in # 6 - 1 = ', BNodevalue)
+                                                print('BNodeval in # 6 - 1 = ', BNodeval)
+                                                print('i # 6 - 1 = ', i, '\nj # 6 - 1 = ', j, '\np # 6 - 1 = ', p)
                                                 p = p + 1
 
                                             elif np.greater(BNodeval[i][j][15] / 2, s) and np.greater(Af2, Af1):  # 6 - 2
@@ -306,18 +318,18 @@ class ClassA(QMainWindow):
 
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
+                                                BNodevalue[i][p][2] = Lb2[0]
+                                                BNodevalue[i][p][3] = Lb2[1]
+                                                BNodevalue[i][p][4] = Lb2[2]
                                                 BNodevalue[i][p][5] = BNodeval[i][j][5]
                                                 BNodevalue[i][p][6] = BNodeval[i][j][6]
                                                 BNodevalue[i][p][7] = BNodeval[i][j][7]
                                                 BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
+                                                BNodevalue[i][p][9] = Dgsb[1]
                                                 BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
+                                                BNodevalue[i][p][11] = dtsb[1]
+                                                BNodevalue[i][p][12] = hgsb[1]
+                                                BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 2
                                                 BNodevalue[i][p][15] = BNodeval[i][j][15] + s
 
@@ -388,8 +400,8 @@ class ClassA(QMainWindow):
                                         L = np.sqrt(((JNodevalue_j[i][2] - JNodevalue_i[i][2]) ** 2 + (
                                                 JNodevalue_j[i][3] - JNodevalue_i[i][3]) ** 2 + (
                                                              JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
-
-                                        if self.ui.StepRB1.isChecked():  # 7 - 1
+                                        # print('checked =' , self.ui.StepRB1.isChecked())
+                                        if is_step_checked:  # 7 - 1
                                             print("# 7 - 1")
                                             # original element
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
@@ -410,7 +422,7 @@ class ClassA(QMainWindow):
                                             BNodevalue[i][p][15] = BNodeval[i][j][15]
                                             p = p + 1
 
-                                        elif self.ui.StepRB2.isChecked():  # 7 - 2
+                                        else:  # 7 - 2
                                             print("# 7 - 2")
                                             if np.greater(abs(L - BNodeval[i][j][15]) / 2,
                                                           s) and np.greater_equal(Af1, Af2):  # 8 - 1
@@ -467,18 +479,18 @@ class ClassA(QMainWindow):
 
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
+                                                BNodevalue[i][p][2] = Lb2[0]
+                                                BNodevalue[i][p][3] = Lb2[1]
+                                                BNodevalue[i][p][4] = Lb2[2]
                                                 BNodevalue[i][p][5] = JNodevalue_j[i][5]
                                                 BNodevalue[i][p][6] = JNodevalue_j[i][6]
                                                 BNodevalue[i][p][7] = JNodevalue_j[i][7]
                                                 BNodevalue[i][p][8] = JNodevalue_j[i][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
+                                                BNodevalue[i][p][9] = Dgsb[1]
                                                 BNodevalue[i][p][10] = JNodevalue_j[i][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
+                                                BNodevalue[i][p][11] = dtsb[1]
+                                                BNodevalue[i][p][12] = hgsb[1]
+                                                BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 2
                                                 BNodevalue[i][p][15] = BNodeval[i][j][15] + s
                                                 p = p + 1
@@ -533,18 +545,18 @@ class ClassA(QMainWindow):
 
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
+                                                BNodevalue[i][p][2] = Lb2[0]
+                                                BNodevalue[i][p][3] = Lb2[1]
+                                                BNodevalue[i][p][4] = Lb2[2]
                                                 BNodevalue[i][p][5] = BNodeval[i][j][5]
                                                 BNodevalue[i][p][6] = BNodeval[i][j][6]
                                                 BNodevalue[i][p][7] = BNodeval[i][j][7]
                                                 BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
+                                                BNodevalue[i][p][9] = Dgsb[1]
                                                 BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
+                                                BNodevalue[i][p][11] = dtsb[1]
+                                                BNodevalue[i][p][12] = hgsb[1]
+                                                BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 2
                                                 BNodevalue[i][p][15] = BNodeval[i][j][15] - s
 
@@ -716,18 +728,18 @@ class ClassA(QMainWindow):
 
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
+                                                BNodevalue[i][p][2] = Lb2[0]
+                                                BNodevalue[i][p][3] = Lb2[1]
+                                                BNodevalue[i][p][4] = Lb2[2]
                                                 BNodevalue[i][p][5] = JNodevalue_i[i][5]
                                                 BNodevalue[i][p][6] = JNodevalue_i[i][6]
                                                 BNodevalue[i][p][7] = JNodevalue_i[i][7]
                                                 BNodevalue[i][p][8] = JNodevalue_i[i][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
+                                                BNodevalue[i][p][9] = Dgsb[1]
                                                 BNodevalue[i][p][10] = JNodevalue_i[i][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
+                                                BNodevalue[i][p][11] = dtsb[1]
+                                                BNodevalue[i][p][12] = hgsb[1]
+                                                BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 2
                                                 BNodevalue[i][p][15] = BNodeval[i][j][15] - s
                                                 p = p + 1
@@ -784,18 +796,18 @@ class ClassA(QMainWindow):
 
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
+                                                BNodevalue[i][p][2] = Lb2[0]
+                                                BNodevalue[i][p][3] = Lb2[1]
+                                                BNodevalue[i][p][4] = Lb2[2]
                                                 BNodevalue[i][p][5] = BNodeval[i][j][5]
                                                 BNodevalue[i][p][6] = BNodeval[i][j][6]
                                                 BNodevalue[i][p][7] = BNodeval[i][j][7]
                                                 BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
+                                                BNodevalue[i][p][9] = Dgsb[1]
                                                 BNodevalue[i][p][10] = BNodeval[i][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
+                                                BNodevalue[i][p][11] = dtsb[1]
+                                                BNodevalue[i][p][12] = hgsb[1]
+                                                BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 2
                                                 BNodevalue[i][p][15] = BNodeval[i][j][15] + s
 
@@ -948,18 +960,18 @@ class ClassA(QMainWindow):
 
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
+                                                BNodevalue[i][p][2] = Lb2[0]
+                                                BNodevalue[i][p][3] = Lb2[1]
+                                                BNodevalue[i][p][4] = Lb2[2]
                                                 BNodevalue[i][p][5] = BNodeval[i][j + 1][5]
                                                 BNodevalue[i][p][6] = BNodeval[i][j + 1][6]
                                                 BNodevalue[i][p][7] = BNodeval[i][j + 1][7]
                                                 BNodevalue[i][p][8] = BNodeval[i][j + 1][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
+                                                BNodevalue[i][p][9] = Dgsb[1]
                                                 BNodevalue[i][p][10] = BNodeval[i][j + 1][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
+                                                BNodevalue[i][p][11] = dtsb[1]
+                                                BNodevalue[i][p][12] = hgsb[1]
+                                                BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 2
                                                 BNodevalue[i][p][15] = BNodeval[i][j + 1][15] + s
                                                 p = p + 1
@@ -1016,18 +1028,18 @@ class ClassA(QMainWindow):
 
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
-                                                BNodevalue[i][p][2] = Lb2[0][0]
-                                                BNodevalue[i][p][3] = Lb2[1][0]
-                                                BNodevalue[i][p][4] = Lb2[2][0]
+                                                BNodevalue[i][p][2] = Lb2[0]
+                                                BNodevalue[i][p][3] = Lb2[1]
+                                                BNodevalue[i][p][4] = Lb2[2]
                                                 BNodevalue[i][p][5] = BNodeval[i][j][5]
                                                 BNodevalue[i][p][6] = BNodeval[i][j][6]
                                                 BNodevalue[i][p][7] = BNodeval[i][j][7]
                                                 BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                                BNodevalue[i][p][9] = Dgsb[0][1]
+                                                BNodevalue[i][p][9] = Dgsb[1]
                                                 BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                                BNodevalue[i][p][11] = dtsb[0][1]
-                                                BNodevalue[i][p][12] = hgsb[0][1]
-                                                BNodevalue[i][p][13] = Afillsb[0][1]
+                                                BNodevalue[i][p][11] = dtsb[1]
+                                                BNodevalue[i][p][12] = hgsb[1]
+                                                BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 3
                                                 BNodevalue[i][p][15] = BNodeval[i][j][15] - s
 
@@ -1199,18 +1211,18 @@ class ClassA(QMainWindow):
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
-                                            BNodevalue[i][p][2] = Lb2[0][0]
-                                            BNodevalue[i][p][3] = Lb2[1][0]
-                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][2] = Lb2[0]
+                                            BNodevalue[i][p][3] = Lb2[1]
+                                            BNodevalue[i][p][4] = Lb2[2]
                                             BNodevalue[i][p][5] = JNodevalue_j[i][5]
                                             BNodevalue[i][p][6] = JNodevalue_j[i][6]
                                             BNodevalue[i][p][7] = JNodevalue_j[i][7]
                                             BNodevalue[i][p][8] = JNodevalue_j[i][8]
-                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][9] = Dgsb[1]
                                             BNodevalue[i][p][10] = JNodevalue_j[i][10]
-                                            BNodevalue[i][p][11] = dtsb[0][1]
-                                            BNodevalue[i][p][12] = hgsb[0][1]
-                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][11] = dtsb[1]
+                                            BNodevalue[i][p][12] = hgsb[1]
+                                            BNodevalue[i][p][13] = Afillsb[1]
                                             BNodevalue[i][p][14] = 3
                                             BNodevalue[i][p][15] = BNodeval[i][j][15] + s
                                             p = p + 1
@@ -1267,18 +1279,18 @@ class ClassA(QMainWindow):
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
-                                            BNodevalue[i][p][2] = Lb2[0][0]
-                                            BNodevalue[i][p][3] = Lb2[1][0]
-                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][2] = Lb2[0]
+                                            BNodevalue[i][p][3] = Lb2[1]
+                                            BNodevalue[i][p][4] = Lb2[2]
                                             BNodevalue[i][p][5] = BNodeval[i][j][5]
                                             BNodevalue[i][p][6] = BNodeval[i][j][6]
                                             BNodevalue[i][p][7] = BNodeval[i][j][7]
                                             BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][9] = Dgsb[1]
                                             BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = dtsb[0][1]
-                                            BNodevalue[i][p][12] = hgsb[0][1]
-                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][11] = dtsb[1]
+                                            BNodevalue[i][p][12] = hgsb[1]
+                                            BNodevalue[i][p][13] = Afillsb[1]
                                             BNodevalue[i][p][14] = 3
                                             BNodevalue[i][p][15] = BNodeval[i][j][15] - s
 
@@ -1433,18 +1445,18 @@ class ClassA(QMainWindow):
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
-                                            BNodevalue[i][p][2] = Lb2[0][0]
-                                            BNodevalue[i][p][3] = Lb2[1][0]
-                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][2] = Lb2[0]
+                                            BNodevalue[i][p][3] = Lb2[1]
+                                            BNodevalue[i][p][4] = Lb2[2]
                                             BNodevalue[i][p][5] = BNodeval[i][j - 1][5]
                                             BNodevalue[i][p][6] = BNodeval[i][j - 1][6]
                                             BNodevalue[i][p][7] = BNodeval[i][j - 1][7]
                                             BNodevalue[i][p][8] = BNodeval[i][j - 1][8]
-                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][9] = Dgsb[1]
                                             BNodevalue[i][p][10] = BNodeval[i][j - 1][10]
-                                            BNodevalue[i][p][11] = dtsb[0][1]
-                                            BNodevalue[i][p][12] = hgsb[0][1]
-                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][11] = dtsb[1]
+                                            BNodevalue[i][p][12] = hgsb[1]
+                                            BNodevalue[i][p][13] = Afillsb[1]
                                             BNodevalue[i][p][14] = 2
                                             BNodevalue[i][p][15] = BNodeval[i][j][15] - s
                                             p = p + 1
@@ -1500,18 +1512,18 @@ class ClassA(QMainWindow):
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
-                                            BNodevalue[i][p][2] = Lb2[0][0]
-                                            BNodevalue[i][p][3] = Lb2[1][0]
-                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][2] = Lb2[0]
+                                            BNodevalue[i][p][3] = Lb2[1]
+                                            BNodevalue[i][p][4] = Lb2[2]
                                             BNodevalue[i][p][5] = BNodeval[i][j][5]
                                             BNodevalue[i][p][6] = BNodeval[i][j][6]
                                             BNodevalue[i][p][7] = BNodeval[i][j][7]
                                             BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][9] = Dgsb[1]
                                             BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = dtsb[0][1]
-                                            BNodevalue[i][p][12] = hgsb[0][1]
-                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][11] = dtsb[1]
+                                            BNodevalue[i][p][12] = hgsb[1]
+                                            BNodevalue[i][p][13] = Afillsb[1]
                                             BNodevalue[i][p][14] = 2
                                             BNodevalue[i][p][15] = BNodeval[i][j][15] + s
 
@@ -1688,18 +1700,18 @@ class ClassA(QMainWindow):
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
-                                            BNodevalue[i][p][2] = Lb2[0][0]
-                                            BNodevalue[i][p][3] = Lb2[1][0]
-                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][2] = Lb2[0]
+                                            BNodevalue[i][p][3] = Lb2[1]
+                                            BNodevalue[i][p][4] = Lb2[2]
                                             BNodevalue[i][p][5] = BNodeval[i][j - 1][5]
                                             BNodevalue[i][p][6] = BNodeval[i][j - 1][6]
                                             BNodevalue[i][p][7] = BNodeval[i][j - 1][7]
                                             BNodevalue[i][p][8] = BNodeval[i][j - 1][8]
-                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][9] = Dgsb[1]
                                             BNodevalue[i][p][10] = BNodeval[i][j - 1][10]
-                                            BNodevalue[i][p][11] = dtsb[0][1]
-                                            BNodevalue[i][p][12] = hgsb[0][1]
-                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][11] = dtsb[1]
+                                            BNodevalue[i][p][12] = hgsb[1]
+                                            BNodevalue[i][p][13] = Afillsb[1]
                                             BNodevalue[i][p][14] = 2
                                             BNodevalue[i][p][15] = BNodeval[i][j][15] - s
                                             p = p + 1
@@ -1757,18 +1769,18 @@ class ClassA(QMainWindow):
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
-                                            BNodevalue[i][p][2] = Lb2[0][0]
-                                            BNodevalue[i][p][3] = Lb2[1][0]
-                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][2] = Lb2[0]
+                                            BNodevalue[i][p][3] = Lb2[1]
+                                            BNodevalue[i][p][4] = Lb2[2]
                                             BNodevalue[i][p][5] = BNodeval[i][j][5]
                                             BNodevalue[i][p][6] = BNodeval[i][j][6]
                                             BNodevalue[i][p][7] = BNodeval[i][j][7]
                                             BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][9] = Dgsb[1]
                                             BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = dtsb[0][1]
-                                            BNodevalue[i][p][12] = hgsb[0][1]
-                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][11] = dtsb[1]
+                                            BNodevalue[i][p][12] = hgsb[1]
+                                            BNodevalue[i][p][13] = Afillsb[1]
                                             BNodevalue[i][p][14] = 2
                                             BNodevalue[i][p][15] = BNodeval[i][j][15] + s
 
@@ -1921,18 +1933,18 @@ class ClassA(QMainWindow):
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
-                                            BNodevalue[i][p][2] = Lb2[0][0]
-                                            BNodevalue[i][p][3] = Lb2[1][0]
-                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][2] = Lb2[0]
+                                            BNodevalue[i][p][3] = Lb2[1]
+                                            BNodevalue[i][p][4] = Lb2[2]
                                             BNodevalue[i][p][5] = BNodeval[i][j + 1][5]
                                             BNodevalue[i][p][6] = BNodeval[i][j + 1][6]
                                             BNodevalue[i][p][7] = BNodeval[i][j + 1][7]
                                             BNodevalue[i][p][8] = BNodeval[i][j + 1][8]
-                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][9] = Dgsb[1]
                                             BNodevalue[i][p][10] = BNodeval[i][j + 1][10]
-                                            BNodevalue[i][p][11] = dtsb[0][1]
-                                            BNodevalue[i][p][12] = hgsb[0][1]
-                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][11] = dtsb[1]
+                                            BNodevalue[i][p][12] = hgsb[1]
+                                            BNodevalue[i][p][13] = Afillsb[1]
                                             BNodevalue[i][p][14] = 3
                                             BNodevalue[i][p][15] = BNodeval[i][j][15] + s
                                             p = p + 1
@@ -1989,18 +2001,18 @@ class ClassA(QMainWindow):
 
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
-                                            BNodevalue[i][p][2] = Lb2[0][0]
-                                            BNodevalue[i][p][3] = Lb2[1][0]
-                                            BNodevalue[i][p][4] = Lb2[2][0]
+                                            BNodevalue[i][p][2] = Lb2[0]
+                                            BNodevalue[i][p][3] = Lb2[1]
+                                            BNodevalue[i][p][4] = Lb2[2]
                                             BNodevalue[i][p][5] = BNodeval[i][j][5]
                                             BNodevalue[i][p][6] = BNodeval[i][j][6]
                                             BNodevalue[i][p][7] = BNodeval[i][j][7]
                                             BNodevalue[i][p][8] = BNodeval[i][j][8]
-                                            BNodevalue[i][p][9] = Dgsb[0][1]
+                                            BNodevalue[i][p][9] = Dgsb[1]
                                             BNodevalue[i][p][10] = BNodeval[i][j][10]
-                                            BNodevalue[i][p][11] = dtsb[0][1]
-                                            BNodevalue[i][p][12] = hgsb[0][1]
-                                            BNodevalue[i][p][13] = Afillsb[0][1]
+                                            BNodevalue[i][p][11] = dtsb[1]
+                                            BNodevalue[i][p][12] = hgsb[1]
+                                            BNodevalue[i][p][13] = Afillsb[1]
                                             BNodevalue[i][p][14] = 3
                                             BNodevalue[i][p][15] = BNodeval[i][j][15] - s
 

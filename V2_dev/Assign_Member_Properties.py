@@ -28,9 +28,10 @@ class Assign_All_Class(QMainWindow):
         from SABRE2_main_subclass import SABRE2_main_subclass
         member_properties_values = SABRE2_main_subclass.update_member_properties_table(self,
                                                                                        self.ui.Member_Properties_Table)
+        print('member prob values', member_properties_values)
         if SNodevalue.shape[1] == 0:
             if Massemble.shape[1] == 0 and BNodevalue.shape[1]:
                 for i in range(Massemble.shape[0]):
-                    for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1):
+                    for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                         SNodevalue[i][j][0] = i + 1
                         SNodevalue[i][j][1] = j + 1

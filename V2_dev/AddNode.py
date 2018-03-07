@@ -664,7 +664,7 @@ class AddNodeClass(QMainWindow):
         current_member = self.ui.AddNodeMember.currentIndex()
         import DropDownActions
         try:
-            remove_added_node_test =  BNodevalue[current_member][current_selected_node][1]
+            remove_added_node_test =  BNodevalue[current_member][current_selected_node][1] # this is a test operator for try-except statement
             import SABRE2_GUI
             remove_added_node = QtGui.QMessageBox()
             remove_added_node.setWindowTitle('Remove Selected Node?')
@@ -750,10 +750,10 @@ class AddNodeClass(QMainWindow):
                 BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j,
                                                                      Massemble)
 
-                # print("BNodevalue function after = ", BNodevalue)
+                print("BNodevalue function after = ", BNodevalue)
                 import SABRE2SegmModel
 
-                # SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
+                SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
 
                 # SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
                 AddNodeClass.addedNodeInformationArrayUpdate(self)

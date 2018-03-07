@@ -93,8 +93,6 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionZoom_In.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.setZoomIn())
         ui_layout.actionZoom_Out.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.setZoomOut())
         ui_layout.actionWhite_Background.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
-        ui_layout.StepRB1.pressed.connect(lambda:AddNode.AddNodeClass.radioButtonState2(self))
-        ui_layout.StepRB2.pressed.connect(lambda:AddNode.AddNodeClass.radioButtonState1(self))
         # Release Tab, first columns of the tables size arrangements
         ui_layout.Torsional_Release.setColumnWidth(0, 62)
         ui_layout.My_release.setColumnWidth(0, 62)
@@ -392,6 +390,7 @@ class SABRE2_main_subclass(QMainWindow):
     def update_members_table(self, tableName, position):
         JNodeValue = SABRE2_main_subclass.update_joints_table(self, self.ui.Joints_Table)
         Members_values, current_row, current_col, flag_mem_values = DataCollection.update_table_values(self, tableName, position)
+
         if current_col == 1 or current_col == 2:
             if Members_values[current_row, current_col] in JNodeValue[:, 0]:
                 DropDownActions.ActionClass.statusMessage(self, message="")
@@ -539,7 +538,7 @@ class SABRE2_main_subclass(QMainWindow):
 
     def update_member_properties_table(self, tableName):
         prop_values = JointTable.tableValues(self, tableName)
-        print("main screen Properties Table values", prop_values)
+        # print("main screen Properties Table values", prop_values)
         return prop_values
 
     def update_shear_panel_table(self, tableName, flag="not combo"):
@@ -589,7 +588,7 @@ class SABRE2_main_subclass(QMainWindow):
 
     def m_assemble_updater(self, tableName, Copy_from_number=1, Insert_after_number=1, lineName=1, Delete_row = 1,
                            flag="insert after button"):
-
+        # print('flag in massembly updater = ', flag)
         # print("members = ", self.members_table_values)
         # print("massemble updater = ", SABRE2_main_subclass.Massemble)
         row_count = tableName.rowCount()
@@ -635,8 +634,10 @@ class SABRE2_main_subclass(QMainWindow):
 
 
         elif flag == "cell changed":
-            row = tableName.currentRow()
 
+            row = tableName.currentRow()
+            # print('row in cell changed = ',row)
+            # print('SA_Massemble =', SABRE2_main_subclass.Massemble)
             try:
                 for i in range(3):
                     SABRE2_main_subclass.Massemble[row][i] = self.members_table_values[row][i]
@@ -661,6 +662,7 @@ class SABRE2_main_subclass(QMainWindow):
             except ValueError and IndexError:
                 pass
         elif flag == "OpenGL":
+
             pass
             # try:
             #     print("OpenGL = ", SABRE2_main_subclass.Massemble)

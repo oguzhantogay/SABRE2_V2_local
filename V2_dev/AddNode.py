@@ -58,10 +58,17 @@ class AddNodeClass(QMainWindow):
                 self.ui.AdditionalNodeNumberComboBox.addItems(a)
 
 
-    def addedNodeInformationArrayUpdate(self):
-        current_member = int(self.ui.AddNodeMember.currentIndex())
+    def addedNodeInformationArrayUpdate(self, BNodevalue):
+        current_added_node_number = 0
+        # print('Bnode = ', BNodevalue)
+        for i in range(BNodevalue.shape[0]):
+            for j in range(BNodevalue.shape[1]):
+                if BNodevalue[i][j][1] != 0:
+                    current_added_node_number += 1
+        # print('0 = ', BNodevalue.shape[0], '1 = ',BNodevalue.shape[1])
+        # print('current added number = ', current_added_node_number)
 
-        current_added_node_number = int(self.ui.AdditionalNodeNumberComboBox.count())
+        current_member = int(self.ui.AddNodeMember.currentIndex())
 
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
 
@@ -78,15 +85,14 @@ class AddNodeClass(QMainWindow):
         for i in range(int(self.ui.AddNodeMember.count())):
             added_node_information[i][0] = i + 1
 
-        # print('added node info = ', added_node_information)
+        print('added node info = ', added_node_information)
         h5_file.h5_Class.update_array(self, added_node_information, 'added_node_information')
-
+        AddNodeClass.setAddedNodeComboBox(self)
         # print('added node information = ', AddNodeClass.added_node_information)
 
     def setAddedNodeComboBox(self):
 
         current_member = int(self.ui.AddNodeMember.currentIndex())
-        current_added_node_text = self.ui.AdditionalNodeNumberComboBox.currentText()
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         added_node_count = added_node_information[current_member][1]
         # print('added node array =', added_node_information)
@@ -756,7 +762,7 @@ class AddNodeClass(QMainWindow):
                 SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
 
                 # SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
-                AddNodeClass.addedNodeInformationArrayUpdate(self)
+                AddNodeClass.addedNodeInformationArrayUpdate(self, BNodevalue)
                 # print("BNodevalue apply button = ", BNodevalue)
                 h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
                 # test_array = h5_file.h5_Class.read_array(self, 'BNodevalue')

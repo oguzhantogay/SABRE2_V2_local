@@ -118,8 +118,8 @@ elseif isempty(get(pdb_bfb_edit,'String')) ...
    set(pt_title_name,'Visible','on')    
 else
    set(pt_title_name,'Visible','off') % Hide BACKGROUND TEXT
-%    fprintf('test3') 
-%    BNodevalue
+   fprintf('test3') 
+   BNodevalue
 
    if max(BNodevalue(mnum,:,2))<nbnode
       SNodevalue=[];
@@ -149,7 +149,7 @@ end % if end
 % Automatic Segment numbering or Step member.
 [BNodevalue]=SABRE2SegmCODE(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,BNodevalue,...
    pdb_coordx_edit,pdb_coordy_edit,pdb_coordz_edit,pdb_step_edit,seglength);
-fprintf('test3')
+fprintf('segm App')
 BNodevalue
 % ************************************************************************
 % **************             Initial Setting              ****************

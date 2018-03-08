@@ -591,7 +591,7 @@ class glWidget(QGLWidget, QMainWindow):
                     MJvalue[1][3] = self.joint_nodes[int(glWidget.Massemble[i][2] - 1)][3]
                     for i in range(2):
                         glVertex3f(MJvalue[i, 1], MJvalue[i, 2], MJvalue[i, 3])
-                print('MJvalue in member only =', MJvalue)
+                # print('MJvalue in member only =', MJvalue)
                 glEnd()
                 glPopAttrib()
         else:

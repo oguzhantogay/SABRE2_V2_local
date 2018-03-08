@@ -72,6 +72,10 @@ else
        alpharef(i,2)=atan2(opp,adj);   % Only global frame angle
    end 
    
+%     fprintf('\nBNodevalue before ifs')
+%     BNodevalue
+%     fprintf('BNodeval before ifs')
+%     BNodeval
 % ------------------------------------------------------------------------   
 % ----------------      Add   Steped elements           ------------------ 
 % ------------------------------------------------------------------------ 
@@ -82,6 +86,10 @@ else
          p=1;
          for j = 1:max(BNodeval(i,:,2))
              fprintf('\nfor 2')
+%              fprintf('\nBNodevalue before in for 2')
+%              BNodevalue
+%              fprintf('BNodeval before in for 2')
+%              BNodeval
             if isequal(round(str2double(get(pdb_coordx_edit,'String'))*10^5)/10^5,round(BNodeval(i,j,3)*10^5)/10^5) ...
                   && isequal(round(str2double(get(pdb_coordy_edit,'String'))*10^5)/10^5,round(BNodeval(i,j,4)*10^5)/10^5) ...
                   && isequal(round(str2double(get(pdb_coordz_edit,'String'))*10^5)/10^5,round(BNodeval(i,j,5)*10^5)/10^5)  % if condition 1 - 1
@@ -195,11 +203,11 @@ else
                                  0 0 1];                           
                               Lb2 =[BNodeval(i,j,16)-s;0;0];
                               Lb2 = Rz*Lb2+[JNodevalue_i(i,3);JNodevalue_i(i,4);JNodevalue_i(i,5)]; 
-                              Lb2
-                              Dgsb
-                              dtsb
-                              hgsb
-                              Afillsb
+%                               Lb2
+%                               Dgsb
+%                               dtsb
+%                               hgsb
+%                               Afillsb
                               BNodevalue(i,p,1)=BNodeval(i,j,1);
                               BNodevalue(i,p,2)=p;
                               BNodevalue(i,p,3)=Lb2(1,1);
@@ -217,8 +225,8 @@ else
                               BNodevalue(i,p,15)=2;
                               BNodevalue(i,p,16)=BNodeval(i,j,16)-s;
                               p=p+1;
-                              BNodevalue
-                              BNodeval
+%                               BNodevalue
+%                               BNodeval
                            elseif (BNodeval(i,j,16)/2 > s ) && (Af1 < Af2)  % if condition 6 - 2 
                                fprintf('\n# 6 - 2')
                               % Linear interpolation
@@ -1040,6 +1048,10 @@ else
                                  0 0 1];                           
                               Lb2 =[BNodeval(i,j,16)-s;0;0];
                               Lb2 = Rz*Lb2+[JNodevalue_i(i,3);JNodevalue_i(i,4);JNodevalue_i(i,5)]; 
+                              fprintf('\nBNodevalue before in # 16 - 2')
+                              BNodevalue
+                              fprintf('BNodeval before in # 16 - 2')
+                              BNodeval
                               BNodevalue(i,p,1)=BNodeval(i,j,1);
                               BNodevalue(i,p,2)=p;
                               BNodevalue(i,p,3)=Lb2(1,1);
@@ -1056,7 +1068,9 @@ else
                               BNodevalue(i,p,14)=Afillsb(1,2);  
                               BNodevalue(i,p,15)=3;
                               BNodevalue(i,p,16)=BNodeval(i,j,16)-s;
-                              p=p+1;                              
+                              p=p+1;           
+                              fprintf('BNodevalue after in # 16 - 2')
+                              BNodevalue
                            end % ( abs(L-BNodeval(i,j,16)) > 2*s ) && ( Af1 < Af2 )                           
                         end % isequal(get(pdb_step_edit,'Value'),1) % No step                        
                         
@@ -1653,7 +1667,11 @@ else
                
             else % ~ coordinate % if condition 1 - 2
                 fprintf('\n# 1 - 2')
-               % original element                
+               % original element      
+%                fprintf('\nBNodevalue before in # 1 - 2')
+%                BNodevalue
+%                fprintf('BNodeval before in # 1 - 2')
+%                BNodeval
                BNodevalue(i,p,1)=BNodeval(i,j,1);
                BNodevalue(i,p,2)=p;
                BNodevalue(i,p,3)=BNodeval(i,j,3);

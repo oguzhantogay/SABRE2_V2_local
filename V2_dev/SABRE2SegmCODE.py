@@ -85,6 +85,9 @@ class ClassA(QMainWindow):
                     # print("max = ", int(np.amax(BNodeval[i, :, 1])))
                     for j in range(int(np.amax(BNodeval[i, :, 1]))):
                         print("for 2")
+                        # print('BNodevalue in for 2 = ', BNodevalue)
+                        # print('BNodeval in for 2= ', BNodeval)
+                        # print('i for 2 = ', i, '\nj for 2 = ', j, '\np for 2 = ', p)
                         # print("x = ", coord_x, "\ny =", coord_y, "\nz =", coord_z)
                         # print("3 = ", BNodeval[i][j][2], "\n4 =", BNodeval[i][j][3], "\n5 =", BNodeval[i][j][4])
                         # BNodevalue = np.zeros((mem, p + 1, 16))
@@ -242,10 +245,10 @@ class ClassA(QMainWindow):
                                                 Lb2 = np.dot(Rz, Lb2) + Additive
                                                 # print('LB2 # 6 - 1 =', Lb2)
                                                 
-                                                print('Dgsb # 6 - 1 =', Dgsb)
-                                                print('dtsb # 6 - 1 =', dtsb)
-                                                print('hgsb # 6 - 1 =', hgsb)
-                                                print('Afillsb # 6 - 1 =', Afillsb)
+                                                # print('Dgsb # 6 - 1 =', Dgsb)
+                                                # print('dtsb # 6 - 1 =', dtsb)
+                                                # print('hgsb # 6 - 1 =', hgsb)
+                                                # print('Afillsb # 6 - 1 =', Afillsb)
 
                                                 BNodevalue = np.insert(BNodevalue,p,0,axis = 1)
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
@@ -264,9 +267,9 @@ class ClassA(QMainWindow):
                                                 BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 2
                                                 BNodevalue[i][p][15] = BNodeval[i][j][15] - s
-                                                print('BNodevalue in # 6 - 1 = ', BNodevalue)
-                                                print('BNodeval in # 6 - 1 = ', BNodeval)
-                                                print('i # 6 - 1 = ', i, '\nj # 6 - 1 = ', j, '\np # 6 - 1 = ', p)
+                                                # print('BNodevalue in # 6 - 1 = ', BNodevalue)
+                                                # print('BNodeval in # 6 - 1 = ', BNodeval)
+                                                # print('i # 6 - 1 = ', i, '\nj # 6 - 1 = ', j, '\np # 6 - 1 = ', p)
                                                 p = p + 1
 
                                             elif np.greater(BNodeval[i][j][15] / 2, s) and np.greater(Af2, Af1):  # 6 - 2
@@ -1276,7 +1279,9 @@ class ClassA(QMainWindow):
                                             Additive[2] = JNodevalue_i[i][4]
                                             Lb2[0] = BNodeval[i][j][15] - s
                                             Lb2 = np.dot(Rz, Lb2) + Additive
-
+                                            print('BNodevalue in # 16 - 2 = ', BNodevalue)
+                                            print('BNodeval in # 16 - 2 = ', BNodeval)
+                                            print('i # 16 - 2 = ', i, '\nj # 16 - 2 = ', j, '\np # 16 - 2 = ', p)
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0]
@@ -2039,7 +2044,9 @@ class ClassA(QMainWindow):
 
                         else:  # 1 - 2
                             print("# 1 - 2")
-
+                            print('BNodevalue in # 1 - 2 = ', BNodevalue)
+                            print('BNodeval in # 1 - 2 = ', BNodeval)
+                            print('i # 1 - 2 = ', i, '\nj # 1 - 2 = ', j, '\np # 1 - 2 = ', p)
                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                             BNodevalue[i][p][1] = p + 1
                             BNodevalue[i][p][2] = BNodeval[i][j][2]

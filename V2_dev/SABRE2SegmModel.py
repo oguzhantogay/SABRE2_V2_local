@@ -25,7 +25,13 @@ class AddNodeCoordCS(QMainWindow, QGLWidget):
         dx = 0
         dy = 0
         dz = 0
-        print('Bnodevalue error= ', BNodevalue)
+        # print('Bnodevalue error= ', BNodevalue)
+        added_node_count =BNodevalue.shape[1]
+        # for j in range(member_count):
+        #     for i in range(BNodevalue.shape[1]):
+        #         added_node_count += 1
+
+        print('Added node count = ', added_node_count)
         for j in range(member_count):
             # print('for add node')
             if not np.isclose(BNodevalue[j][0][1], 0):
@@ -36,6 +42,7 @@ class AddNodeCoordCS(QMainWindow, QGLWidget):
                     dx = BNodevalue[j][i][2]
                     dy = -BNodevalue[j][i][4]
                     dz = BNodevalue[j][i][3]
+                    flag = BNodevalue[j][i][15]
                     print('dx =', dx, 'dy =', dy,'dz =', dz)
                     if np.isclose(BNodevalue[j][i][14], 1):
                         flag = 'Add Node x'

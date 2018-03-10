@@ -35,7 +35,7 @@ class AddNodeClass(QMainWindow):
                 for e in range(len(b)):
                     b[e] = str(b[e])
                 self.ui.AdditionalNodeNumberComboBox.clear()
-                self.ui.AdditionalNodeNumberComboBox.addItems(a)
+                self.ui.AdditionalNodeNumberComboBox.addItems(b)
         else:
 
             # print('set combo box else 1 ')
@@ -60,15 +60,14 @@ class AddNodeClass(QMainWindow):
 
     def addedNodeInformationArrayUpdate(self, BNodevalue):
         current_added_node_number = 0
-        # print('Bnode = ', BNodevalue)
-        for i in range(BNodevalue.shape[0]):
-            for j in range(BNodevalue.shape[1]):
-                if BNodevalue[i][j][1] != 0:
-                    current_added_node_number += 1
+        # print('Bnode = ', BNodevalue)s
+        current_member = int(self.ui.AddNodeMember.currentIndex())
+        for j in range(BNodevalue.shape[1]):
+            if BNodevalue[current_member][j][1] != 0:
+                current_added_node_number += 1
         # print('0 = ', BNodevalue.shape[0], '1 = ',BNodevalue.shape[1])
         # print('current added number = ', current_added_node_number)
 
-        current_member = int(self.ui.AddNodeMember.currentIndex())
 
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
 
@@ -82,10 +81,10 @@ class AddNodeClass(QMainWindow):
         else:
             added_node_information = np.delete(added_node_information, added_node_information.shape[0] - 1, 0)
 
+        # print('added node info before for = ', added_node_information)
         for i in range(int(self.ui.AddNodeMember.count())):
             added_node_information[i][0] = i + 1
 
-        print('added node info = ', added_node_information)
         h5_file.h5_Class.update_array(self, added_node_information, 'added_node_information')
         AddNodeClass.setAddedNodeComboBox(self)
         # print('added node information = ', AddNodeClass.added_node_information)
@@ -95,7 +94,7 @@ class AddNodeClass(QMainWindow):
         current_member = int(self.ui.AddNodeMember.currentIndex())
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         added_node_count = added_node_information[current_member][1]
-        # print('added node array =', added_node_information)
+        print('added node array =', added_node_information)
         # print('current_member = ', current_member, 'added node count = ', added_node_count)
 
         if current_member == -1:
@@ -109,17 +108,17 @@ class AddNodeClass(QMainWindow):
 
                 for e in range(len(list_items)):
                     list_items[e] = str(list_items[e])
-                print('list items = ', list_items)
+                # print('list items = ', list_items)
                 self.ui.AdditionalNodeNumberComboBox.clear()
                 self.ui.AdditionalNodeNumberComboBox.addItems(list_items)
 
-    def radioButtonState1(self):
-        AddNodeClass.btnChecked = self.ui.StepRB1.isChecked()
-        print("step =", AddNodeClass.btnChecked)
+    # def radioButtonState1(self):
+    #     AddNodeClass.btnChecked = self.ui.StepRB1.isChecked()
+    #     print("step =", AddNodeClass.btnChecked)
 
-    def radioButtonState2(self):
-        AddNodeClass.btnChecked = self.ui.StepRB1.isChecked()
-        print("no step =", AddNodeClass.btnChecked)
+    # def radioButtonState2(self):
+    #     AddNodeClass.btnChecked = self.ui.StepRB1.isChecked()
+    #     print("no step =", AddNodeClass.btnChecked)
 
     def memberTableValues(self):
 
@@ -488,12 +487,13 @@ class AddNodeClass(QMainWindow):
 
     def fill_table_with_known(self):
         BNodevalue = h5_file.h5_Class.read_array(self,'BNodevalue')
-        # print('Bnode = ' , BNodevalue)
-        if BNodevalue.shape[2] ==16:
-            member_number = self.ui.AddNodeMember.currentIndex()
-            add_node_number = self.ui.AdditionalNodeNumberComboBox.currentIndex()
+        member_number = self.ui.AddNodeMember.currentIndex()
+        add_node_number = self.ui.AdditionalNodeNumberComboBox.currentIndex()
+        try:
+            # print('Bnode = ' , BNodevalue)
+            if BNodevalue.shape[2] ==16 and BNodevalue[member_number][add_node_number][1] !=0:
+
             # print('member = ', member_number, 'add_node = ', add_node_number)
-            try:
                 table = np.zeros((1,7))
 
                 table[0][0] = BNodevalue[member_number][add_node_number][5]
@@ -506,7 +506,8 @@ class AddNodeClass(QMainWindow):
                 if self.ui.AdditionalNodeNumberComboBox.currentText() == '':
                     self.ui.AddNodePositionFrom.setText('')
                 else:
-                    self.ui.AddNodePositionFrom.setText(str(BNodevalue[member_number][add_node_number][2]))
+                    print('test')
+                    self.ui.AddNodePositionFrom.setText(str(np.around(BNodevalue[member_number][add_node_number][15], decimals = 3)))
                     tableName = self.ui.AddNodeTable
                     validatorDouble = QDoubleValidator()
                     for i in range(7):
@@ -516,10 +517,10 @@ class AddNodeClass(QMainWindow):
                         item.setText(str(table[0][i]))
                         tableName.setCellWidget(0, i, item)
                     DropDownActions.ActionClass.statusMessage(self, message="")
-            except IndexError:
-                DropDownActions.ActionClass.statusMessage(self, message="Please enter the Position from the i node!")
+        except IndexError:
+            DropDownActions.ActionClass.statusMessage(self, message="Please enter the Position from the i node!")
 
-                self.ui.AddNodePositionFrom.setText('')
+            self.ui.AddNodePositionFrom.setText('')
 
     def sql_print(self):
         tableName = self.ui.AddNodeTable

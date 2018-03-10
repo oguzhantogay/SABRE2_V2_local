@@ -10,7 +10,7 @@ class ClassA(QMainWindow):
         self.ui = ui_layout
 
     def BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble):
-        is_step_checked  = self.ui.StepRB2.isChecked()
+        is_step_checked  = self.ui.StepRB1.isChecked()
         # print('is_checked = ', is_step_checked)
         # print("Massemble in BNodevalueUpdater= ", Massemble)
         # print('updater beginning BNode = ', BNodevalue)
@@ -166,7 +166,7 @@ class ClassA(QMainWindow):
 
                                         # print('BNodevalue before # 5 - 1 = ', BNodevalue)
 
-                                        if self.ui.StepRB1.isChecked():  # 5 - 1
+                                        if is_step_checked:  # 5 - 1
                                             print("# 5 - 1")
                                             # original element
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
@@ -187,7 +187,7 @@ class ClassA(QMainWindow):
                                             BNodevalue[i][p][15] = BNodeval[i][j][15]
                                             p = p + 1
 
-                                        elif self.ui.StepRB2.isChecked():  # 5 - 2
+                                        else:  # 5 - 2
                                             print("# 5 - 2")
 
                                             if np.greater(BNodeval[i][j][15] / 2, s) and np.greater_equal(Af1,
@@ -267,9 +267,9 @@ class ClassA(QMainWindow):
                                                 BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 2
                                                 BNodevalue[i][p][15] = BNodeval[i][j][15] - s
-                                                # print('BNodevalue in # 6 - 1 = ', BNodevalue)
-                                                # print('BNodeval in # 6 - 1 = ', BNodeval)
-                                                # print('i # 6 - 1 = ', i, '\nj # 6 - 1 = ', j, '\np # 6 - 1 = ', p)
+                                                print('BNodevalue in # 6 - 1 = ', BNodevalue)
+                                                print('BNodeval in # 6 - 1 = ', BNodeval)
+                                                print('i # 6 - 1 = ', i, '\nj # 6 - 1 = ', j, '\np # 6 - 1 = ', p)
                                                 p = p + 1
 
                                             elif np.greater(BNodeval[i][j][15] / 2, s) and np.greater(Af2, Af1):  # 6 - 2
@@ -403,7 +403,7 @@ class ClassA(QMainWindow):
                                         L = np.sqrt(((JNodevalue_j[i][2] - JNodevalue_i[i][2]) ** 2 + (
                                                 JNodevalue_j[i][3] - JNodevalue_i[i][3]) ** 2 + (
                                                              JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
-                                        # print('checked =' , self.ui.StepRB1.isChecked())
+                                        # print('checked =' , is_step_checked)
                                         if is_step_checked:  # 7 - 1
                                             print("# 7 - 1")
                                             # original element
@@ -427,6 +427,11 @@ class ClassA(QMainWindow):
 
                                         else:  # 7 - 2
                                             print("# 7 - 2")
+                                            print('BNodevalue before in # 7 - 2 = ', BNodevalue)
+                                            print('BNodeval before # 7 - 2 = ', BNodeval)
+                                            # print('i # 7 - 2 = ', i, '\nj # 7 - 2 = ', j, '\np # 7 - 2 = ', p)
+                                            print(np.greater(abs(L - BNodeval[i][j][15]) / 2,
+                                                          s), )
                                             if np.greater(abs(L - BNodeval[i][j][15]) / 2,
                                                           s) and np.greater_equal(Af1, Af2):  # 8 - 1
                                                 print("# 8 - 1")
@@ -480,6 +485,7 @@ class ClassA(QMainWindow):
                                                 Lb2[0] = BNodeval[i][j][15] + s
                                                 Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                                BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
                                                 BNodevalue[i][p][2] = Lb2[0]
@@ -546,6 +552,7 @@ class ClassA(QMainWindow):
                                                 Lb2[0] = BNodeval[i][j][15] - s
                                                 Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                                BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
                                                 BNodevalue[i][p][2] = Lb2[0]
@@ -648,7 +655,7 @@ class ClassA(QMainWindow):
                                         Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
                                         Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
 
-                                        if self.ui.StepRB1.isChecked():  # 10 - 1
+                                        if is_step_checked:  # 10 - 1
                                             # original element
                                             print("# 10 - 1")
 
@@ -670,7 +677,7 @@ class ClassA(QMainWindow):
                                             BNodevalue[i][p][15] = BNodeval[i][j][15]
                                             p = p + 1
 
-                                        elif self.ui.StepRB2.isChecked():  # 10 -2
+                                        else:  # 10 -2
                                             print("# 10 - 2")
                                             if np.greater(BNodeval[i][j][15] / 2,
                                                           s) and np.greater_equal(Af1, Af2):  # 11 - 1
@@ -729,6 +736,7 @@ class ClassA(QMainWindow):
                                                 Lb2[0] = BNodeval[i][j][15] - s
                                                 Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                                BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
                                                 BNodevalue[i][p][2] = Lb2[0]
@@ -797,6 +805,7 @@ class ClassA(QMainWindow):
                                                 Lb2[0] = BNodeval[i][j][15] + s
                                                 Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                                BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
                                                 BNodevalue[i][p][2] = Lb2[0]
@@ -880,7 +889,7 @@ class ClassA(QMainWindow):
                                         Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
                                         Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
 
-                                        if self.ui.StepRB1.isChecked():  # 12 - 1
+                                        if is_step_checked:  # 12 - 1
                                             # original element
                                             print("# 12 - 1")
 
@@ -902,7 +911,7 @@ class ClassA(QMainWindow):
                                             BNodevalue[i][p][15] = BNodeval[i][j][15]
                                             p = p + 1
 
-                                        elif self.ui.StepRB2.isChecked():  # 12 - 2
+                                        else:  # 12 - 2
                                             print("# 12 - 2")
                                             if np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j + 1][15]) / 2,
                                                           s) and np.greater(Af2, Af1):  # 13 - 1
@@ -961,6 +970,7 @@ class ClassA(QMainWindow):
                                                 Lb2[0] = BNodeval[i][j][15] + s
                                                 Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                                BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
                                                 BNodevalue[i][p][2] = Lb2[0]
@@ -1029,6 +1039,7 @@ class ClassA(QMainWindow):
                                                 Lb2[0] = BNodeval[i][j][15] - s
                                                 Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                                BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                                 BNodevalue[i][p][0] = BNodeval[i][j][0]
                                                 BNodevalue[i][p][1] = p + 1
                                                 BNodevalue[i][p][2] = Lb2[0]
@@ -1136,7 +1147,7 @@ class ClassA(QMainWindow):
                                             JNodevalue_j[i][3] - JNodevalue_i[i][3]) ** 2 + (
                                                          JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
 
-                                    if self.ui.StepRB1.isChecked():  # 15 -1
+                                    if is_step_checked:  # 15 -1
                                         print("# 15 - 1")
                                         # original element
                                         BNodevalue[i][p][0] = BNodeval[i][j][0]
@@ -1157,7 +1168,7 @@ class ClassA(QMainWindow):
                                         BNodevalue[i][p][15] = BNodeval[i][j][15]
                                         p = p + 1
 
-                                    elif self.ui.StepRB2.isChecked():  # 15- 2
+                                    else:  # 15- 2
                                         print("# 15 - 2")
                                         if np.greater(abs(L - BNodeval[i][j][15]) / 2,
                                                       s) and np.greater(Af2, Af1):  # 16 -1
@@ -1212,6 +1223,7 @@ class ClassA(QMainWindow):
                                             Lb2[0] = BNodeval[i][j][15] + s
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                            BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0]
@@ -1279,9 +1291,10 @@ class ClassA(QMainWindow):
                                             Additive[2] = JNodevalue_i[i][4]
                                             Lb2[0] = BNodeval[i][j][15] - s
                                             Lb2 = np.dot(Rz, Lb2) + Additive
-                                            print('BNodevalue in # 16 - 2 = ', BNodevalue)
-                                            print('BNodeval in # 16 - 2 = ', BNodeval)
-                                            print('i # 16 - 2 = ', i, '\nj # 16 - 2 = ', j, '\np # 16 - 2 = ', p)
+                                            # print('BNodevalue in # 16 - 2 = ', BNodevalue)
+                                            # print('BNodeval in # 16 - 2 = ', BNodeval)
+                                            # print('i # 16 - 2 = ', i, '\nj # 16 - 2 = ', j, '\np # 16 - 2 = ', p)
+                                            BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0]
@@ -1367,7 +1380,7 @@ class ClassA(QMainWindow):
                                             JNodevalue_j[i][3] - JNodevalue_i[i][3]) ** 2 + (
                                                          JNodevalue_j[i][4] - JNodevalue_i[i][4]) ** 2))
 
-                                    if self.ui.StepRB1.isChecked():  # 17 - 1
+                                    if is_step_checked:  # 17 - 1
                                         # original element
                                         print("# 17 - 1")
 
@@ -1389,7 +1402,7 @@ class ClassA(QMainWindow):
                                         BNodevalue[i][p][15] = BNodeval[i][j][15]
                                         p = p + 1
 
-                                    elif self.ui.StepRB2.isChecked():  # 17 - 2
+                                    else:  # 17 - 2
                                         print("# 17 - 2")
                                         if np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j - 1][15]) / 2,
                                                       s) or not np.greater_equal(Af1, Af2):  # 18 - 1
@@ -1448,6 +1461,7 @@ class ClassA(QMainWindow):
                                             Lb2[0] = BNodeval[i][j][15] - s
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                            BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0]
@@ -1515,6 +1529,7 @@ class ClassA(QMainWindow):
                                             Lb2[0] = BNodeval[i][j][15] + s
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                            BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0]
@@ -1619,7 +1634,7 @@ class ClassA(QMainWindow):
                                     Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
                                     Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
 
-                                    if self.ui.StepRB1.isChecked():  # 20 - 1
+                                    if is_step_checked:  # 20 - 1
                                         # original element
 
                                         print("# 20 - 1")
@@ -1642,7 +1657,7 @@ class ClassA(QMainWindow):
                                         BNodevalue[i][p][15] = BNodeval[i][j][15]
                                         p = p + 1
 
-                                    elif self.ui.StepRB2.isChecked():  # 20 - 2
+                                    else:  # 20 - 2
 
                                         print("# 20 - 1")
                                         if np.greater(abs(BNodeval[i][j][15] - BNodeval[i][j - 1][15]) / 2,
@@ -1703,6 +1718,7 @@ class ClassA(QMainWindow):
                                             Lb2[0] = BNodeval[i][j][15] - s
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                            BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0]
@@ -1772,6 +1788,7 @@ class ClassA(QMainWindow):
                                             Lb2[0] = BNodeval[i][j][15] + s
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                            BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0]
@@ -1855,7 +1872,7 @@ class ClassA(QMainWindow):
                                     Af1 = bfb1 * tfb1 + bft1 * tft1 + tw1
                                     Af2 = bfb2 * tfb2 + bft2 * tft2 + tw2
 
-                                    if self.ui.StepRB1.isChecked():  # 22 - 1
+                                    if is_step_checked:  # 22 - 1
                                         # original
                                         print("# 22 - 1")
 
@@ -1877,7 +1894,7 @@ class ClassA(QMainWindow):
                                         BNodevalue[i][p][15] = BNodeval[i][j][15]
                                         p = p + 1
 
-                                    elif self.ui.StepRB2.isChecked():  # 22 - 2
+                                    else:  # 22 - 2
                                         print("# 22 - 2")
                                         if np.greater(abs(BNodeval[i][j + 1][15] - BNodeval[i][j][15]) / 2,
                                                       s) or not np.greater(Af2, Af1):  # 23 - 1
@@ -1936,6 +1953,7 @@ class ClassA(QMainWindow):
                                             Lb2[0] = BNodeval[i][j][15] + s
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                            BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0]
@@ -2004,6 +2022,7 @@ class ClassA(QMainWindow):
                                             Lb2[0] = BNodeval[i][j][15] - s
                                             Lb2 = np.dot(Rz, Lb2) + Additive
 
+                                            BNodevalue = np.insert(BNodevalue, p, 0, axis=1)
                                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                                             BNodevalue[i][p][1] = p + 1
                                             BNodevalue[i][p][2] = Lb2[0]
@@ -2044,9 +2063,9 @@ class ClassA(QMainWindow):
 
                         else:  # 1 - 2
                             print("# 1 - 2")
-                            print('BNodevalue in # 1 - 2 = ', BNodevalue)
-                            print('BNodeval in # 1 - 2 = ', BNodeval)
-                            print('i # 1 - 2 = ', i, '\nj # 1 - 2 = ', j, '\np # 1 - 2 = ', p)
+                            # print('BNodevalue in # 1 - 2 = ', BNodevalue)
+                            # print('BNodeval in # 1 - 2 = ', BNodeval)
+                            # print('i # 1 - 2 = ', i, '\nj # 1 - 2 = ', j, '\np # 1 - 2 = ', p)
                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                             BNodevalue[i][p][1] = p + 1
                             BNodevalue[i][p][2] = BNodeval[i][j][2]
@@ -2097,7 +2116,7 @@ class ClassA(QMainWindow):
                     L1[j][:] = L0[i][j][:]
                     # print('L1 = ', L1)
 
-                L1 = L1[L1[:,0].argsort()]
+                L1 = L1[L1[:,15].argsort()]
                 # print("L1 = ", L1)
 
                 for j in range(int(np.amax(BNodevalue[i, :, 1]))):

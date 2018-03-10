@@ -80,12 +80,15 @@ else
 % ----------------      Add   Steped elements           ------------------ 
 % ------------------------------------------------------------------------ 
    for i = 1:mem
-       fprintf('\nfor 1')
+       fprintf('\nifs for 1')
+%        fprintf('\nBNodevalue before ifs')
+%        BNodevalue
+       
       if ~isequal(max(BNodeval(i,:,2)),0) % No Bracing  
-          fprintf('\nif # 1')
+          fprintf('\nifs if # 1')
          p=1;
          for j = 1:max(BNodeval(i,:,2))
-             fprintf('\nfor 2')
+             fprintf('\nifs for 2')
 %              fprintf('\nBNodevalue before in for 2')
 %              BNodevalue
 %              fprintf('BNodeval before in for 2')
@@ -137,8 +140,12 @@ else
                         Af2= bfb2*tfb2+bft2*tft2+tw2;
                         L = sqrt( (JNodevalue_j(i,3)-JNodevalue_i(i,3))^2 ...
                            + (JNodevalue_j(i,4)-JNodevalue_i(i,4))^2 + (JNodevalue_j(i,5)-JNodevalue_i(i,5))^2 );                         
-                        % --------------- Calculation the difference of SC E   
-
+                        % --------------- Calculation the difference of SC E
+%                         fprintf('\nBNodevalue before in 5 - 1')
+%                         BNodevalue
+%                         fprintf('BNodeval before in 5 - 1')
+%                         BNodeval
+                        get(pdb_step_edit,'Value')
                         if isequal(get(pdb_step_edit,'Value'),1) % No step    % if condition 5 - 1 
                             fprintf('\n# 5 - 1')
                            % original element              
@@ -208,6 +215,9 @@ else
 %                               dtsb
 %                               hgsb
 %                               Afillsb
+                              i
+                              j
+                              p
                               BNodevalue(i,p,1)=BNodeval(i,j,1);
                               BNodevalue(i,p,2)=p;
                               BNodevalue(i,p,3)=Lb2(1,1);
@@ -225,8 +235,10 @@ else
                               BNodevalue(i,p,15)=2;
                               BNodevalue(i,p,16)=BNodeval(i,j,16)-s;
                               p=p+1;
-%                               BNodevalue
-%                               BNodeval
+                              fprintf('\nBNodevalue after in 6 - 1')
+                              BNodevalue
+                              fprintf('BNodeval after in 6 - 1')
+                              BNodeval
                            elseif (BNodeval(i,j,16)/2 > s ) && (Af1 < Af2)  % if condition 6 - 2 
                                fprintf('\n# 6 - 2')
                               % Linear interpolation
@@ -285,6 +297,10 @@ else
                               BNodevalue(i,p,15)=2;
                               BNodevalue(i,p,16)=BNodeval(i,j,16)+s;
                               p=p+1;
+%                               fprintf('\nBNodevalue after in 6 - 2')
+%                               BNodevalue
+%                               fprintf('BNodeval after in 6 - 2')
+%                               BNodeval
                                                            
                            end % (BNodeval(i,j,16) > 2*s )                                                 
                         end % isequal(get(pdb_step_edit,'Value'),1) % No step
@@ -1048,10 +1064,10 @@ else
                                  0 0 1];                           
                               Lb2 =[BNodeval(i,j,16)-s;0;0];
                               Lb2 = Rz*Lb2+[JNodevalue_i(i,3);JNodevalue_i(i,4);JNodevalue_i(i,5)]; 
-                              fprintf('\nBNodevalue before in # 16 - 2')
-                              BNodevalue
-                              fprintf('BNodeval before in # 16 - 2')
-                              BNodeval
+%                               fprintf('\nBNodevalue before in # 16 - 2')
+%                               BNodevalue
+%                               fprintf('BNodeval before in # 16 - 2')
+%                               BNodeval
                               BNodevalue(i,p,1)=BNodeval(i,j,1);
                               BNodevalue(i,p,2)=p;
                               BNodevalue(i,p,3)=Lb2(1,1);
@@ -1069,8 +1085,8 @@ else
                               BNodevalue(i,p,15)=3;
                               BNodevalue(i,p,16)=BNodeval(i,j,16)-s;
                               p=p+1;           
-                              fprintf('BNodevalue after in # 16 - 2')
-                              BNodevalue
+%                               fprintf('BNodevalue after in # 16 - 2')
+%                               BNodevalue
                            end % ( abs(L-BNodeval(i,j,16)) > 2*s ) && ( Af1 < Af2 )                           
                         end % isequal(get(pdb_step_edit,'Value'),1) % No step                        
                         
@@ -1713,7 +1729,8 @@ else
          end
       end
    end  
-   
+%    fprintf('L0')
+%    L0
    % Sort whole columns with respect to distance from i node
    L1=[];BNodevalueOrder=[];
    
@@ -1728,6 +1745,8 @@ else
             L1(j,:) =  L0(i,j,:);   
          end
          L1 = sortrows(L1,16);
+%          fprintf('segm code L1')
+%          L1
          for j = 1:max(BNodevalue(i,:,2))
             for k = 1:16
                BNodevalueOrder(i,j,k) = L1(j,k);
@@ -1736,6 +1755,8 @@ else
          L1(:,:)=[];
       end
    end
+%    fprintf('BNodevalueorder at last')
+%    BNodevalueOrder
    % Reset BNodevalue Using Sorted BNodevalueOrder
    BNodevalue=BNodevalueOrder;
    % *********************************************************** Sorting E   

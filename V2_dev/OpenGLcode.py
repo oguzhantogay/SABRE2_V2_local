@@ -5,6 +5,7 @@ from PyQt4.QtGui import *
 from OpenGL.GL import *
 from DropDownActions import ActionClass
 import numpy as np
+import h5_file
 import AddNode
 
 
@@ -340,6 +341,9 @@ class glWidget(QGLWidget, QMainWindow):
         glWidget.render_checked = self.ui.actionRender_All_Members.isChecked()
         # glWidget.BNodevalue = self.BNodeValueUpdater()
         # print('paint GL BNodevalue = ', glWidget.BNodevalue)
+        BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
+        if BNodevalue.shape[2] == 16:
+            glWidget.BNodevalue = BNodevalue
         if glWidget.member_count is not None:
             glWidget.member_count = int(glWidget.member_count)
         if glWidget.render_checked:
@@ -646,20 +650,22 @@ class glWidget(QGLWidget, QMainWindow):
         # print("node values", glWidget.JNodeValues_i, glWidget.JNodeValues_j)
         # print("test", JNodevalue_i)
         max_b = 0
+        max_c = 0
 
         for i in range(int(member_count)):
-            max_c = np.amax(BNodevalue[i, :, 1])
+            max_c += np.amax(BNodevalue[i, :, 1])
             if max_b < max_c:
                 max_b = max_c
 
         # print('max_b = ', max_b, 'max_c = ', max_c,'member = ', member_count)
         max_for_NJ_i = int(max_b + member_count)
+        print('max for nj_i', max_b)
         SASSEM = np.zeros((member_count, max_for_NJ_i + 1, 13))
         NJ_i = np.zeros((max_for_NJ_i, 13))
         NJ_j = np.zeros((max_for_NJ_i, 13))
 
-        from SABRE2SegmCODE import ClassA
-        BNodevalue = ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, glWidget.Massemble)
+        # from SABRE2SegmCODE import ClassA
+        # BNodevalue = ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
         # print('Bnode in render all fun = ', BNodevalue)
 
         for k in range(13):
@@ -692,7 +698,11 @@ class glWidget(QGLWidget, QMainWindow):
         # print("test2")
 
         q = 1
-
+        # print("NJ_i_1 = ", q, int(np.amax(BNodevalue[i, :, 1])))
+        # print('shape = ', NJ_i.shape[0])
+        # for j in range(int(np.amax(BNodevalue[i, :, 1]))):
+        #     print('test j = ', j)
+        #     print('q + j = ', q + j)
         for i in range(member_count):
             NJ_i[q - 1][0] = q
             NJ_i[q - 1][1] = q
@@ -707,21 +717,25 @@ class glWidget(QGLWidget, QMainWindow):
             NJ_i[q - 1][10] = SASSEM[i, 0, 10]
             NJ_i[q - 1][11] = SASSEM[i, 0, 11]
             NJ_i[q - 1][12] = SASSEM[i, 0, 12]
-            # print("NJ_i_1 = ", NJ_i)
+            # print("NJ_i_1 = ", q, int(np.amax(BNodevalue[i, :, 1])))
+            # print('shape = ', NJ_i.shape[0])
             for j in range(int(np.amax(BNodevalue[i, :, 1]))):
+                # print('test j = ', j)
+                # print('q + j = ', q + j-1)
+                # print('NJ_i = ', NJ_i)
                 NJ_i[q + j][0] = q + j + 1
                 NJ_i[q + j][1] = q + j + 1
-                NJ_i[q + j][2] = SASSEM[i, j+1, 2]
-                NJ_i[q + j][3] = SASSEM[i, j+1, 3]
-                NJ_i[q + j][4] = SASSEM[i, j+1, 4]
-                NJ_i[q + j][5] = SASSEM[i, j+1, 5]
-                NJ_i[q + j][6] = SASSEM[i, j+1, 6]
-                NJ_i[q + j][7] = SASSEM[i, j+1, 7]
-                NJ_i[q + j][8] = SASSEM[i, j+1, 8]
-                NJ_i[q + j][9] = SASSEM[i, j+1, 9]
-                NJ_i[q + j][10] = SASSEM[i, j +1, 10]
-                NJ_i[q + j][11] = SASSEM[i, j +1, 11]
-                NJ_i[q + j][12] = SASSEM[i, j +1, 12]
+                NJ_i[q + j][2] = SASSEM[i,j + 1, 2]
+                NJ_i[q + j][3] = SASSEM[i,j + 1, 3]
+                NJ_i[q + j][4] = SASSEM[i,j + 1, 4]
+                NJ_i[q + j][5] = SASSEM[i,j + 1, 5]
+                NJ_i[q + j][6] = SASSEM[i,j + 1, 6]
+                NJ_i[q + j][7] = SASSEM[i,j + 1, 7]
+                NJ_i[q + j][8] = SASSEM[i,j + 1, 8]
+                NJ_i[q + j][9] = SASSEM[i,j + 1, 9]
+                NJ_i[q + j][10] = SASSEM[i,j + 1, 10]
+                NJ_i[q + j][11] = SASSEM[i,j + 1, 11]
+                NJ_i[q + j][12] = SASSEM[i,j + 1, 12]
             q = int(np.amax(BNodevalue[i, :, 1]) + q + 1)
         # print("NJ_i_2 = ", NJ_i)
         q = 1
@@ -902,7 +916,7 @@ class glWidget(QGLWidget, QMainWindow):
 
         for i in range(member_count):
             for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
-                val1[q + j][0] = Rval[i][1]
+                val1[q + j - 1][0] = Rval[i][1]
 
             q = (int(np.amax(BNodevalue[i, :, 1]) + 1)) + q
 
@@ -1033,6 +1047,7 @@ class glWidget(QGLWidget, QMainWindow):
         Nshe1 = np.zeros((taper1.shape[0], 3))
         Nshe2 = np.zeros((taper2.shape[0], 3))
 
+        # print('\nNshe1 = ', Nshe1,'\ntaper1 = ', taper1, '\nNG1 = ', NG1 )
         # Global frame nodal coordinates w.r.t Shear center
         Nshe1[:, 0] = taper1[:, 0] + NG1[:, 0]
         Nshe2[:, 0] = taper2[:, 0] + NG2[:, 0]
@@ -1452,6 +1467,7 @@ class glWidget(QGLWidget, QMainWindow):
 
                 # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
                 glColor4f(0, 1, 0, 1)
+                # if BNodevalue[]
                 glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=glWidget.font2)
                 glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Flange 2", font=glWidget.font2)
                 glWidget.SurfaceContour(self, tf, edges)

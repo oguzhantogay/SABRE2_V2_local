@@ -149,8 +149,8 @@ end % if end
 % Automatic Segment numbering or Step member.
 [BNodevalue]=SABRE2SegmCODE(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,BNodevalue,...
    pdb_coordx_edit,pdb_coordy_edit,pdb_coordz_edit,pdb_step_edit,seglength);
-fprintf('\n Final BNodevalue in segm App after SegmCode function')
-BNodevalue
+% fprintf('\n Final BNodevalue in segm App after SegmCode function')
+% BNodevalue
 % ************************************************************************
 % **************             Initial Setting              ****************
 % ************************************************************************ 

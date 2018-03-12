@@ -369,6 +369,12 @@ else
                            
                         elseif isequal(get(pdb_step_edit,'Value'),2) % left step   % if condition 7 - 2
                             fprintf('\n# 7 - 2')
+%                             abs(L-BNodeval(i,j,16))/2
+%                             L
+%                             BNodeval(i,j,16)
+%                             s
+%                             Af1 
+%                             Af2
                            if ( abs(L-BNodeval(i,j,16))/2 > s ) && ( Af1 < Af2 )    % if condition 8 - 1
                                fprintf('\n# 8 - 1')
                               % Linear interpolation

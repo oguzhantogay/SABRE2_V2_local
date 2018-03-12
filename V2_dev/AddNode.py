@@ -123,7 +123,7 @@ class AddNodeClass(QMainWindow):
     def memberTableValues(self):
 
         import SABRE2_main_subclass
-        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue,flag_mem_values,_= SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
+        member_values, JNodeValues_i, JNodeValues_j, _, BNodevalue, flag_mem_values, Rval= SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
             self, self.ui.Members_table, 3)
         # mnum = int(self.ui.AddNodeMember.currentIndex())
         # if flag_mem_values[mnum][1] == 1 and self.ui.AddNodeTable.item(0,0) is None:
@@ -172,10 +172,10 @@ class AddNodeClass(QMainWindow):
         #     item.setValidator(validatorDouble)
         #     item.setText(str(Afills))
         #     tableName.setCellWidget(0, 6, item)
-        return member_values, JNodeValues_i, JNodeValues_j, BNodevalue,flag_mem_values
+        return member_values, JNodeValues_i, JNodeValues_j, BNodevalue,flag_mem_values, Rval
 
     def addNodeTableInitiation(self):
-        _, JNodeValues_i, _, _, flag_mem_values = AddNodeClass.memberTableValues(self)
+        _, JNodeValues_i, _, _, flag_mem_values,_ = AddNodeClass.memberTableValues(self)
         mnum = int(self.ui.AddNodeMember.currentIndex())
         if self.ui.AddNodeTable.cellWidget(0, 0).text() == '':
             bfbs = (JNodeValues_i[mnum][5])
@@ -225,7 +225,8 @@ class AddNodeClass(QMainWindow):
             tableName.setCellWidget(0, 6, item)
 
     def comboBoxChanged(self):
-        _, JNodeValues_i, _, _,  flag_mem_values = AddNodeClass.memberTableValues(self)
+
+        _, JNodeValues_i, _, _, _, _= AddNodeClass.memberTableValues(self)
         mnum = int(self.ui.AddNodeMember.currentIndex())
 
         bfbs = (JNodeValues_i[mnum][5])
@@ -286,7 +287,7 @@ class AddNodeClass(QMainWindow):
         if seglength == '':
             pass
         else:
-            member_values, JNodevalue_i, JNodevalue_j, BNodevalue, _ = AddNodeClass.memberTableValues(self)
+            member_values, JNodevalue_i, JNodevalue_j, BNodevalue, _, _ = AddNodeClass.memberTableValues(self)
             if BNodevalue[mnum][0][1] == 0:
                 seL = np.sqrt((JNodevalue_i[mnum][2] - JNodevalue_j[mnum][2]) ** 2 + (
                         JNodevalue_i[mnum][3] - JNodevalue_j[mnum][3]) ** 2 + (
@@ -587,7 +588,7 @@ class AddNodeClass(QMainWindow):
             seglength = float(self.ui.AddNodePositionFrom.text())
 
             # print("mnum = ", mnum, "\n", "seglength = ", seglength)
-            _, JNodevalue_i, JNodevalue_j, _, _ = AddNodeClass.memberTableValues(self)
+            _, JNodevalue_i, JNodevalue_j, _, _, _ = AddNodeClass.memberTableValues(self)
 
             # print("JNodevalue_i = ", JNodevalue_i)
             # print("JNodevalue_j = ", JNodevalue_j)
@@ -699,7 +700,7 @@ class AddNodeClass(QMainWindow):
         mnum = int(self.ui.AddNodeMember.currentIndex())
         nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())
         # print('mnum = ', mnum, 'nbnode = ', nbnode)
-        members_table, JNodevalue_i, JNodevalue_j, BNodevalue,_= AddNodeClass.memberTableValues(self)
+        members_table, JNodevalue_i, JNodevalue_j, BNodevalue,_, Rval= AddNodeClass.memberTableValues(self)
         Massemble = members_table[:, :3]
         total_member_number = Massemble.shape[0]
         try:
@@ -757,7 +758,7 @@ class AddNodeClass(QMainWindow):
                 BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j,
                                                                      Massemble)
 
-                print("BNodevalue function after = ", BNodevalue)
+                # print("BNodevalue function after = ", BNodevalue)
                 import SABRE2SegmModel
 
                 SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
@@ -766,6 +767,8 @@ class AddNodeClass(QMainWindow):
                 AddNodeClass.addedNodeInformationArrayUpdate(self, BNodevalue)
                 # print("BNodevalue apply button = ", BNodevalue)
                 h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
+                import OpenGLcode
+                # OpenGLcode.glWidget.renderAllProp(self, total_member_number, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, Massemble)
                 # test_array = h5_file.h5_Class.read_array(self, 'BNodevalue')
                 # print('test array = ', test_array)
 
@@ -784,7 +787,7 @@ class SegmRemove(QMainWindow):
 
     def removeNode(self):
         BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
-        members_table, JNodevalue_i, JNodevalue_j, _, _= AddNodeClass.memberTableValues(self)
+        members_table, JNodevalue_i, JNodevalue_j, _, _, _= AddNodeClass.memberTableValues(self)
         Massemble = members_table[:, :3]
         # remove selected node
         nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())  # specifies the selected node current index
@@ -797,7 +800,7 @@ class SegmRemove(QMainWindow):
         added_node_information[memnum][1] = added_node_information[memnum][1] - 1
         h5_file.h5_Class.update_array(self, added_node_information, 'added_node_information')
         # print('added node information = ', added_node_information)
-        print('total number = ' , total_number, 'nbnode = ', nbnode)
+        # print('total number = ' , total_number, 'nbnode = ', nbnode)
 
         b = list(range(1, int(added_node_information[memnum][1] + 1)))
         for e in range(len(b)):
@@ -814,7 +817,7 @@ class SegmRemove(QMainWindow):
 
         BNodevalue[memnum,:,1] = np.arange(added_node_information[memnum][1]) + 1
         h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
-        print('test remove = ', BNodevalue)
+        # print('test remove = ', BNodevalue)
         # BNodevalue[memnum, nbnode, :] = 0
 
         # BNodedev = np.zeros((1, int(np.amax(BNodevalue[memnum, :, 1])), 16))

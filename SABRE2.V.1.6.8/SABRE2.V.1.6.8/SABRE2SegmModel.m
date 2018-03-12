@@ -169,7 +169,10 @@ else % ~isempty(Massemble)
          NJ_i(q+j,13)=SASSEM(i,j+1,13);
  
       end
+      NJ_i
+      q
       q = max(BNodevalue(i,:,2))+q+1;  
+      q
    end
    
    q = 1; 
@@ -432,8 +435,8 @@ else % ~isempty(Massemble)
    % ----------------    Undeformed 3D rendering       -------------------
    % ---------------------------------------------------------------------
 %    Evalue = [];
-   fprintf('Rval = ')
-   val1
+%    fprintf('Rval = ')
+%    val1
    for i = 1:sn 
       Rz=[cos(alpharef(i,2)) -sin(alpharef(i,2)) 0; ...
       sin(alpharef(i,2)) cos(alpharef(i,2)) 0; ...

@@ -427,13 +427,14 @@ class ClassA(QMainWindow):
 
                                         else:  # 7 - 2
                                             print("# 7 - 2")
-                                            print('BNodevalue before in # 7 - 2 = ', BNodevalue)
-                                            print('BNodeval before # 7 - 2 = ', BNodeval)
-                                            # print('i # 7 - 2 = ', i, '\nj # 7 - 2 = ', j, '\np # 7 - 2 = ', p)
-                                            print(np.greater(abs(L - BNodeval[i][j][15]) / 2,
-                                                          s), )
+                                            # print('BNodevalue before in # 7 - 2 = ', BNodevalue)
+                                            # print('BNodeval before # 7 - 2 = ', BNodeval)
+                                            # # print('i # 7 - 2 = ', i, '\nj # 7 - 2 = ', j, '\np # 7 - 2 = ', p)
+                                            # print(np.greater(abs(L - BNodeval[i][j][15]) / 2,
+                                            #               s), np.greater_equal(Af1, Af2))
+                                            # print('\n\n\n', L, BNodeval[i][j][15], s, Af1, Af2)
                                             if np.greater(abs(L - BNodeval[i][j][15]) / 2,
-                                                          s) and np.greater_equal(Af1, Af2):  # 8 - 1
+                                                          s) and np.greater_equal(Af2, Af1):  # 8 - 1
                                                 print("# 8 - 1")
                                                 segLoc = [BNodeval[i][j][15], L]
                                                 segLocstep = [BNodeval[i][j][15], (BNodeval[i][j][15] + s), L]

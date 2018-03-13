@@ -99,6 +99,7 @@ class glWidget(QGLWidget, QMainWindow):
 
     def drawAsterisk(self, member_count, BNodevalue):
         # print('draw asterisk test')
+        print('BNodevalue in draw asterix = ', BNodevalue)
         if BNodevalue.shape[2] ==16:
             glPushMatrix()
             asterisk_size = glWidget.joint_size * 2.5
@@ -873,7 +874,10 @@ class glWidget(QGLWidget, QMainWindow):
         # Shear center
         # Start node
         # bottom flange centroid to shear center
-
+        print('BNodeValue in code = ', BNodevalue)
+        print('tf1 = ', tft1)
+        print('bft1 = ', bft1)
+        print('hg1 = ', hg1)
         hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
                          (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1, np.power(bft1, 3))))
         Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center

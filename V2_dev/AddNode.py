@@ -84,12 +84,11 @@ class AddNodeClass(QMainWindow):
         # print('added node info before for = ', added_node_information)
         for i in range(int(self.ui.AddNodeMember.count())):
             added_node_information[i][0] = i + 1
-        print(' member_count = ',added_node_information )
+        # print(' member_count = ',added_node_information )
         h5_file.h5_Class.update_array(self, added_node_information, 'added_node_information')
         AddNodeClass.setAddedNodeComboBox(self)
         # print('added node information = ', AddNodeClass.added_node_information)
-        import OpenGLcode
-        AddNodeClass.OpenGLwidget = OpenGLcode.glWidget(self.ui)
+
 
     def setAddedNodeComboBox(self):
 
@@ -761,18 +760,17 @@ class AddNodeClass(QMainWindow):
                                                                      Massemble)
 
                 # print("BNodevalue function after = ", BNodevalue)
-                import SABRE2SegmModel
-
-                SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self, BNodevalue)
 
                 # SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
                 AddNodeClass.addedNodeInformationArrayUpdate(self, BNodevalue)
                 # print("BNodevalue apply button = ", BNodevalue)
                 h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
-                import OpenGLcode
                 # OpenGLcode.glWidget.renderAllProp(self, total_member_number, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, Massemble)
                 # test_array = h5_file.h5_Class.read_array(self, 'BNodevalue')
-                # print('test array = ', test_array)
+                # # print('test array = ', test_array)
+                # import OpenGLcode
+                # AddNodeClass.OpenGLwidget = OpenGLcode.glWidget(self.ui)
+                # AddNodeClass.OpenGLwidget.updateTheWidget()
 
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")

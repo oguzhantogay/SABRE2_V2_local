@@ -88,37 +88,6 @@ class glWidget(QGLWidget, QMainWindow):
             glVertex3fv(vertices[i, :])
         glEnd()
 
-    def drawAsterisk(self, dx, dy, dz, flag = 'Asterisk'):
-        # print('draw asterisk test')
-        asterisk_size = glWidget.joint_size * 1.7
-        glCullFace(GL_BACK)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-        glBegin(GL_LINES)
-
-        if glWidget.white_checked:
-            glColor3fv((0, 0, 0))
-        else:
-            glColor3fv((1, 0, 0))
-
-        if flag == 'Asterisk':
-            glVertex3d(dx + asterisk_size / 2, dy + 0, dz + 0)
-            glVertex3d(dx + -asterisk_size / 2, dy + 0, dz + 0)
-            glVertex3d(dx + 0, dy + asterisk_size / 2, dz + 0)
-            glVertex3d(dx + 0, dy + -asterisk_size / 2, dz + 0)
-            glVertex3d(dx + 0, dy + 0, dz + asterisk_size / 2)
-            glVertex3d(dx + 0, dy + 0, dz + -asterisk_size / 2)
-
-        glVertex3d(dx + asterisk_size / 2, dy + asterisk_size / 2, dz + asterisk_size / 2)
-        glVertex3d(dx + -asterisk_size / 2, dy + -asterisk_size / 2, dz + -asterisk_size / 2)
-        glVertex3d(dx + -asterisk_size / 2, dy + asterisk_size / 2, dz + asterisk_size / 2)
-        glVertex3d(dx + asterisk_size / 2, dy + -asterisk_size / 2, dz + -asterisk_size / 2)
-        glVertex3d(dx + asterisk_size / 2, dy + -asterisk_size / 2, dz + asterisk_size / 2)
-        glVertex3d(dx + -asterisk_size / 2, dy + asterisk_size / 2, dz + -asterisk_size / 2)
-        glVertex3d(dx + asterisk_size / 2, dy + asterisk_size / 2, dz + -asterisk_size / 2)
-        glVertex3d(dx + -asterisk_size / 2, dy + -asterisk_size / 2, dz + asterisk_size / 2)
-        glEnd()
-
     def referenceLine(self, MJvalue):
         glPushAttrib(GL_ENABLE_BIT)
         glBegin(GL_LINES)
@@ -127,6 +96,61 @@ class glWidget(QGLWidget, QMainWindow):
             glVertex3f(MJvalue[i, 1], MJvalue[i, 2], MJvalue[i, 3])
         glEnd()
         glPopAttrib()
+
+    def drawAsterisk(self, member_count, BNodevalue):
+        # print('draw asterisk test')
+        if BNodevalue.shape[2] ==16:
+            glPushMatrix()
+            asterisk_size = glWidget.joint_size * 2.5
+            glCullFace(GL_BACK)
+            glEnable(GL_BLEND)
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+            glBegin(GL_LINES)
+
+            if glWidget.white_checked:
+                glColor3fv((0, 0, 0))
+            else:
+                glColor3fv((1, 0, 0))
+
+            flag = 0
+            dx = 0
+            dy = 0
+            dz = 0
+            for j in range(member_count):
+                if BNodevalue[j, 0, 1] != 0:
+                    for i in range(int(np.amax(BNodevalue[j, :, 1]))):
+                        # print('i = ', i, 'j = ', j)
+                        # print('for 2 add node')
+                        dx = BNodevalue[j][i][2]
+                        dy = -BNodevalue[j][i][4]
+                        dz = BNodevalue[j][i][3]
+                        print(BNodevalue[j][i][14])
+                        if np.isclose(BNodevalue[j][i][14], 1):
+                            flag = 1
+                        else:
+                            flag = 2
+                        # array_size +=1
+
+            # print('dx =', dx, 'dy =', dy, 'dz =', dz, flag)
+
+                        if flag == 2:
+                            glVertex3d(dx + asterisk_size / 2, dy + 0, dz + 0)
+                            glVertex3d(dx + -asterisk_size / 2, dy + 0, dz + 0)
+                            glVertex3d(dx + 0, dy + asterisk_size / 2, dz + 0)
+                            glVertex3d(dx + 0, dy + -asterisk_size / 2, dz + 0)
+                            glVertex3d(dx + 0, dy + 0, dz + asterisk_size / 2)
+                            glVertex3d(dx + 0, dy + 0, dz + -asterisk_size / 2)
+
+                        glVertex3d(dx + asterisk_size / 2, dy + asterisk_size / 2, dz + asterisk_size / 2)
+                        glVertex3d(dx + -asterisk_size / 2, dy + -asterisk_size / 2, dz + -asterisk_size / 2)
+                        glVertex3d(dx + -asterisk_size / 2, dy + asterisk_size / 2, dz + asterisk_size / 2)
+                        glVertex3d(dx + asterisk_size / 2, dy + -asterisk_size / 2, dz + -asterisk_size / 2)
+                        glVertex3d(dx + asterisk_size / 2, dy + -asterisk_size / 2, dz + asterisk_size / 2)
+                        glVertex3d(dx + -asterisk_size / 2, dy + asterisk_size / 2, dz + -asterisk_size / 2)
+                        glVertex3d(dx + asterisk_size / 2, dy + asterisk_size / 2, dz + -asterisk_size / 2)
+                        glVertex3d(dx + -asterisk_size / 2, dy + -asterisk_size / 2, dz + asterisk_size / 2)
+            glEnd()
+            glPopMatrix()
 
     def Joints(self, x):
 
@@ -346,8 +370,9 @@ class glWidget(QGLWidget, QMainWindow):
             glWidget.BNodevalue = BNodevalue
         if glWidget.member_count is not None:
             glWidget.member_count = int(glWidget.member_count)
+            glWidget.drawAsterisk(self, glWidget.member_count, glWidget.BNodevalue)
         if glWidget.render_checked:
-            self.renderAllProp(glWidget.member_count, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval,
+            glWidget.renderAllProp(self,glWidget.member_count, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval,
                                glWidget.Massemble)
 
     def normalizeAngle(self, angle):
@@ -464,8 +489,8 @@ class glWidget(QGLWidget, QMainWindow):
                     #     self.drawAsterisk(dx, dy, dz)
                     # else:
                     #     pass
-
-                    self.renderAllProp(glWidget.member_count, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue,
+                    glWidget.drawAsterisk(self, glWidget.member_count, glWidget.BNodevalue)
+                    glWidget.renderAllProp(self,glWidget.member_count, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue,
                                        glWidget.Rval, glWidget.Massemble)
 
         except AttributeError:
@@ -1076,9 +1101,6 @@ class glWidget(QGLWidget, QMainWindow):
         # print("memlength 2 = ", MemLength2)
         # print('val1 = ', val1)
         # print('sn = ', sn)
-        if BNodevalue.shape[2] == 16:
-            import SABRE2SegmModel
-            SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self,BNodevalue)
         for i in range(sn):
             # print('i = ', i)
             Rz[0][0] = np.cos(alpharef[i, 1])
@@ -1476,15 +1498,21 @@ class glWidget(QGLWidget, QMainWindow):
                 # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
                 # print("forBottom = ", forBottom, "\nforTop = ", forTop)
                 # print(BNodevalue)
-                glColor4f(0, 1, 0, 1)
-                # if BNodevalue[]
+                # glColor4f(0, 1, 0, 1)
+                # print('shape' , BNodevalue.shape[2])
+                # print('is checked = ', self.ui.actionFlange_Labels.isChecked())
+
                 if self.ui.actionFlange_Labels.isChecked():
                     if BNodevalue.shape[2] != 16:
+                        glColor4f(0, 1, 0, 1)
                         glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=glWidget.font2)
                         glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Flange 2", font=glWidget.font2)
                     else:
+                        glColor4f(0, 1, 0, 1)
                         glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Fl_1", font=glWidget.font2)
                         glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Fl_2", font=glWidget.font2)
+
+
 
                 glWidget.SurfaceContour(self, tf, edges)
                 glWidget.SurfaceContour(self, web, edges)
@@ -1493,3 +1521,4 @@ class glWidget(QGLWidget, QMainWindow):
                 glWidget.Surfaces(self, tf)
                 glWidget.Surfaces(self, web)
                 glWidget.Surfaces(self, bf)
+

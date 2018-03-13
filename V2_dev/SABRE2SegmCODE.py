@@ -267,9 +267,9 @@ class ClassA(QMainWindow):
                                                 BNodevalue[i][p][13] = Afillsb[1]
                                                 BNodevalue[i][p][14] = 2
                                                 BNodevalue[i][p][15] = BNodeval[i][j][15] - s
-                                                print('BNodevalue in # 6 - 1 = ', BNodevalue)
-                                                print('BNodeval in # 6 - 1 = ', BNodeval)
-                                                print('i # 6 - 1 = ', i, '\nj # 6 - 1 = ', j, '\np # 6 - 1 = ', p)
+                                                # print('BNodevalue in # 6 - 1 = ', BNodevalue)
+                                                # print('BNodeval in # 6 - 1 = ', BNodeval)
+                                                # print('i # 6 - 1 = ', i, '\nj # 6 - 1 = ', j, '\np # 6 - 1 = ', p)
                                                 p = p + 1
 
                                             elif np.greater(BNodeval[i][j][15] / 2, s) and np.greater(Af2, Af1):  # 6 - 2

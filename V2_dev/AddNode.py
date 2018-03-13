@@ -84,17 +84,19 @@ class AddNodeClass(QMainWindow):
         # print('added node info before for = ', added_node_information)
         for i in range(int(self.ui.AddNodeMember.count())):
             added_node_information[i][0] = i + 1
-
+        print(' member_count = ',added_node_information )
         h5_file.h5_Class.update_array(self, added_node_information, 'added_node_information')
         AddNodeClass.setAddedNodeComboBox(self)
         # print('added node information = ', AddNodeClass.added_node_information)
+        import OpenGLcode
+        AddNodeClass.OpenGLwidget = OpenGLcode.glWidget(self.ui)
 
     def setAddedNodeComboBox(self):
 
         current_member = int(self.ui.AddNodeMember.currentIndex())
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         added_node_count = added_node_information[current_member][1]
-        print('added node array =', added_node_information)
+        # print('added node array =', added_node_information)
         # print('current_member = ', current_member, 'added node count = ', added_node_count)
 
         if current_member == -1:

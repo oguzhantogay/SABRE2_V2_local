@@ -3835,6 +3835,7 @@ Number</string>
      <addaction name="actionPoint_Loads"/>
      <addaction name="actionUniform_Loads"/>
      <addaction name="actionJoint_Member_Labels"/>
+     <addaction name="actionFlange_Labels"/>
     </widget>
     <addaction name="actionCamera_Toolbar"/>
     <addaction name="separator"/>
@@ -4223,6 +4224,17 @@ Number</string>
    </property>
    <property name="text">
     <string>Joint &amp; Member Labels</string>
+   </property>
+  </action>
+  <action name="actionFlange_Labels">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Flange Labels</string>
    </property>
   </action>
  </widget>

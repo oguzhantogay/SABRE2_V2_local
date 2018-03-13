@@ -118,6 +118,7 @@ class SABRE2_main_subclass(QMainWindow):
 
         # Help dropdown actions
         ui_layout.actionAbout.triggered.connect(lambda: DropDownActions.ActionClass('uidesign').AboutAct())
+        ui_layout.actionFlange_Labels.triggered.connect(lambda : SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
         # Joint Table Arrangements
 

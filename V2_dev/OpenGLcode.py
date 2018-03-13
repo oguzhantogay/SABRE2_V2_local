@@ -450,8 +450,11 @@ class glWidget(QGLWidget, QMainWindow):
                 pass
             else:
                 glWidget.member_count, glWidget.member_values, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval = self.memberTableValues()
-                # glWidget.BNodevalue = self.BNodeValueUpdater()
-                # print('update the widget = ', glWidget.member_values[:, :3] )
+                BNode_from_h5 = h5_file.h5_Class.read_array(self,'BNodevalue')
+
+                if BNode_from_h5.shape[2] == 16:
+                    glWidget.BNodevalue = BNode_from_h5
+
                 if glWidget.render_checked:
                     glWidget.Massemble = glWidget.member_values[:, :3]
                     glWidget.member_count = int(glWidget.member_count)
@@ -648,7 +651,7 @@ class glWidget(QGLWidget, QMainWindow):
         ''' This function works on the rendering all properties of the model'''
         # glWidget.member_count, glWidget.member_values, glWidget.JNodeValues_i, glWidget.JNodeValues_j
         # print("node values", glWidget.JNodeValues_i, glWidget.JNodeValues_j)
-        # print("test", JNodevalue_i)
+        # print("test")
         max_b = 0
         max_c = 0
 
@@ -659,7 +662,7 @@ class glWidget(QGLWidget, QMainWindow):
 
         # print('max_b = ', max_b, 'max_c = ', max_c,'member = ', member_count)
         max_for_NJ_i = int(max_b + member_count)
-        print('max for nj_i', max_b)
+        # print('max for nj_i', max_b)
         SASSEM = np.zeros((member_count, max_for_NJ_i + 1, 13))
         NJ_i = np.zeros((max_for_NJ_i, 13))
         NJ_j = np.zeros((max_for_NJ_i, 13))
@@ -907,6 +910,8 @@ class glWidget(QGLWidget, QMainWindow):
 
             segnum[i + 1][0] = segnum[i][0] + int(np.amax(BNodevalue[i, :, 1] + 1))
 
+        # print('MemLegth = ', MemLength)
+
         # Calculate Initial Member x-dir Nodal Coordinates for Each Member E
 
         # Set up reference axis for each segments
@@ -1071,6 +1076,9 @@ class glWidget(QGLWidget, QMainWindow):
         # print("memlength 2 = ", MemLength2)
         # print('val1 = ', val1)
         # print('sn = ', sn)
+        if BNodevalue.shape[2] == 16:
+            import SABRE2SegmModel
+            SABRE2SegmModel.AddNodeCoordCS.addNodePoint(self,BNodevalue)
         for i in range(sn):
             # print('i = ', i)
             Rz[0][0] = np.cos(alpharef[i, 1])
@@ -1466,10 +1474,18 @@ class glWidget(QGLWidget, QMainWindow):
                          (3, 0))
 
                 # print("tf = ", tf, "\nweb = ", web, "\nbf = ", bf)
+                # print("forBottom = ", forBottom, "\nforTop = ", forTop)
+                # print(BNodevalue)
                 glColor4f(0, 1, 0, 1)
                 # if BNodevalue[]
-                glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=glWidget.font2)
-                glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Flange 2", font=glWidget.font2)
+                if self.ui.actionFlange_Labels.isChecked():
+                    if BNodevalue.shape[2] != 16:
+                        glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Flange 1", font=glWidget.font2)
+                        glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Flange 2", font=glWidget.font2)
+                    else:
+                        glWidget.renderText(self, forBottom[0], forBottom[1], forBottom[2], "Fl_1", font=glWidget.font2)
+                        glWidget.renderText(self, forTop[0], forTop[1], forTop[2], "Fl_2", font=glWidget.font2)
+
                 glWidget.SurfaceContour(self, tf, edges)
                 glWidget.SurfaceContour(self, web, edges)
                 glWidget.SurfaceContour(self, bf, edges)

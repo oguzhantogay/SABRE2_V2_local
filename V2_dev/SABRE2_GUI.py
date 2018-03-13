@@ -1850,6 +1850,10 @@ class Ui_SABRE2_V3(object):
         self.actionJoint_Member_Labels.setCheckable(True)
         self.actionJoint_Member_Labels.setChecked(True)
         self.actionJoint_Member_Labels.setObjectName(_fromUtf8("actionJoint_Member_Labels"))
+        self.actionFlange_Labels = QtGui.QAction(SABRE2_V3)
+        self.actionFlange_Labels.setCheckable(True)
+        self.actionFlange_Labels.setChecked(True)
+        self.actionFlange_Labels.setObjectName(_fromUtf8("actionFlange_Labels"))
         self.menuFile.addAction(self.actionAbout)
         self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionNew)
@@ -1874,6 +1878,7 @@ class Ui_SABRE2_V3(object):
         self.menuGraphic_Labels.addAction(self.actionPoint_Loads)
         self.menuGraphic_Labels.addAction(self.actionUniform_Loads)
         self.menuGraphic_Labels.addAction(self.actionJoint_Member_Labels)
+        self.menuGraphic_Labels.addAction(self.actionFlange_Labels)
         self.menuView.addAction(self.actionCamera_Toolbar)
         self.menuView.addSeparator()
         self.menuView.addAction(self.menuDefined_Views.menuAction())
@@ -2491,5 +2496,6 @@ class Ui_SABRE2_V3(object):
         self.actionUniform_Loads.setText(_translate("SABRE2_V3", "Uniform Loads", None))
         self.actionWhite_Background.setText(_translate("SABRE2_V3", "White Background", None))
         self.actionJoint_Member_Labels.setText(_translate("SABRE2_V3", "Joint & Member Labels", None))
+        self.actionFlange_Labels.setText(_translate("SABRE2_V3", "Flange Labels", None))
 
 import SABRE2_resources_rc

@@ -1,6 +1,7 @@
 import numpy as np
 from PyQt4.QtGui import *
 from OpenGL.GLU import *
+import h5_file
 from PyQt4.QtOpenGL import *
 
 
@@ -16,38 +17,37 @@ class AddNodeCoordCS(QMainWindow, QGLWidget):
 
         # mem as mnum in the AddNode.AddNodeClass.ApplyButton
 
-        from OpenGLcode import glWidget
-
-        member_count, member_values, JNodevalue_i, JNodevalue_j, _, Rval = glWidget.memberTableValues(self)
-
+        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         # Additional Node Plotting
         flag = 'No Added Node'
         dx = 0
         dy = 0
         dz = 0
-        # print('Bnodevalue error= ', BNodevalue)
-        added_node_count =BNodevalue.shape[1]
-        # for j in range(member_count):
-        #     for i in range(BNodevalue.shape[1]):
-        #         added_node_count += 1
+        added_node_count = 0
+        print('added_node_information = ', added_node_information)
+        member_count = added_node_information.shape[0]
+        # added_node_count =BNodevalue.shape[1]
 
         print('Added node count = ', added_node_count)
         for j in range(member_count):
-            # print('for add node')
-            if not np.isclose(BNodevalue[j][0][1], 0):
-                # print('if not add node')
-                for i in range(int(np.amax(BNodevalue[j, :, 1]))):
-                    # print('i = ', i, 'j = ', j)
-                    # print('for 2 add node')
-                    dx = BNodevalue[j][i][2]
-                    dy = -BNodevalue[j][i][4]
-                    dz = BNodevalue[j][i][3]
-                    flag = BNodevalue[j][i][15]
-                    print('dx =', dx, 'dy =', dy,'dz =', dz)
-                    if np.isclose(BNodevalue[j][i][14], 1):
-                        flag = 'Add Node x'
-                    else:
-                        flag = 'Asterisk'
+            for i in range(int(np.amax(BNodevalue[j, :, 1]))):
+                # print('i = ', i, 'j = ', j)
+                # print('for 2 add node')
+                dx = BNodevalue[j][i][2]
+                dy = -BNodevalue[j][i][4]
+                dz = BNodevalue[j][i][3]
+                # flag = BNodevalue[j][i][15]
+                if np.isclose(BNodevalue[j][i][14], 1):
+                    flag = 1
+                else:
+                    flag = 2
+                # array_size +=1
+
+        print('dx =', dx, 'dy =', dy,'dz =', dz)
+
+
+        return dx,dy,dz, flag
+
 
     def added_node_drawing_properties(self,BNodevalue):
         ''' This function is used to obtain the added point cross-section properties'''

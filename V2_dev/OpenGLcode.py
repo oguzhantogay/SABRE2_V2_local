@@ -124,7 +124,7 @@ class glWidget(QGLWidget, QMainWindow):
                         dx = BNodevalue[j][i][2]
                         dy = -BNodevalue[j][i][4]
                         dz = BNodevalue[j][i][3]
-                        print(BNodevalue[j][i][14])
+                        # print(BNodevalue[j][i][14])
                         if np.isclose(BNodevalue[j][i][14], 1):
                             flag = 1
                         else:

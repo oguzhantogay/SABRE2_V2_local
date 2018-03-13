@@ -1082,12 +1082,17 @@ class ClassA(QMainWindow):
 
                             elif np.greater(j, 0) and np.isclose(j, np.amax(BNodeval[i, :, 1]) - 1):  # 2 - 2
                                 print("# 2 - 2")
+                                print('test 1 = ', np.isclose(JNodevalue_j[i][5], BNodeval[i][j][5]))
+                                print('test 2 = ', np.isclose(JNodevalue_j[i][6], BNodeval[i][j][6]))
+                                print('test 3 = ', np.isclose(JNodevalue_j[i][7], BNodeval[i][j][7]))
+                                print('test 4 = ', np.isclose(JNodevalue_j[i][8], BNodeval[i][j][8]))
+                                print('test 5 = ', np.isclose(JNodevalue_j[i][10],BNodeval[i][j][10]))
                                 if not np.isclose(JNodevalue_j[i][5], BNodeval[i][j][5]) or not np.isclose(
                                         JNodevalue_j[i][6], BNodeval[i][j][6]) or not np.isclose(JNodevalue_j[i][7],
                                                                                                  BNodeval[i][j][
                                                                                                      7]) or not np.isclose(
                                     JNodevalue_j[i][8], BNodeval[i][j][8]) or not np.isclose(JNodevalue_j[i][10],
-                                                                                             BNodeval[i][j + 1][
+                                                                                             BNodeval[i][j][
                                                                                                  10]):  # 14 -1
                                     print("# 14 - 1")
 

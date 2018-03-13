@@ -508,7 +508,7 @@ class AddNodeClass(QMainWindow):
                 if self.ui.AdditionalNodeNumberComboBox.currentText() == '':
                     self.ui.AddNodePositionFrom.setText('')
                 else:
-                    print('test')
+                    # print('test')
                     self.ui.AddNodePositionFrom.setText(str(np.around(BNodevalue[member_number][add_node_number][15], decimals = 3)))
                     tableName = self.ui.AddNodeTable
                     validatorDouble = QDoubleValidator()

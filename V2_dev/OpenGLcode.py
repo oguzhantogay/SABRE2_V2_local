@@ -874,10 +874,10 @@ class glWidget(QGLWidget, QMainWindow):
         # Shear center
         # Start node
         # bottom flange centroid to shear center
-        print('BNodeValue in code = ', BNodevalue)
-        print('tf1 = ', tft1)
-        print('bft1 = ', bft1)
-        print('hg1 = ', hg1)
+        # print('BNodeValue in code = ', BNodevalue)
+        # print('tf1 = ', tft1)
+        # print('bft1 = ', bft1)
+        # print('hg1 = ', hg1)
         hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
                          (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1, np.power(bft1, 3))))
         Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
@@ -1103,7 +1103,7 @@ class glWidget(QGLWidget, QMainWindow):
         SN3, SN7, SN10, SN14 = np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3))
         # print("memlength 1 = ", MemLength1)
         # print("memlength 2 = ", MemLength2)
-        # print('val1 = ', val1)
+        print('val1 = ', val1)
         # print('sn = ', sn)
         for i in range(sn):
             # print('i = ', i)
@@ -1224,7 +1224,7 @@ class glWidget(QGLWidget, QMainWindow):
                 SN13 = SN13 + NG2[i, :]
                 SN14 = SN14 + NG2[i, :]
 
-            elif val1[i][1] == 2:
+            elif val1[i][0] == 2:
                 # *************************** Rotation
                 # bottom flange start node
                 SN1[0, :] = [MemLength1[i, 0], (-Dg1[i, 0]), (zg1[i, 0] + bfb1[i, 0] / 2)]
@@ -1297,7 +1297,7 @@ class glWidget(QGLWidget, QMainWindow):
                 SN13 = SN13 + NG2[i, :]
                 SN14 = SN14 + NG2[i, :]
 
-            elif val1[i][1] == 3:
+            elif val1[i][0] == 3:
                 # *************************** Rotation
                 # bottom flange start node
 

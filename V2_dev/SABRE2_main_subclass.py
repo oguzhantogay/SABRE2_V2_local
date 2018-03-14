@@ -471,9 +471,10 @@ class SABRE2_main_subclass(QMainWindow):
 
         # print("Rval", Rval)
         self.members_table_values = Members_values
-        # print('self.members_table_values', self.members_table_values)
+        print('self.members_table_values', self.members_table_values)
         # print("main screen node i", JNodeValue_i)
         # print("main screen node j", JNodeValue_j)
+
         return Members_values, JNodeValue_i, JNodeValue_j, current_row, SABRE2_main_subclass.BNodevalue, flag_mem_values, Rval
 
     def AISC_update_fun(self, tableName):
@@ -886,15 +887,15 @@ class DataCollection(QMainWindow):
             tableName.setCellWidget(i, position, combo_box)
             if current_index is not None:
                 combo_box.setCurrentIndex(current_index)
-            combo_box.currentIndexChanged.connect(
-                lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
+                combo_box.currentIndexChanged.connect(
+                    lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
 
-            combo_box.currentIndexChanged.connect(
-                lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
+                combo_box.currentIndexChanged.connect(
+                    lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
-            combo_box.currentIndexChanged.connect(
-                lambda:SABRE2_main_subclass.OpenGLwidget.resizeGL(SABRE2_main_subclass.OpenGLwidget.width(),
-                                               SABRE2_main_subclass.OpenGLwidget.height()))
+                combo_box.currentIndexChanged.connect(
+                    lambda:SABRE2_main_subclass.OpenGLwidget.resizeGL(SABRE2_main_subclass.OpenGLwidget.width(),
+                                                   SABRE2_main_subclass.OpenGLwidget.height()))
 
     def update_table_values(self, tableName, position):
         col = tableName.currentColumn()
@@ -1027,8 +1028,16 @@ class TableChanges(QMainWindow):
                     member_count = combo_values.shape[0]
                     if member_count > row_position:
                         combo_box.setCurrentIndex(combo_values[row_position-1])
-                combo_box.currentIndexChanged.connect(
-                    lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
+                        combo_box.currentIndexChanged.connect(
+                            lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
+
+                        combo_box.currentIndexChanged.connect(
+                            lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
+
+                        combo_box.currentIndexChanged.connect(
+                            lambda: SABRE2_main_subclass.OpenGLwidget.resizeGL(
+                                SABRE2_main_subclass.OpenGLwidget.width(),
+                                SABRE2_main_subclass.OpenGLwidget.height()))
 
                 item1 = QTableWidgetItem(str(row_position + 1))
                 item1.setTextAlignment(QtCore.Qt.AlignCenter)
@@ -1252,6 +1261,7 @@ class JointTable(QMainWindow):
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def tableValues(self, tableName):
+        # print('test')
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
@@ -1273,7 +1283,7 @@ class JointTable(QMainWindow):
 
         except ValueError:
             tableName.clearSelection()
-            tableName.item(row, col).setText("")
+            tableName.item(row, col).setText('0')
 
         if 0 in val2:
             self.ui.Members_tab.setEnabled(False)
@@ -1282,6 +1292,7 @@ class JointTable(QMainWindow):
 
             val_unique = np.delete(val1, [0], axis=1)
             val_unique, indices = np.unique(val_unique, axis=0, return_index=True)
+            # print('val_unique = ', val_unique, 'indices = ', indices)
             try:
                 for i in range(val1.shape[0]):
                     if i in range(indices.shape[0]):
@@ -1290,7 +1301,7 @@ class JointTable(QMainWindow):
                         DropDownActions.ActionClass.statusMessage(self,
                                                                   message="Same location cannot be defined twice!")
                         tableName.clearSelection()
-                        tableName.item(row, col).setText("")
+                        tableName.item(row, col).setText('0')
             except AttributeError:
                 DropDownActions.ActionClass.statusMessage(self, message="")
 

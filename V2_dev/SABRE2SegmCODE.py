@@ -90,9 +90,9 @@ class ClassA(QMainWindow):
                     p = 0
                     # print("max = ", int(np.amax(BNodeval[i, :, 1])))
                     for j in range(int(np.amax(BNodeval[i, :, 1]))):
-                        print("for 2")
-                        print('BNodevalue in for 2 = ', BNodevalue)
-                        print('BNodeval in for 2= ', BNodeval)
+                        # print("for 2")
+                        # print('BNodevalue in for 2 = ', BNodevalue)
+                        # print('BNodeval in for 2= ', BNodeval)
                         # print('i for 2 = ', i, '\nj for 2 = ', j, '\np for 2 = ', p)
                         # print("x = ", coord_x, "\ny =", coord_y, "\nz =", coord_z)
                         # print("3 = ", BNodeval[i][j][2], "\n4 =", BNodeval[i][j][3], "\n5 =", BNodeval[i][j][4])
@@ -2075,9 +2075,9 @@ class ClassA(QMainWindow):
 
                         else:  # 1 - 2
                             print("# 1 - 2")
-                            print('BNodevalue in # 1 - 2 = ', BNodevalue)
-                            print('BNodeval in # 1 - 2 = ', BNodeval)
-                            print('i # 1 - 2 = ', i, '\nj # 1 - 2 = ', j, '\np # 1 - 2 = ', p)
+                            # print('BNodevalue in # 1 - 2 = ', BNodevalue)
+                            # print('BNodeval in # 1 - 2 = ', BNodeval)
+                            # print('i # 1 - 2 = ', i, '\nj # 1 - 2 = ', j, '\np # 1 - 2 = ', p)
                             BNodevalue[i][p][0] = BNodeval[i][j][0]
                             BNodevalue[i][p][1] = p + 1
                             BNodevalue[i][p][2] = BNodeval[i][j][2]
@@ -2095,9 +2095,9 @@ class ClassA(QMainWindow):
                             BNodevalue[i][p][14] = 1
                             BNodevalue[i][p][15] = BNodeval[i][j][15]
                             p = p + 1
-                            print('BNodevalue in after # 1 - 2 = ', BNodevalue)
-                            print('BNodeval in after # 1 - 2 = ', BNodeval)
-                            print('i # 1 - 2 = ', i, '\nj # 1 - 2 = ', j, '\np # 1 - 2 = ', p)
+                            # print('BNodevalue in after # 1 - 2 = ', BNodevalue)
+                            # print('BNodeval in after # 1 - 2 = ', BNodeval)
+                            # print('i # 1 - 2 = ', i, '\nj # 1 - 2 = ', j, '\np # 1 - 2 = ', p)
 
             # ADD Step E
             # Sorting S

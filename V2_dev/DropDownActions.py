@@ -233,7 +233,7 @@ class ActionClass(QMainWindow):
                                                                                              self.ui.Point_load_table,
                                                                                              combo_flag=0)
 
-        filename = 'test1.npz'
+        filename = 'test2.npz'
         file = open(filename, 'wb')
 
         np.savez(file, joint_values=self.joint_values,
@@ -259,7 +259,7 @@ class ActionClass(QMainWindow):
 
         self.OpenGLwidget = OpenGLcode.glWidget(self.ui)
 
-        filename = 'test1.npz'
+        filename = 'test2.npz'
 
         aa = np.load(filename)
 
@@ -288,7 +288,8 @@ class ActionClass(QMainWindow):
         shape_warping_release_values = int(self.Warping_release_values.shape[0])
         shape_uniform_data_values = int(self.uniform_data_values.shape[0])
         # shape_point_data_values = int(self.point_data_values.shape[0])
-
+        print('shape member table = ', shape_members_table_values)
+        print('shape member table = ', self.members_table_values)
         # filling for joints table
         for i in range(shape_joint_table):
 

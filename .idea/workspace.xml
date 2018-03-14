@@ -2,11 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0ee3103-6d08-4b17-8e91-429164a7cb7a" name="Default" comment="Bval">
+      <change beforePath="$PROJECT_DIR$/.idea/SABRE2-V2.iml" afterPath="$PROJECT_DIR$/.idea/SABRE2-V2.iml" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2SegmCODE.m" afterPath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2SegmCODE.m" />
-      <change beforePath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2SegmRem.m" afterPath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2SegmRem.m" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/AddNode.py" afterPath="$PROJECT_DIR$/V2_dev/AddNode.py" />
+      <change beforePath="$PROJECT_DIR$/V2_dev/DropDownActions.py" afterPath="$PROJECT_DIR$/V2_dev/DropDownActions.py" />
+      <change beforePath="$PROJECT_DIR$/V2_dev/OpenGLcode.py" afterPath="$PROJECT_DIR$/V2_dev/OpenGLcode.py" />
+      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2-V3.ui" afterPath="$PROJECT_DIR$/V2_dev/SABRE2-V3.ui" />
       <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py" afterPath="$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py" />
+      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2_GUI.py" afterPath="$PROJECT_DIR$/V2_dev/SABRE2_GUI.py" />
+      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" afterPath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" />
     </list>
     <ignored path="C:\Users\Python\Desktop\SABRE2-V2\.idea\shelf/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,7 +21,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/SABRE2_V2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1521005203318" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
+    <SUITE FILE_PATH="coverage/SABRE2_V2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1521046284826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$OpenGLcode2.coverage" NAME="OpenGLcode2 Coverage Results" MODIFIED="1507443683441" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$OpenGLTest.coverage" NAME="OpenGLTest Coverage Results" MODIFIED="1507430818206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$AddNode.coverage" NAME="AddNode Coverage Results" MODIFIED="1520722527280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
@@ -36,22 +40,23 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SABRE2_main_subclass.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SABRE2_main_subclass.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3026">
-              <caret line="178" column="0" lean-forward="false" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
+            <state relative-caret-position="-5136">
+              <caret line="394" column="6" lean-forward="false" selection-start-line="394" selection-start-column="6" selection-end-line="394" selection-end-column="6" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
-                <element signature="e#26761#28299#0" expanded="false" />
-                <element signature="e#28379#28850#0" expanded="false" />
-                <element signature="e#28933#29493#0" expanded="false" />
-                <element signature="e#67979#71338#0" expanded="false" />
-                <element signature="e#71385#82944#0" expanded="false" />
-                <element signature="e#82984#87884#0" expanded="false" />
-                <element signature="e#88166#88305#0" expanded="false" />
-                <element signature="e#88812#90205#0" expanded="false" />
-                <element signature="e#90247#92347#0" expanded="false" />
+                <element signature="e#26760#28298#0" expanded="false" />
+                <element signature="e#28378#28849#0" expanded="false" />
+                <element signature="e#28932#29492#0" expanded="false" />
+                <element signature="e#36767#36804#0" expanded="false" />
+                <element signature="e#53951#64170#0" expanded="false" />
+                <element signature="e#71975#83534#0" expanded="false" />
+                <element signature="e#83574#88474#0" expanded="false" />
+                <element signature="e#88756#88895#0" expanded="false" />
+                <element signature="e#89402#90795#0" expanded="false" />
+                <element signature="e#90837#92937#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -60,9 +65,11 @@
       <file leaf-file-name="SABRE2_GUI.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_GUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9520">
+            <state relative-caret-position="11200">
               <caret line="560" column="13" lean-forward="false" selection-start-line="560" selection-start-column="13" selection-end-line="560" selection-end-column="13" />
-              <folding />
+              <folding>
+                <marker date="1521042963809" expanded="true" signature="681:15989" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -80,8 +87,8 @@
       <file leaf-file-name="OpenGLcode.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/OpenGLcode.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1734">
-              <caret line="102" column="36" lean-forward="true" selection-start-line="102" selection-start-column="36" selection-end-line="102" selection-end-column="36" />
+            <state relative-caret-position="320">
+              <caret line="1045" column="0" lean-forward="true" selection-start-line="1045" selection-start-column="0" selection-end-line="1045" selection-end-column="0" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
                 <element signature="e#6389#6416#0" expanded="false" />
@@ -114,7 +121,7 @@
       <file leaf-file-name="SABRE2SegmModel.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2SegmModel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="816">
+            <state relative-caret-position="960">
               <caret line="48" column="29" lean-forward="false" selection-start-line="14" selection-start-column="8" selection-end-line="48" selection-end-column="29" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -123,13 +130,28 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SABRE2SegmCODE.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SABRE2SegmCODE.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="124">
-              <caret line="61" column="20" lean-forward="false" selection-start-line="61" selection-start-column="12" selection-end-line="61" selection-end-column="20" />
+            <state relative-caret-position="184">
+              <caret line="2077" column="51" lean-forward="false" selection-start-line="2077" selection-start-column="51" selection-end-line="2077" selection-end-column="51" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DropDownActions.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/V2_dev/DropDownActions.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="124">
+              <caret line="214" column="134" lean-forward="false" selection-start-line="214" selection-start-column="134" selection-end-line="214" selection-end-column="134" />
+              <folding>
+                <element signature="e#2269#2466#0" expanded="false" />
+                <element signature="e#5873#6879#0" expanded="false" />
+                <element signature="e#6913#7084#0" expanded="false" />
+                <element signature="e#7126#7208#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -138,8 +160,8 @@
       <file leaf-file-name="AddNode.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/AddNode.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="47">
-              <caret line="814" column="8" lean-forward="false" selection-start-line="814" selection-start-column="8" selection-end-line="817" selection-end-column="29" />
+            <state relative-caret-position="-13">
+              <caret line="811" column="58" lean-forward="true" selection-start-line="811" selection-start-column="58" selection-end-line="811" selection-end-column="58" />
               <folding>
                 <element signature="e#252#600#0" expanded="false" />
                 <element signature="e#2819#2957#0" expanded="false" />
@@ -192,7 +214,6 @@
                 <element signature="e#35472#35524#0" expanded="false" />
                 <element signature="e#37196#37264#0" expanded="false" />
                 <element signature="e#37864#37865#0" expanded="false" />
-                <element signature="e#37864#37865#0" expanded="false" />
                 <element signature="e#38875#38948#0" expanded="false" />
                 <element signature="e#41617#41645#0" expanded="false" />
                 <element signature="e#41830#41878#0" expanded="false" />
@@ -204,7 +225,7 @@
       <file leaf-file-name="h5_file.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/h5_file.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="731">
+            <state relative-caret-position="860">
               <caret line="43" column="10" lean-forward="false" selection-start-line="43" selection-start-column="10" selection-end-line="43" selection-end-column="10" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -216,7 +237,7 @@
       <file leaf-file-name="Assign_Member_Properties.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
+            <state relative-caret-position="460">
               <caret line="23" column="32" lean-forward="false" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
@@ -236,14 +257,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>from.setText(str(</find>
-      <find>addNodePushButton</find>
-      <find>6 - 1</find>
-      <find>7 - 2</find>
-      <find>&quot;added</find>
-      <find>glWidget.Rval</find>
-      <find>h5</find>
-      <find>q + j</find>
       <find>[q + j]</find>
       <find>max for nj_i</find>
       <find>glWidget.BNodevalue</find>
@@ -266,6 +279,14 @@
       <find>added no</find>
       <find>update</find>
       <find># 1 - 2</find>
+      <find>J</find>
+      <find>trig</find>
+      <find>J&quot;</find>
+      <find>BNodeValue in code</find>
+      <find>ui_layout.Joints_Table</find>
+      <find>setText(&quot;&quot;)</find>
+      <find>val1</find>
+      <find>same loca</find>
     </findStrings>
     <replaceStrings>
       <replace>SAB</replace>
@@ -316,14 +337,14 @@
         <option value="$PROJECT_DIR$/V2_dev/saver_pickle.py" />
         <option value="$PROJECT_DIR$/V2_dev/SABRE2_GUI.py" />
         <option value="$PROJECT_DIR$/V2_dev/SABRE2_main.py" />
-        <option value="$PROJECT_DIR$/V2_dev/DropDownActions.py" />
         <option value="$PROJECT_DIR$/V2_dev/h5_file.py" />
         <option value="$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py" />
-        <option value="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" />
         <option value="$PROJECT_DIR$/V2_dev/SABRE2SegmModel.py" />
-        <option value="$PROJECT_DIR$/V2_dev/OpenGLcode.py" />
         <option value="$PROJECT_DIR$/V2_dev/AddNode.py" />
         <option value="$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py" />
+        <option value="$PROJECT_DIR$/V2_dev/OpenGLcode.py" />
+        <option value="$PROJECT_DIR$/V2_dev/DropDownActions.py" />
+        <option value="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" />
       </list>
     </option>
   </component>
@@ -334,7 +355,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
+    <option name="x" value="2903" />
+    <option name="y" value="-8" />
     <option name="width" value="666" />
     <option name="height" value="775" />
   </component>
@@ -358,7 +380,7 @@
     </entry>
   </component>
   <component name="ProjectView">
-    <navigator proportions="" version="1">
+    <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -371,7 +393,26 @@
       <manualOrder />
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes />
+    <panes>
+      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="SABRE2-V2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SABRE2-V2" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SABRE2-V2" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SABRE2-V2" type="462c0819:PsiDirectoryNode" />
+              <item name="V2_dev" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -872,17 +913,17 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1320" height="784" extended-state="6" />
+    <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286385" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37639877" sideWeight="0.50416666" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5460318" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="0" y="0" width="338" height="716" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3611111" sideWeight="0.71634614" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5457481" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="0" y="0" width="338" height="716" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36012208" sideWeight="0.71634614" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3271605" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287037" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287037" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.21428572" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2140625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32857144" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="SciView" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5182292" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1029,15 +1070,16 @@
           <caret line="52" column="0" lean-forward="true" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
-            <element signature="e#26761#28299#0" expanded="false" />
-            <element signature="e#28379#28850#0" expanded="false" />
-            <element signature="e#28933#29493#0" expanded="false" />
-            <element signature="e#67979#71338#0" expanded="false" />
-            <element signature="e#71385#82944#0" expanded="false" />
-            <element signature="e#82984#87884#0" expanded="false" />
-            <element signature="e#88166#88305#0" expanded="false" />
-            <element signature="e#88812#90205#0" expanded="false" />
-            <element signature="e#90247#92347#0" expanded="false" />
+            <element signature="e#26760#28298#0" expanded="false" />
+            <element signature="e#28378#28849#0" expanded="false" />
+            <element signature="e#28932#29492#0" expanded="false" />
+            <element signature="e#36767#36804#0" expanded="false" />
+            <element signature="e#53951#64170#0" expanded="false" />
+            <element signature="e#71975#83534#0" expanded="false" />
+            <element signature="e#83574#88474#0" expanded="false" />
+            <element signature="e#88756#88895#0" expanded="false" />
+            <element signature="e#89402#90795#0" expanded="false" />
+            <element signature="e#90837#92937#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1114,15 +1156,16 @@
           <caret line="14" column="27" lean-forward="false" selection-start-line="14" selection-start-column="27" selection-end-line="14" selection-end-column="27" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
-            <element signature="e#26761#28299#0" expanded="false" />
-            <element signature="e#28379#28850#0" expanded="false" />
-            <element signature="e#28933#29493#0" expanded="false" />
-            <element signature="e#67979#71338#0" expanded="false" />
-            <element signature="e#71385#82944#0" expanded="false" />
-            <element signature="e#82984#87884#0" expanded="false" />
-            <element signature="e#88166#88305#0" expanded="false" />
-            <element signature="e#88812#90205#0" expanded="false" />
-            <element signature="e#90247#92347#0" expanded="false" />
+            <element signature="e#26760#28298#0" expanded="false" />
+            <element signature="e#28378#28849#0" expanded="false" />
+            <element signature="e#28932#29492#0" expanded="false" />
+            <element signature="e#36767#36804#0" expanded="false" />
+            <element signature="e#53951#64170#0" expanded="false" />
+            <element signature="e#71975#83534#0" expanded="false" />
+            <element signature="e#83574#88474#0" expanded="false" />
+            <element signature="e#88756#88895#0" expanded="false" />
+            <element signature="e#89402#90795#0" expanded="false" />
+            <element signature="e#90837#92937#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1254,24 +1297,13 @@
     <entry file="file://$USER_HOME$/.PyCharm2017.3/system/python_stubs/652478984/PyQt4/QtGui/__init__.py" />
     <entry file="file://$USER_HOME$/.PyCharm2017.3/system/python_stubs/652478984/PyQt4/QtOpenGL.py" />
     <entry file="file://C:/Python3.6/Lib/site-packages/h5py/_hl/group.py" />
-    <entry file="file://$PROJECT_DIR$/V2_dev/DropDownActions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2856">
-          <caret line="212" column="113" lean-forward="false" selection-start-line="212" selection-start-column="113" selection-end-line="213" selection-end-column="144" />
-          <folding>
-            <element signature="e#2269#2466#0" expanded="false" />
-            <element signature="e#5873#6879#0" expanded="false" />
-            <element signature="e#6913#7084#0" expanded="false" />
-            <element signature="e#7126#7208#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_GUI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9520">
+        <state relative-caret-position="11200">
           <caret line="560" column="13" lean-forward="false" selection-start-line="560" selection-start-column="13" selection-end-line="560" selection-end-column="13" />
-          <folding />
+          <folding>
+            <marker date="1521042963809" expanded="true" signature="681:15989" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1285,7 +1317,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/h5_file.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="731">
+        <state relative-caret-position="860">
           <caret line="43" column="10" lean-forward="false" selection-start-line="43" selection-start-column="10" selection-end-line="43" selection-end-column="10" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
@@ -1295,7 +1327,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
+        <state relative-caret-position="460">
           <caret line="23" column="32" lean-forward="false" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
@@ -1305,7 +1337,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2SegmModel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="816">
+        <state relative-caret-position="960">
           <caret line="48" column="29" lean-forward="false" selection-start-line="14" selection-start-column="8" selection-end-line="48" selection-end-column="29" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
@@ -1313,62 +1345,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3026">
-          <caret line="178" column="0" lean-forward="false" selection-start-line="178" selection-start-column="0" selection-end-line="178" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-            <element signature="e#26761#28299#0" expanded="false" />
-            <element signature="e#28379#28850#0" expanded="false" />
-            <element signature="e#28933#29493#0" expanded="false" />
-            <element signature="e#67979#71338#0" expanded="false" />
-            <element signature="e#71385#82944#0" expanded="false" />
-            <element signature="e#82984#87884#0" expanded="false" />
-            <element signature="e#88166#88305#0" expanded="false" />
-            <element signature="e#88812#90205#0" expanded="false" />
-            <element signature="e#90247#92347#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Python/Python3.6/Lib/site-packages/h5py/__init__.py" />
-    <entry file="file://$PROJECT_DIR$/V2_dev/OpenGLcode.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1734">
-          <caret line="102" column="36" lean-forward="true" selection-start-line="102" selection-start-column="36" selection-end-line="102" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#24#0" expanded="true" />
-            <element signature="e#6389#6416#0" expanded="false" />
-            <element signature="e#6450#6479#0" expanded="false" />
-            <element signature="e#6524#6693#0" expanded="false" />
-            <element signature="e#6738#6907#0" expanded="false" />
-            <element signature="e#6952#7121#0" expanded="false" />
-            <element signature="e#7160#7404#0" expanded="false" />
-            <element signature="e#10455#11098#0" expanded="false" />
-            <element signature="e#11145#12266#0" expanded="false" />
-            <element signature="e#12316#12320#0" expanded="false" />
-            <element signature="e#15439#15568#0" expanded="false" />
-            <element signature="e#15607#15682#0" expanded="false" />
-            <element signature="e#15715#15790#0" expanded="false" />
-            <element signature="e#15825#15901#0" expanded="false" />
-            <element signature="e#15935#16010#0" expanded="false" />
-            <element signature="e#16046#16929#0" expanded="false" />
-            <element signature="e#16964#17373#0" expanded="false" />
-            <element signature="e#17409#17756#0" expanded="false" />
-            <element signature="e#21672#22005#0" expanded="false" />
-            <element signature="e#23317#23632#0" expanded="false" />
-            <element signature="e#26182#26722#0" expanded="false" />
-            <element signature="e#28400#28435#0" expanded="false" />
-            <element signature="e#29180#29238#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/AddNode.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="47">
-          <caret line="814" column="8" lean-forward="false" selection-start-line="814" selection-start-column="8" selection-end-line="817" selection-end-column="29" />
+        <state relative-caret-position="-13">
+          <caret line="811" column="58" lean-forward="true" selection-start-line="811" selection-start-column="58" selection-end-line="811" selection-end-column="58" />
           <folding>
             <element signature="e#252#600#0" expanded="false" />
             <element signature="e#2819#2957#0" expanded="false" />
@@ -1421,7 +1402,6 @@
             <element signature="e#35472#35524#0" expanded="false" />
             <element signature="e#37196#37264#0" expanded="false" />
             <element signature="e#37864#37865#0" expanded="false" />
-            <element signature="e#37864#37865#0" expanded="false" />
             <element signature="e#38875#38948#0" expanded="false" />
             <element signature="e#41617#41645#0" expanded="false" />
             <element signature="e#41830#41878#0" expanded="false" />
@@ -1431,10 +1411,75 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="124">
-          <caret line="61" column="20" lean-forward="false" selection-start-line="61" selection-start-column="12" selection-end-line="61" selection-end-column="20" />
+        <state relative-caret-position="184">
+          <caret line="2077" column="51" lean-forward="false" selection-start-line="2077" selection-start-column="51" selection-end-line="2077" selection-end-column="51" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/V2_dev/OpenGLcode.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="1045" column="0" lean-forward="true" selection-start-line="1045" selection-start-column="0" selection-end-line="1045" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+            <element signature="e#6389#6416#0" expanded="false" />
+            <element signature="e#6450#6479#0" expanded="false" />
+            <element signature="e#6524#6693#0" expanded="false" />
+            <element signature="e#6738#6907#0" expanded="false" />
+            <element signature="e#6952#7121#0" expanded="false" />
+            <element signature="e#7160#7404#0" expanded="false" />
+            <element signature="e#10455#11098#0" expanded="false" />
+            <element signature="e#11145#12266#0" expanded="false" />
+            <element signature="e#12316#12320#0" expanded="false" />
+            <element signature="e#15439#15568#0" expanded="false" />
+            <element signature="e#15607#15682#0" expanded="false" />
+            <element signature="e#15715#15790#0" expanded="false" />
+            <element signature="e#15825#15901#0" expanded="false" />
+            <element signature="e#15935#16010#0" expanded="false" />
+            <element signature="e#16046#16929#0" expanded="false" />
+            <element signature="e#16964#17373#0" expanded="false" />
+            <element signature="e#17409#17756#0" expanded="false" />
+            <element signature="e#21672#22005#0" expanded="false" />
+            <element signature="e#23317#23632#0" expanded="false" />
+            <element signature="e#26182#26722#0" expanded="false" />
+            <element signature="e#28400#28435#0" expanded="false" />
+            <element signature="e#29180#29238#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/V2_dev/DropDownActions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="214" column="134" lean-forward="false" selection-start-line="214" selection-start-column="134" selection-end-line="214" selection-end-column="134" />
+          <folding>
+            <element signature="e#2269#2466#0" expanded="false" />
+            <element signature="e#5873#6879#0" expanded="false" />
+            <element signature="e#6913#7084#0" expanded="false" />
+            <element signature="e#7126#7208#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5136">
+          <caret line="394" column="6" lean-forward="false" selection-start-line="394" selection-start-column="6" selection-end-line="394" selection-end-column="6" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+            <element signature="e#26760#28298#0" expanded="false" />
+            <element signature="e#28378#28849#0" expanded="false" />
+            <element signature="e#28932#29492#0" expanded="false" />
+            <element signature="e#36767#36804#0" expanded="false" />
+            <element signature="e#53951#64170#0" expanded="false" />
+            <element signature="e#71975#83534#0" expanded="false" />
+            <element signature="e#83574#88474#0" expanded="false" />
+            <element signature="e#88756#88895#0" expanded="false" />
+            <element signature="e#89402#90795#0" expanded="false" />
+            <element signature="e#90837#92937#0" expanded="false" />
           </folding>
         </state>
       </provider>

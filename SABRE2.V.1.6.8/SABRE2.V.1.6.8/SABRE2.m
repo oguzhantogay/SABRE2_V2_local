@@ -5486,6 +5486,8 @@ function pdb_cancel_pushbutton_Callback(hObject, eventdata)
          pdb_coordz_edit,pdb_length_edit,pdb_bfb_edit,pdb_tfb_edit,...
          pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit,pdb_step_edit,LabType,axesm,vstm);  
    end
+   fprintf('main file')
+   BNodevalue
 end % function end
 % --------------------------------------------------------------------
 function pdmi_apply_pushbutton_Callback(hObject, eventdata)  

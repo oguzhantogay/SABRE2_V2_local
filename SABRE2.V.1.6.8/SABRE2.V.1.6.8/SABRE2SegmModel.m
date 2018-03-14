@@ -169,10 +169,10 @@ else % ~isempty(Massemble)
          NJ_i(q+j,13)=SASSEM(i,j+1,13);
  
       end
-      NJ_i
-      q
+%       NJ_i
+%       q
       q = max(BNodevalue(i,:,2))+q+1;  
-      q
+%       q
    end
    
    q = 1; 

@@ -99,7 +99,7 @@ class glWidget(QGLWidget, QMainWindow):
 
     def drawAsterisk(self, member_count, BNodevalue):
         # print('draw asterisk test')
-        print('BNodevalue in draw asterix = ', BNodevalue)
+        # print('BNodevalue in draw asterix = ', BNodevalue)
         if BNodevalue.shape[2] ==16:
             glPushMatrix()
             asterisk_size = glWidget.joint_size * 2.5

@@ -215,9 +215,9 @@ else
 %                               dtsb
 %                               hgsb
 %                               Afillsb
-                              i
-                              j
-                              p
+%                               i
+%                               j
+%                               p
                               BNodevalue(i,p,1)=BNodeval(i,j,1);
                               BNodevalue(i,p,2)=p;
                               BNodevalue(i,p,3)=Lb2(1,1);
@@ -235,10 +235,10 @@ else
                               BNodevalue(i,p,15)=2;
                               BNodevalue(i,p,16)=BNodeval(i,j,16)-s;
                               p=p+1;
-                              fprintf('\nBNodevalue after in 6 - 1')
-                              BNodevalue
-                              fprintf('BNodeval after in 6 - 1')
-                              BNodeval
+%                               fprintf('\nBNodevalue after in 6 - 1')
+%                               BNodevalue
+%                               fprintf('BNodeval after in 6 - 1')
+%                               BNodeval
                            elseif (BNodeval(i,j,16)/2 > s ) && (Af1 < Af2)  % if condition 6 - 2 
                                fprintf('\n# 6 - 2')
                               % Linear interpolation

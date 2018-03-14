@@ -672,25 +672,27 @@ class AddNodeClass(QMainWindow):
         current_selected_node = self.ui.AdditionalNodeNumberComboBox.currentIndex()
         current_member = self.ui.AddNodeMember.currentIndex()
         import DropDownActions
-        try:
-            remove_added_node_test =  BNodevalue[current_member][current_selected_node][1] # this is a test operator for try-except statement
-            import SABRE2_GUI
-            remove_added_node = QtGui.QMessageBox()
-            remove_added_node.setWindowTitle('Remove Selected Node?')
-            remove_added_node.setIcon(QtGui.QMessageBox.Critical)
-            remove_added_node.setTextFormat(SABRE2_GUI.QtCore.Qt.RichText)
-            # about_box.setIconPixmap(QtGui.QPixmap(ComicTaggerSettings.getGraphic('about.png'))) #include image
-            remove_added_node.setText('Do you want to remove the Added Node Number ' + str(current_selected_node+1)+ ' of Member ' + str(current_member+1) + '?')
-            remove_added_node.setStandardButtons(SABRE2_GUI.QtGui.QMessageBox.Yes | SABRE2_GUI.QtGui.QMessageBox.No)
-            ret_val = remove_added_node.exec_()
-            if ret_val == SABRE2_GUI.QtGui.QMessageBox.Yes:
-                SegmRemove.removeNode(self)
-            else:
-                return
+        # try:
+            # remove_added_node_test =  BNodevalue[current_member][current_selected_node][1] # this is a test operator for try-except statement
+        import SABRE2_GUI
+        remove_added_node = QtGui.QMessageBox()
+        remove_added_node.setWindowTitle('Remove Selected Node?')
+        remove_added_node.setIcon(QtGui.QMessageBox.Critical)
+        remove_added_node.setTextFormat(SABRE2_GUI.QtCore.Qt.RichText)
+        # about_box.setIconPixmap(QtGui.QPixmap(ComicTaggerSettings.getGraphic('about.png'))) #include image
+        remove_added_node.setText('Do you want to remove the Added Node Number ' + str(current_selected_node+1)+ ' of Member ' + str(current_member+1) + '?')
+        remove_added_node.setStandardButtons(SABRE2_GUI.QtGui.QMessageBox.Yes | SABRE2_GUI.QtGui.QMessageBox.No)
+        ret_val = remove_added_node.exec_()
+        if ret_val == SABRE2_GUI.QtGui.QMessageBox.Yes:
+            SegmRemove.removeNode(self)
+        else:
+            return
 
-        except IndexError:
-            DropDownActions.ActionClass.statusMessage(self,
-                                                      message=('Added number ' + str(current_selected_node+1)+ ' of Member ' + str(current_member+1) + ' is removed!'))
+        # except IndexError as e:
+        #     import sys
+        #     print('Error on line {}'.format(sys.exc_info()[-1].tb_lineno), type(e).__name__, e)
+        #     DropDownActions.ActionClass.statusMessage(self,
+        #                                               message=('Added number ' + str(current_selected_node+1)+ ' of Member ' + str(current_member+1) + ' is removed!'))
         # print('message box result = ', ret_val)
 
     def ApplyButton(self):
@@ -792,7 +794,7 @@ class SegmRemove(QMainWindow):
         # remove selected node
         nbnode = int(self.ui.AdditionalNodeNumberComboBox.currentIndex())  # specifies the selected node current index
         memnum = int(self.ui.AddNodeMember.currentIndex())  # specifies the selected node current index
-        # total_memnum = int(self.ui.AddNodeMember.count())  # specifies the selected node current index
+        total_memnum = int(self.ui.AddNodeMember.count())  # specifies the selected node current index
         #
         # # import SABRE2SegmCODE
         # added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
@@ -801,19 +803,19 @@ class SegmRemove(QMainWindow):
         # added_node_information[memnum][1] = added_node_information[memnum][1] - 1
         # h5_file.h5_Class.update_array(self, added_node_information, 'added_node_information')
         # # print('added node information = ', added_node_information)
-        # # print('total number = ' , total_number, 'nbnode = ', nbnode)
+        print('memnum = ' , memnum, 'nbnode = ', nbnode)
         #
         # b = list(range(1, int(added_node_information[memnum][1] + 1)))
         # for e in range(len(b)):
         #     b[e] = str(b[e])
         # self.ui.AdditionalNodeNumberComboBox.clear()
         # self.ui.AdditionalNodeNumberComboBox.addItems(b)
-        # max_b = 0
-        # max_c = 0
-        # for i in range(int(total_memnum)):
-        #     max_c = np.amax(BNodevalue[i, :, 1])
-        #     if max_b < max_c:
-        #         max_b = max_c
+        max_b = 0
+        max_c = 0
+        for i in range(int(total_memnum)):
+            max_c = np.amax(BNodevalue[i, :, 1])
+            if max_b < max_c:
+                max_b = max_c
         # # print('max_b = ', max_b, 'max_c = ', max_c,'member = ', total_memnum)
         # # print('test remove = ', BNodevalue)
         # # total added node count of current member
@@ -830,36 +832,58 @@ class SegmRemove(QMainWindow):
         # print('test remove 2 = ', np.arange(added_node_information[memnum][1]))
         # BNodevalue[memnum,:,1] = np.arange(added_node_information[memnum][1]) + 1
         # h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
-        # print('test remove = ', BNodevalue)
+        # print('test remove = ', int(np.amax(BNodevalue[memnum, :, 1])))
         # BNodevalue[memnum, nbnode, :] = 0
-        print('test 1 ')
+        # print('test 1 __')
 
-        BNodedev = np.zeros((1, int(np.amax(BNodevalue[memnum, :, 1])), 16))
+        BNodedev = np.zeros((total_memnum, int(max_b), 16))
 
+        # print('test 2_ = ,', BNodedev)
+        BNodevalue[memnum, nbnode, :] = 0
 
-        BNodevalue[memnum, int(nbnode+1), :] = 0
-
-        print('test 2 BNode = ', BNodevalue)
+        # print('test 2__ BNode = ')
         for i in range(int(BNodevalue[memnum, :, 1].shape[0])):
             for j in range(16):
                 BNodedev[memnum, i, j] = 0
 
-        print('test 2 ')
+        # print('test 2__ ')
         p = 0
-
-        for i in range(int(BNodevalue[memnum, :, 1].shape[0])):
+        # print('BV = ', BNodevalue)
+        for i in range(BNodevalue[memnum,:,0].shape[0]):
+            # print('test 31 ')
             if not np.isclose(BNodevalue[memnum,i,0], 0):
-                for j in range(16):
-                    BNodedev[0, p, j] = BNodevalue[memnum, i, j]
-
+                # print('BNodevalue[memnum, i, :]', BNodevalue[memnum, i, :])
+                BNodevalue[memnum,i,1] = p+1
+                    # print('test 33')
+                BNodedev[memnum, p, 0] = BNodevalue[memnum, i, 0]
+                BNodedev[memnum, p, 1] = BNodevalue[memnum, i, 1]
+                BNodedev[memnum, p, 2] = BNodevalue[memnum, i, 2]
+                BNodedev[memnum, p, 3] = BNodevalue[memnum, i, 3]
+                BNodedev[memnum, p, 4] = BNodevalue[memnum, i, 4]
+                BNodedev[memnum, p, 5] = BNodevalue[memnum, i, 5]
+                BNodedev[memnum, p, 6] = BNodevalue[memnum, i, 6]
+                BNodedev[memnum, p, 7] = BNodevalue[memnum, i, 7]
+                BNodedev[memnum, p, 8] = BNodevalue[memnum, i, 8]
+                BNodedev[memnum, p, 9] = BNodevalue[memnum, i, 9]
+                BNodedev[memnum, p, 10] = BNodevalue[memnum, i, 10]
+                BNodedev[memnum, p, 11] = BNodevalue[memnum, i, 11]
+                BNodedev[memnum, p, 12] = BNodevalue[memnum, i, 12]
+                BNodedev[memnum, p, 13] = BNodevalue[memnum, i, 13]
+                BNodedev[memnum, p, 14] = BNodevalue[memnum, i, 14]
+                BNodedev[memnum, p, 15] = BNodevalue[memnum, i, 15]
                 p += 1
 
-        print('test 3 ')
+        # print('BA = ', BNodevalue)
+
+
+        # print('test 3____')
+        # print('Bnodevalue = ', BNodevalue)
+        # print('Bnodedev = ', BNodedev)
         BNodevalue[memnum, :, :] = BNodedev[memnum, :, :]
-        print('remove node BNodevalue = ', BNodevalue)
+        # print('remove node BNodevalue = ', BNodevalue)
         # handle SNODE later
         import SABRE2SegmCODE
         BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
-        print('remove node BNodevalue = ', BNodevalue)
+        # print('remove node BNodevalue = ', BNodevalue)
         h5_file.h5_Class.update_array(self,BNodevalue,'BNodevalue')
 

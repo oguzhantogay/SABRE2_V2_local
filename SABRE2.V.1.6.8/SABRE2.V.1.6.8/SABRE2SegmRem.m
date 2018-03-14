@@ -30,8 +30,8 @@ else
    if ~isempty(BNodevalue)
       BNodevalue(mnum,nbnode,:) = 0;       % Remove BNodevalue
       BNodev=[];
-      fprintf('xxx')
-      BNodevalue
+%       fprintf('xxx')
+%       BNodevalue
       for i=1:length(BNodevalue(mnum,:,1))
             BNodev(mnum,i,1)=0;
             BNodev(mnum,i,2)=0;
@@ -50,8 +50,8 @@ else
             BNodev(mnum,i,15)=0; 
             BNodev(mnum,i,16)=0; 
       end   
-      fprintf('test1__ ')
-      BNodev
+%       fprintf('test1__ ')
+%       BNodev
 
       p=0;
       for i=1:length(BNodevalue(mnum,:,1))
@@ -78,15 +78,15 @@ else
             p=p+1;
          end
       end
-      fprintf('\ntest2__ ')
-      BNodev
-      
-      fprintf('\nyyy ')
-      BNodevalue
+%       fprintf('\ntest2__ ')
+%       BNodev
+%       
+%       fprintf('\nyyy ')
+%       BNodevalue
 
       BNodevalue(mnum,:,:)=BNodev(mnum,:,:);
-      fprintf('test Remove BNodevalue =')
-      BNodevalue
+%       fprintf('test Remove BNodevalue =')
+%       BNodevalue
       
       if ~isempty(SNodevalue)
          SNodevalue(mnum,nbnode+1,:) = 0;     % Remove SNodevalue

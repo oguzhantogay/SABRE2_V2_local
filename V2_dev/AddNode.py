@@ -761,7 +761,7 @@ class AddNodeClass(QMainWindow):
                 BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j,
                                                                      Massemble)
 
-                # print("BNodevalue function after = ", BNodevalue)
+                print("BNodevalue function after = ", BNodevalue)
 
                 # SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
                 AddNodeClass.addedNodeInformationArrayUpdate(self, BNodevalue)
@@ -803,7 +803,7 @@ class SegmRemove(QMainWindow):
         # added_node_information[memnum][1] = added_node_information[memnum][1] - 1
         # h5_file.h5_Class.update_array(self, added_node_information, 'added_node_information')
         # # print('added node information = ', added_node_information)
-        print('memnum = ' , memnum, 'nbnode = ', nbnode)
+        # print('memnum = ' , memnum, 'nbnode = ', nbnode)
         #
         # b = list(range(1, int(added_node_information[memnum][1] + 1)))
         # for e in range(len(b)):

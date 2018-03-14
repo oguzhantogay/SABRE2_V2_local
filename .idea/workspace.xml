@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0ee3103-6d08-4b17-8e91-429164a7cb7a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/SABRE2-V2.iml" afterPath="$PROJECT_DIR$/.idea/SABRE2-V2.iml" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+    <list default="true" id="f0ee3103-6d08-4b17-8e91-429164a7cb7a" name="Default" comment="Bval">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2.m" afterPath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2.m" />
       <change beforePath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2SegmCODE.m" afterPath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2SegmCODE.m" />
-      <change beforePath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2SegmModel.m" afterPath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2SegmModel.m" />
       <change beforePath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2SegmRem.m" afterPath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2SegmRem.m" />
       <change beforePath="$PROJECT_DIR$/V2_dev/AddNode.py" afterPath="$PROJECT_DIR$/V2_dev/AddNode.py" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/OpenGLcode.py" afterPath="$PROJECT_DIR$/V2_dev/OpenGLcode.py" />
+      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py" afterPath="$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py" />
     </list>
     <ignored path="C:\Users\Python\Desktop\SABRE2-V2\.idea\shelf/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/SABRE2_V2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1521001756124" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
+    <SUITE FILE_PATH="coverage/SABRE2_V2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1521005203318" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$OpenGLcode2.coverage" NAME="OpenGLcode2 Coverage Results" MODIFIED="1507443683441" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$OpenGLTest.coverage" NAME="OpenGLTest Coverage Results" MODIFIED="1507430818206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$AddNode.coverage" NAME="AddNode Coverage Results" MODIFIED="1520722527280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
@@ -127,11 +123,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SABRE2SegmCODE.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SABRE2SegmCODE.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="11" column="8" lean-forward="false" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
+            <state relative-caret-position="124">
+              <caret line="61" column="20" lean-forward="false" selection-start-line="61" selection-start-column="12" selection-end-line="61" selection-end-column="20" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -139,15 +135,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AddNode.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AddNode.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/AddNode.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="637">
-              <caret line="887" column="56" lean-forward="true" selection-start-line="887" selection-start-column="56" selection-end-line="887" selection-end-column="56" />
+            <state relative-caret-position="47">
+              <caret line="814" column="8" lean-forward="false" selection-start-line="814" selection-start-column="8" selection-end-line="817" selection-end-column="29" />
               <folding>
                 <element signature="e#252#600#0" expanded="false" />
-                <element signature="e#2216#2304#0" expanded="false" />
-                <element signature="e#2313#2377#0" expanded="false" />
                 <element signature="e#2819#2957#0" expanded="false" />
                 <element signature="e#3696#4617#0" expanded="false" />
                 <element signature="e#4151#4617#0" expanded="false" />
@@ -196,9 +190,9 @@
                 <element signature="e#33383#33475#0" expanded="false" />
                 <element signature="e#33940#34041#0" expanded="false" />
                 <element signature="e#35472#35524#0" expanded="false" />
-                <element signature="e#37198#37266#0" expanded="false" />
-                <element signature="e#37866#37867#0" expanded="false" />
-                <element signature="e#38425#38426#0" expanded="false" />
+                <element signature="e#37196#37264#0" expanded="false" />
+                <element signature="e#37864#37865#0" expanded="false" />
+                <element signature="e#37864#37865#0" expanded="false" />
                 <element signature="e#38875#38948#0" expanded="false" />
                 <element signature="e#41617#41645#0" expanded="false" />
                 <element signature="e#41830#41878#0" expanded="false" />
@@ -242,8 +236,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>self.ui.AddNodePositionFrom.set</find>
-      <find>chang</find>
       <find>from.setText(str(</find>
       <find>addNodePushButton</find>
       <find>6 - 1</find>
@@ -272,6 +264,8 @@
       <find>BNodevalueUpdater</find>
       <find>print</find>
       <find>added no</find>
+      <find>update</find>
+      <find># 1 - 2</find>
     </findStrings>
     <replaceStrings>
       <replace>SAB</replace>
@@ -327,9 +321,9 @@
         <option value="$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py" />
         <option value="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" />
         <option value="$PROJECT_DIR$/V2_dev/SABRE2SegmModel.py" />
-        <option value="$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py" />
         <option value="$PROJECT_DIR$/V2_dev/OpenGLcode.py" />
         <option value="$PROJECT_DIR$/V2_dev/AddNode.py" />
+        <option value="$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py" />
       </list>
     </option>
   </component>
@@ -339,9 +333,9 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-7" />
-    <option name="width" value="842" />
+    <option name="width" value="666" />
     <option name="height" value="775" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -521,13 +515,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1506299146941</updated>
-    </task>
-    <task id="LOCAL-00004" summary="transfer">
-      <created>1507656622889</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1507656622889</updated>
     </task>
     <task id="LOCAL-00005" summary="color assignment on surfaces works">
       <created>1507692267439</created>
@@ -865,7 +852,14 @@
       <option name="project" value="LOCAL" />
       <updated>1520958471612</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="Bug in remove nodes fixed">
+      <created>1521002077088</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1521002077088</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="TodoView">
@@ -878,13 +872,13 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="0" width="842" height="775" extended-state="0" />
+    <frame x="-8" y="-8" width="1320" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286385" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37639877" sideWeight="0.50416666" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5460318" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="0" y="0" width="338" height="716" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36619717" sideWeight="0.71634614" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3611111" sideWeight="0.71634614" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3271605" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287037" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287037" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -939,7 +933,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add nodes table employment is set for both AISC and from joint i" />
     <MESSAGE value="Matlab file changes" />
     <MESSAGE value="Update on GUI for Add Node Member" />
     <MESSAGE value="AddNode code till SegCode" />
@@ -964,7 +957,8 @@
     <MESSAGE value="Add Node OpenGL Rendering Works, work on segment numbering and add node minimized rendering" />
     <MESSAGE value="add node minimized rendering works" />
     <MESSAGE value="Fix in SegmCode if # 14 - 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix in SegmCode if # 14 - 1" />
+    <MESSAGE value="Bug in remove nodes fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug in remove nodes fixed" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1371,24 +1365,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="11" column="8" lean-forward="false" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/AddNode.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="637">
-          <caret line="887" column="56" lean-forward="true" selection-start-line="887" selection-start-column="56" selection-end-line="887" selection-end-column="56" />
+        <state relative-caret-position="47">
+          <caret line="814" column="8" lean-forward="false" selection-start-line="814" selection-start-column="8" selection-end-line="817" selection-end-column="29" />
           <folding>
             <element signature="e#252#600#0" expanded="false" />
-            <element signature="e#2216#2304#0" expanded="false" />
-            <element signature="e#2313#2377#0" expanded="false" />
             <element signature="e#2819#2957#0" expanded="false" />
             <element signature="e#3696#4617#0" expanded="false" />
             <element signature="e#4151#4617#0" expanded="false" />
@@ -1437,12 +1419,22 @@
             <element signature="e#33383#33475#0" expanded="false" />
             <element signature="e#33940#34041#0" expanded="false" />
             <element signature="e#35472#35524#0" expanded="false" />
-            <element signature="e#37198#37266#0" expanded="false" />
-            <element signature="e#37866#37867#0" expanded="false" />
-            <element signature="e#38425#38426#0" expanded="false" />
+            <element signature="e#37196#37264#0" expanded="false" />
+            <element signature="e#37864#37865#0" expanded="false" />
+            <element signature="e#37864#37865#0" expanded="false" />
             <element signature="e#38875#38948#0" expanded="false" />
             <element signature="e#41617#41645#0" expanded="false" />
             <element signature="e#41830#41878#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2SegmCODE.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="61" column="20" lean-forward="false" selection-start-line="61" selection-start-column="12" selection-end-line="61" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>

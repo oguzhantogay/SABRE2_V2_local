@@ -1690,10 +1690,10 @@ else
             else % ~ coordinate % if condition 1 - 2
                 fprintf('\n# 1 - 2')
                % original element      
-%                fprintf('\nBNodevalue before in # 1 - 2')
-%                BNodevalue
-%                fprintf('BNodeval before in # 1 - 2')
-%                BNodeval
+               fprintf('\nBNodevalue before in # 1 - 2')
+               BNodevalue
+               fprintf('BNodeval before in # 1 - 2')
+               BNodeval
                BNodevalue(i,p,1)=BNodeval(i,j,1);
                BNodevalue(i,p,2)=p;
                BNodevalue(i,p,3)=BNodeval(i,j,3);
@@ -1711,6 +1711,11 @@ else
                BNodevalue(i,p,15)=BNodeval(i,j,15);
                BNodevalue(i,p,16)=BNodeval(i,j,16);
                p=p+1;     
+               fprintf('\nBNodevalue after in # 1 - 2')
+               BNodevalue
+               fprintf('BNodeval after in # 1 - 2')
+               BNodeval
+
                
             end % ~ coordinate end
 

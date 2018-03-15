@@ -471,7 +471,7 @@ class SABRE2_main_subclass(QMainWindow):
 
         # print("Rval", Rval)
         self.members_table_values = Members_values
-        print('self.members_table_values', self.members_table_values)
+        # print('self.members_table_values', self.members_table_values)
         # print("main screen node i", JNodeValue_i)
         # print("main screen node j", JNodeValue_j)
 
@@ -881,6 +881,7 @@ class DataCollection(QMainWindow):
     def Assign_comboBox(self, tableName, options, position, current_index = None):
         r = tableName.rowCount()
         for i in range(r):
+            print('i = ', i)
             combo_box = QtGui.QComboBox()
             for t in options:
                 combo_box.addItem(t)
@@ -1008,7 +1009,7 @@ class TableChanges(QMainWindow):
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def add_new_row(self, tableName, options, position, lineName, flag, combo_values=None):
-
+        # print('add_new_row')
         def add_new_row_application(self,tableName, options, position, lineName, flag, combo_values=None):
             """nested function for application of added node"""
             combo_box = QtGui.QComboBox()
@@ -1058,12 +1059,21 @@ class TableChanges(QMainWindow):
                     tableName.setItem(i, 0, item)
 
                 for t in options:
+
                     combo_box.addItem(t)
 
                 tableName.setCellWidget(row_number, position, combo_box)
-                combo_box.currentIndexChanged.connect(
-                    lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
 
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_members_table(self, tableName, position))
+
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
+
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.OpenGLwidget.resizeGL(
+                    SABRE2_main_subclass.OpenGLwidget.width(),
+                    SABRE2_main_subclass.OpenGLwidget.height()))
         row_position = tableName.rowCount()
 
         if combo_values is not None:

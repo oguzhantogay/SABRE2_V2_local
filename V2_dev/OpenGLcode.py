@@ -1103,7 +1103,7 @@ class glWidget(QGLWidget, QMainWindow):
         SN3, SN7, SN10, SN14 = np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3)), np.zeros((1, 3))
         # print("memlength 1 = ", MemLength1)
         # print("memlength 2 = ", MemLength2)
-        print('val1 = ', val1)
+        # print('val1 = ', val1)
         # print('sn = ', sn)
         for i in range(sn):
             # print('i = ', i)

@@ -233,6 +233,8 @@ class ActionClass(QMainWindow):
                                                                                              self.ui.Point_load_table,
                                                                                              combo_flag=0)
 
+        # print('self.members_table_values', self.members_table_values)
+
         filename = 'test2.npz'
         file = open(filename, 'wb')
 
@@ -313,17 +315,18 @@ class ActionClass(QMainWindow):
         self.Members_table_options = ["Mid Depth", "Flange 2", "Flange 1"]
         self.Members_table_position = 3
 
-        # print("member shape = ", shape_members_table_values)
+        print("member shape = ", )
 
         self.ui.Members_table.blockSignals(True)
-
         for i in range(shape_members_table_values):
 
             for j in range(1, 18):
 
-                if j == 3 and i == 0:
+                if j == 3:
+                    # print('test = ', self.ui.Members_table, self.Members_table_options,
+                    #                                                     self.Members_table_position, self.members_table_values[i][3])
                     SABRE2_main_subclass.DataCollection.Assign_comboBox(self, self.ui.Members_table, self.Members_table_options,
-                                                                        self.Members_table_position, self.members_table_values[0][3])
+                                                                        self.Members_table_position, self.members_table_values[i][3])
                 elif j == 1 or j == 2:
                     item = QTableWidgetItem(str(int(self.members_table_values[i][j])))
                     item.setTextAlignment(QtCore.Qt.AlignCenter)

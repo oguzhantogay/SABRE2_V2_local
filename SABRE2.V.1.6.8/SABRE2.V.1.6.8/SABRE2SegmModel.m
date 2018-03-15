@@ -768,6 +768,8 @@ else % ~isempty(Massemble)
  
    % ********************************************** Plot Additional Node S
    mnum = length(BNodevalue(:,1,1));
+   fprintf('BNOde in segm = ')
+   BNodevalue
    % Drawing Nodal Points
    for j = 1:mnum
       if ~isequal(BNodevalue(j,1,2),0)

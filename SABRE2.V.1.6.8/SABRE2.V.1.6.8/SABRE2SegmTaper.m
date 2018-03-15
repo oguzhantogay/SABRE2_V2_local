@@ -19,6 +19,7 @@ else
    mnum = round(str2double(get(pdb_member_name,'String')));
    seglength = str2double(get(pdb_length_edit,'String'));
    if isempty(BNodevalue) || isequal(BNodevalue(mnum,1,2),0)
+      fprintf('if_1')
       seL = sqrt( (JNodevalue_i(mnum,3)-JNodevalue_j(mnum,3))^2 + ...
          (JNodevalue_i(mnum,4)-JNodevalue_j(mnum,4))^2+(JNodevalue_i(mnum,5)-JNodevalue_j(mnum,5))^2    );
       segLoc = [0, seL];
@@ -31,10 +32,12 @@ else
       tws=[JNodevalue_i(mnum,11),JNodevalue_j(mnum,11)];
       Afills=[JNodevalue_i(mnum,14),JNodevalue_j(mnum,14)];
    else
-         
+         fprintf('else_1')
          ntap=0; 
+         max(BNodevalue(mnum,:,2))
          for i=1:max(BNodevalue(mnum,:,2))
             if str2double(get(pdb_length_edit,'String')) > BNodevalue(mnum,i,16)
+                fprintf('if_2')
                ntap = i;
             else
             end
@@ -42,7 +45,9 @@ else
          end
 
          if isequal(max(BNodevalue(mnum,:,2)),1)
+            fprintf('if_3')
             if isequal(ntap,0)
+               fprintf('if_4')
                seL = sqrt( (JNodevalue_i(mnum,3)-BNodevalue(mnum,ntap+1,3))^2 + ...
                   (JNodevalue_i(mnum,4)-BNodevalue(mnum,ntap+1,4))^2+(JNodevalue_i(mnum,5)-BNodevalue(mnum,ntap+1,5))^2    );
                segLoc = [0, seL];
@@ -57,7 +62,7 @@ else
 
 
             else
-
+               fprintf('else_4')
                seL = sqrt( (BNodevalue(mnum,ntap,3)-JNodevalue_j(mnum,3))^2 + ...
                   (BNodevalue(mnum,ntap,4)-JNodevalue_j(mnum,4))^2+(BNodevalue(mnum,ntap,5)-JNodevalue_j(mnum,5))^2    );
                segLoc = [0, seL];
@@ -72,8 +77,9 @@ else
             end
 
          else
-            
+            fprintf('else_3')
             if isequal(ntap,0)
+               fprintf('if_5')
                seL = sqrt( (JNodevalue_i(mnum,3)-BNodevalue(mnum,ntap+1,3))^2 + ...
                   (JNodevalue_i(mnum,4)-BNodevalue(mnum,ntap+1,4))^2+(JNodevalue_i(mnum,5)-BNodevalue(mnum,ntap+1,5))^2    );
                segLoc = [0, seL];
@@ -88,6 +94,7 @@ else
 
 
             elseif isequal(ntap,max(BNodevalue(mnum,:,2)))
+               fprintf('if_5_1')
 
                seL = sqrt( (BNodevalue(mnum,ntap,3)-JNodevalue_j(mnum,3))^2 + ...
                   (BNodevalue(mnum,ntap,4)-JNodevalue_j(mnum,4))^2+(BNodevalue(mnum,ntap,5)-JNodevalue_j(mnum,5))^2    );
@@ -102,7 +109,7 @@ else
                Afills=[BNodevalue(mnum,ntap,14),JNodevalue_j(mnum,14)];
                
             else
-               
+               fprintf('else_5')
                seL = sqrt( (BNodevalue(mnum,ntap,3)-BNodevalue(mnum,ntap+1,3))^2 + ...
                   (BNodevalue(mnum,ntap,4)-BNodevalue(mnum,ntap+1,4))^2+(BNodevalue(mnum,ntap,5)-BNodevalue(mnum,ntap+1,5))^2    );
                segLoc = [0, seL];

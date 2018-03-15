@@ -881,7 +881,7 @@ class DataCollection(QMainWindow):
     def Assign_comboBox(self, tableName, options, position, current_index = None):
         r = tableName.rowCount()
         for i in range(r):
-            print('i = ', i)
+            # print('i = ', i)
             combo_box = QtGui.QComboBox()
             for t in options:
                 combo_box.addItem(t)

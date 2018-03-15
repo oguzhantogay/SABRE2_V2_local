@@ -290,8 +290,8 @@ class ActionClass(QMainWindow):
         shape_warping_release_values = int(self.Warping_release_values.shape[0])
         shape_uniform_data_values = int(self.uniform_data_values.shape[0])
         # shape_point_data_values = int(self.point_data_values.shape[0])
-        print('shape member table = ', shape_members_table_values)
-        print('shape member table = ', self.members_table_values)
+        # print('shape member table = ', shape_members_table_values)
+        # print('shape member table = ', self.members_table_values)
         # filling for joints table
         for i in range(shape_joint_table):
 
@@ -315,7 +315,7 @@ class ActionClass(QMainWindow):
         self.Members_table_options = ["Mid Depth", "Flange 2", "Flange 1"]
         self.Members_table_position = 3
 
-        print("member shape = ", )
+        # print("member shape = ", )
 
         self.ui.Members_table.blockSignals(True)
         for i in range(shape_members_table_values):

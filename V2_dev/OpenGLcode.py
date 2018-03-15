@@ -123,16 +123,16 @@ class glWidget(QGLWidget, QMainWindow):
                         # print('i = ', i, 'j = ', j)
                         # print('for 2 add node')
                         dx = BNodevalue[j][i][2]
-                        dy = -BNodevalue[j][i][4]
-                        dz = BNodevalue[j][i][3]
+                        dy = BNodevalue[j][i][3]
+                        dz = BNodevalue[j][i][4]
                         # print(BNodevalue[j][i][14])
                         if np.isclose(BNodevalue[j][i][14], 1):
                             flag = 1
                         else:
                             flag = 2
                         # array_size +=1
+                        # print('dx =', dx, 'dy =', dy, 'dz =', dz, flag)
 
-            # print('dx =', dx, 'dy =', dy, 'dz =', dz, flag)
 
                         if flag == 2:
                             glVertex3d(dx + asterisk_size / 2, dy + 0, dz + 0)

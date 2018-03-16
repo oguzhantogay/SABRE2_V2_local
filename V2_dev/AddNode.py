@@ -60,16 +60,20 @@ class AddNodeClass(QMainWindow):
 
     def addedNodeInformationArrayUpdate(self, BNodevalue):
         current_added_node_number = 0
-        # print('Bnode = ', BNodevalue)s
+        # print('Bnode = ', BNodevalue)
+        total_member_number = BNodevalue.shape[0]
+        added_node_information = np.zeros((total_member_number, 2))
+
+        for i in range(total_member_number):
+            added_node_information[i][0] = i + 1
+            added_node_information[i][1] = np.amax(BNodevalue[i, :, 1])
         current_member = int(self.ui.AddNodeMember.currentIndex())
         for j in range(BNodevalue.shape[1]):
             if BNodevalue[current_member][j][1] != 0:
                 current_added_node_number += 1
         # print('0 = ', BNodevalue.shape[0], '1 = ',BNodevalue.shape[1])
         # print('current added number = ', current_added_node_number)
-
-
-        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        print('added node information = ', added_node_information)
 
         added_node_information[current_member][1] = current_added_node_number
         # print('added node info1 = ', added_node_information.shape[0], self.ui.Members_table.rowCount())
@@ -321,7 +325,9 @@ class AddNodeClass(QMainWindow):
                 for i in range(int(max(BNodevalue[mnum, :, 1]))):
                     if seglength > BNodevalue[mnum][i][15]:
                         print('if_2')
-                        ntap = int(i)
+                        ntap = int(i) + 1
+
+                print('ntap = ', ntap)
 
                 if int(max(BNodevalue[mnum, :, 1])) == 1:
                     print('if_3')
@@ -368,6 +374,7 @@ class AddNodeClass(QMainWindow):
                         Afills = (BNodevalue[mnum][ntap][13], JNodevalue_j[mnum][13])
                 else:
                     print('else_3')
+                    print(ntap,'\n' ,BNodevalue[mnum, :, 1],'\n', BNodevalue)
                     if ntap == 0:
                         print('if_5')
                         seL = np.sqrt((JNodevalue_i[mnum][2] - BNodevalue[mnum][ntap + 1][2]) ** 2 + (
@@ -389,25 +396,25 @@ class AddNodeClass(QMainWindow):
                         dws = (JNodevalue_i[mnum][9], BNodevalue[mnum] [ntap][9])
                         tws = (JNodevalue_i[mnum][10], BNodevalue[mnum][ntap][10])
                         Afills = (JNodevalue_i[mnum][13], BNodevalue[mnum][ntap][13])
-                    elif ntap == int(max(BNodevalue[mnum, :, 1])):
+                    elif ntap  == int(max(BNodevalue[mnum, :, 1])):
                         print('if_5_1')
-                        seL = np.sqrt((BNodevalue[mnum][ntap][2] - JNodevalue_j[mnum][2]) ** 2 + (
-                                BNodevalue[mnum][ntap][3] - JNodevalue_j[mnum][3]) ** 2 + (
-                                              BNodevalue[mnum][ntap][4] - JNodevalue_j[mnum][4]) ** 2)
+                        seL = np.sqrt((BNodevalue[mnum][ntap - 1][2] - JNodevalue_j[mnum][2]) ** 2 + (
+                                BNodevalue[mnum][ntap - 1][3] - JNodevalue_j[mnum][3]) ** 2 + (
+                                              BNodevalue[mnum][ntap - 1][4] - JNodevalue_j[mnum][4]) ** 2)
 
                         segLoc = np.zeros((1, 2))
                         segLocstep = np.zeros((1, 3))
                         segLoc[0][1] = seL
-                        segLocstep[0][1] = seglength - BNodevalue[mnum][ntap][15]
+                        segLocstep[0][1] = seglength - BNodevalue[mnum][ntap - 1][15]
                         segLocstep[0][2] = seL
 
-                        bfbs = (BNodevalue[mnum][ntap][5], JNodevalue_j[mnum][5])
-                        tfbs = (BNodevalue[mnum][ntap][6], JNodevalue_j[mnum][6])
-                        bfts = (BNodevalue[mnum][ntap][7], JNodevalue_j[mnum][7])
-                        tfts = (BNodevalue[mnum][ntap][8], JNodevalue_j[mnum][8])
-                        dws = (BNodevalue[mnum][ntap][9], JNodevalue_j[mnum][9])
-                        tws = (BNodevalue[mnum][ntap][10], JNodevalue_j[mnum][10])
-                        Afills = (BNodevalue[mnum][ntap][13], JNodevalue_j[mnum][13])
+                        bfbs = (BNodevalue[mnum][ntap - 1][5], JNodevalue_j[mnum][5])
+                        tfbs = (BNodevalue[mnum][ntap - 1][6], JNodevalue_j[mnum][6])
+                        bfts = (BNodevalue[mnum][ntap - 1][7], JNodevalue_j[mnum][7])
+                        tfts = (BNodevalue[mnum][ntap - 1][8], JNodevalue_j[mnum][8])
+                        dws = (BNodevalue[mnum][ntap - 1][9], JNodevalue_j[mnum][9])
+                        tws = (BNodevalue[mnum][ntap - 1][10], JNodevalue_j[mnum][10])
+                        Afills = (BNodevalue[mnum][ntap - 1][13], JNodevalue_j[mnum][13])
                     else:
                         print('else_5')
                         seL = np.sqrt((BNodevalue[mnum][ntap][2] - BNodevalue[mnum][ntap][2]) ** 2 + (

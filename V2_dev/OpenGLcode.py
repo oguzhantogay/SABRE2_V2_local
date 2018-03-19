@@ -60,6 +60,10 @@ class glWidget(QGLWidget, QMainWindow):
         self.selected_checked = False
         glWidget.render_checked = False
         # print("values = ", glWidget.member_count, glWidget.member_values)
+        # Generate frame buffer
+        # glWidget.frameBuffer = glGenFramebuffers(1)
+        # glBindFramebuffer(GL_FRAMEBUFFER, glWidget.frameBuffer)
+
 
     def SurfaceContour(self, vertices, edges):
         glDisable(GL_CULL_FACE)
@@ -343,7 +347,10 @@ class glWidget(QGLWidget, QMainWindow):
                     joint_text = "J" + str(int(self.joint_nodes[i][0]))
                     self.renderText(self.joint_nodes[i][1] - glWidget.joint_size,
                                     self.joint_nodes[i][2] + glWidget.joint_size, 0, joint_text, font=self.font)
-
+        BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
+        if BNodevalue.shape[2] == 16:
+            glWidget.BNodevalue = BNodevalue
+        print('BNodevalue shape in PaintGL = ', BNodevalue.shape[0], BNodevalue.shape[1], BNodevalue.shape[2])
         if glWidget.member_count is None:
             pass
         else:
@@ -356,19 +363,23 @@ class glWidget(QGLWidget, QMainWindow):
                             glColor3f(0, 0, 0)
                         else:
                             glColor3f(1, 1, 1)
-                        text_x = self.joint_nodes[self.joint_i][1] + (self.joint_nodes[self.joint_j][1] -
-                                                                      self.joint_nodes[self.joint_i][1]) / 2
-                        text_y = self.joint_nodes[self.joint_i][2] + (self.joint_nodes[self.joint_j][2] -
-                                                                      self.joint_nodes[self.joint_i][2]) / 2
-                        joint_text = "M" + str(int(glWidget.member_values[i][0]))
-                        self.renderText(text_x, text_y, 0, joint_text, font=self.font)
+
+                        if BNodevalue.shape[2] == 1:
+                            text_x = self.joint_nodes[self.joint_i][1] + (self.joint_nodes[self.joint_j][1] -
+                                                                          self.joint_nodes[self.joint_i][1]) / 2
+                            text_y = self.joint_nodes[self.joint_i][2] + (self.joint_nodes[self.joint_j][2] -
+                                                                          self.joint_nodes[self.joint_i][2]) / 2
+                            joint_text = "M" + str(int(glWidget.member_values[i][0]))
+                            self.renderText(text_x, text_y, 0, joint_text, font=self.font)
+
+                        elif BNodevalue.shape[2] == 16:
+                            AddNode.PlotSegments.drawSegmentNames(self,glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Massemble, glWidget)
+
 
         glWidget.render_checked = self.ui.actionRender_All_Members.isChecked()
         # glWidget.BNodevalue = self.BNodeValueUpdater()
         # print('paint GL BNodevalue = ', glWidget.BNodevalue)
-        BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
-        if BNodevalue.shape[2] == 16:
-            glWidget.BNodevalue = BNodevalue
+
         if glWidget.member_count is not None:
             glWidget.member_count = int(glWidget.member_count)
             glWidget.drawAsterisk(self, glWidget.member_count, glWidget.BNodevalue)

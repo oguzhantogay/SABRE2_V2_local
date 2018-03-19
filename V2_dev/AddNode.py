@@ -1,10 +1,11 @@
 from PyQt4.QtGui import *
+from OpenGL.GL import *
 from PyQt4 import QtGui
 import DropDownActions
 import sqlite3 as sq
 import numpy as np
 import h5_file
-
+from PyQt4.QtOpenGL import *
 
 class AddNodeClass(QMainWindow):
     """docstring for Actions"""
@@ -909,3 +910,61 @@ class SegmRemove(QMainWindow):
         # print('remove node BNodevalue = ', BNodevalue)
         h5_file.h5_Class.update_array(self,BNodevalue,'BNodevalue')
 
+
+class PlotSegments(QGLWidget, QMainWindow):
+    """ This class removes previously added nodes"""
+
+    def __init__(self, ui_layout, parent=None):
+        super(PlotSegments, self).__init__(parent)
+        self.ui = ui_layout
+
+
+    def drawSegmentNames(self, JNodevalue_i, JNodevalue_j, BNodevalue, Massemble, glWidget):
+        total_member_number = BNodevalue.shape[0]
+        print('draw segments = ' , BNodevalue)
+        Ta = max(np.amax(JNodevalue_i[:,5]),np.amax(JNodevalue_i[:,7]))
+
+        BJvalue = np.zeros((2,3))
+        for i in range(total_member_number):
+            if np.isclose(BNodevalue[i,0,1],0):
+                current_member = int(BNodevalue[i,0,0])-1
+                BJvalue[0, 0] = JNodevalue_i[current_member, 2]
+                BJvalue[1, 0] = JNodevalue_j[current_member, 2]
+                BJvalue[0, 1] = JNodevalue_i[current_member, 3]
+                BJvalue[1, 1] = JNodevalue_j[current_member, 3]
+                BJvalue[0, 2] = JNodevalue_i[current_member, 4]
+                BJvalue[1, 2] = JNodevalue_j[current_member, 4]
+                text = 'M' + str(int(i+1)) + 'S1'
+                font = QFont()
+                font.setPointSize(8)
+                # print(np.sum(BJvalue[:,0])/2, np.sum(BJvalue[:,1])/2+Ta)
+                # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+                glWidget.renderText(self,np.sum(BJvalue[:,0])/2, np.sum(BJvalue[:,1])/2, 0,text, font)
+
+            elif np.isclose(np.amax(BNodevalue[i,:,1]),1):
+                current_member = int(BNodevalue[i, 0, 0]) - 1
+                nbnode = int(np.amax(BNodevalue[i, :, 1])) - 1
+
+                BJvalue[0, 0] = JNodevalue_i[current_member, 2]
+                BJvalue[1, 0] = BNodevalue[i, nbnode, 2]
+                BJvalue[0, 1] = JNodevalue_i[current_member, 3]
+                BJvalue[1, 1] = BNodevalue[i, nbnode, 3]
+                BJvalue[0, 2] = JNodevalue_i[current_member, 4]
+                BJvalue[1, 2] = BNodevalue[i, nbnode, 4]
+
+                text = 'M' + str(int(i+1)) + 'S' + str(int(nbnode+1))
+                font = QFont()
+                font.setPointSize(8)
+
+                glWidget.renderText(self, np.sum(BJvalue[:, 0]) / 2, np.sum(BJvalue[:, 1]) / 2, 0, text, font)
+
+                BJvalue[0, 0] = BNodevalue[i, nbnode, 2]
+                BJvalue[1, 0] = JNodevalue_i[current_member, 2]
+                BJvalue[0, 1] = BNodevalue[i, nbnode, 3]
+                BJvalue[1, 1] = JNodevalue_i[current_member, 3]
+                BJvalue[0, 2] = BNodevalue[i, nbnode, 4]
+                BJvalue[1, 2] = JNodevalue_i[current_member, 4]
+
+                text = 'M' + str(int(i + 1)) + 'S' + str(int(nbnode + 2))
+                glWidget.renderText(self, np.sum(BJvalue[:, 0]) / 2, np.sum(BJvalue[:, 1]) / 2, 0, text, font)

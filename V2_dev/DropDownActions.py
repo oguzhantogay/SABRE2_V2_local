@@ -261,7 +261,7 @@ class ActionClass(QMainWindow):
 
         self.OpenGLwidget = OpenGLcode.glWidget(self.ui)
 
-        filename = 'test2.npz'
+        filename = 'test1.npz'
 
         aa = np.load(filename)
 

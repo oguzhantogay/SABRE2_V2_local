@@ -111,6 +111,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionOpen.triggered.connect(lambda: self.ActionMenus.OpenAct())
         ui_layout.actionSave.triggered.connect(lambda: self.ActionMenus.SaveAct())
         ui_layout.actionJoint_Member_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
+        ui_layout.actionMember_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         # ui_layout.actionSave_As.triggered.connect(lambda: ActionClass('uidesign').Save_AsAct())
         # ui_layout.actionPrint.triggered.connect(lambda: ActionClass('uidesign').PrintAct())
         # ui_layout.actionPrint_Preview.triggered.connect(lambda: ActionClass('uidesign').Print_PreviewAct())
@@ -118,6 +119,9 @@ class SABRE2_main_subclass(QMainWindow):
 
         # Help dropdown actions
         ui_layout.actionAbout.triggered.connect(lambda: DropDownActions.ActionClass('uidesign').AboutAct())
+        ui_layout.actionJoint_Member_Labels.triggered.connect(
+            lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
+        ui_layout.actionMember_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         ui_layout.actionFlange_Labels.triggered.connect(lambda : SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
         # Joint Table Arrangements

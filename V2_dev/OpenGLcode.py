@@ -356,7 +356,7 @@ class glWidget(QGLWidget, QMainWindow):
         else:
             for i in range(glWidget.member_count):
                 self.memberOnly(i)
-                if self.ui.actionJoint_Member_Labels.isChecked():
+                if self.ui.actionMember_Labels.isChecked():
                     if self.ui.Members_table.item(i, 1) is not None and self.ui.Members_table.item(i,
                                                                                                    2) is not None:
                         if glWidget.white_checked:

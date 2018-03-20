@@ -960,11 +960,51 @@ class PlotSegments(QGLWidget, QMainWindow):
                 glWidget.renderText(self, np.sum(BJvalue[:, 0]) / 2, np.sum(BJvalue[:, 1]) / 2, 0, text, font)
 
                 BJvalue[0, 0] = BNodevalue[i, nbnode, 2]
-                BJvalue[1, 0] = JNodevalue_i[current_member, 2]
+                BJvalue[1, 0] = JNodevalue_j[current_member, 2]
                 BJvalue[0, 1] = BNodevalue[i, nbnode, 3]
-                BJvalue[1, 1] = JNodevalue_i[current_member, 3]
+                BJvalue[1, 1] = JNodevalue_j[current_member, 3]
                 BJvalue[0, 2] = BNodevalue[i, nbnode, 4]
-                BJvalue[1, 2] = JNodevalue_i[current_member, 4]
+                BJvalue[1, 2] = JNodevalue_j[current_member, 4]
 
                 text = 'M' + str(int(i + 1)) + 'S' + str(int(nbnode + 2))
                 glWidget.renderText(self, np.sum(BJvalue[:, 0]) / 2, np.sum(BJvalue[:, 1]) / 2, 0, text, font)
+
+            else:
+                current_member = int(BNodevalue[i, 0, 0]) - 1
+                nbnode = int(np.amax(BNodevalue[i, :, 1])) - 1
+                BJvalue[0, 0] = JNodevalue_i[current_member, 2]
+                BJvalue[1, 0] = BNodevalue[i, 0, 2]
+                BJvalue[0, 1] = JNodevalue_i[current_member, 3]
+                BJvalue[1, 1] = BNodevalue[i, 0, 3]
+                BJvalue[0, 2] = JNodevalue_i[current_member, 4]
+                BJvalue[1, 2] = BNodevalue[i, 0, 4]
+
+                text = 'M' + str(int(i + 1)) + 'S' + str(int(1))
+                font = QFont()
+                font.setPointSize(8)
+
+                glWidget.renderText(self, np.sum(BJvalue[:, 0]) / 2, np.sum(BJvalue[:, 1]) / 2, 0, text, font)
+
+                for j in range(nbnode - 1):
+                    BJvalue[0, 0] = BNodevalue[i, j, 2]
+                    BJvalue[1, 0] = BNodevalue[i, j + 1, 2]
+                    BJvalue[0, 1] = BNodevalue[i, j, 3]
+                    BJvalue[1, 1] = BNodevalue[i, j + 1, 3]
+                    BJvalue[0, 2] = BNodevalue[i, j , 4]
+                    BJvalue[1, 2] = BNodevalue[i, j + 1, 4]
+                    text = 'M' + str(int(i + 1)) + 'S' + str(int(j + 1))
+                    font = QFont()
+                    font.setPointSize(8)
+
+                    glWidget.renderText(self, np.sum(BJvalue[:, 0]) / 2, np.sum(BJvalue[:, 1]) / 2, 0, text, font)
+
+                BJvalue[0, 0] = BNodevalue[i, nbnode, 2]
+                BJvalue[1, 0] = JNodevalue_j[current_member, 2]
+                BJvalue[0, 1] = BNodevalue[i, nbnode, 3]
+                BJvalue[1, 1] = JNodevalue_j[current_member, 3]
+                BJvalue[0, 2] = BNodevalue[i, nbnode, 4]
+                BJvalue[1, 2] = JNodevalue_j[current_member, 4]
+
+                text = 'M' + str(int(i + 1)) + 'S' + str(int(nbnode + 2))
+                glWidget.renderText(self, np.sum(BJvalue[:, 0]) / 2, np.sum(BJvalue[:, 1]) / 2, 0, text, font)
+

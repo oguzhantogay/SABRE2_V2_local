@@ -55,8 +55,8 @@ else
                SNodevalue(i,j,11)=HomoType;
             end  
          end
-         fprintf('SNodevalue in AssiAll =')
-         SNodevalue
+%          fprintf('SNodevalue in AssiAll =')
+%          SNodevalue
       end
      
    else

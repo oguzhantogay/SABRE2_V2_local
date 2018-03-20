@@ -74,7 +74,7 @@ class AddNodeClass(QMainWindow):
                 current_added_node_number += 1
         # print('0 = ', BNodevalue.shape[0], '1 = ',BNodevalue.shape[1])
         # print('current added number = ', current_added_node_number)
-        print('added node information = ', added_node_information)
+        # print('added node information = ', added_node_information)
 
         added_node_information[current_member][1] = current_added_node_number
         # print('added node info1 = ', added_node_information.shape[0], self.ui.Members_table.rowCount())
@@ -117,14 +117,6 @@ class AddNodeClass(QMainWindow):
                 # print('list items = ', list_items)
                 self.ui.AdditionalNodeNumberComboBox.clear()
                 self.ui.AdditionalNodeNumberComboBox.addItems(list_items)
-
-    # def radioButtonState1(self):
-    #     AddNodeClass.btnChecked = self.ui.StepRB1.isChecked()
-    #     print("step =", AddNodeClass.btnChecked)
-
-    # def radioButtonState2(self):
-    #     AddNodeClass.btnChecked = self.ui.StepRB1.isChecked()
-    #     print("no step =", AddNodeClass.btnChecked)
 
     def memberTableValues(self):
 
@@ -356,23 +348,23 @@ class AddNodeClass(QMainWindow):
                         Afills = (JNodevalue_i[mnum][13], BNodevalue[mnum][ntap][13])
                     else:
                         print('else_4')
-                        seL = np.sqrt((BNodevalue[mnum][ntap][2] - JNodevalue_j[mnum][2]) ** 2 + (
-                                BNodevalue[mnum][ntap][3] - JNodevalue_j[mnum][3]) ** 2 + (
-                                              BNodevalue[mnum][ntap][4] - JNodevalue_j[mnum][4]) ** 2)
+                        seL = np.sqrt((BNodevalue[mnum][ntap - 1][2] - JNodevalue_j[mnum][2]) ** 2 + (
+                                BNodevalue[mnum][ntap - 1][3] - JNodevalue_j[mnum][3]) ** 2 + (
+                                              BNodevalue[mnum][ntap- 1][4] - JNodevalue_j[mnum][4]) ** 2)
 
                         segLoc = np.zeros((1, 2))
                         segLocstep = np.zeros((1, 3))
                         segLoc[0][1] = seL
-                        segLocstep[0][1] = seglength - BNodevalue[mnum][ntap][15]
+                        segLocstep[0][1] = seglength - BNodevalue[mnum][ntap - 1][15]
                         segLocstep[0][2] = seL
 
-                        bfbs = (BNodevalue[mnum][ntap][5], JNodevalue_j[mnum][5])
-                        tfbs = (BNodevalue[mnum][ntap][6], JNodevalue_j[mnum][6])
-                        bfts = (BNodevalue[mnum][ntap][7], JNodevalue_j[mnum][7])
-                        tfts = (BNodevalue[mnum][ntap][8], JNodevalue_j[mnum][8])
-                        dws = (BNodevalue[mnum][ntap][9], JNodevalue_j[mnum][9])
-                        tws = (BNodevalue[mnum][ntap][10], JNodevalue_j[mnum][10])
-                        Afills = (BNodevalue[mnum][ntap][13], JNodevalue_j[mnum][13])
+                        bfbs =   (BNodevalue[mnum][ntap - 1][5], JNodevalue_j[mnum][5])
+                        tfbs =   (BNodevalue[mnum][ntap - 1][6], JNodevalue_j[mnum][6])
+                        bfts =   (BNodevalue[mnum][ntap - 1][7], JNodevalue_j[mnum][7])
+                        tfts =   (BNodevalue[mnum][ntap - 1][8], JNodevalue_j[mnum][8])
+                        dws =    (BNodevalue[mnum][ntap - 1][9], JNodevalue_j[mnum][9])
+                        tws =    (BNodevalue[mnum][ntap - 1][10], JNodevalue_j[mnum][10])
+                        Afills = (BNodevalue[mnum][ntap - 1][13], JNodevalue_j[mnum][13])
                 else:
                     print('else_3')
                     print(ntap,'\n' ,BNodevalue[mnum, :, 1],'\n', BNodevalue)
@@ -790,6 +782,8 @@ class AddNodeClass(QMainWindow):
                 AddNodeClass.addedNodeInformationArrayUpdate(self, BNodevalue)
                 # print("BNodevalue apply button = ", BNodevalue)
                 h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
+                added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+                print('added node array =', added_node_information)
                 # OpenGLcode.glWidget.renderAllProp(self, total_member_number, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, Massemble)
                 # test_array = h5_file.h5_Class.read_array(self, 'BNodevalue')
                 # # print('test array = ', test_array)
@@ -911,7 +905,7 @@ class SegmRemove(QMainWindow):
         h5_file.h5_Class.update_array(self,BNodevalue,'BNodevalue')
 
 
-class PlotSegments(QGLWidget, QMainWindow):
+class PlotSegments(QMainWindow):
     """ This class removes previously added nodes"""
 
     def __init__(self, ui_layout, parent=None):
@@ -921,7 +915,7 @@ class PlotSegments(QGLWidget, QMainWindow):
 
     def drawSegmentNames(self, JNodevalue_i, JNodevalue_j, BNodevalue, Massemble, glWidget):
         total_member_number = BNodevalue.shape[0]
-        print('draw segments = ' , BNodevalue)
+        # print('draw segments = ' , BNodevalue)
         Ta = max(np.amax(JNodevalue_i[:,5]),np.amax(JNodevalue_i[:,7]))
 
         BJvalue = np.zeros((2,3))

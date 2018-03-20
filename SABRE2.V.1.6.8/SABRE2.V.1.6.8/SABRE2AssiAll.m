@@ -55,8 +55,7 @@ else
                SNodevalue(i,j,11)=HomoType;
             end  
          end
-%          fprintf('SNodevalue in AssiAll =')
-%          SNodevalue
+
       end
      
    else
@@ -95,7 +94,8 @@ else
    end
 
 end
-
+         fprintf('SNodevalue in AssiAll =')
+         SNodevalue
 % if isequal(dunit,2)
 %    % Empty Edits
 %    set([pam_segment_edit,pamse_assign_edit],'string','');

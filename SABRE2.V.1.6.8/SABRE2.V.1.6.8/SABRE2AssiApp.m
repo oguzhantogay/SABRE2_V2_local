@@ -153,28 +153,28 @@ else
       
    end
 end
+fprintf('SNodevalue in ASSIAPP')
+SNodevalue
 % if isequal(dunit,2)
-%    % Empty Edits
-%    set([pam_segment_edit,pamse_assign_edit],'string','');
+%    % Empty Edits set([pam_segment_edit,pamse_assign_edit],'string','');
 %    set(pamen_assign_edit,'string','4');
-%    set(pame_assign_edit,'string','20000');      
+%    set(pame_assign_edit,'string','20000');
 %    set(pamg_assign_edit,'string','7720');
 %    set(pamfy_assign_edit,'string','34.5');
 %    set(pamrho_assign_edit,'string','0.0000912');
 %    set(pamfyfi_assign_edit,'string','34.5');
 %    set(pamfyw_assign_edit,'string','34.5');
-%    set(pamfyfo_assign_edit,'string','34.5');  
+%    set(pamfyfo_assign_edit,'string','34.5');
 % else
-%    % Empty Edits
-%    set([pam_segment_edit,pamse_assign_edit],'string','');
+%    % Empty Edits set([pam_segment_edit,pamse_assign_edit],'string','');
 %    set(pamen_assign_edit,'string','4');
-%    set(pame_assign_edit,'string','29000');      
+%    set(pame_assign_edit,'string','29000');
 %    set(pamg_assign_edit,'string','11200');
 %    set(pamfy_assign_edit,'string','50');
 %    set(pamrho_assign_edit,'string','0.00034028');
 %    set(pamfyfi_assign_edit,'string','50');
 %    set(pamfyw_assign_edit,'string','50');
-%    set(pamfyfo_assign_edit,'string','50');     
+%    set(pamfyfo_assign_edit,'string','50');
 % end
 
 if ~isempty(SNodevalue)

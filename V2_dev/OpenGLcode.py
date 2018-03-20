@@ -350,7 +350,7 @@ class glWidget(QGLWidget, QMainWindow):
         BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
         if BNodevalue.shape[2] == 16:
             glWidget.BNodevalue = BNodevalue
-        print('BNodevalue shape in PaintGL = ', BNodevalue.shape[0], BNodevalue.shape[1], BNodevalue.shape[2])
+        # print('BNodevalue shape in PaintGL = ', BNodevalue.shape[0], BNodevalue.shape[1], BNodevalue.shape[2])
         if glWidget.member_count is None:
             pass
         else:

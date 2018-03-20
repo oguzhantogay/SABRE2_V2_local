@@ -1383,6 +1383,13 @@ class MemberPropertiesTable(QMainWindow):
         memberPropertiesTable.blockSignals(True)
         row_member = memberPropertiesTable.rowCount()
         row_def = memberDefinitionTable.rowCount()
+        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
+        if BNodevalue.shape[0] <= added_node_information.shape[0]:
+            pass
+        else:
+            total_number_row = np.sum(added_node_information[:,1])
+            row_def = int(total_number_row) + int(row_member)
 
         if row_def == row_member:
             pass

@@ -926,7 +926,7 @@ class PlotSegments(QGLWidget, QMainWindow):
 
         BJvalue = np.zeros((2,3))
         for i in range(total_member_number):
-            if np.isclose(BNodevalue[i,0,1],0):
+            if np.isclose(BNodevalue[i,0,1],0): #No Bracing
                 current_member = int(BNodevalue[i,0,0])-1
                 BJvalue[0, 0] = JNodevalue_i[current_member, 2]
                 BJvalue[1, 0] = JNodevalue_j[current_member, 2]
@@ -942,7 +942,7 @@ class PlotSegments(QGLWidget, QMainWindow):
 
                 glWidget.renderText(self,np.sum(BJvalue[:,0])/2, np.sum(BJvalue[:,1])/2, 0,text, font)
 
-            elif np.isclose(np.amax(BNodevalue[i,:,1]),1):
+            elif np.isclose(np.amax(BNodevalue[i,:,1]),1): # One Bracing
                 current_member = int(BNodevalue[i, 0, 0]) - 1
                 nbnode = int(np.amax(BNodevalue[i, :, 1])) - 1
 
@@ -985,14 +985,15 @@ class PlotSegments(QGLWidget, QMainWindow):
 
                 glWidget.renderText(self, np.sum(BJvalue[:, 0]) / 2, np.sum(BJvalue[:, 1]) / 2, 0, text, font)
 
-                for j in range(nbnode - 1):
+                for j in range(nbnode):
                     BJvalue[0, 0] = BNodevalue[i, j, 2]
                     BJvalue[1, 0] = BNodevalue[i, j + 1, 2]
                     BJvalue[0, 1] = BNodevalue[i, j, 3]
                     BJvalue[1, 1] = BNodevalue[i, j + 1, 3]
                     BJvalue[0, 2] = BNodevalue[i, j , 4]
                     BJvalue[1, 2] = BNodevalue[i, j + 1, 4]
-                    text = 'M' + str(int(i + 1)) + 'S' + str(int(j + 1))
+
+                    text = 'M' + str(int(i + 1)) + 'S' + str(int(j + 2))
                     font = QFont()
                     font.setPointSize(8)
 

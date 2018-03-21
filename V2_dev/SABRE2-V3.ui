@@ -461,7 +461,7 @@
        <enum>QTabWidget::Triangular</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <property name="iconSize">
        <size>
@@ -544,7 +544,7 @@
             <string>1</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
            <property name="flags">
             <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -555,7 +555,7 @@
             <string>0</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
            <property name="flags">
             <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -566,7 +566,7 @@
             <string>2</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
            <property name="flags">
             <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -577,7 +577,7 @@
             <string>0</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
            <property name="flags">
             <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -964,7 +964,7 @@
                 <string>1</string>
                </property>
                <property name="textAlignment">
-                <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                <set>AlignCenter</set>
                </property>
                <property name="flags">
                 <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -1612,10 +1612,10 @@ rgb(170, 255, 255)}</string>
           </column>
           <item row="0" column="0">
            <property name="text">
-            <string>1</string>
+            <string>M1S1</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
            <property name="flags">
             <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -1626,7 +1626,7 @@ rgb(170, 255, 255)}</string>
             <string>4</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
           </item>
           <item row="0" column="2">
@@ -1634,7 +1634,7 @@ rgb(170, 255, 255)}</string>
             <string>29000</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
           </item>
           <item row="0" column="3">
@@ -1642,7 +1642,7 @@ rgb(170, 255, 255)}</string>
             <string>11200</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
           </item>
           <item row="0" column="4">
@@ -1650,7 +1650,7 @@ rgb(170, 255, 255)}</string>
             <string>0.00034028</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
           </item>
           <item row="0" column="5">
@@ -1658,7 +1658,7 @@ rgb(170, 255, 255)}</string>
             <string>50</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
           </item>
           <item row="0" column="6">
@@ -1666,7 +1666,7 @@ rgb(170, 255, 255)}</string>
             <string>50</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
           </item>
           <item row="0" column="7">
@@ -1674,7 +1674,7 @@ rgb(170, 255, 255)}</string>
             <string>50</string>
            </property>
            <property name="textAlignment">
-            <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+            <set>AlignCenter</set>
            </property>
           </item>
          </widget>
@@ -1860,7 +1860,7 @@ rgb(170, 255, 255)}</string>
                 <string>1</string>
                </property>
                <property name="textAlignment">
-                <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                <set>AlignCenter</set>
                </property>
                <property name="flags">
                 <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -2052,7 +2052,7 @@ rgb(170, 255, 255)}</string>
                 <string>1</string>
                </property>
                <property name="textAlignment">
-                <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                <set>AlignCenter</set>
                </property>
                <property name="flags">
                 <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -2334,7 +2334,7 @@ Panel  for Member:</string>
                 <string>1</string>
                </property>
                <property name="textAlignment">
-                <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                <set>AlignCenter</set>
                </property>
                <property name="flags">
                 <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -2559,7 +2559,7 @@ Panel  for Member:</string>
                   <string>1</string>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                  <set>AlignCenter</set>
                  </property>
                  <property name="flags">
                   <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -2633,7 +2633,7 @@ Panel  for Member:</string>
                   <string>1</string>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                  <set>AlignCenter</set>
                  </property>
                  <property name="flags">
                   <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -2700,7 +2700,7 @@ Panel  for Member:</string>
                   <string>1</string>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                  <set>AlignCenter</set>
                  </property>
                  <property name="flags">
                   <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -2711,7 +2711,7 @@ Panel  for Member:</string>
                   <string>Continuous</string>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignLeft|AlignVCenter</set>
+                  <set>AlignLeading|AlignVCenter</set>
                  </property>
                  <property name="checkState">
                   <enum>Checked</enum>
@@ -2770,7 +2770,7 @@ Panel  for Member:</string>
                   <string>1</string>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                  <set>AlignCenter</set>
                  </property>
                  <property name="flags">
                   <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -2895,7 +2895,7 @@ Panel  for Member:</string>
                   </font>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignLeft|AlignVCenter</set>
+                  <set>AlignLeading|AlignVCenter</set>
                  </property>
                 </column>
                 <column>
@@ -2909,7 +2909,7 @@ Panel  for Member:</string>
                   </font>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignLeft|AlignVCenter</set>
+                  <set>AlignLeading|AlignVCenter</set>
                  </property>
                 </column>
                 <item row="0" column="0">
@@ -3016,7 +3016,7 @@ Panel  for Member:</string>
                   </font>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <column>
@@ -3030,7 +3030,7 @@ Panel  for Member:</string>
                   </font>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <column>
@@ -3044,7 +3044,7 @@ Panel  for Member:</string>
                   </font>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <column>
@@ -3058,7 +3058,7 @@ Panel  for Member:</string>
                   </font>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <column>
@@ -3072,7 +3072,7 @@ Panel  for Member:</string>
                   </font>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <column>
@@ -3086,7 +3086,7 @@ Panel  for Member:</string>
                   </font>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                  <set>AlignCenter</set>
                  </property>
                 </column>
                 <item row="0" column="0">
@@ -3094,7 +3094,7 @@ Panel  for Member:</string>
                   <string>1</string>
                  </property>
                  <property name="textAlignment">
-                  <set>AlignLeft|AlignVCenter</set>
+                  <set>AlignLeading|AlignVCenter</set>
                  </property>
                  <property name="flags">
                   <set>ItemIsDragEnabled|ItemIsUserCheckable</set>
@@ -3246,7 +3246,7 @@ Panel  for Member:</string>
                 <string>1</string>
                </property>
                <property name="textAlignment">
-                <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                <set>AlignCenter</set>
                </property>
               </item>
               <item row="0" column="1">
@@ -3536,7 +3536,7 @@ Number</string>
                 <string>0</string>
                </property>
                <property name="textAlignment">
-                <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+                <set>AlignCenter</set>
                </property>
               </item>
              </widget>

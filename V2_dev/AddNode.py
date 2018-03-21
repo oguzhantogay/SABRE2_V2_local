@@ -901,6 +901,9 @@ class SegmRemove(QMainWindow):
         # handle SNODE later
         import SABRE2SegmCODE
         BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
+        from SABRE2_main_subclass import MemberPropertiesTable
+        MemberPropertiesTable.set_number_of_rows(self, self.ui.Members_table,
+                                                 self.ui.Member_Properties_Table)
         # print('remove node BNodevalue = ', BNodevalue)
         h5_file.h5_Class.update_array(self,BNodevalue,'BNodevalue')
 

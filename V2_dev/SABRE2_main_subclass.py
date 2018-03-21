@@ -1394,9 +1394,18 @@ class MemberPropertiesTable(QMainWindow):
         if row_def == row_member:
             pass
         else:
-            initial_values = JointTable.tableValues(self, memberPropertiesTable)
             memberPropertiesTable.setRowCount(row_def)
-            for i in range(8):
+            for k in range(row_def):
+                for i in range(int(added_node_information.shape[0])):
+                    for j in range(int(added_node_information[i][1])):
+                        text = 'M' + str(i+1) + 'S' + str(int(added_node_information[i][j])+1)
+                        item = QTableWidgetItem(text)
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                        memberPropertiesTable.setItem(k, 0, item)
+
+            initial_values = JointTable.tableValues(self, memberPropertiesTable)
+            for i in range(1, 8):
                 for j in range(1, row_def):
                     if i == 0:
                         item = QTableWidgetItem(str(j + 1))

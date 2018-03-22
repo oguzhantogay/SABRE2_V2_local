@@ -138,7 +138,8 @@ end % if end
 [BNodevalue]=SABRE2SegmCODE(JNodevalue,Massemble,JNodevalue_i,JNodevalue_j,BNodevalue,...
    pdb_coordx_edit,pdb_coordy_edit,pdb_coordz_edit,pdb_step_edit,seglength);
 
-
+fprintf('\ntest remove 1')
+BNodevalue
 % Initially Auto Genetate BNodevalue for No Bracing Cases
 if ~isempty(Massemble)
    mem = length(Massemble(:,1));

@@ -1300,26 +1300,26 @@ class JointTable(QMainWindow):
         except ValueError:
             tableName.clearSelection()
             tableName.item(row, col).setText('0')
+        if tableName != self.ui.Member_Properties_Table:
+            if 0 in val2:
+                self.ui.Members_tab.setEnabled(False)
+            else:
+                self.ui.Members_tab.setEnabled(True)
 
-        if 0 in val2:
-            self.ui.Members_tab.setEnabled(False)
-        else:
-            self.ui.Members_tab.setEnabled(True)
-
-            val_unique = np.delete(val1, [0], axis=1)
-            val_unique, indices = np.unique(val_unique, axis=0, return_index=True)
-            # print('val_unique = ', val_unique, 'indices = ', indices)
-            try:
-                for i in range(val1.shape[0]):
-                    if i in range(indices.shape[0]):
-                        DropDownActions.ActionClass.statusMessage(self, message="")
-                    else:
-                        DropDownActions.ActionClass.statusMessage(self,
-                                                                  message="Same location cannot be defined twice!")
-                        tableName.clearSelection()
-                        tableName.item(row, col).setText('0')
-            except AttributeError:
-                DropDownActions.ActionClass.statusMessage(self, message="")
+                val_unique = np.delete(val1, [0], axis=1)
+                val_unique, indices = np.unique(val_unique, axis=0, return_index=True)
+                # print('val_unique = ', val_unique, 'indices = ', indices)
+                try:
+                    for i in range(val1.shape[0]):
+                        if i in range(indices.shape[0]):
+                            DropDownActions.ActionClass.statusMessage(self, message="")
+                        else:
+                            DropDownActions.ActionClass.statusMessage(self,
+                                                                      message="Same location cannot be defined twice!")
+                            tableName.clearSelection()
+                            tableName.item(row, col).setText('0')
+                except AttributeError:
+                    DropDownActions.ActionClass.statusMessage(self, message="")
 
             # ActionClass.statusMessage(self, message="Please enter only numbers in the cell!")
         # print("val1", val1)
@@ -1382,16 +1382,12 @@ class MemberPropertiesTable(QMainWindow):
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable):
-        print('test')
+        ''' this function sets the initial configuration of the member properties table after added nodes'''
+        # print('test')
         memberPropertiesTable.blockSignals(True)
         row_member = memberPropertiesTable.rowCount()
         row_def = memberDefinitionTable.rowCount()
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
-        # print('added node information = ', added_node_information)
-        # print('row_member = ', row_member)
-        # print('row_def = ', row_def)
-        BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
-        # print('BNodevalue = ', BNodevalue)
         if row_def != row_member:
             memberPropertiesTable.setRowCount(row_def)
 
@@ -1421,40 +1417,30 @@ class MemberPropertiesTable(QMainWindow):
 
         else:
             total_number_row = np.sum(added_node_information[:, 1])
-            row_def = int(total_number_row) + int(row_member)
-
-        # if BNodevalue.shape[0] < added_node_information.shape[0]:
-        #     pass
-        # elif BNodevalue.shape[0] < row_def or added_node_information.shape[0] < row_def:
-        #     pass
-        # else:
-        #     total_number_row = np.sum(added_node_information[:,1])
-        #     row_def = int(total_number_row) + int(row_member)
-
-        # if row_def == row_member:
-        #     pass
-        # else:
-        #     # print('row_def = ', row_def)
+            row_def = int(total_number_row) + int(row_def)
             memberPropertiesTable.setRowCount(row_def)
-            for k in range(row_def):
-                # if added_node_information.shape[0] < memberDefinitionTable.rowCount():
-                #     temp0 = memberDefinitionTable.rowCount()
-                # else:
-                #     temp0 =int(added_node_information.shape[0])
-                # print('temp0 = ', temp0)
-                for i in range(int(added_node_information.shape[0])):
-                    temp = int(added_node_information[i][1])
-                    if temp < 1:
-                        temp = 1
-                    for j in range(temp):
-                        print('value = ' , added_node_information[i][j])
-                        print('value M = ' , i)
-                        text = 'M' + str(i+1) + 'S' + str(int(added_node_information[i][1])+1)
+            print('')
+            k = 0
+            for i in range(int(added_node_information[:,0].shape[0])):
+                if added_node_information[i][1] == 0:
+                    text = text = 'M' + str(i + 1) + 'S1'
+                    item = QTableWidgetItem(text)
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                    memberPropertiesTable.setItem(k, 0, item)
+                    k += 1
+                else:
+                    for j in range(int(added_node_information[i][1])+1):
+                        text = 'M' + str(i+1) + 'S' + str(j+1)
                         item = QTableWidgetItem(text)
                         item.setTextAlignment(QtCore.Qt.AlignCenter)
                         item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
                         memberPropertiesTable.setItem(k, 0, item)
-                    temp = None
+
+                        k += 1
+
+
+
 
                 initial_values = JointTable.tableValues(self, memberPropertiesTable)
                 for i in range(1, 8):
@@ -1478,7 +1464,7 @@ class MemberPropertiesTable(QMainWindow):
         row_count = memberPropertiesTable.rowCount()
         copyfrom_values = DataCollection.update_lineedit_values(self, member_prop_line_edit)
         initial_values = np.zeros((1, 8))
-        for k in range(8):
+        for k in range(1,8):
             initial_values[0, k] = float(memberPropertiesTable.item(copyfrom_values - 1, k).text())
         for i in range(8):
             for j in range(row_count):

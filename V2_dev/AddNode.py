@@ -776,14 +776,14 @@ class AddNodeClass(QMainWindow):
                 BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j,
                                                                      Massemble)
 
-                print("BNodevalue function after = ", BNodevalue)
+                # print("BNodevalue function after = ", BNodevalue)
 
                 # SABRE2SegmModel.AddNodeCoordCS.added_node_drawing_properties(self, BNodevalue)
                 AddNodeClass.addedNodeInformationArrayUpdate(self, BNodevalue)
                 # print("BNodevalue apply button = ", BNodevalue)
                 h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
                 added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
-                print('added node array =', added_node_information)
+                # print('added node array =', added_node_information)
 
                 from SABRE2_main_subclass import MemberPropertiesTable
                 MemberPropertiesTable.set_number_of_rows(self, self.ui.Members_table,
@@ -904,8 +904,14 @@ class SegmRemove(QMainWindow):
         BNodevalue[memnum, :, :] = BNodedev[memnum, :, :]
         # print('remove node BNodevalue = ', BNodevalue)
         # handle SNODE later
+        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        added_node_information[memnum][1] = nbnode
+        h5_file.h5_Class.update_array(self,added_node_information,'added_node_information')
+        # print('added = ', added_node_information)
         import SABRE2SegmCODE
         BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
+        if BNodevalue[memnum,0,0] == 0:
+            BNodevalue[memnum,0,0] = memnum+1
         from SABRE2_main_subclass import MemberPropertiesTable
         MemberPropertiesTable.set_number_of_rows(self, self.ui.Members_table,
                                                  self.ui.Member_Properties_Table)

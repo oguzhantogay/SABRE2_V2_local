@@ -31,15 +31,21 @@ class ClassA(QMainWindow):
                         dZ0[j][0] = JNodevalue_i[i][4] - BNodevalue[i][j][4]
                         L0[i][j][15] = np.sqrt((dX0[j][0]) ** 2 + (dY0[j][0]) ** 2 + (dZ0[j][0]) ** 2)
 
-            added_node_count = 0
             max_b = 0
+            # print('Bnodevalue = ', BNodevalue)
             for i in range(int(mem)):
                 added_node_count = np.count_nonzero(BNodevalue[i, :, 1])
+                if added_node_count == 0:
+                    added_node_count = 1
                 if max_b < added_node_count:
                     max_b = added_node_count
+
+            # print('mem = ', mem, 'max_b = ', max_b, 'added node count = ' , added_node_count)
             BNodevalueOrder = np.zeros((mem, max_b, 16))
             for i in range(mem):
                 L1 = np.zeros((int(np.amax(BNodevalue[i, :, 1])), 16))
+                # print('L0 = ' , L0)
+                # print('BNodevalueorder = ', BNodevalueOrder)
                 if np.amax(BNodevalue[i, :, 1]) == 0:
                     # print("if # a ")
                     BNodevalueOrder[i][0][0] = L0[i][0][0]

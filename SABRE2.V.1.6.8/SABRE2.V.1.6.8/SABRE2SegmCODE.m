@@ -54,6 +54,7 @@ else
          L1(:,:)=[];
       end
    end
+   BNodevalueOrder
    % Reset BNodevalue Using Sorted BNodevalueOrder
    BNodeval=BNodevalueOrder;
 %    L1
@@ -1766,8 +1767,8 @@ else
          L1(:,:)=[];
       end
    end
-%    fprintf('BNodevalueorder at last')
-%    BNodevalueOrder
+   fprintf('BNodevalueorder at last')
+   BNodevalueOrder
    % Reset BNodevalue Using Sorted BNodevalueOrder
    BNodevalue=BNodevalueOrder;
    % *********************************************************** Sorting E   

@@ -19,7 +19,7 @@ class Assign_All_Class(QMainWindow):
         SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
         # Massemble = h5_file.h5_Class.read_array(self, 'Massemble')
         BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
-        print('BNodevalue = ', BNodevalue)
+        # print('BNodevalue = ', BNodevalue)
         from SABRE2_main_subclass import SABRE2_main_subclass
         member_properties_values = SABRE2_main_subclass.update_member_properties_table(self,
                                                                                        self.ui.Member_Properties_Table)
@@ -34,7 +34,7 @@ class Assign_All_Class(QMainWindow):
 
 
         SNodevalue = np.zeros((int(BNodevalue.shape[0]),int(max_b + 1), 11))
-        print('member prob values = ', member_properties_values)
+        # print('member prob values = ', member_properties_values)
         for i in range(int(BNodevalue.shape[0])):
             for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
                 SNodevalue[i][j][0] = i + 1
@@ -54,4 +54,6 @@ class Assign_All_Class(QMainWindow):
                     SNodevalue[i][j][5] = 50
                 SNodevalue[i][j][10] = HomoType
 
-        print('SNodevalue =', SNodevalue)
+        # print('SNodevalue =', SNodevalue)
+
+        h5_file.h5_Class.update_array(self,SNodevalue, 'SNodevalue')

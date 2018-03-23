@@ -283,6 +283,10 @@ class SABRE2_main_subclass(QMainWindow):
 
         ui_layout.AddNodeApply.clicked.connect(lambda : SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
 
+        # For boundary conditions definition
+
+        # ui_layout.DefinitionTabs.itemSelectionChanged.connect(lambda : SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
+
         # Member Properties Table
         ui_layout.Apply_all_member_properties.clicked.connect(
             lambda: MemberPropertiesTable.set_values_with_row(self, ui_layout.Member_Properties_Table,
@@ -1497,10 +1501,7 @@ class MemberPropertiesTable(QMainWindow):
         for i in range(8):
             for j in range(row_count):
                 if i == 0:
-                    item = QTableWidgetItem(str(j + 1))
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
-                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                    memberPropertiesTable.setItem(j, i, item)
+                    pass
                 elif i == 4:
                     item = QTableWidgetItem(str(initial_values[0, i]))
                     item.setTextAlignment(QtCore.Qt.AlignCenter)

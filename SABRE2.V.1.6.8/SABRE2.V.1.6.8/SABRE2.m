@@ -3902,6 +3902,7 @@ function loads_uniform_menu_Callback(hObject, eventdata)
 end % function end 
 % --------------------------------------------------------------------
 function bc_menu_Callback(hObject, eventdata)
+   fprintf('boundary condition menu pressed')
    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');
    set(pt_title_name,'Visible','off') ;set(ri_infor_text,'Visible','off') 
    if strcmp(get(gcbo,'type'),'uimenu') 

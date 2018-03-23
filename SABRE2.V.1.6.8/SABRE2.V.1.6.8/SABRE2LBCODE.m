@@ -42,9 +42,14 @@ else
             Sassemble(i,j+1,k) = BNodevalue(i,j,k);
          end
       end
+      fprintf('\ntest = ')   
+      max(BNodevalue(i,:,2))
       Sassemble(i,max(BNodevalue(i,:,2))+2,k) =JNodevalue_j(i,k);
       end
    end
+  
+   fprintf('Sassemble in LB code')   
+   Sassemble
    % *********************************************** Njbode
    q = 1; r = 1;
    for i = 1:mem   

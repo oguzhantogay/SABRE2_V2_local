@@ -7,6 +7,7 @@ from DropDownActions import ActionClass
 import numpy as np
 import h5_file
 import AddNode
+import SABRE2LBCODE
 
 
 class glWidget(QGLWidget, QMainWindow):
@@ -482,6 +483,10 @@ class glWidget(QGLWidget, QMainWindow):
         none_checker = self.noneDetector(self.ui.Joints_Table)
         glWidget.render_checked = self.ui.actionRender_All_Members.isChecked()
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
+        if self.ui.DefinitionTabs.currentIndex() == 3:
+            print('test')
+            SABRE2LBCODE.SABRE2LBCODE.LBCode(self)
+
         try:
             if self.ui.Members_table.item(row, 1) is None:
                 pass

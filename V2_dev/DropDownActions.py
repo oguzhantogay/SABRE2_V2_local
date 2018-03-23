@@ -4,6 +4,7 @@ from PyQt4 import QtCore
 from PyQt4 import QtGui
 import SABRE2_GUI
 import numpy as np
+import h5_file
 import tempfile
 
 
@@ -19,6 +20,8 @@ class ActionClass(QMainWindow):
         self.joint_values = None
         self.member_properties_values = None
         self.members_table_values = None
+        self.Massemble = None
+        self.table_prop = None
         self.shear_panel_values = None
         self.ground_spring_values = None
         self.torsional_spring_values = None
@@ -210,8 +213,10 @@ class ActionClass(QMainWindow):
 
         self.joint_values = SABRE2_main_subclass.SABRE2_main_subclass.update_joints_table(self, self.ui.Joints_Table)
 
-        self.member_properties_values = SABRE2_main_subclass.SABRE2_main_subclass.update_member_properties_table(self,
+        self.member_properties_values= SABRE2_main_subclass.SABRE2_main_subclass.update_member_properties_table(self,
                                                                                                                  self.ui.Member_Properties_Table)
+        self.table_prop = h5_file.h5_Class.read_array(self, 'table_prop')
+        self.Massemble = h5_file.h5_Class.read_array(self, 'Massemble')
         self.members_table_values, self.JNodeValue_i, self.JNodeValue_j, _, _, _, _ = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(
             self,
             self.ui.Members_table,
@@ -234,13 +239,16 @@ class ActionClass(QMainWindow):
                                                                                              combo_flag=0)
 
         # print('self.members_table_values', self.members_table_values)
+        print('table prop save = ' , self.table_prop)
 
-        filename = 'test2.npz'
+        filename = 'test4.npz'
         file = open(filename, 'wb')
 
         np.savez(file, joint_values=self.joint_values,
                  member_properties_values=self.member_properties_values,
                  members_table_values=self.members_table_values,
+                 table_prop_for_AISC = self.table_prop,
+                 Massemble = self.Massemble,
                  shear_panel_values=self.shear_panel_values,
                  ground_spring_values=self.ground_spring_values,
                  torsional_spring_values=self.torsional_spring_values,
@@ -261,13 +269,16 @@ class ActionClass(QMainWindow):
 
         self.OpenGLwidget = OpenGLcode.glWidget(self.ui)
 
-        filename = 'test1.npz'
+        filename = 'test4.npz'
 
         aa = np.load(filename)
 
         self.joint_values = aa['joint_values']
         self.member_properties_values = aa['member_properties_values']
         self.members_table_values = aa['members_table_values']
+        self.table_prop = aa['table_prop_for_AISC']
+        self.Massemble = aa['Massemble']
+        # print('table prop read = ' , self.table_prop)
         self.shear_panel_values = aa['shear_panel_values']
         self.ground_spring_values = aa['ground_spring_values']
         self.torsional_spring_values = aa['torsional_spring_values']
@@ -357,3 +368,6 @@ class ActionClass(QMainWindow):
         import AddNode
 
         AddNode.AddNodeClass.setAddNodeComboBox(self)
+
+        #RETURN REQUIRED ARRAYS ONLY
+        return self.table_prop, self.Massemble

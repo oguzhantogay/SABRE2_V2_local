@@ -364,7 +364,7 @@ class glWidget(QGLWidget, QMainWindow):
                         else:
                             glColor3f(1, 1, 1)
 
-                        if BNodevalue.shape[2] == 1:
+                        if BNodevalue.shape[2] == 2:
                             text_x = self.joint_nodes[self.joint_i][1] + (self.joint_nodes[self.joint_j][1] -
                                                                           self.joint_nodes[self.joint_i][1]) / 2
                             text_y = self.joint_nodes[self.joint_i][2] + (self.joint_nodes[self.joint_j][2] -

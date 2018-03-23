@@ -55,9 +55,10 @@ else
                SNodevalue(i,j,11)=HomoType;
             end  
          end
-
+        
       end
-     
+     fprintf('Assi All')
+     SNodevalue
    else
 
       if ~isempty(Massemble) && ~isempty(BNodevalue) 

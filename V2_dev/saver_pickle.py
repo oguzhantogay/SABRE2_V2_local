@@ -21,6 +21,7 @@ class SaverPicker(QMainWindow):
         self.Warping_release_values = None
         self.uniform_data_values = None
         self.point_data_values = None
+        self.table_prop = None
 
     def save_fun(self, ui_layout):
 
@@ -29,7 +30,7 @@ class SaverPicker(QMainWindow):
         self.joint_values = sw.update_joints_table(sw.JointsTable)
         print("joint values", self.joint_values)
 
-        self.member_properties_values = SABRE2_main_subclass.SABRE2_main_subclass.update_member_properties_table(self,
+        self.member_properties_values= SABRE2_main_subclass.SABRE2_main_subclass.update_member_properties_table(self,
                                                                                                       self.ui.Member_Properties_Table)
         self.members_table_values, _, _, _, _, _, _ = SABRE2_main_subclass.SABRE2_main_subclass.update_members_table(self, self.ui.Members_table,
                                                                                         self.Members_table_position)

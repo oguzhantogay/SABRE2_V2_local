@@ -5,6 +5,8 @@ import DropDownActions
 import sqlite3 as sq
 import numpy as np
 import h5_file
+import Assign_Member_Properties
+
 from PyQt4.QtOpenGL import *
 
 class AddNodeClass(QMainWindow):
@@ -785,16 +787,15 @@ class AddNodeClass(QMainWindow):
                 added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
                 # print('added node array =', added_node_information)
 
+
+                #segment properties menu arrangements and SNodevalue array set up
+
                 from SABRE2_main_subclass import MemberPropertiesTable
                 MemberPropertiesTable.set_number_of_rows(self, self.ui.Members_table,
                                                          self.ui.Member_Properties_Table)
 
-                # OpenGLcode.glWidget.renderAllProp(self, total_member_number, JNodevalue_i, JNodevalue_j, BNodevalue, Rval, Massemble)
-                # test_array = h5_file.h5_Class.read_array(self, 'BNodevalue')
-                # # print('test array = ', test_array)
-                # import OpenGLcode
-                # AddNodeClass.OpenGLwidget = OpenGLcode.glWidget(self.ui)
-                # AddNodeClass.OpenGLwidget.updateTheWidget()
+
+                Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self)
 
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
@@ -913,11 +914,13 @@ class SegmRemove(QMainWindow):
         if BNodevalue[memnum,0,0] == 0:
             BNodevalue[memnum,0,0] = memnum+1
         from SABRE2_main_subclass import MemberPropertiesTable
-        MemberPropertiesTable.set_number_of_rows(self, self.ui.Members_table,
-                                                 self.ui.Member_Properties_Table)
         # print('remove node BNodevalue = ', BNodevalue)
         h5_file.h5_Class.update_array(self,BNodevalue,'BNodevalue')
 
+        # set member properties table and assign values
+        MemberPropertiesTable.set_number_of_rows(self, self.ui.Members_table,
+                                                 self.ui.Member_Properties_Table)
+        Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self)
 
 class PlotSegments(QMainWindow):
     """ This class removes previously added nodes"""

@@ -16,11 +16,19 @@ class h5_Class:
 
         SNodevalue = np.zeros((1,1,1))
 
+        Massemble = np.zeros((1,1,1))
+
+        table_prop =  np.zeros((1,14))
+
         file_open.create_dataset('added_node_information', data=added_node_information)
 
         file_open.create_dataset('BNodevalue', data=BNodevalue)
 
         file_open.create_dataset('SNodevalue', data=SNodevalue)
+
+        file_open.create_dataset('Massemble', data=Massemble)
+
+        file_open.create_dataset('table_prop', data=table_prop)
 
         file_open.close()
 

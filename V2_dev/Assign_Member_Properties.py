@@ -14,24 +14,44 @@ class Assign_All_Class(QMainWindow):
         super(Assign_All_Class, self).__init__(parent)
         self.ui = ui_layout
 
-    def check_existing_array(self):
-        """ The method read SNodevalue array from the process or saved file.h5"""
-        SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
-        Massemble = h5_file.h5_Class.read_array(self, 'Massemble')
-        BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
-        return SNodevalue, Massemble, BNodevalue
-
     def assign_SNodevalue(self):
         """ Assign the SNodevalue array with the values from Member Properties Tab"""
-
-        SNodevalue, Massemble, BNodevalue = Assign_All_Class.check_existing_SNodevalue(self)
+        SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
+        # Massemble = h5_file.h5_Class.read_array(self, 'Massemble')
+        BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
+        print('BNodevalue = ', BNodevalue)
         from SABRE2_main_subclass import SABRE2_main_subclass
         member_properties_values = SABRE2_main_subclass.update_member_properties_table(self,
                                                                                        self.ui.Member_Properties_Table)
-        print('member prob values', member_properties_values)
-        if SNodevalue.shape[1] == 0:
-            if Massemble.shape[1] == 0 and BNodevalue.shape[1]:
-                for i in range(Massemble.shape[0]):
-                    for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
-                        SNodevalue[i][j][0] = i + 1
-                        SNodevalue[i][j][1] = j + 1
+
+        max_b = 0
+        max_c = 0
+
+        for i in range(int(BNodevalue.shape[0])):
+            max_c = np.amax(BNodevalue[i, :, 1])
+            if max_b < max_c:
+                max_b = max_c
+
+
+        SNodevalue = np.zeros((int(BNodevalue.shape[0]),int(max_b + 1), 11))
+        print('member prob values = ', member_properties_values)
+        for i in range(int(BNodevalue.shape[0])):
+            for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
+                SNodevalue[i][j][0] = i + 1
+                SNodevalue[i][j][1] = j + 1
+                SNodevalue[i][j][2] = member_properties_values[i][1]
+                SNodevalue[i][j][3] = member_properties_values[i][2]
+                SNodevalue[i][j][4] = member_properties_values[i][3]
+                SNodevalue[i][j][7] = member_properties_values[i][5]
+                SNodevalue[i][j][8] = member_properties_values[i][6]
+                SNodevalue[i][j][9] = member_properties_values[i][7]
+                if SNodevalue[i][j][7] == SNodevalue[i][j][8] ==SNodevalue[i][j][9]:
+                    HomoType = 0
+                    SNodevalue[i][j][5] = SNodevalue[i][j][7]
+
+                else:
+                    HomoType = 1
+                    SNodevalue[i][j][5] = 50
+                SNodevalue[i][j][10] = HomoType
+
+        print('SNodevalue =', SNodevalue)

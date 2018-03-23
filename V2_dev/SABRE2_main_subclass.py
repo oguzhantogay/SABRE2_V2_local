@@ -9,6 +9,7 @@ import AddNode
 import h5_file
 import numpy as np
 import sqlite3 as sq
+import Assign_Member_Properties
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -110,6 +111,7 @@ class SABRE2_main_subclass(QMainWindow):
         # ui_layout.actionNew.triggered.connect(lambda: ActionClass('uidesign').NewAct())
         ui_layout.actionOpen.triggered.connect(lambda: self.ActionMenus.OpenAct())
         ui_layout.actionSave.triggered.connect(lambda: self.ActionMenus.SaveAct())
+        ui_layout.actionOpen.triggered.connect(lambda: self.table_prop_read())
         ui_layout.actionJoint_Member_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         ui_layout.actionMember_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         # ui_layout.actionSave_As.triggered.connect(lambda: ActionClass('uidesign').Save_AsAct())
@@ -207,6 +209,9 @@ class SABRE2_main_subclass(QMainWindow):
 
         ui_layout.Mem_def_add.clicked.connect(lambda: self.m_assemble_updater(ui_layout.Members_table, flag="last"))
 
+        # ui_layout.Mem_def_add.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+
+
         ui_layout.Insert_row_mem_def_button.clicked.connect(
             lambda: TableChanges.add_new_row(self, ui_layout.Members_table, self.Members_table_options,
                                              self.Members_table_position, ui_layout.Insert_row_number_mem_def,
@@ -219,6 +224,8 @@ class SABRE2_main_subclass(QMainWindow):
 
         ui_layout.Mem_def_delete.clicked.connect(
             lambda:self.m_assemble_updater(ui_layout.Members_table, flag="Delete Last"))
+
+        ui_layout.Mem_def_delete.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
 
         ui_layout.Delete_row_mem_def_button.clicked.connect(
             lambda: TableChanges.delete_row(self, ui_layout.Members_table, ui_layout.Delete_row_number_mem_def,
@@ -284,7 +291,7 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: MemberPropertiesTable.check_values(self, ui_layout.Member_Properties_Table))
 
         ui_layout.Member_Properties_Table.itemChanged.connect(
-            lambda: self.update_member_properties_table(ui_layout.Member_Properties_Table))
+            lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
 
         # ui_layout.Delete_new_row_button_shear_panel.clicked.connect(
         #     lambda: Boundary_Conditions.set_active(self, ui_layout.Shear_panel_table,
@@ -414,12 +421,12 @@ class SABRE2_main_subclass(QMainWindow):
         row_count = tableName.rowCount()
         # print("row count = ", row_count)
         Rval = np.zeros((row_count, 2))
-        #
+        SABRE2_main_subclass.BNodevalue = h5_file.h5_Class.read_array(self,'BNodevalue')
         for i in range(row_count):
             Rval[i][0] = Members_values[i][0]
             Rval[i][1] = Members_values[i][3] + 1
         # print("update = ", SABRE2_main_subclass.BNodevalue, "\nshape = ", SABRE2_main_subclass.BNodevalue.shape[1])
-        if SABRE2_main_subclass.BNodevalue is None:
+        if SABRE2_main_subclass.BNodevalue.shape[2] != 16:
             SABRE2_main_subclass.BNodevalue = np.zeros((row_count, 1, 2))
             # print("update = ", SABRE2_main_subclass.BNodevalue)
             if row_count == SABRE2_main_subclass.BNodevalue.shape[0]:
@@ -433,7 +440,7 @@ class SABRE2_main_subclass(QMainWindow):
                     SABRE2_main_subclass.BNodevalue[i][0][0] = i + 1
                     SABRE2_main_subclass.BNodevalue[i][0][1] = 0  # to indicate zero bracing
 
-
+        h5_file.h5_Class.update_array(self, SABRE2_main_subclass.BNodevalue, 'BNodevalue')
         JNodeValue_i = np.zeros((Members_values.shape[0], 14))
         JNodeValue_j = np.zeros((Members_values.shape[0], 14))
 
@@ -485,6 +492,8 @@ class SABRE2_main_subclass(QMainWindow):
         # tableName.blockSignals(True)
         try:
             Massemble, current_row_number, row_count, table_prop = LineChanges.sql_print(self, tableName)
+            # print('table prop = ', current_row_number)
+            # print('self = ', self.table_prop)
             self.table_prop[current_row_number][0] = table_prop[0, 0]
             self.table_prop[current_row_number][2] = table_prop[0, 0]
             self.table_prop[current_row_number][4] = table_prop[0, 0]
@@ -501,7 +510,9 @@ class SABRE2_main_subclass(QMainWindow):
             self.table_prop[current_row_number][13] = table_prop[0, 17]
 
             # print("Massemble = ", Massemble)
-            # print("table prop = ", self.table_prop)
+            # print("table prop 2= ", self.table_prop)
+            h5_file.h5_Class.update_array(self,self.table_prop, 'table_prop')
+
 
             for i in range(16):
                 SABRE2_main_subclass.Massemble[int(current_row_number)][i] = Massemble[0][i]
@@ -540,11 +551,17 @@ class SABRE2_main_subclass(QMainWindow):
             DropDownActions.ActionClass.statusMessage(self, message="Row not defined")
         return insertafter_values
 
+    #table prop array for whether the section is from AISC database or not is read from the saved file
+    def table_prop_read(self):
+        self.table_prop, SABRE2_main_subclass.Massemble= DropDownActions.ActionClass.read_fun(self)
+
+
+
     # Table Values Update
 
     def update_member_properties_table(self, tableName):
         prop_values = JointTable.tableValues(self, tableName)
-        # print("main screen Properties Table values", prop_values)
+        # print("main screen Properties Table values",self.table_prop)
         return prop_values
 
     def update_shear_panel_table(self, tableName, flag="not combo"):
@@ -604,10 +621,14 @@ class SABRE2_main_subclass(QMainWindow):
 
 
         if flag == "last":
+            print('test last')
+            # print(self.table_prop)
             SABRE2_main_subclass.Massemble = np.append(SABRE2_main_subclass.Massemble, to_append, axis=0)
             self.table_prop = np.append(self.table_prop, to_append_prop, axis=0)
             for i in range(3):
                 SABRE2_main_subclass.Massemble[current_row][i] = self.members_table_values[current_row][i]
+
+            # print('after = ', self.table_prop)
 
         elif flag == "insert after button":
             row_number = DataCollection.update_lineedit_values(self, lineName)
@@ -678,8 +699,9 @@ class SABRE2_main_subclass(QMainWindow):
             #     print(e)
 
         # print("table_" , self.table_prop, "\n members table = ", self.members_table_values)
-        # print("assembly matrix = ", SABRE2_main_subclass.Massemble)
-        return SABRE2_main_subclass.Massemble
+        h5_file.h5_Class.update_array(self,SABRE2_main_subclass.Massemble,'Massemble')
+        h5_file.h5_Class.update_array(self, self.table_prop, 'table_prop')
+        return SABRE2_main_subclass.Massemble, self.table_prop
         # pass
 
     def resizeEvent(self, event):
@@ -1385,63 +1407,22 @@ class MemberPropertiesTable(QMainWindow):
         ''' this function sets the initial configuration of the member properties table after added nodes'''
         # print('test')
         memberPropertiesTable.blockSignals(True)
-        row_member = memberPropertiesTable.rowCount()
-        row_def = memberDefinitionTable.rowCount()
-        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
-        if row_def != row_member:
-            memberPropertiesTable.setRowCount(row_def)
+        current_column = self.ui.Members_table.currentColumn()
+        print
+        if current_column == 1 or current_column == 2:
+            row_member = memberPropertiesTable.rowCount()
+            row_def = memberDefinitionTable.rowCount()
+            added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+            if row_def != row_member:
+                memberPropertiesTable.setRowCount(row_def)
 
-        if added_node_information.shape[0] < row_def:
-            for j in range(0, row_def):
-                text = text = 'M' + str(j+1) + 'S1'
-                item = QTableWidgetItem(text)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                memberPropertiesTable.setItem(j, 0, item)
-            initial_values = JointTable.tableValues(self, memberPropertiesTable)
-            for i in range(1, 8):
-                for j in range(1, row_def):
-                    if i == 0:
-                        item = QTableWidgetItem(str(j + 1))
-                        item.setTextAlignment(QtCore.Qt.AlignCenter)
-                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                        memberPropertiesTable.setItem(j, i, item)
-                    elif i == 4:
-                        item = QTableWidgetItem(str(initial_values[0, i]))
-                        item.setTextAlignment(QtCore.Qt.AlignCenter)
-                        memberPropertiesTable.setItem(j, i, item)
-                    else:
-                        item = QTableWidgetItem(str(int(initial_values[0, i])))
-                        item.setTextAlignment(QtCore.Qt.AlignCenter)
-                        memberPropertiesTable.setItem(j, i, item)
-
-        else:
-            total_number_row = np.sum(added_node_information[:, 1])
-            row_def = int(total_number_row) + int(row_def)
-            memberPropertiesTable.setRowCount(row_def)
-            print('')
-            k = 0
-            for i in range(int(added_node_information[:,0].shape[0])):
-                if added_node_information[i][1] == 0:
-                    text = text = 'M' + str(i + 1) + 'S1'
+            if added_node_information.shape[0] < row_def:
+                for j in range(0, row_def):
+                    text = text = 'M' + str(j+1) + 'S1'
                     item = QTableWidgetItem(text)
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                    memberPropertiesTable.setItem(k, 0, item)
-                    k += 1
-                else:
-                    for j in range(int(added_node_information[i][1])+1):
-                        text = 'M' + str(i+1) + 'S' + str(j+1)
-                        item = QTableWidgetItem(text)
-                        item.setTextAlignment(QtCore.Qt.AlignCenter)
-                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                        memberPropertiesTable.setItem(k, 0, item)
-
-                        k += 1
-
-
-
-
+                    memberPropertiesTable.setItem(j, 0, item)
                 initial_values = JointTable.tableValues(self, memberPropertiesTable)
                 for i in range(1, 8):
                     for j in range(1, row_def):
@@ -1458,6 +1439,50 @@ class MemberPropertiesTable(QMainWindow):
                             item = QTableWidgetItem(str(int(initial_values[0, i])))
                             item.setTextAlignment(QtCore.Qt.AlignCenter)
                             memberPropertiesTable.setItem(j, i, item)
+
+            else:
+                total_number_row = np.sum(added_node_information[:, 1])
+                row_def = int(total_number_row) + int(row_def)
+                memberPropertiesTable.setRowCount(row_def)
+                print('')
+                k = 0
+                for i in range(int(added_node_information[:,0].shape[0])):
+                    if added_node_information[i][1] == 0:
+                        text = text = 'M' + str(i + 1) + 'S1'
+                        item = QTableWidgetItem(text)
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                        memberPropertiesTable.setItem(k, 0, item)
+                        k += 1
+                    else:
+                        for j in range(int(added_node_information[i][1])+1):
+                            text = 'M' + str(i+1) + 'S' + str(j+1)
+                            item = QTableWidgetItem(text)
+                            item.setTextAlignment(QtCore.Qt.AlignCenter)
+                            item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                            memberPropertiesTable.setItem(k, 0, item)
+
+                            k += 1
+
+
+
+
+                    initial_values = JointTable.tableValues(self, memberPropertiesTable)
+                    for i in range(1, 8):
+                        for j in range(1, row_def):
+                            if i == 0:
+                                item = QTableWidgetItem(str(j + 1))
+                                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                                memberPropertiesTable.setItem(j, i, item)
+                            elif i == 4:
+                                item = QTableWidgetItem(str(initial_values[0, i]))
+                                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                memberPropertiesTable.setItem(j, i, item)
+                            else:
+                                item = QTableWidgetItem(str(int(initial_values[0, i])))
+                                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                memberPropertiesTable.setItem(j, i, item)
         memberPropertiesTable.blockSignals(False)
 
     def set_values_with_row(self, memberPropertiesTable, member_prop_line_edit):

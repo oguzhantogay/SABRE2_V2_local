@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0ee3103-6d08-4b17-8e91-429164a7cb7a" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/V2_dev/SABRE2LBCODE.py" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2.m" afterPath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2.m" />
-      <change beforePath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2LBCODE.m" afterPath="$PROJECT_DIR$/SABRE2.V.1.6.8/SABRE2.V.1.6.8/SABRE2LBCODE.m" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py" afterPath="$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/OpenGLcode.py" afterPath="$PROJECT_DIR$/V2_dev/OpenGLcode.py" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" afterPath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" />
     </list>
     <ignored path="C:\Users\Python\Desktop\SABRE2-V2\.idea\shelf/" />
     <ignored path="C:\Oguzhan\SABRE2-V2\.idea\shelf/" />
@@ -451,13 +445,6 @@
       <option name="presentableId" value="Default" />
       <updated>1506299146941</updated>
     </task>
-    <task id="LOCAL-00009" summary="transfer for update view">
-      <created>1510513985730</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1510513985730</updated>
-    </task>
     <task id="LOCAL-00010" summary="text for joints, rotate, white/black background work">
       <created>1510552084261</created>
       <option name="number" value="00010" />
@@ -794,7 +781,14 @@
       <option name="project" value="LOCAL" />
       <updated>1521833508595</updated>
     </task>
-    <option name="localTasksCounter" value="58" />
+    <task id="LOCAL-00058" summary="LB Code till Sassemble works">
+      <created>1521848283141</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1521848283141</updated>
+    </task>
+    <option name="localTasksCounter" value="59" />
     <servers />
   </component>
   <component name="TodoView">
@@ -869,7 +863,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="AddNode code till SegCode 473" />
     <MESSAGE value="SegCode is completed bug in if # 1 - 1" />
     <MESSAGE value="SegCode is completed and Works, SegmModel Halfway through" />
     <MESSAGE value="updates on save fun" />
@@ -894,7 +887,8 @@
     <MESSAGE value="Segment Numbering Completed" />
     <MESSAGE value="Member Properties Segment Names Working with removing the node as well." />
     <MESSAGE value="Save and Open fun till Member Properties works" />
-    <option name="LAST_COMMIT_MESSAGE" value="Save and Open fun till Member Properties works" />
+    <MESSAGE value="LB Code till Sassemble works" />
+    <option name="LAST_COMMIT_MESSAGE" value="LB Code till Sassemble works" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

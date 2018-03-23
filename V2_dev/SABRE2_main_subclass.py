@@ -112,6 +112,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionOpen.triggered.connect(lambda: self.ActionMenus.OpenAct())
         ui_layout.actionSave.triggered.connect(lambda: self.ActionMenus.SaveAct())
         ui_layout.actionOpen.triggered.connect(lambda: self.table_prop_read())
+        ui_layout.actionOpen.triggered.connect(lambda: AddNode.AddNodeClass.ApplyButton(self))
         ui_layout.actionJoint_Member_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         ui_layout.actionMember_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         # ui_layout.actionSave_As.triggered.connect(lambda: ActionClass('uidesign').Save_AsAct())
@@ -554,6 +555,8 @@ class SABRE2_main_subclass(QMainWindow):
     #table prop array for whether the section is from AISC database or not is read from the saved file
     def table_prop_read(self):
         self.table_prop, SABRE2_main_subclass.Massemble= DropDownActions.ActionClass.read_fun(self)
+
+
 
 
 

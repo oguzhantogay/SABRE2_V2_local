@@ -489,6 +489,7 @@ class glWidget(QGLWidget, QMainWindow):
                 glWidget.member_count, glWidget.member_values, glWidget.JNodeValues_i, glWidget.JNodeValues_j, glWidget.BNodevalue, glWidget.Rval = self.memberTableValues()
                 BNode_from_h5 = h5_file.h5_Class.read_array(self,'BNodevalue')
 
+
                 if BNode_from_h5.shape[2] == 16:
                     glWidget.BNodevalue = BNode_from_h5
 

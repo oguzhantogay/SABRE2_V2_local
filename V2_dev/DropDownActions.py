@@ -22,6 +22,7 @@ class ActionClass(QMainWindow):
         self.members_table_values = None
         self.Massemble = None
         self.table_prop = None
+        self.BNodevalue = None
         self.shear_panel_values = None
         self.ground_spring_values = None
         self.torsional_spring_values = None
@@ -221,6 +222,8 @@ class ActionClass(QMainWindow):
             self,
             self.ui.Members_table,
             self.Members_table_position)
+        self.BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
+        self.added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         self.shear_panel_values = SABRE2_main_subclass.SABRE2_main_subclass.update_shear_panel_table(self,
                                                                                                      self.ui.Shear_panel_table)
         self.ground_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_ground_table(self,
@@ -239,9 +242,9 @@ class ActionClass(QMainWindow):
                                                                                              combo_flag=0)
 
         # print('self.members_table_values', self.members_table_values)
-        print('table prop save = ' , self.table_prop)
+        # print('table prop save = ' , self.table_prop)
 
-        filename = 'test4.npz'
+        filename = 'test5.npz'
         file = open(filename, 'wb')
 
         np.savez(file, joint_values=self.joint_values,
@@ -249,6 +252,8 @@ class ActionClass(QMainWindow):
                  members_table_values=self.members_table_values,
                  table_prop_for_AISC = self.table_prop,
                  Massemble = self.Massemble,
+                 added_node_information = self.added_node_information,
+                 BNodevalue = self.BNodevalue,
                  shear_panel_values=self.shear_panel_values,
                  ground_spring_values=self.ground_spring_values,
                  torsional_spring_values=self.torsional_spring_values,
@@ -269,7 +274,7 @@ class ActionClass(QMainWindow):
 
         self.OpenGLwidget = OpenGLcode.glWidget(self.ui)
 
-        filename = 'test4.npz'
+        filename = 'test5.npz'
 
         aa = np.load(filename)
 
@@ -278,6 +283,8 @@ class ActionClass(QMainWindow):
         self.members_table_values = aa['members_table_values']
         self.table_prop = aa['table_prop_for_AISC']
         self.Massemble = aa['Massemble']
+        self.BNodevalue = aa['BNodevalue']
+        self.added_node_information = aa['added_node_information']
         # print('table prop read = ' , self.table_prop)
         self.shear_panel_values = aa['shear_panel_values']
         self.ground_spring_values = aa['ground_spring_values']
@@ -287,7 +294,8 @@ class ActionClass(QMainWindow):
         self.Warping_release_values = aa['Warping_release_values']
         self.uniform_data_values = aa['uniform_data_values']
         self.point_data_values = aa['point_data_values']
-
+        h5_file.h5_Class.update_array(self, self.BNodevalue, 'BNodevalue')
+        h5_file.h5_Class.update_array(self, self.added_node_information, 'added_node_information')
         # print("\njoint values = ", self.joint_values, "\nmember prop values = ", self.member_properties_values,
         #       "\nmembers table values = ", self.members_table_values)
 
@@ -303,6 +311,8 @@ class ActionClass(QMainWindow):
         # shape_point_data_values = int(self.point_data_values.shape[0])
         # print('shape member table = ', shape_members_table_values)
         # print('shape member table = ', self.members_table_values)
+
+        # print('BNodevalue = ', self.BNodevalue)
         # filling for joints table
         for i in range(shape_joint_table):
 

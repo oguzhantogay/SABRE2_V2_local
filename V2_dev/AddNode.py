@@ -727,6 +727,8 @@ class AddNodeClass(QMainWindow):
             float(self.ui.AddNodePositionFrom.text())  # test for the node i is filled or not ?
 
             BNodevalue_read = h5_file.h5_Class.read_array(self,'BNodevalue')
+            Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self)
+
             if BNodevalue_read.shape[2] > BNodevalue.shape[2]:
                 BNodevalue = BNodevalue_read
                 # print('BNodevalue read = ' , BNodevalue_read)
@@ -801,6 +803,7 @@ class AddNodeClass(QMainWindow):
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
 
         return BNodevalue
+
 
 
 class SegmRemove(QMainWindow):

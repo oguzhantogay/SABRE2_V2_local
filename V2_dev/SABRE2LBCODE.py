@@ -67,3 +67,54 @@ class SABRE2LBCODE(QMainWindow):
 
         # print('Sassemble in LBCode =', Sassemble)
 
+        # NJbode sizing
+        q = 1
+        a = 1
+        for i in range(mem):
+            q += np.amax(SNodevalue[i,:,1]) + 1
+            for j in range(int(np.amax(SNodevalue[i,:,1]))):
+                a += j
+
+        size_1 = q + a
+
+        NJbode = np.zeros((int(size_1), 15))
+
+        q = 1
+        r = 1
+        for i in range(mem):
+            NJbode[q - 1][0] = r
+            NJbode[q - 1][1] = Sassemble[i][0][0]
+            NJbode[q - 1][2] = Sassemble[i][0][2]
+            NJbode[q - 1][3] = Sassemble[i][0][3]
+            NJbode[q - 1][4] = Sassemble[i][0][4]
+            NJbode[q - 1][5] = Sassemble[i][0][5]
+            NJbode[q - 1][6] = Sassemble[i][0][6]
+            NJbode[q - 1][7] = Sassemble[i][0][7]
+            NJbode[q - 1][8] = Sassemble[i][0][8]
+            NJbode[q - 1][9] = Sassemble[i][0][9]
+            NJbode[q - 1][10] = Sassemble[i][0][10]
+            NJbode[q - 1][11] = Sassemble[i][0][11]
+            NJbode[q - 1][12] = Sassemble[i][0][12]
+            NJbode[q - 1][13] = Sassemble[i][0][13]
+            NJbode[q - 1][14] = q
+            for j in range(int(np.amax(SNodevalue[i,:,1]))):
+                NJbode[q + j - 1][0] = NJbode[q+j-2][0] + SNodevalue[i][j][2]
+                NJbode[q + j - 1][1] =  Sassemble[i][j+1][0]
+                NJbode[q + j - 1][2] =  Sassemble[i][j+1][2]
+                NJbode[q + j - 1][3] =  Sassemble[i][j+1][3]
+                NJbode[q + j - 1][4] =  Sassemble[i][j+1][4]
+                NJbode[q + j - 1][5] =  Sassemble[i][j+1][5]
+                NJbode[q + j - 1][6] =  Sassemble[i][j+1][6]
+                NJbode[q + j - 1][7] =  Sassemble[i][j+1][7]
+                NJbode[q + j - 1][8] =  Sassemble[i][j+1][8]
+                NJbode[q + j - 1][9] =  Sassemble[i][j+1][9]
+                NJbode[q + j - 1][10] = Sassemble[i][j+1][10]
+                NJbode[q + j - 1][11] = Sassemble[i][j+1][11]
+                NJbode[q + j - 1][12] = Sassemble[i][j+1][12]
+                NJbode[q + j - 1][13] = Sassemble[i][j+1][13]
+                NJbode[q + j - 1][14] = q +j + 1
+
+            r += np.sum(SNodevalue[i,:,2])
+            q += np.amax(SNodevalue[i,:,1]) + 1
+
+        print('NJBode = ', NJbode)

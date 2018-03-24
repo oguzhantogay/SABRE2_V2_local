@@ -48,8 +48,8 @@ else
       end
    end
   
-   fprintf('Sassemble in LB code')   
-   Sassemble
+%    fprintf('Sassemble in LB code')   
+%    Sassemble
    % *********************************************** Njbode
    q = 1; r = 1;
    for i = 1:mem   
@@ -88,7 +88,8 @@ else
       r = sum(SNodevalue(i,:,3))+r;
       q = max(SNodevalue(i,:,2))+q+1;  
    end
-
+   fprintf('NJbode in segm =')
+   NJbode
    % *********************************************** NC with Duplication
    nodep=[];xgp=[];ygp=[];zgp=[];bfbp=[];bftp=[];tfbp=[];
    tftp=[];dp=[];twp=[];dwp=[];hp=[];Afilp=[];

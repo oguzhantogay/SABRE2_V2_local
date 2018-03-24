@@ -484,7 +484,7 @@ class glWidget(QGLWidget, QMainWindow):
         glWidget.render_checked = self.ui.actionRender_All_Members.isChecked()
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
         if self.ui.DefinitionTabs.currentIndex() == 3:
-            print('test')
+            # print('test')
             SABRE2LBCODE.SABRE2LBCODE.LBCode(self)
 
         try:

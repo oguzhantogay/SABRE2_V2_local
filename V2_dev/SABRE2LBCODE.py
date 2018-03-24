@@ -1,6 +1,7 @@
 import numpy as np
 import h5_file
 from PyQt4.QtGui import *
+from scipy.interpolate import interp1d
 
 class SABRE2LBCODE(QMainWindow):
     """ put the doc in here"""
@@ -127,3 +128,79 @@ class SABRE2LBCODE(QMainWindow):
             # print('r = ', r)
 
         # print('NJBode = ', NJbode)
+        nodes = np.zeros((2,1))
+        xgs =np.zeros((2,1))
+        ygs =np.zeros((2,1))
+        zgs =np.zeros((2,1))
+        bfbs =np.zeros((2,1))
+        tfbs = np.zeros((2,1))
+        bfts = np.zeros((2,1))
+        tfts = np.zeros((2,1))
+        dws = np.zeros((2,1))
+        tws = np.zeros((2,1))
+        ds = np.zeros((2,1))
+        hs = np.zeros((2,1))
+        Afil = np.zeros((2,1))
+        q = 0
+        for i in range(mem):
+            for j in range(int(np.amax(SNodevalue[i,:2]))):
+                nodes[0][0] = NJbode[q+j][0]
+                nodes[1][0] = NJbode[q+j+1][0]
+                xgs [0][0] = NJbode[q+j][2]
+                xgs [1][0] = NJbode[q+j+1][2]
+                ygs [0][0] = NJbode[q+j][3]
+                ygs [1][0] = NJbode[q+j+1][3]
+                zgs [0][0] = NJbode[q+j][4]
+                zgs [1][0] = NJbode[q+j+1][4]
+                bfbs [0][0] = NJbode[q+j][5]
+                bfbs [1][0] = NJbode[q+j+1][5]
+                tfbs [0][0] = NJbode[q+j][6]
+                tfbs [1][0] = NJbode[q+j+1][6]
+                bfts [0][0] = NJbode[q+j][7]
+                bfts [1][0] = NJbode[q+j+1][7]
+                tfts [0][0] = NJbode[q+j][8]
+                tfts [1][0] = NJbode[q+j+1][8]
+                dws [0][0] = NJbode[q+j][9]
+                dws [1][0] = NJbode[q+j+1][9]
+                tws [0][0] = NJbode[q+j][10]
+                tws [1][0] = NJbode[q+j+1][10]
+                ds [0][0] = NJbode[q+j][11]
+                ds [1][0] = NJbode[q+j+1][11]
+                hs [0][0] = NJbode[q+j][12]
+                hs [1][0] = NJbode[q+j+1][12]
+                Afil [0][0] = NJbode[q+j][13]
+                Afil [1][0] = NJbode[q+j+1][13]
+                if np.isclose(j+1,np.amax(SNodevalue[i,:,1])):
+                    node_1 = int(NJbode[q+1+j][0])
+                    node_2 = int(NJbode[q+2+j][0])
+                    inter = np.vstack(np.linspace(node_1,node_2,(node_2 - node_1) + 1))
+                    nodesb = interp1d(nodes,nodes,inter)
+                    xgsb =   interp1d(nodes,xgs,inter)
+                    ygsb =   interp1d(nodes,ygs,inter)
+                    zgsb =   interp1d(nodes,zgs,inter)
+                    bfbsb =  interp1d(nodes,bfbs,inter)
+                    tfbsb =  interp1d(nodes,tfbs,inter)
+                    bftsb =  interp1d(nodes,bfts,inter)
+                    tftsb =  interp1d(nodes,tfts,inter)
+                    dwsb =   interp1d(nodes,dws,inter)
+                    twsb =   interp1d(nodes,tws,inter)
+                    dsb =    interp1d(nodes,ds ,inter)
+                    hsb =    interp1d(nodes,hs ,inter)
+                    Afilb =  interp1d(nodes,Afil,inter)
+                else:
+                    node_1 = int(NJbode[q + 1 + j][0])
+                    node_2 = int(NJbode[q + 2 + j][0]) -1
+                    inter = np.vstack(np.linspace(node_1, node_2, (node_2 - node_1) + 1))
+                    nodesb = interp1d(nodes, nodes, inter)
+                    xgsb = interp1d(nodes, xgs, inter)
+                    ygsb = interp1d(nodes, ygs, inter)
+                    zgsb = interp1d(nodes, zgs, inter)
+                    bfbsb = interp1d(nodes, bfbs, inter)
+                    tfbsb = interp1d(nodes, tfbs, inter)
+                    bftsb = interp1d(nodes, bfts, inter)
+                    tftsb = interp1d(nodes, tfts, inter)
+                    dwsb = interp1d(nodes, dws, inter)
+                    twsb = interp1d(nodes, tws, inter)
+                    dsb = interp1d(nodes, ds, inter)
+                    hsb = interp1d(nodes, hs, inter)
+                    Afilb = interp1d(nodes, Afil, inter)

@@ -68,7 +68,6 @@ else
       Njbode(q,13)=Sassemble(i,1,13);
       Njbode(q,14)=Sassemble(i,1,14);
       Njbode(q,15)=q; 
-      max(SNodevalue(i,:,2))
       for j = 1:max(SNodevalue(i,:,2))   
          Njbode(q+j,1)=Njbode(q+j-1,1)+SNodevalue(i,j,3);
          Njbode(q+j,2)=Sassemble(i,j+1,1);
@@ -104,13 +103,13 @@ else
          zgs=[Njbode(q+j,5);Njbode(q+j+1,5)];
          bfbs=[Njbode(q+j,6);Njbode(q+j+1,6)]; 
          tfbs=[Njbode(q+j,7);Njbode(q+j+1,7)];
-         bfts=[Njbode(q+j,8);Njbode(q+j+1,8)];   
+         bfts=[Njbode(q+j,8);Njbode(q+j+1,8)];  
          tfts=[Njbode(q+j,9);Njbode(q+j+1,9)]; 
          dws=[Njbode(q+j,10);Njbode(q+j+1,10)];
          tws=[Njbode(q+j,11);Njbode(q+j+1,11)]; 
          ds=[Njbode(q+j,12);Njbode(q+j+1,12)];
          hs=[Njbode(q+j,13);Njbode(q+j+1,13)]; 
-         Afil=[Njbode(q+j,14);Njbode(q+j+1,14)]; 
+         Afil=[Njbode(q+j,14);Njbode(q+j+1,14)];
          
          % linear interpolation
          if isequal(j,max(SNodevalue(i,:,2)))
@@ -144,7 +143,7 @@ else
          end          
                
          nodenum = [nodep;nodesb];
-         nodep=nodenum;
+         nodep=nodenum
          xgnum = [xgp;xgsb];
          xgp=xgnum;
          ygnum = [ygp;ygsb];

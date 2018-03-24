@@ -42,8 +42,8 @@ else
             Sassemble(i,j+1,k) = BNodevalue(i,j,k);
          end
       end
-      fprintf('\ntest = ')   
-      max(BNodevalue(i,:,2))
+%       fprintf('\ntest = ')   
+%       max(BNodevalue(i,:,2))
       Sassemble(i,max(BNodevalue(i,:,2))+2,k) =JNodevalue_j(i,k);
       end
    end
@@ -68,6 +68,7 @@ else
       Njbode(q,13)=Sassemble(i,1,13);
       Njbode(q,14)=Sassemble(i,1,14);
       Njbode(q,15)=q; 
+      max(SNodevalue(i,:,2))
       for j = 1:max(SNodevalue(i,:,2))   
          Njbode(q+j,1)=Njbode(q+j-1,1)+SNodevalue(i,j,3);
          Njbode(q+j,2)=Sassemble(i,j+1,1);
@@ -83,13 +84,14 @@ else
          Njbode(q+j,12)=Sassemble(i,j+1,12);
          Njbode(q+j,13)=Sassemble(i,j+1,13);
          Njbode(q+j,14)=Sassemble(i,j+1,14);
-         Njbode(q+j,15)=q+j;  
+         Njbode(q+j,15)=q+j;
       end
       r = sum(SNodevalue(i,:,3))+r;
-      q = max(SNodevalue(i,:,2))+q+1;  
+      q = max(SNodevalue(i,:,2))+q+1;
+      
    end
-   fprintf('NJbode in segm =')
-   NJbode
+%    fprintf('NJbode in segm =')
+%    Njbode
    % *********************************************** NC with Duplication
    nodep=[];xgp=[];ygp=[];zgp=[];bfbp=[];bftp=[];tfbp=[];
    tftp=[];dp=[];twp=[];dwp=[];hp=[];Afilp=[];

@@ -16,8 +16,8 @@ class SABRE2LBCODE(QMainWindow):
         joint_nodes_length, JNodevalue = OpenGLcode.glWidget.JointTableValues(self)
         member_count, member_values, JNodeValues_i, JNodeValues_j, _, Rval = OpenGLcode.glWidget.memberTableValues(self)
 
-        print('BNodevalue = ', BNodevalue)
-        # print('SNodevalue = ', SNodevalue)
+        # print('BNodevalue = ', BNodevalue)
+        print('SNodevalue = ', SNodevalue)
         # print('joint_nodes_length = ', joint_nodes_length)
         # print('JNodevalue = ', JNodevalue)
         # print('member_count = ', member_count)
@@ -54,7 +54,7 @@ class SABRE2LBCODE(QMainWindow):
         mem = member_count                          # Total Nuber of Members
         smem = np.amax(SNodevalue[:,0,0])
         Sassemble = np.zeros((mem,int(max_b)+2,14))
-        print('max b + 1 = ' ,max_b+1)
+        # print('max b + 1 = ' ,max_b+1)
         for k in range(14):
             for i in range(mem):
                 Sassemble[i][0][k] = JNodeValues_i[i][k]
@@ -62,7 +62,7 @@ class SABRE2LBCODE(QMainWindow):
                 if not np.isclose(np.amax(BNodevalue[i,:,1]),0):
                     for j in range(int(np.amax(BNodevalue[i,:,1]))):
                         Sassemble[i,j+1,k] = BNodevalue[i,j,k]
-                print('test =', int(np.amax(BNodevalue[i,:,1])))
+                # print('test =', int(np.amax(BNodevalue[i,:,1])))
                 Sassemble[i][int(np.amax(BNodevalue[i,:,1]))+1][k] = JNodeValues_j[i][k]
 
         # print('Sassemble in LBCode =', Sassemble)
@@ -70,18 +70,23 @@ class SABRE2LBCODE(QMainWindow):
         # NJbode sizing
         q = 1
         a = 1
-        for i in range(mem):
+        for i in range(mem - 1):
             q += np.amax(SNodevalue[i,:,1]) + 1
-            for j in range(int(np.amax(SNodevalue[i,:,1]))):
-                a += j
+
+        for i in range(mem):
+            a = (int(np.amax(SNodevalue[i,:,1])))
 
         size_1 = q + a
+        # print('size_1 = ', size_1)
+        # print('Sassemble = ', Sassemble)
 
         NJbode = np.zeros((int(size_1), 15))
+        # print('NJbode first = ', NJbode)
 
         q = 1
         r = 1
         for i in range(mem):
+            # print('NJbode loop = ', q)
             NJbode[q - 1][0] = r
             NJbode[q - 1][1] = Sassemble[i][0][0]
             NJbode[q - 1][2] = Sassemble[i][0][2]
@@ -97,24 +102,28 @@ class SABRE2LBCODE(QMainWindow):
             NJbode[q - 1][12] = Sassemble[i][0][12]
             NJbode[q - 1][13] = Sassemble[i][0][13]
             NJbode[q - 1][14] = q
+
             for j in range(int(np.amax(SNodevalue[i,:,1]))):
-                NJbode[q + j - 1][0] = NJbode[q+j-2][0] + SNodevalue[i][j][2]
-                NJbode[q + j - 1][1] =  Sassemble[i][j+1][0]
-                NJbode[q + j - 1][2] =  Sassemble[i][j+1][2]
-                NJbode[q + j - 1][3] =  Sassemble[i][j+1][3]
-                NJbode[q + j - 1][4] =  Sassemble[i][j+1][4]
-                NJbode[q + j - 1][5] =  Sassemble[i][j+1][5]
-                NJbode[q + j - 1][6] =  Sassemble[i][j+1][6]
-                NJbode[q + j - 1][7] =  Sassemble[i][j+1][7]
-                NJbode[q + j - 1][8] =  Sassemble[i][j+1][8]
-                NJbode[q + j - 1][9] =  Sassemble[i][j+1][9]
-                NJbode[q + j - 1][10] = Sassemble[i][j+1][10]
-                NJbode[q + j - 1][11] = Sassemble[i][j+1][11]
-                NJbode[q + j - 1][12] = Sassemble[i][j+1][12]
-                NJbode[q + j - 1][13] = Sassemble[i][j+1][13]
-                NJbode[q + j - 1][14] = q +j + 1
+                NJbode[q + j][0] = NJbode[q+j-1][0] + SNodevalue[i][j][2]
+                NJbode[q + j][1] =  Sassemble[i][j+1][0]
+                NJbode[q + j][2] =  Sassemble[i][j+1][2]
+                NJbode[q + j][3] =  Sassemble[i][j+1][3]
+                NJbode[q + j][4] =  Sassemble[i][j+1][4]
+                NJbode[q + j][5] =  Sassemble[i][j+1][5]
+                NJbode[q + j][6] =  Sassemble[i][j+1][6]
+                NJbode[q + j][7] =  Sassemble[i][j+1][7]
+                NJbode[q + j][8] =  Sassemble[i][j+1][8]
+                NJbode[q + j][9] =  Sassemble[i][j+1][9]
+                NJbode[q + j][10] = Sassemble[i][j+1][10]
+                NJbode[q + j][11] = Sassemble[i][j+1][11]
+                NJbode[q + j][12] = Sassemble[i][j+1][12]
+                NJbode[q + j][13] = Sassemble[i][j+1][13]
+                NJbode[q + j][14] = q +j + 1
+            # print('NJbode loop last = ', NJbode)
+            r += int(np.sum(SNodevalue[i,:,2]))
+            q += int(np.amax(SNodevalue[i,:,1])) + 1
+            # print('sum = ' , np.sum(SNodevalue[i,:,2]))
+            # print('q = ', q)
+            # print('r = ', r)
 
-            r += np.sum(SNodevalue[i,:,2])
-            q += np.amax(SNodevalue[i,:,1]) + 1
-
-        print('NJBode = ', NJbode)
+        # print('NJBode = ', NJbode)

@@ -33,6 +33,8 @@ if ~isequal(error,0)
 else
    % Sassemble Assemble including Member & Bracing
    % Sassemble : Nodal Points
+%    fprintf('BNodevalue = ')
+%    BNodevalue
    for k = 1:14
       for i = 1:mem
       Sassemble(i,1,k) =JNodevalue_i(i,k);
@@ -113,6 +115,10 @@ else
          
          % linear interpolation
          if isequal(j,max(SNodevalue(i,:,2)))
+%             fprintf('in LB code if')
+%             Njbode(q+j,1)
+%             Njbode(q+j+1,1)
+%             Njbode(q+j,1):Njbode(q+j+1,1)
             nodesb=interp1(nodes,nodes,(Njbode(q+j,1):Njbode(q+j+1,1))');
             xgsb=interp1(nodes,xgs,(Njbode(q+j,1):Njbode(q+j+1,1))');
             ygsb=interp1(nodes,ygs,(Njbode(q+j,1):Njbode(q+j+1,1))');
@@ -127,10 +133,14 @@ else
             hsb=interp1(nodes,hs,(Njbode(q+j,1):Njbode(q+j+1,1))');
             Afilb=interp1(nodes,Afil,(Njbode(q+j,1):Njbode(q+j+1,1))');
          else     
-            fprintf('test else =')
-            nodes
-            (Njbode(q+j,1):(Njbode(q+j+1,1))-1)'
-            nodesb=interp1(nodes,nodes,(Njbode(q+j,1):(Njbode(q+j+1,1))-1)')
+%             fprintf('in LB code else =')
+%             q
+%             j
+%             Njbode(q+j,1)
+%             Njbode(q+j+1,1)
+%             nodes
+%             (Njbode(q+j,1):(Njbode(q+j+1,1))-1)'
+            nodesb=interp1(nodes,nodes,(Njbode(q+j,1):(Njbode(q+j+1,1))-1)');
             xgsb=interp1(nodes,xgs,(Njbode(q+j,1):(Njbode(q+j+1,1))-1)');
             ygsb=interp1(nodes,ygs,(Njbode(q+j,1):(Njbode(q+j+1,1))-1)');
             zgsb=interp1(nodes,zgs,(Njbode(q+j,1):(Njbode(q+j+1,1))-1)');
@@ -146,38 +156,38 @@ else
          end          
                
          nodenum = [nodep;nodesb];
-         nodep=nodenum
+         nodep=nodenum;
          xgnum = [xgp;xgsb];
          xgp=xgnum;
          ygnum = [ygp;ygsb];
-         ygp=ygnum; 
+         ygp=ygnum;
          zgnum = [zgp;zgsb];
          zgp=zgnum;   
          bfbnum = [bfbp;bfbsb];
          bfbp=bfbnum;
          tfbnum = [tfbp;tfbsb];
-         tfbp=tfbnum;           
+         tfbp=tfbnum;          
          bftnum = [bftp;bftsb];
-         bftp=bftnum; 
+         bftp=bftnum;
          tftnum = [tftp;tftsb];
          tftp=tftnum;
          dwnum = [dwp;dwsb];
-         dwp=dwnum; 
+         dwp=dwnum;
          twnum = [twp;twsb];
-         twp=twnum;  
+         twp=twnum;
          dnum = [dp;dsb];
          dp=dnum;
          hnum = [hp;hsb];
          hp=hnum;
          Afilnum = [Afilp;Afilb];
-         Afilp=Afilnum;         
+         Afilp=Afilnum;        
       end
       q = max(SNodevalue(i,:,2))+q+1;  
      
    end
    % integer
    nodenum = round(nodenum);
-   NC =[nodenum,xgnum,ygnum,zgnum,bfbnum,tfbnum,bftnum,tftnum,dwnum,twnum,dnum,hnum,Afilnum];  
+   NC =[nodenum,xgnum,ygnum,zgnum,bfbnum,tfbnum,bftnum,tftnum,dwnum,twnum,dnum,hnum,Afilnum] 
 
    % *********************************************** NCa
    % Set duplated nodes as zeros.

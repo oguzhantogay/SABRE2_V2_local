@@ -315,20 +315,20 @@ class AddNodeClass(QMainWindow):
                 Afills = (JNodevalue_i[mnum][13], JNodevalue_j[mnum][13])
             else:
                 print('else_1')
-                print("seglength = ", seglength)
+                # print("seglength = ", seglength)
                 ntap = 0
                 for i in range(int(max(BNodevalue[mnum, :, 1]))):
                     if seglength > BNodevalue[mnum][i][15]:
                         print('if_2')
                         ntap = int(i) + 1
 
-                print('ntap = ', ntap)
+                # print('ntap = ', ntap)
 
                 if int(max(BNodevalue[mnum, :, 1])) == 1:
                     print('if_3')
                     if ntap == 0:
                         print('if_4')
-                        print('i = ', i, 'mnum = ', mnum, )
+                        # print('i = ', i, 'mnum = ', mnum, )
                         seL = np.sqrt((JNodevalue_i[mnum][2] - BNodevalue[mnum][ntap][2]) ** 2 + (
                                 JNodevalue_i[mnum][3] - BNodevalue[mnum][ntap][3]) ** 2 + (JNodevalue_i[mnum][4] -
                                                                                                BNodevalue[mnum][

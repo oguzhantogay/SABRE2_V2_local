@@ -18,7 +18,7 @@ class SABRE2LBCODE(QMainWindow):
         member_count, member_values, JNodeValues_i, JNodeValues_j, _, Rval = OpenGLcode.glWidget.memberTableValues(self)
 
         # print('BNodevalue = ', BNodevalue)
-        print('SNodevalue = ', SNodevalue)
+        # print('SNodevalue = ', SNodevalue)
         # print('joint_nodes_length = ', joint_nodes_length)
         # print('JNodevalue = ', JNodevalue)
         # print('member_count = ', member_count)
@@ -156,7 +156,8 @@ class SABRE2LBCODE(QMainWindow):
         Afil = np.zeros((2,1))
         q = 0
         for i in range(mem):
-            for j in range(int(np.amax(SNodevalue[i,:2]))):
+
+            for j in range(int(np.amax(SNodevalue[i,:,1]))):
                 nodes[0][0] = NJbode[q+j][0]
                 nodes[1][0] = NJbode[q+j+1][0]
                 xgs [0][0] = NJbode[q+j][2]
@@ -184,44 +185,52 @@ class SABRE2LBCODE(QMainWindow):
                 Afil [0][0] = NJbode[q+j][13]
                 Afil [1][0] = NJbode[q+j+1][13]
                 if np.isclose(j+1,np.amax(SNodevalue[i,:,1])):
-                    node_1 = int(NJbode[q+1+j][0])
-                    node_2 = int(NJbode[q+2+j][0])
-                    inter = np.vstack(np.linspace(node_1,node_2,(node_2 - node_1) + 1))
-                    nodesb = np.interp(nodes,nodes,inter)
-                    print('nodesb = ', nodesb)
-                    xgsb =   np.interp(nodes,xgs,inter)
-                    ygsb =   np.interp(nodes,ygs,inter)
-                    zgsb =   np.interp(nodes,zgs,inter)
-                    bfbsb =  np.interp(nodes,bfbs,inter)
-                    tfbsb =  np.interp(nodes,tfbs,inter)
-                    bftsb =  np.interp(nodes,bfts,inter)
-                    tftsb =  np.interp(nodes,tfts,inter)
-                    dwsb =   np.interp(nodes,dws,inter)
-                    twsb =   np.interp(nodes,tws,inter)
-                    dsb =    np.interp(nodes,ds ,inter)
-                    hsb =    np.interp(nodes,hs ,inter)
-                    Afilb =  np.interp(nodes,Afil,inter)
-                else:
-                    node_1 = int(NJbode[q + j][0])
-                    node_2 = int(NJbode[q + 1 + j][0]) -1
-                    inter = np.vstack(np.linspace(node_1, node_2, (node_2 - node_1) + 1))
-                    print('nodes = ', nodes, '\ninter = ', inter)
+                    # print('# if in LB code')
+                    node_1 = int(NJbode[q+j][0])
+                    node_2 = int(NJbode[q+1+j][0])
+                    # print('node 1 = ', node_1, '\nnode 2 = ', node_2)
+                    inter = np.vstack(np.linspace(node_1,node_2,(node_2 - node_1)+1))
+                    # print('\ninter = ', inter)
                     nodesb = np.interp(inter[:,0], nodes[:,0], nodes[:,0])
-                    print('nodesb = ', nodesb)
-                    xgsb = np.interp(nodes, xgs, inter)
-                    ygsb = np.interp(nodes, ygs, inter)
-                    zgsb = np.interp(nodes, zgs, inter)
-                    bfbsb = np.interp(nodes, bfbs, inter)
-                    tfbsb = np.interp(nodes, tfbs, inter)
-                    bftsb = np.interp(nodes, bfts, inter)
-                    tftsb = np.interp(nodes, tfts, inter)
-                    dwsb = np.interp(nodes, dws, inter)
-                    twsb = np.interp(nodes, tws, inter)
-                    dsb = np.interp(nodes, ds, inter)
-                    hsb = np.interp(nodes, hs, inter)
-                    Afilb = np.interp(nodes, Afil, inter)
+                    # print('nodesb = ', nodesb)
+                    xgsb =   np.interp(inter[:,0],nodes[:,0],xgs[:,0])
+                    ygsb =   np.interp(inter[:,0],nodes[:,0],ygs[:,0])
+                    zgsb =   np.interp(inter[:,0],nodes[:,0],zgs[:,0])
+                    bfbsb =  np.interp(inter[:,0],nodes[:,0],bfbs[:,0])
+                    tfbsb =  np.interp(inter[:,0],nodes[:,0],tfbs[:,0])
+                    bftsb =  np.interp(inter[:,0],nodes[:,0],bfts[:,0])
+                    tftsb =  np.interp(inter[:,0],nodes[:,0],tfts[:,0])
+                    dwsb =   np.interp(inter[:,0],nodes[:,0],dws[:,0])
+                    twsb =   np.interp(inter[:,0],nodes[:,0],tws[:,0])
+                    dsb =    np.interp(inter[:,0],nodes[:,0],ds [:,0])
+                    hsb =    np.interp(inter[:,0],nodes[:,0],hs [:,0])
+                    Afilb =  np.interp(inter[:,0],nodes[:,0],Afil[:,0])
+                else:
+                    print('else in LB code')
+                    # print('q = ', q, '\nj = ' , j)
+                    node_1 = int(NJbode[q + j][0])
+                    node_2 = int(NJbode[q + 1 + j][0])
+                    # print('node 1 = ', node_1, '\nnode 2 = ', node_2)
+                    inter = np.vstack(np.linspace(node_1, node_2-1, (node_2 - node_1)))
+                    # print('\ninter = ', inter)
 
-                if nodep == None:
+                    nodesb = np.interp(inter[:,0], nodes[:,0], nodes[:,0])
+                    # print('nodesb = ', nodesb)
+                    xgsb =  np.interp(inter[:,0], nodes[:,0], xgs[:,0])
+                    # print('xgsb = ', xgsb)
+                    ygsb =  np.interp(inter[:,0], nodes[:,0], ygs[:,0])
+                    zgsb =  np.interp(inter[:,0], nodes[:,0], zgs[:,0])
+                    bfbsb = np.interp(inter[:,0], nodes[:,0], bfbs[:,0])
+                    tfbsb = np.interp(inter[:,0], nodes[:,0], tfbs[:,0])
+                    bftsb = np.interp(inter[:,0], nodes[:,0], bfts[:,0])
+                    tftsb = np.interp(inter[:,0], nodes[:,0], tfts[:,0])
+                    dwsb =  np.interp(inter[:,0], nodes[:,0], dws[:,0])
+                    twsb =  np.interp(inter[:,0], nodes[:,0], tws[:,0])
+                    dsb =   np.interp(inter[:,0], nodes[:,0], ds[:,0])
+                    hsb =   np.interp(inter[:,0], nodes[:,0], hs[:,0])
+                    Afilb = np.interp(inter[:,0], nodes[:,0], Afil[:,0])
+                # print('nodep = ', nodep)
+                if nodep is None:
                     nodenum = np.vstack(nodesb)
                     nodep = nodenum
                     xgnum = np.vstack(xgsb)
@@ -249,46 +258,82 @@ class SABRE2LBCODE(QMainWindow):
                     Afilnum = np.vstack(Afilb)
                     Afilp=Afilnum
                 else:
-                    nodenum = np.vstack((nodep,nodesb))
+                    nodenum = np.vstack((nodep,np.vstack(nodesb)))
                     nodep = nodenum
-                    xgnum = np.vstack((xgp,xgsb))
+                    xgnum = np.vstack((xgp,np.vstack(xgsb)))
                     xgp=xgnum
-                    ygnum = np.vstack((ygp,ygsb))
+                    ygnum = np.vstack((ygp,np.vstack(ygsb)))
                     ygp=ygnum
-                    zgnum = np.vstack((zgp,zgsb))
+                    zgnum = np.vstack((zgp,np.vstack(zgsb)))
                     zgp=zgnum
-                    bfbnum = np.vstack((bfbp, bfbsb))
+                    bfbnum = np.vstack((bfbp,np.vstack( bfbsb)))
                     bfbp=bfbnum
-                    tfbnum = np.vstack((tfbp, tfbsb))
+                    tfbnum = np.vstack((tfbp,np.vstack( tfbsb)))
                     tfbp=tfbnum
-                    bftnum = np.vstack((bftp,bftsb))
+                    bftnum = np.vstack((bftp,np.vstack(bftsb)))
                     bftp=bftnum
-                    tftnum = np.vstack((tftp, tftsb))
+                    tftnum = np.vstack((tftp,np.vstack( tftsb)))
                     tftp=tftnum
-                    dwnum = np.vstack((dwp,dwsb))
+                    dwnum = np.vstack((dwp,np.vstack(dwsb)))
                     dwp=dwnum
-                    twnum = np.vstack((twp, twsb))
+                    twnum = np.vstack((twp,np.vstack( twsb)))
                     twp=twnum
-                    dnum = np.vstack((dp,dsb))
+                    dnum = np.vstack((dp,np.vstack(dsb)))
                     dp=dnum
-                    hnum = np.vstack((hp,hsb))
+                    hnum = np.vstack((hp,np.vstack(hsb)))
                     hp=hnum
-                    Afilnum = np.vstack((Afilp,Afilb))
+                    Afilnum = np.vstack((Afilp,np.vstack(Afilb)))
                     Afilp=Afilnum
-            q = int(np.amax(SNodevalue[i,:,1])) + q
 
-            print('nodenum = ', nodenum)
-            print('xgnum = ', xgnum)
-            print('ygnum = ', ygnum)
-            print('zgnum = ', zgnum)
-            print('bfbnum = ', bfbnum)
-            print('tfbnum = ', tfbnum)
-            print('bftnum = ', bftnum)
-            print('tftnum = ', tftnum)
-            print('dwnum = ', dwnum)
-            print('twnum = ', twnum)
-            print('dnum = ', dnum)
-            print('hnum = ', hnum)
-            print('Afilnum = ', Afilnum)
+            # print('amax = ', np.amax(SNodevalue[i,:,1]))
+            q = int(np.amax(SNodevalue[i,:,1])) + q + 1
+
+        print('nodenum = ', nodenum)
+        # print('xgnum = ', xgnum)
+        # print('ygnum = ', ygnum)
+        # print('zgnum = ', zgnum)
+        # print('bfbnum = ', bfbnum)
+        # print('tfbnum = ', tfbnum)
+        # print('bftnum = ', bftnum)
+        # print('tftnum = ', tftnum)
+        # print('dwp = ', dwp)
+        # print('twnum = ', twnum)
+        # print('dp = ', dp)
+        # print('hp = ', hp)
+        # print('Afilnum = ', Afilnum)
+
+        nodenum = nodenum.astype(int)
+
+        NC = np.zeros((nodenum.shape[0], 13))
+        NC[:,0] = nodenum[:,0]
+        NC[:,1] = xgnum[:,0]
+        NC[:,2] = ygnum[:,0]
+        NC[:,3] = zgnum[:,0]
+        NC[:,4] = bfbnum[:,0]
+        NC[:,5] = tfbnum[:,0]
+        NC[:,6] = bftnum[:,0]
+        NC[:,7] = tftnum[:,0]
+        NC[:,8] = dwnum[:,0]
+        NC[:,9] = twnum[:,0]
+        NC[:,10] = dnum[:,0]
+        NC[:,11] = hnum[:,0]
+        NC[:,12] = Afilnum[:,0]
+
+        q = 0
+        size_row = 0
+        a = 0
+        # print('SNodevalue = ', SNodevalue)
+        for i in range(mem):
+            # print('sum =',  np.sum(SNodevalue[i,:,2]))
+            a = np.sum(SNodevalue[i,:,2])
+            if size_row <=  a:
+                size_row = a
+
+        # print(' a  = ', )
+        NCa = np.zeros((int(2*a + 2),16))
+
+
+
+
 
 

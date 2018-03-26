@@ -167,7 +167,8 @@ else
                            BNodevalue(i,p,15)=1;
                            BNodevalue(i,p,16)=BNodeval(i,j,15); 
                            p=p+1;
-                           
+                           fprintf('BNodevalue 5 - 1')
+                           BNodevalue
                         elseif isequal(get(pdb_step_edit,'Value'),2) % left step      % if condition 5 - 2  
                             fprintf('\n# 5 - 2')
 
@@ -1767,8 +1768,8 @@ else
          L1(:,:)=[];
       end
    end
-   fprintf('BNodevalueorder at last')
-   BNodevalueOrder
+%    fprintf('BNodevalueorder at last')
+%    BNodevalueOrder
    % Reset BNodevalue Using Sorted BNodevalueOrder
    BNodevalue=BNodevalueOrder;
    % *********************************************************** Sorting E   

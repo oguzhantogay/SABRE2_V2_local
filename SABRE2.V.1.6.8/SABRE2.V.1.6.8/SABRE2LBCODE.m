@@ -126,8 +126,11 @@ else
             dsb=interp1(nodes,ds,(Njbode(q+j,1):Njbode(q+j+1,1))');
             hsb=interp1(nodes,hs,(Njbode(q+j,1):Njbode(q+j+1,1))');
             Afilb=interp1(nodes,Afil,(Njbode(q+j,1):Njbode(q+j+1,1))');
-         else            
-            nodesb=interp1(nodes,nodes,(Njbode(q+j,1):(Njbode(q+j+1,1))-1)');
+         else     
+            fprintf('test else =')
+            nodes
+            (Njbode(q+j,1):(Njbode(q+j+1,1))-1)'
+            nodesb=interp1(nodes,nodes,(Njbode(q+j,1):(Njbode(q+j+1,1))-1)')
             xgsb=interp1(nodes,xgs,(Njbode(q+j,1):(Njbode(q+j+1,1))-1)');
             ygsb=interp1(nodes,ygs,(Njbode(q+j,1):(Njbode(q+j+1,1))-1)');
             zgsb=interp1(nodes,zgs,(Njbode(q+j,1):(Njbode(q+j+1,1))-1)');

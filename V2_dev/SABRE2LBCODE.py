@@ -18,15 +18,15 @@ class SABRE2LBCODE(QMainWindow):
         joint_nodes_length, JNodevalue = OpenGLcode.glWidget.JointTableValues(self)
         member_count, member_values, JNodeValues_i, JNodeValues_j, _, Rval = OpenGLcode.glWidget.memberTableValues(self)
 
-        # print('BNodevalue = ', BNodevalue)
-        # print('SNodevalue = ', SNodevalue)
-        # print('joint_nodes_length = ', joint_nodes_length)
-        # print('JNodevalue = ', JNodevalue)
-        # print('member_count = ', member_count)
-        # print('member_values = ', member_values)
-        # print('JNodeValues_i = ', JNodeValues_i)
-        # print('JNodeValues_j = ', JNodeValues_j)
-        # print('Rval = ', Rval)
+        print('BNodevalue = ', BNodevalue)
+        print('SNodevalue = ', SNodevalue)
+        print('joint_nodes_length = ', joint_nodes_length)
+        print('JNodevalue = ', JNodevalue)
+        print('member_count = ', member_count)
+        print('member_values = ', member_values)
+        print('JNodeValues_i = ', JNodeValues_i)
+        print('JNodeValues_j = ', JNodeValues_j)
+        print('Rval = ', Rval)
 
         # The following code is to determine whether Material Assignment done or not ? Not Required for Table type.
         # error = 0
@@ -385,20 +385,26 @@ class SABRE2LBCODE(QMainWindow):
 
         # NCb & NCc
         # Node data without duplication
-        r = 1
-        for i in range(size):
+        size_2 = 1
+        for i in range(NCa.shape[0]):
             if not np.isclose(NCa[i][0], 0):
-                r +=1
+                size_2 +=1
+
+        # print('size_2 = ', size_2 -1 )
         r = 0
-        NCb = np.zeros((r,13))
-        for i in range(size):
+        NCb = np.zeros((size_2-1,13))
+        # print('NCb = ' , NCb)
+        for i in range(NCa.shape[0]):
             if not np.isclose(NCa[i][0], 0):
                 NCb[r][0] = r+1
                 for k in range(1,13):
                     NCb[r][k] = NCa[i][k]
                 r = r + 1
 
+        # print('r = ', r)
         NCc = NCb
+
+        # print('NCc = ' , NCc)
 
         # DUP with Duplication
         DUP = np.zeros((nodenum.shape[0], 14))
@@ -409,11 +415,28 @@ class SABRE2LBCODE(QMainWindow):
                     for k in range(13):
                         DUP[i][k+1] = NCc[j][k]
 
+        # print('DUP = ', DUP)
+
         # DUP1 & DUP2
         q = 0
         r = 0
-        DUP1 =
-        DUP2 =
+        DUP1 = np.zeros((int(size), 14))
+        DUP2 = np.zeros((int(size), 14))
         for i in range(mem):
             for j in range(int(np.sum(SNodevalue[i,:,2]))):
+                # i Node
+                DUP1[j+r][0] = j + r + 1
+                DUP1[j+r][1] = DUP[j+q][1]
+                for k in range(1,13):
+                    DUP1[j + r][k+1] = NC[j + q][k]
+
+                # j Node
+                DUP2[j + r][0] = j + r + 1
+                DUP2[j + r][1] = DUP[j + q + 1][1]
+                for k in range(1, 13):
+                    DUP2[j + r][k + 1] = NC[j + q + 1][k]
+            r +=  int(np.sum(SNodevalue[i,:,2]))
+
+        print('DUP1 = ', DUP1)
+        print('DUP2 = ', DUP2)
 

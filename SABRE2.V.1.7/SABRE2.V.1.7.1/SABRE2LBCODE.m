@@ -136,7 +136,7 @@ else
          end          
                
          nodenum = [nodep;nodesb];
-         nodep=nodenum
+         nodep=nodenum;
          xgnum = [xgp;xgsb];
          xgp=xgnum;
          ygnum = [ygp;ygsb];
@@ -172,7 +172,7 @@ else
    % *********************************************** NCa
    % Set duplated nodes as zeros.
    q = 0;NCa=[];
-   SNodevalue
+%    SNodevalue
    for i=1:mem  
       for j=1:sum(SNodevalue(i,:,3))+1        
          if isequal(i,1)
@@ -244,8 +244,8 @@ else
                   end   
                end   
             elseif isequal(j,sum(SNodevalue(i,:,3))+1)
-                fprintf('\n## elif 2\n')
-                mn
+%                 fprintf('\n## elif 2\n')
+%                 mn
                for n = 1:mn
                   if isequal(NCa(n,2),NC(j+q,2)) ...
                         && isequal(NCa(n,3),NC(j+q,3)) ... 
@@ -340,6 +340,7 @@ else
       end
    end
    NCc = NCb;
+   NCb
    % *********************************************** DUP with Duplication 
    DUP=[];
    for i=1:length(NC(:,1))   
@@ -363,6 +364,7 @@ else
          end         
       end      
    end
+   DUP
 
    % *********************************************** DUP1 & DUP2
    q = 0;r=0;DUP1=[];DUP2=[];
@@ -404,6 +406,9 @@ else
       q = sum(SNodevalue(i,:,3))+q+1;
       r = sum(SNodevalue(i,:,3))+r;
    end % for i end      
+   
+%    DUP1
+%    DUP2
 
 % ------------------------------------------------------------------------
 % ----------------------      Model generation       ---------------------

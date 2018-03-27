@@ -176,6 +176,7 @@ else
    for i=1:mem  
       for j=1:sum(SNodevalue(i,:,3))+1        
          if isequal(i,1)
+             fprintf('\n## if 1\n')
             NCa(j+q,1)=NC(j+q,1);
             NCa(j+q,2)=NC(j+q,2);
             NCa(j+q,3)=NC(j+q,3);
@@ -195,11 +196,14 @@ else
             
             mn = length(NCa(:,1));
          else
+             fprintf('\n## else 1\n')
             if isequal(j,1)
+                fprintf('\n## if 2\n')
                for n = 1:mn                 
                   if isequal(NCa(n,2),NC(j+q,2)) ...
                         && isequal(NCa(n,3),NC(j+q,3)) ...
                         && isequal(NCa(n,4),NC(j+q,4)) && isequal(NCa(n,14),0)  
+                    fprintf('\n## if 3\n')
                      NCa(j+q,1)=0;
                      NCa(j+q,2)=0;
                      NCa(j+q,3)=0;
@@ -219,6 +223,7 @@ else
                      break; % Stop loof if satisfy the creterian.
        
                   else
+                      fprintf('\n## else 3\n')
                      NCa(j+q,1)=NC(j+q,1);
                      NCa(j+q,2)=NC(j+q,2);
                      NCa(j+q,3)=NC(j+q,3);
@@ -239,10 +244,13 @@ else
                   end   
                end   
             elseif isequal(j,sum(SNodevalue(i,:,3))+1)
+                fprintf('\n## elif 2\n')
+                mn
                for n = 1:mn
                   if isequal(NCa(n,2),NC(j+q,2)) ...
                         && isequal(NCa(n,3),NC(j+q,3)) ... 
-                        && isequal(NCa(n,4),NC(j+q,4)) && isequal(NCa(n,14),0)               
+                        && isequal(NCa(n,4),NC(j+q,4)) && isequal(NCa(n,14),0)   
+                    fprintf('\n## if 4\n')
                      NCa(j+q,1)=0;
                      NCa(j+q,2)=0;
                      NCa(j+q,3)=0;
@@ -263,6 +271,7 @@ else
                      break;
                   
                   else
+                      fprintf('\n## else 4\n')
                      NCa(j+q,1)=NC(j+q,1);
                      NCa(j+q,2)=NC(j+q,2);
                      NCa(j+q,3)=NC(j+q,3);
@@ -283,6 +292,7 @@ else
                   end 
                end   
             else
+                fprintf('\n## else 2\n')
                NCa(j+q,1)=NC(j+q,1);
                NCa(j+q,2)=NC(j+q,2);
                NCa(j+q,3)=NC(j+q,3);
@@ -306,7 +316,7 @@ else
       mn = length(NCa(:,1)); 
       q = sum(SNodevalue(i,:,3))+q+1;
    end % for i end
-   NCa
+%    NCa
 
    % *********************************************** NCb & NCc 
    % Node data without duplication

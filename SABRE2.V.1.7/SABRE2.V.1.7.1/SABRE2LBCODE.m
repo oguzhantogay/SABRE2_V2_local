@@ -364,7 +364,7 @@ else
          end         
       end      
    end
-   DUP
+%    DUP
 
    % *********************************************** DUP1 & DUP2
    q = 0;r=0;DUP1=[];DUP2=[];
@@ -407,8 +407,8 @@ else
       r = sum(SNodevalue(i,:,3))+r;
    end % for i end      
    
-   DUP1
-   DUP2
+%    DUP1
+%    DUP2
 
 % ------------------------------------------------------------------------
 % ----------------------      Model generation       ---------------------
@@ -485,7 +485,7 @@ end
 
 % Calculate Initial Member x-dir Nodal Coordinates for Each Member
 [MemLength]=InitialEleLengthRendering(xg1,yg1,zg1,xg2,yg2,zg2,SNodevalue);
-MemLength
+% MemLength
 q = 0; val1=zeros(xn,1);
 for i = 1:mem
    for j=1:sum(SNodevalue(i,:,3))
@@ -580,7 +580,8 @@ for i = 1:mem
    end 
    segnum(i+1,1) = segnum(i,1) + sum(SNodevalue(i,:,3));
 end   
-
+NTshe1
+NTshe2
 % Preallocationg
 taper1 = zeros(xn,3); taper2 = zeros(xn,3);
 for n = 1:xn

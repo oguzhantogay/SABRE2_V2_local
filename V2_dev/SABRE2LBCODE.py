@@ -441,17 +441,17 @@ class SABRE2LBCODE(QMainWindow):
         #
         # print('DUP1 = ', DUP1)
         # print('DUP2 = ', DUP2)
-        return DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue
+        return DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval
 
     def InitialEleLengthRendering(self,xn,mem,xg1,yg1,zg1,xg2,yg2,zg2,SNodevalue):
         #Initial Each Element Length
         # Preallocationg
-        print('xg1 = ', xg1)
-        print('xg2 = ', xg2)
-        print('yg1 = ', yg1)
-        print('yg2 = ', yg2)
-        print('zg1 = ', zg1)
-        print('zg2 = ', zg2)
+        # print('xg1 = ', xg1)
+        # print('xg2 = ', xg2)
+        # print('yg1 = ', yg1)
+        # print('yg2 = ', yg2)
+        # print('zg1 = ', zg1)
+        # print('zg2 = ', zg2)
         xn = int(xn)
         dX0 = np.zeros((xn, 1))
         dY0 = np.zeros((xn, 1))
@@ -475,17 +475,20 @@ class SABRE2LBCODE(QMainWindow):
         for i in range(int(mem)):
             for k in range(int(np.sum(SNodevalue[i,:,2]))):
                 if np.isclose(k+segnum[i][0], segnum[i][0]):
+                    print('test1', int(k+segnum[i][0]))
                     MemLength[int(k+segnum[i][0])][0] = L0[int(k+segnum[i][0])][0]
                 else:
-                    MemLength[int(k + segnum[i][0])][0] = L0[int(k + segnum[i][0] -1)][0] + L0[int(k+segnum[i][0])][0]
+                    print('test2',int(k + segnum[i][0]))
+                    MemLength[int(k + segnum[i][0])][0] = MemLength[int(k + segnum[i][0] -1)][0] + L0[int(k+segnum[i][0])][0]
 
             segnum[i+1][0] = int(segnum[i][0] + sum(SNodevalue[i,:,2]))
 
-        print('segnum = ', segnum)
-        print('MemLength = ', MemLength)
+        # print('segnum = ', segnum)
+        # print('MemLength = ', MemLength)
+        return MemLength
 
     def modelWithBC(self):
-        DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue= SABRE2LBCODE.LBCode(self)
+        DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval= SABRE2LBCODE.LBCode(self)
 
         MI = np.zeros((DUP1[:, 0].shape[0], 3))
         MI[:, 0] = DUP1[:, 0]
@@ -599,9 +602,9 @@ class SABRE2LBCODE(QMainWindow):
         alpharef = np.zeros((int(xn), 2))
         q = 0
 
-        print('mem = ', mem)
+        # print('mem = ', mem)
         for i in range(int(mem)):
-            print('i = ', i)
+            # print('i = ', i)
             for j in range(int(np.sum(SNodevalue[i,:,2]))):
                 opp = JNodeValues_j[i, 3] - JNodeValues_i[i, 3]  # element depth in y-dir
                 adj = JNodeValues_j[i, 2] - JNodeValues_i[i, 2]  # element length in x-dir
@@ -610,8 +613,95 @@ class SABRE2LBCODE(QMainWindow):
 
             q += int(np.sum(SNodevalue[i,:,2]))
 
-        print('alpharef = ', alpharef)
+        # print('alpharef = ', alpharef)
 
-        SABRE2LBCODE.InitialEleLengthRendering(self, xn, mem, xg1, yg1, zg1, xg2, yg2, zg2, SNodevalue)
+        MemLength = SABRE2LBCODE.InitialEleLengthRendering(self, xn, mem, xg1, yg1, zg1, xg2, yg2, zg2, SNodevalue)
+        q = 0
+        xn = int(xn)
+        val1 = np.zeros((xn,1))
+        for i in range(int(mem)):
+            for j in range(int(np.sum(SNodevalue[i,:,2]))):
+                val1[q+j][0] = Rval[i][1]
+
+            q += int(np.sum(SNodevalue[i,:,2]))
+
+        NTshe1 , NTshe2 = np.zeros((xn, 4)), np.zeros((xn, 4))
+        segnum = np.zeros((int(mem) + 1, 1))
+        ys1 = np.zeros((xn, 1))
+        ys2 = np.zeros((xn, 1))
+
+        for i in range(mem):
+            if Rval[i][1] == 1:
+                for k in range(int(np.sum(SNodevalue[i, :, 2]))):
+                    ys1[int(k + segnum[i][0])][0] = (Dg1[int(k + segnum[i][0])][0]) / 2 - Dst1[int(k + segnum[i][0])][0]
+                    ys2[int(k + segnum[i][0])][0] = (Dg2[int(k + segnum[i][0])][0]) / 2 - Dst2[int(k + segnum[i][0])][
+                        0]  # Shear center
+                    if [k + segnum[i][0]][0] == (segnum[i][0]):
+                        NTshe1[[int(k + segnum[i][0])][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[int(k + segnum[i][0])][0]][0] = k + segnum[i][0] + 1
+                        NTshe1[[int(k + segnum[i][0])][0]][1] = 0
+                        NTshe2[[int(k + segnum[i][0])][0]][1] = MemLength[int(k + segnum[i][0])][0]
+                        NTshe1[[int(k + segnum[i][0])][0]][2] = ys1[int(k + segnum[i][0])][0]
+                        NTshe2[[int(k + segnum[i][0])][0]][2] = ys2[int(k + segnum[i][0])][0]
+                        NTshe1[[int(k + segnum[i][0])][0]][3] = zg1[int(k + segnum[i][0])][0]
+                        NTshe2[[int(k + segnum[i][0])][0]][3] = zg2[int(k + segnum[i][0])][0]
+                    else:
+                        NTshe1[[int(k + segnum[i][0])][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[int(k + segnum[i][0])][0]][0] = k + segnum[i][0] + 1
+                        NTshe1[[int(k + segnum[i][0])][0]][1] = MemLength[int(k + segnum[i][0] - 1)][0]
+                        NTshe2[[int(k + segnum[i][0])][0]][1] = MemLength[int(k + segnum[i][0])][0]
+                        NTshe1[[int(k + segnum[i][0])][0]][2] = ys1[int(k + segnum[i][0])][0]
+                        NTshe2[[int(k + segnum[i][0])][0]][2] = ys2[int(k + segnum[i][0])][0]
+                        NTshe1[[int(k + segnum[i][0])][0]][3] = zg1[int(k + segnum[i][0])][0]
+                        NTshe2[[int(k + segnum[i][0])][0]][3] = zg2[int(k + segnum[i][0])][0]
+
+            elif Rval[i][1] == 2:
+                for k in range(int(np.sum(SNodevalue[i, :, 2]))):
+                    ys1[int(k + segnum[i][0])][0] = - Dst1[int(k + segnum[i][0])][0]
+                    ys2[int(k + segnum[i][0])][0] = - Dst2[int(k + segnum[i][0])][0]  # Shear center
+                    if [k + segnum[i][0]][0] == (segnum[i][0]):
+                        NTshe1[[int(k + segnum[i][0])][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[int(k + segnum[i][0])][0]][0] = k + segnum[i][0] + 1
+                        NTshe1[[int(k + segnum[i][0])][0]][1] = 0
+                        NTshe2[[int(k + segnum[i][0])][0]][1] = MemLength[int(k + segnum[i][0])][0]
+                        NTshe1[[int(k + segnum[i][0])][0]][2] = ys1[int(k + segnum[i][0])][0]
+                        NTshe2[[int(k + segnum[i][0])][0]][2] = ys2[int(k + segnum[i][0])][0]
+                        NTshe1[[int(k + segnum[i][0])][0]][3] = zg1[int(k + segnum[i][0])][0]
+                        NTshe2[[int(k + segnum[i][0])][0]][3] = zg2[int(k + segnum[i][0])][0]
+                    else:
+                        NTshe1[[int(k + segnum[i][0])][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[int(k + segnum[i][0])][0]][0] = k + segnum[i][0] + 1
+                        NTshe1[[int(k + segnum[i][0])][0]][1] = MemLength[(k + segnum[i][0] - 1)][0]
+                        NTshe2[[int(k + segnum[i][0])][0]][1] = MemLength[(k + segnum[i][0])][0]
+                        NTshe1[[int(k + segnum[i][0])][0]][2] = ys1[int(k + segnum[i][0])][0]
+                        NTshe2[[int(k + segnum[i][0])][0]][2] = ys2[int(k + segnum[i][0])][0]
+                        NTshe1[[int(k + segnum[i][0])][0]][3] = zg1[int(k + segnum[i][0])][0]
+                        NTshe2[[int(k + segnum[i][0])][0]][3] = zg2[int(k + segnum[i][0])][0]
+
+            elif Rval[i][1] == 3:
+                for k in range(int(np.sum(SNodevalue[i, :, 2]))):
+                    ys1[k + segnum[i][0]][0] = (Dsb1[k + segnum[i][0]][0])
+                    ys2[k + segnum[i][0]][0] = (Dsb2[k + segnum[i][0]][0])
+                    if [k + segnum[i][0]][0] == (segnum[i][0]):
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe1[[k + segnum[i][0]][0]][1] = 0
+                        NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][2] = ys2[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
+                    else:
+                        NTshe1[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe2[[k + segnum[i][0]][0]][0] = k + segnum[i][0] + 1
+                        NTshe1[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0] - 1][0]
+                        NTshe2[[k + segnum[i][0]][0]][1] = MemLength[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][2] = ys1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][2] = ys2[k + segnum[i][0]][0]
+                        NTshe1[[k + segnum[i][0]][0]][3] = zg1[k + segnum[i][0]][0]
+                        NTshe2[[k + segnum[i][0]][0]][3] = zg2[k + segnum[i][0]][0]
+            segnum[i + 1][0] = int(segnum[i][0] + np.sum(SNodevalue[i, :, 2]))
+
+        # print("NTshe1 = \n", NTshe1,"\nNTshe2 = \n", NTshe2)
 
 

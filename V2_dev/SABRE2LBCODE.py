@@ -30,7 +30,7 @@ class SABRE2LBCODE(QMainWindow):
 
         # The following code is to determine whether Material Assignment done or not ? Not Required for Table type.
         # error = 0
-        # xn = np.sum(np.sum(SNodevalue[:,:,2]))      # Total Number of Elements
+        xn = int(np.sum(np.sum(SNodevalue[:,:,2])))      # Total Number of Elements
         # mem = member_count                          # Total Nuber of Members
         # smem = np.amax(SNodevalue[:,0,0])
         #
@@ -327,7 +327,7 @@ class SABRE2LBCODE(QMainWindow):
             # print('sum =',  np.sum(SNodevalue[i,:,2]))
             size += np.sum(SNodevalue[i, :, 2])
         print('size =', size)
-        NCa = np.zeros((int(size)+mem, 16))
+        NCa = np.zeros((int(size) + mem, 16))
 
         mn = NCa[:, 0].shape[0]
         for i in range(mem):
@@ -349,15 +349,15 @@ class SABRE2LBCODE(QMainWindow):
                                 print('j = ', j, 'q = ', q)
                                 for k in range(13):
                                     NCa[j + q][k] = 0
-                                NCa[j+q][13] = n+1
-                                NCa[j+q][14] = i+1
-                                NCa[j+q][15] = j+1
+                                NCa[j + q][13] = n + 1
+                                NCa[j + q][14] = i + 1
+                                NCa[j + q][15] = j + 1
                                 break
                             else:
                                 print('\n## else 3\n')
                                 for k in range(13):
                                     NCa[j + q][k] = NC[j + q][k]
-                    elif np.isclose(j, np.sum(SNodevalue[i,:,2])):
+                    elif np.isclose(j, np.sum(SNodevalue[i, :, 2])):
                         print('\n## elif 2\n')
                         # print('mn in elif 2 = ', mn)
                         for n in range(mn):
@@ -366,8 +366,8 @@ class SABRE2LBCODE(QMainWindow):
                                 NCa[n][3], NC[j + q][3]) and np.isclose(NCa[n][13], 0):
                                 print('\n## if 4\n')
                                 NCa[j + q][13] = n + 1
-                                NCa[j + q][14] = i+1
-                                NCa[j + q][15] = j+1
+                                NCa[j + q][14] = i + 1
+                                NCa[j + q][15] = j + 1
                                 break
                             else:
                                 print('\n## else 4\n')
@@ -379,7 +379,7 @@ class SABRE2LBCODE(QMainWindow):
                             NCa[j + q][k] = NC[j + q][k]
 
             mn = int(np.sum(SNodevalue[i, :, 2])) + 1
-            q += int(np.sum(SNodevalue[i,:,2])) + 1
+            q += int(np.sum(SNodevalue[i, :, 2])) + 1
 
         # print('NCa at the end of the loop = ', NCa)
 
@@ -388,16 +388,16 @@ class SABRE2LBCODE(QMainWindow):
         size_2 = 1
         for i in range(NCa.shape[0]):
             if not np.isclose(NCa[i][0], 0):
-                size_2 +=1
+                size_2 += 1
 
         # print('size_2 = ', size_2 -1 )
         r = 0
-        NCb = np.zeros((size_2-1,13))
+        NCb = np.zeros((size_2 - 1, 13))
         # print('NCb = ' , NCb)
         for i in range(NCa.shape[0]):
             if not np.isclose(NCa[i][0], 0):
-                NCb[r][0] = r+1
-                for k in range(1,13):
+                NCb[r][0] = r + 1
+                for k in range(1, 13):
                     NCb[r][k] = NCa[i][k]
                 r = r + 1
 
@@ -410,10 +410,11 @@ class SABRE2LBCODE(QMainWindow):
         DUP = np.zeros((nodenum.shape[0], 14))
         for i in range(nodenum.shape[0]):
             for j in range(NCc.shape[0]):
-                if np.isclose(NC[i][1],NCc[j][1]) and np.isclose(NC[i][2], NCc[j][2]) and np.isclose(NC[i][3], NCc[j][3]):
+                if np.isclose(NC[i][1], NCc[j][1]) and np.isclose(NC[i][2], NCc[j][2]) and np.isclose(NC[i][3],
+                                                                                                      NCc[j][3]):
                     DUP[i][0] = i + 1
                     for k in range(13):
-                        DUP[i][k+1] = NCc[j][k]
+                        DUP[i][k + 1] = NCc[j][k]
 
         # print('DUP = ', DUP)
 
@@ -423,20 +424,194 @@ class SABRE2LBCODE(QMainWindow):
         DUP1 = np.zeros((int(size), 14))
         DUP2 = np.zeros((int(size), 14))
         for i in range(mem):
-            for j in range(int(np.sum(SNodevalue[i,:,2]))):
+            for j in range(int(np.sum(SNodevalue[i, :, 2]))):
                 # i Node
-                DUP1[j+r][0] = j + r + 1
-                DUP1[j+r][1] = DUP[j+q][1]
-                for k in range(1,13):
-                    DUP1[j + r][k+1] = NC[j + q][k]
+                DUP1[j + r][0] = j + r + 1
+                DUP1[j + r][1] = DUP[j + q][1]
+                for k in range(1, 13):
+                    DUP1[j + r][k + 1] = NC[j + q][k]
 
                 # j Node
                 DUP2[j + r][0] = j + r + 1
                 DUP2[j + r][1] = DUP[j + q + 1][1]
                 for k in range(1, 13):
                     DUP2[j + r][k + 1] = NC[j + q + 1][k]
-            r +=  int(np.sum(SNodevalue[i,:,2]))
+            r += int(np.sum(SNodevalue[i, :, 2]))
+            q += int(np.sum(SNodevalue[i, :, 2])) + 1
+        #
+        # print('DUP1 = ', DUP1)
+        # print('DUP2 = ', DUP2)
+        return DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue
 
-        print('DUP1 = ', DUP1)
-        print('DUP2 = ', DUP2)
+    def InitialEleLengthRendering(self,xn,mem,xg1,yg1,zg1,xg2,yg2,zg2,SNodevalue):
+        #Initial Each Element Length
+        # Preallocationg
+        print('xg1 = ', xg1)
+        print('xg2 = ', xg2)
+        print('yg1 = ', yg1)
+        print('yg2 = ', yg2)
+        print('zg1 = ', zg1)
+        print('zg2 = ', zg2)
+        xn = int(xn)
+        dX0 = np.zeros((xn, 1))
+        dY0 = np.zeros((xn, 1))
+        dZ0 = np.zeros((xn, 1))
+        L0 =  np.zeros((xn, 1))
+        for i in range(int(xn)):
+            dX0[i][0] = xg2[i][0] - xg1[i][0]
+            dY0[i][0] = yg2[i][0] - yg1[i][0]
+            dZ0[i][0] = zg2[i][0] - zg1[i][0]
+
+            L0[i][0] = np.sqrt(np.square(dX0[i][0])) + np.sqrt(np.square(dY0[i][0])) + np.sqrt(np.square(dZ0[i][0]))
+
+        # Initial Member x-dir Nodal Coordinates for Each Member
+        # Preallocationg
+
+        print('L0 = ',  L0)
+
+        MemLength = np.zeros((xn, 1))
+        segnum = np.zeros((int(mem) + 1 , 1))
+
+        for i in range(int(mem)):
+            for k in range(int(np.sum(SNodevalue[i,:,2]))):
+                if np.isclose(k+segnum[i][0], segnum[i][0]):
+                    MemLength[int(k+segnum[i][0])][0] = L0[int(k+segnum[i][0])][0]
+                else:
+                    MemLength[int(k + segnum[i][0])][0] = L0[int(k + segnum[i][0] -1)][0] + L0[int(k+segnum[i][0])][0]
+
+            segnum[i+1][0] = int(segnum[i][0] + sum(SNodevalue[i,:,2]))
+
+        print('segnum = ', segnum)
+        print('MemLength = ', MemLength)
+
+    def modelWithBC(self):
+        DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue= SABRE2LBCODE.LBCode(self)
+
+        MI = np.zeros((DUP1[:, 0].shape[0], 3))
+        MI[:, 0] = DUP1[:, 0]
+        MI[:, 1] = DUP1[:, 1]
+        MI[:, 2] = DUP2[:, 1]
+        print('MI = ', MI)
+
+        xg1, xg2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros(
+            (DUP1[:, 0].shape[0], 1))  # element length: xg1(start) xg2(end)
+        yg1, yg2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros(
+            (DUP1[:, 0].shape[0], 1))  # element length: xg1(start) xg2(end)
+        zg1, zg2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros(
+            (DUP1[:, 0].shape[0], 1))  # element length: xg1(start) xg2(end)
+
+        xg1[:, 0] = DUP1[:, 2]
+        yg1[:, 0] = DUP1[:, 3]
+        zg1[:, 0] = DUP1[:, 4]
+
+        xg2[:, 0] = DUP2[:, 2]
+        yg2[:, 0] = DUP2[:, 3]
+        zg2[:, 0] = DUP2[:, 4]
+
+        # Section properties at each element under natural frame
+        bfb1, bfb2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros((DUP1[:, 0].shape[0], 1))  # Bottom flange width
+        tfb1, tfb2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros((DUP1[:, 0].shape[0], 1))  # Bottom flange thickness
+        bft1, bft2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros((DUP1[:, 0].shape[0], 1))  # Top flange width
+        tft1, tft2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros((DUP1[:, 0].shape[0], 1))  # Top flange thickness
+        Dg1, Dg2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros((DUP1[:, 0].shape[0], 1))  # dw:Web depth (y-dir)
+        tw1, tw2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros((DUP1[:, 0].shape[0], 1))  # dw:Web depth (y-dir)
+        hg1, hg2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros(
+            (DUP1[:, 0].shape[0], 1))  # h : Distance between flange centroids
+
+        bfb1[:, 0] = DUP1[:, 5]
+        tfb1[:, 0] = DUP1[:, 6]
+        bft1[:, 0] = DUP1[:, 7]
+        tft1[:, 0] = DUP1[:, 8]
+        Dg1[:, 0] = DUP1[:, 9]
+        tw1[:, 0] = DUP1[:, 10]
+        hg1[:, 0] = DUP1[:, 12]
+
+        bfb2[:, 0] = DUP2[:, 5]
+        tfb2[:, 0] = DUP2[:, 6]
+        bft2[:, 0] = DUP2[:, 7]
+        tft2[:, 0] = DUP2[:, 8]
+        Dg2[:, 0] = DUP2[:, 9]
+        tw2[:, 0] = DUP2[:, 10]
+        hg2[:, 0] = DUP2[:, 12]
+
+        #   Geometric dimension of Cross-section
+        #   Mid-web depth
+
+        Dt1 = Dg1 / 2  # top of Web depth to mid web depth
+        Dt2 = Dg2 / 2  # top of Web depth to mid web depth
+        Db1 = Dt1  # bottom of Web depth to mid web depth
+        Db2 = Dt2  # bottom of Web depth to mid web depth
+        ht1 = Dt1 + tft1 / 2  # top flange centroid to mid web depth
+        ht2 = Dt2 + tft2 / 2  # top flange centroid to mid web depth
+        hb1 = Db1 + tfb1 / 2  # bottom flange centroid to mid web depth
+        hb2 = Db2 + tfb2 / 2  # bottom flange centroid to mid web depth
+
+        # Shear center
+        # Start node
+        # bottom flange centroid to shear center
+
+        hsb1 = np.divide((np.multiply(np.multiply(tft1, np.power(bft1, 3)), hg1)),
+                         (np.multiply(tfb1, np.power(bfb1, 3)) + np.multiply(tft1, np.power(bft1, 3))))
+        Dsb1 = hsb1 - tfb1 / 2  # bottom of Web depth to shear center
+        hst1 = hg1 - hsb1  # top flange centroid to shear center
+        Dst1 = hst1 - tft1 / 2  # top of Web depth to shear center
+
+        # End node
+        # bottom flange centroid to shear center
+        hsb2 = np.divide((np.multiply(np.multiply(tft2, np.power(bft2, 3)), hg2)),
+                         (np.multiply(tfb2, np.power(bfb2, 3)) + np.multiply(tft2, np.power(bft2, 3))))
+        Dsb2 = hsb2 - tfb2 / 2  # bottom of Web depth to shear center
+        hst2 = hg2 - hsb2  # top flange centroid to shear center
+        Dst2 = hst2 - tft2 / 2  # top of Web depth to shear center
+
+        # Centroid Axis ; ytbar = top flange to centroid
+        # Start Node
+        Ag1 = np.multiply(tft1, bft1) + np.multiply(tw1, Dg1) + np.multiply(tfb1, bfb1)
+        # print(np.divide(Dg1,2))
+        # print(np.multiply(Dg1, tft1 + np.divide(Dg1,2)))
+        # print(np.multiply(tw1, np.multiply((Dg1, tft1 + np.divide(Dg1,2)))))
+        ytbar1 = (np.divide(np.multiply(bft1, np.multiply(tft1, tft1)), 2) + np.multiply(tw1, np.multiply(
+            Dg1, tft1 + np.divide(Dg1,2))) + np.divide(np.multiply(bfb1, np.multiply(tfb1, np.divide((tft1 + Dg1 + tfb1), 2))), Ag1))
+        Dct1 = ytbar1 - tft1
+        Dcb1 = Dg1 - Dct1
+        hct1 = ytbar1 - tft1/2
+        hcb1 = hg1 - hct1
+
+
+        # End Node
+
+        Ag2 = np.multiply(tft2, bft2) + np.multiply(tw2, Dg2) + np.multiply(tfb2, bfb2)
+        ytbar2 = (np.divide(np.multiply(bft2, np.multiply(tft2, tft2)), 2) + np.multiply(tw2, np.multiply(
+            Dg2, (tft2 + np.divide(Dg2, 2)))) + np.divide(
+            np.multiply(bfb2, np.multiply(tfb2, np.divide((tft2 + Dg2 + tfb2), 2))), Ag2))
+        Dct2 = ytbar2 - tft2
+        Dcb2 = Dg2 - Dct2
+        hct2 = ytbar2 - tft2 / 2
+        hcb2 = hg2 - hct2
+
+        CSD1 = hct1 - hst1
+        CSD2 = hct2 - hst2
+
+        # Geometric dimension of Cross-section : P299 E
+
+        #Global frame angle for each element without considering shear center
+
+        alpharef = np.zeros((int(xn), 2))
+        q = 0
+
+        print('mem = ', mem)
+        for i in range(int(mem)):
+            print('i = ', i)
+            for j in range(int(np.sum(SNodevalue[i,:,2]))):
+                opp = JNodeValues_j[i, 3] - JNodeValues_i[i, 3]  # element depth in y-dir
+                adj = JNodeValues_j[i, 2] - JNodeValues_i[i, 2]  # element length in x-dir
+                alpharef[q+j][0] = MI[q+j][0]
+                alpharef[q+j][1] = np.arctan2(opp, adj)  # Only global frame angle
+
+            q += int(np.sum(SNodevalue[i,:,2]))
+
+        print('alpharef = ', alpharef)
+
+        SABRE2LBCODE.InitialEleLengthRendering(self, xn, mem, xg1, yg1, zg1, xg2, yg2, zg2, SNodevalue)
+
 

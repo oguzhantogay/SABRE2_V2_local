@@ -485,7 +485,7 @@ class glWidget(QGLWidget, QMainWindow):
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
         if self.ui.DefinitionTabs.currentIndex() == 3:
             # print('test')
-            SABRE2LBCODE.SABRE2LBCODE.LBCode(self)
+            SABRE2LBCODE.SABRE2LBCODE.modelWithBC(self)
 
         try:
             if self.ui.Members_table.item(row, 1) is None:
@@ -920,7 +920,7 @@ class glWidget(QGLWidget, QMainWindow):
         for i in range(sn):
             opp = yg2[i, 0] - yg1[i, 0]  # element depth in y-dir
             adj = xg2[i, 0] - xg1[i, 0]  # element length in x-dir
-            alpharef[i][1] = MI[i][0]
+            alpharef[i][0] = MI[i][0]
             alpharef[i][1] = np.arctan2(opp, adj)  # Only global frame angle
 
         # Calculate Initial Member x-dir Nodal Coordinates for Each Member S

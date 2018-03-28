@@ -340,7 +340,7 @@ else
       end
    end
    NCc = NCb;
-   NCb
+%    NCb
    % *********************************************** DUP with Duplication 
    DUP=[];
    for i=1:length(NC(:,1))   
@@ -407,8 +407,8 @@ else
       r = sum(SNodevalue(i,:,3))+r;
    end % for i end      
    
-%    DUP1
-%    DUP2
+   DUP1
+   DUP2
 
 % ------------------------------------------------------------------------
 % ----------------------      Model generation       ---------------------
@@ -481,10 +481,11 @@ for i = 1:mem
    end
  q = sum(SNodevalue(i,:,3))+q;
 end
+% alpharef
 
 % Calculate Initial Member x-dir Nodal Coordinates for Each Member
 [MemLength]=InitialEleLengthRendering(xg1,yg1,zg1,xg2,yg2,zg2,SNodevalue);
-
+MemLength
 q = 0; val1=zeros(xn,1);
 for i = 1:mem
    for j=1:sum(SNodevalue(i,:,3))

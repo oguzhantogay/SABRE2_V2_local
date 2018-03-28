@@ -14,6 +14,13 @@ dY0 = zeros(xn,1);
 dZ0 = zeros(xn,1);
 L0 = zeros(xn,1);
 
+xg1
+xg2
+yg1
+yg2
+zg1
+zg2
+
 for i=1:xn
    
     dX0(i,1) = (xg2(i,1)) - (xg1(i,1));
@@ -22,7 +29,7 @@ for i=1:xn
     L0(i,1) = sqrt( ( dX0(i,1) )^2 +( dY0(i,1) )^2+( dZ0(i,1) )^2  ); 
     
 end
-
+L0
 % **************** Initial Member x-dir Nodal Coordinates for Each Member
 % Preallocationg
 MemLength = zeros(xn,1);
@@ -36,4 +43,6 @@ for i = 1:mem
       end
    end
    segnum(i+1,1) = segnum(i,1) + sum(SNodevalue(i,:,3));
-end  
+   
+end
+% segnum

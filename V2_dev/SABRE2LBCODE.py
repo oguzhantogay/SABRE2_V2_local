@@ -18,19 +18,19 @@ class SABRE2LBCODE(QMainWindow):
         joint_nodes_length, JNodevalue = OpenGLcode.glWidget.JointTableValues(self)
         member_count, member_values, JNodeValues_i, JNodeValues_j, _, Rval = OpenGLcode.glWidget.memberTableValues(self)
 
-        print('BNodevalue = ', BNodevalue)
-        print('SNodevalue = ', SNodevalue)
-        print('joint_nodes_length = ', joint_nodes_length)
-        print('JNodevalue = ', JNodevalue)
-        print('member_count = ', member_count)
-        print('member_values = ', member_values)
-        print('JNodeValues_i = ', JNodeValues_i)
-        print('JNodeValues_j = ', JNodeValues_j)
-        print('Rval = ', Rval)
+        # print('BNodevalue = ', BNodevalue)
+        # print('SNodevalue = ', SNodevalue)
+        # print('joint_nodes_length = ', joint_nodes_length)
+        # print('JNodevalue = ', JNodevalue)
+        # print('member_count = ', member_count)
+        # print('member_values = ', member_values)
+        # print('JNodeValues_i = ', JNodeValues_i)
+        # print('JNodeValues_j = ', JNodeValues_j)
+        # print('Rval = ', Rval)
 
         # The following code is to determine whether Material Assignment done or not ? Not Required for Table type.
         # error = 0
-        xn = int(np.sum(np.sum(SNodevalue[:,:,2])))      # Total Number of Elements
+        # xn = int(np.sum(np.sum(SNodevalue[:,:,2])))      # Total Number of Elements
         # mem = member_count                          # Total Nuber of Members
         # smem = np.amax(SNodevalue[:,0,0])
         #
@@ -338,15 +338,15 @@ class SABRE2LBCODE(QMainWindow):
                         NCa[j + q][k] = NC[j + q][k]
 
                 else:
-                    print('\n## else 1\n')
+                    # print('\n## else 1\n')
                     if np.isclose(j, 0):
-                        print('\n## if 2\n')
+                        # print('\n## if 2\n')
                         for n in range(mn):
                             if np.isclose(NCa[n][1], NC[j + q][1]) and np.isclose(NCa[n][2],
                                                                                   NC[j + q][2]) and np.isclose(
                                 NCa[n][3], NC[j + q][3]) and np.isclose(NCa[n][13], 0):
-                                print('\n## if 3\n')
-                                print('j = ', j, 'q = ', q)
+                                # print('\n## if 3\n')
+                                # print('j = ', j, 'q = ', q)
                                 for k in range(13):
                                     NCa[j + q][k] = 0
                                 NCa[j + q][13] = n + 1
@@ -354,27 +354,27 @@ class SABRE2LBCODE(QMainWindow):
                                 NCa[j + q][15] = j + 1
                                 break
                             else:
-                                print('\n## else 3\n')
+                                # print('\n## else 3\n')
                                 for k in range(13):
                                     NCa[j + q][k] = NC[j + q][k]
                     elif np.isclose(j, np.sum(SNodevalue[i, :, 2])):
-                        print('\n## elif 2\n')
+                        # print('\n## elif 2\n')
                         # print('mn in elif 2 = ', mn)
                         for n in range(mn):
                             if np.isclose(NCa[n][1], NC[j + q][1]) and np.isclose(NCa[n][2],
                                                                                   NC[j + q][2]) and np.isclose(
                                 NCa[n][3], NC[j + q][3]) and np.isclose(NCa[n][13], 0):
-                                print('\n## if 4\n')
+                                # print('\n## if 4\n')
                                 NCa[j + q][13] = n + 1
                                 NCa[j + q][14] = i + 1
                                 NCa[j + q][15] = j + 1
                                 break
                             else:
-                                print('\n## else 4\n')
+                                # print('\n## else 4\n')
                                 for k in range(13):
                                     NCa[j + q][k] = NC[j + q][k]
                     else:
-                        print('\n## else 2\n')
+                        # print('\n## else 2\n')
                         for k in range(13):
                             NCa[j + q][k] = NC[j + q][k]
 
@@ -467,7 +467,7 @@ class SABRE2LBCODE(QMainWindow):
         # Initial Member x-dir Nodal Coordinates for Each Member
         # Preallocationg
 
-        print('L0 = ',  L0)
+        # print('L0 = ',  L0)
 
         MemLength = np.zeros((xn, 1))
         segnum = np.zeros((int(mem) + 1 , 1))
@@ -475,10 +475,10 @@ class SABRE2LBCODE(QMainWindow):
         for i in range(int(mem)):
             for k in range(int(np.sum(SNodevalue[i,:,2]))):
                 if np.isclose(k+segnum[i][0], segnum[i][0]):
-                    print('test1', int(k+segnum[i][0]))
+                    # print('test1', int(k+segnum[i][0]))
                     MemLength[int(k+segnum[i][0])][0] = L0[int(k+segnum[i][0])][0]
                 else:
-                    print('test2',int(k + segnum[i][0]))
+                    # print('test2',int(k + segnum[i][0]))
                     MemLength[int(k + segnum[i][0])][0] = MemLength[int(k + segnum[i][0] -1)][0] + L0[int(k+segnum[i][0])][0]
 
             segnum[i+1][0] = int(segnum[i][0] + sum(SNodevalue[i,:,2]))
@@ -487,6 +487,33 @@ class SABRE2LBCODE(QMainWindow):
         # print('MemLength = ', MemLength)
         return MemLength
 
+    def TapedEleLength(self, NTshex1, NTshey1, NTshez1, NTshex2, NTshey2, NTshez2, alpharef):
+        tr1 = np.zeros((3, 1))
+        tr2 = np.zeros((3, 1))
+        Rz = np.zeros((3, 3))
+
+        tr1[0][0] = NTshex1
+        tr1[1][0] = NTshey1
+        tr1[2][0] = NTshez1
+
+        tr2[0][0] = NTshex2
+        tr2[1][0] = NTshey2
+        tr2[2][0] = NTshez2
+
+        Rz[0][0] = np.cos(alpharef)
+        Rz[0][1] = -np.sin(alpharef)
+        Rz[1][0] = np.sin(alpharef)
+        Rz[1][1] = np.cos(alpharef)
+        Rz[2][2] = 1
+
+        tap1 = Rz.dot(tr1)
+        tap2 = Rz.dot(tr2)
+
+        # print("taqps", tap1, tap2)
+
+        return tap1, tap2
+
+
     def modelWithBC(self):
         DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval= SABRE2LBCODE.LBCode(self)
 
@@ -494,7 +521,7 @@ class SABRE2LBCODE(QMainWindow):
         MI[:, 0] = DUP1[:, 0]
         MI[:, 1] = DUP1[:, 1]
         MI[:, 2] = DUP2[:, 1]
-        print('MI = ', MI)
+        # print('MI = ', MI)
 
         xg1, xg2 = np.zeros((DUP1[:, 0].shape[0], 1)), np.zeros(
             (DUP1[:, 0].shape[0], 1))  # element length: xg1(start) xg2(end)
@@ -703,5 +730,604 @@ class SABRE2LBCODE(QMainWindow):
             segnum[i + 1][0] = int(segnum[i][0] + np.sum(SNodevalue[i, :, 2]))
 
         # print("NTshe1 = \n", NTshe1,"\nNTshe2 = \n", NTshe2)
+
+        taper1 = np.zeros((xn, 3))
+        taper2 = np.zeros((xn, 3))
+
+        for n in range(xn):
+            tap1, tap2 = SABRE2LBCODE.TapedEleLength(self, NTshe1[n][1], NTshe1[n][2], NTshe1[n][3], NTshe2[n][1],
+                                                 NTshe2[n][2],
+                                                 NTshe2[n][3], alpharef[n][1])
+            # print("tap1 = ", tap1)
+            # print("tap2 = ", tap2)
+
+            taper1[n, :] = tap1[:, 0]  # Which is the same as xg.
+            taper2[n, :] = tap2[:, 0]  # Which is the same as yg.
+
+        # Starting Node for each member
+        segnum[0, 0] = 0  # (Start node number - 1) for each member
+        NG1 = np.zeros((xn, 3))
+        NG2 = np.zeros((xn, 3))
+        for i in range(mem):
+            for k in range(int(np.sum(SNodevalue[i, :, 2]))):
+                NG1[int(k + segnum[i][0])][0] = DUP1[int(segnum[i][0])][2]
+                NG2[int(k + segnum[i][0])][0] = DUP1[int(segnum[i][0])][2]
+                NG1[int(k + segnum[i][0])][1] = DUP1[int(segnum[i][0])][3]
+                NG2[int(k + segnum[i][0])][1] = DUP1[int(segnum[i][0])][3]
+                NG1[int(k + segnum[i][0])][2] = DUP1[int(segnum[i][0])][4]
+                NG2[int(k + segnum[i][0])][2] = DUP1[int(segnum[i][0])][4]
+
+            segnum[i + 1][0] = segnum[i][0] + (int(np.sum(SNodevalue[i, :, 2])))
+
+        # Global frame nodal coordinates w.r.t Shear center
+        # Original Shear Center
+
+        Nshe1 = np.zeros((taper1.shape[0], 3))
+        Nshe2 = np.zeros((taper2.shape[0], 3))
+
+        Nshe1[:, 0] = taper1[:, 0] + NG1[:, 0]
+        Nshe2[:, 0] = taper2[:, 0] + NG2[:, 0]
+        Nshe1[:, 1] = taper1[:, 1] + NG1[:, 0]
+        Nshe2[:, 1] = taper2[:, 1] + NG2[:, 0]
+        Nshe1[:, 2] = taper1[:, 2] + NG1[:, 0]
+        Nshe2[:, 2] = taper2[:, 2] + NG2[:, 0]
+
+        # Initial Global frame nodal coordinates w.r.t Shear center
+
+        xg1 = Nshe1[:, 0]
+        yg1 = Nshe1[:, 1]
+        zg1 = Nshe1[:, 2]
+        xg2 = Nshe2[:, 0]
+        yg2 = Nshe2[:, 1]
+        zg2 = Nshe2[:, 2]
+
+        SNshe1 = Nshe1
+        SNshe2 = Nshe2
+
+        # ------------------------------------------------------------------------
+        # -------     Update Intersection Nodes for shear cneter      ------------
+        # ------------------------------------------------------------------------
+
+        r = 0
+        PP = np.zeros((mem, 7))
+
+        for i in range(mem):
+            for j in range(int(np.sum(SNodevalue[i,:,2]))):
+                PP[i][0] = i + 1
+                if j == 0:
+                    PP[i][1] = r + j + 1
+                    PP[i][3] = MI[r+j][1]
+                    PP[i][4] = MI[r+j][2]
+                elif np.isclose((j+1), np.sum(SNodevalue[i,:,2])):
+                    PP[i][2] = r + j + 1
+                    PP[i][3] = MI[r + j][1]
+                    PP[i][4] = MI[r + j][2]
+            r += int(np.sum(SNodevalue[i,:,2]))
+
+        r = 0
+        for i in range(mem):
+            print('for 1')
+            q = 0
+            if np.isclose(np.sum(SNodevalue[i,:,2]),1):
+                print('if 1')
+                for j in range(mem):
+                    print('for 2')
+                    if np.isclose(np.sum(SNodevalue[i, :, 2]), 1):
+                        print('if 2')
+                        if i != j:
+                            print('if 3')
+                            if np.isclose(PP[i][3], PP[j][3]):
+                                print('if 4')
+                                x1 = xg1[r]
+                                y1 = yg1[r]
+                                x2 = xg2[r]
+                                y2 = yg2[r]
+                                x3 = xg1[q]
+                                y3 = yg1[q]
+                                x4 = xg2[q]
+                                y4 = yg2[q]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 5')
+                                    Px = x3
+                                    Py = y3
+                                else:
+                                    print('else 5')
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    print('for 3')
+                                    if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        print('if 6')
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        print('else 6')
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                            elif np.isclose(PP[i][3], PP[j][4]):
+                                print('elif 4')
+                                x1 = xg1[r]
+                                y1 = yg1[r]
+                                x2 = xg2[r]
+                                y2 = yg2[r]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j,:, 2]))]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j,:, 2]))]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j,:, 2]))]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j,:, 2]))]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 7')
+                                    Px = x4
+                                    Py = y4
+                                else:
+                                    print('else 7')
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    print('for 4')
+                                    if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        print('if 8')
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        print('else 8')
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                            elif np.isclose(PP[i][4], PP[j][3]):
+                                print('elif 4_2')
+                                x1 = xg1[int(r + np.sum(SNodevalue[i,:, 2]))]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i,:, 2]))]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i,:, 2]))]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i,:, 2]))]
+                                x3 = xg1[q]
+                                y3 = yg1[q]
+                                x4 = xg2[q]
+                                y4 = yg2[q]
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 9')
+                                    Px = x3
+                                    Py = y3
+                                else:
+                                    print('else 9')
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    print('for 5')
+                                    if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        print('if 10')
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        print('else 10')
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+                            elif np.isclose(PP[i][4], PP[j][4]):
+                                print('if 4_3')
+                                x1 = xg1[int(r + np.sum(SNodevalue[i,:, 2]))]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i,:, 2]))]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i,:, 2]))]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i,:, 2]))]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j,:, 2]))]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j,:, 2]))]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j,:, 2]))]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j,:, 2]))]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 11')
+                                    Px = x4
+                                    Py = y4
+                                else:
+                                    print('else 11')
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    print('for 5')
+                                    if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        print('if 12')
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        print('else 12')
+                                        xg2[k]= Px
+                                        yg2[k]= Py
+                    else:
+                        if i != j:
+                            if np.isclose(PP[i][3], PP[j][3]):
+                                x1 = xg1[r]
+                                y1 = yg1[r]
+                                x2 = xg2[r]
+                                y2 = yg2[r]
+                                x3 = xg1[q]
+                                y3 = yg1[q]
+                                x4 = xg2[q]
+                                y4 = yg2[q]
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x3
+                                    Py = y3
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                            elif np.isclose(PP[i][3], PP[j][6]):
+                                x1 = xg1[r]
+                                y1 = yg1[r]
+                                x2 = xg2[r]
+                                y2 = yg2[r]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x4
+                                    Py = y4
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        xg2[k]= Px
+                                        yg2[k]= Py
+
+                            elif np.isclose(PP[i][4], PP[j][3]):
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x3 = xg1[q]
+                                y3 = yg1[q]
+                                x4 = xg2[q]
+                                y4 = yg2[q]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x3
+                                    Py = y3
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                            elif np.isclose(PP[i][4], PP[j][6]):
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x4
+                                    Py = y4
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+                    q += int(np.sum(SNodevalue[j, :, 2])) - 1
+            else:
+                q = 0
+                for j in range(mem):
+                    if np.isclose(np.sum(SNodevalue[j, :, 2]), 1):
+                        if i != j:
+                            if np.isclose(PP[i][3], PP[j][3]):
+                                x1 = xg1[r]
+                                y1 = yg1[r]
+                                x2 = xg2[r]
+                                y2 = yg2[r]
+                                x3 = xg1[q]
+                                y3 = yg1[q]
+                                x4 = xg2[q]
+                                y4 = yg2[q]
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x3
+                                    Py = y3
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                            elif np.isclose(PP[i][3], PP[j][4]):
+                                x1 = xg1[r]
+                                y1 = yg1[r]
+                                x2 = xg2[r]
+                                y2 = yg2[r]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x4
+                                    Py = y4
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                            elif np.isclose(PP[i][6], PP[j][3]):
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x3 = xg1[q]
+                                y3 = yg1[q]
+                                x4 = xg2[q]
+                                y4 = yg2[q]
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x3
+                                    Py = y3
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                            elif np.isclose(PP[i][6], PP[j][4]):
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x4
+                                    Py = y4
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                    else:
+                        if i != j:
+                            if np.isclose(PP[i][3], PP[j][3]):
+                                x1 = xg1[r]
+                                y1 = yg1[r]
+                                x2 = xg2[r]
+                                y2 = yg2[r]
+                                x3 = xg1[q]
+                                y3 = yg1[q]
+                                x4 = xg2[q]
+                                y4 = yg2[q]
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x3
+                                    Py = y3
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x3,xg2[k][0]) and np.isclose(y3,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                            elif np.isclose(PP[i][3], PP[j][6]):
+                                x1 = xg1[r]
+                                y1 = yg1[r]
+                                x2 = xg2[r]
+                                y2 = yg2[r]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x4
+                                    Py = y4
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                            elif np.isclose(PP[i][6], PP[j][3]):
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x3 = xg1[q]
+                                y3 = yg1[q]
+                                x4 = xg2[q]
+                                y4 = yg2[q]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x3
+                                    Py = y3
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+
+                            elif np.isclose(PP[i][6], PP[j][6]):
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+
+                                Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
+                                Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
+                                Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
+
+                                if np.isclose(round(abs((Pxy1))), 0):
+                                    Px = x4
+                                    Py = y4
+                                else:
+                                    Px = Px1 / Pxy1
+                                    Py = Py1 / Pxy1
+
+                                for k in range(xn):
+                                    if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        xg1[k] = Px
+                                        yg1[k] = Py
+                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        xg2[k] = Px
+                                        yg2[k] = Py
+
+                    q += int(np.sum(SNodevalue[j, :, 2])) - 1
+
+            r += int(np.sum(SNodevalue[i, :, 2])) - 1
+
+        print('xg1 = ', xg1)
+        print('xg2 = ', xg2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

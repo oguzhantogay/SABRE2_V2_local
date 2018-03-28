@@ -580,8 +580,8 @@ for i = 1:mem
    end 
    segnum(i+1,1) = segnum(i,1) + sum(SNodevalue(i,:,3));
 end   
-NTshe1
-NTshe2
+% NTshe1
+% NTshe2
 % Preallocationg
 taper1 = zeros(xn,3); taper2 = zeros(xn,3);
 for n = 1:xn
@@ -1059,7 +1059,8 @@ for i=1:mem
    r = r+sum(SNodevalue(i,:,3)); 
 end
 %-------------------------------------------
-
+xg1
+xg2
 % ------------------------------------------------------------------------
 % ----------       Update Shear center  W.r.t intersections     ----------
 % ------------------------------------------------------------------------

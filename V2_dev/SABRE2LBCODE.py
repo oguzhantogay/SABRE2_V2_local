@@ -443,8 +443,8 @@ class SABRE2LBCODE(QMainWindow):
         # print('DUP2 = ', DUP2)
         return DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval
 
-    def InitialEleLengthRendering(self,xn,mem,xg1,yg1,zg1,xg2,yg2,zg2,SNodevalue):
-        #Initial Each Element Length
+    def InitialEleLengthRendering(self, xn, mem, xg1, yg1, zg1, xg2, yg2, zg2, SNodevalue):
+        # Initial Each Element Length
         # Preallocationg
         # print('xg1 = ', xg1)
         # print('xg2 = ', xg2)
@@ -456,7 +456,7 @@ class SABRE2LBCODE(QMainWindow):
         dX0 = np.zeros((xn, 1))
         dY0 = np.zeros((xn, 1))
         dZ0 = np.zeros((xn, 1))
-        L0 =  np.zeros((xn, 1))
+        L0 = np.zeros((xn, 1))
         for i in range(int(xn)):
             dX0[i][0] = xg2[i][0] - xg1[i][0]
             dY0[i][0] = yg2[i][0] - yg1[i][0]
@@ -470,18 +470,19 @@ class SABRE2LBCODE(QMainWindow):
         # print('L0 = ',  L0)
 
         MemLength = np.zeros((xn, 1))
-        segnum = np.zeros((int(mem) + 1 , 1))
+        segnum = np.zeros((int(mem) + 1, 1))
 
         for i in range(int(mem)):
-            for k in range(int(np.sum(SNodevalue[i,:,2]))):
-                if np.isclose(k+segnum[i][0], segnum[i][0]):
+            for k in range(int(np.sum(SNodevalue[i, :, 2]))):
+                if np.isclose(k + segnum[i][0], segnum[i][0]):
                     # print('test1', int(k+segnum[i][0]))
-                    MemLength[int(k+segnum[i][0])][0] = L0[int(k+segnum[i][0])][0]
+                    MemLength[int(k + segnum[i][0])][0] = L0[int(k + segnum[i][0])][0]
                 else:
                     # print('test2',int(k + segnum[i][0]))
-                    MemLength[int(k + segnum[i][0])][0] = MemLength[int(k + segnum[i][0] -1)][0] + L0[int(k+segnum[i][0])][0]
+                    MemLength[int(k + segnum[i][0])][0] = MemLength[int(k + segnum[i][0] - 1)][0] + \
+                                                          L0[int(k + segnum[i][0])][0]
 
-            segnum[i+1][0] = int(segnum[i][0] + sum(SNodevalue[i,:,2]))
+            segnum[i + 1][0] = int(segnum[i][0] + sum(SNodevalue[i, :, 2]))
 
         # print('segnum = ', segnum)
         # print('MemLength = ', MemLength)
@@ -513,9 +514,8 @@ class SABRE2LBCODE(QMainWindow):
 
         return tap1, tap2
 
-
     def modelWithBC(self):
-        DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval= SABRE2LBCODE.LBCode(self)
+        DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval = SABRE2LBCODE.LBCode(self)
 
         MI = np.zeros((DUP1[:, 0].shape[0], 3))
         MI[:, 0] = DUP1[:, 0]
@@ -601,12 +601,12 @@ class SABRE2LBCODE(QMainWindow):
         # print(np.multiply(Dg1, tft1 + np.divide(Dg1,2)))
         # print(np.multiply(tw1, np.multiply((Dg1, tft1 + np.divide(Dg1,2)))))
         ytbar1 = (np.divide(np.multiply(bft1, np.multiply(tft1, tft1)), 2) + np.multiply(tw1, np.multiply(
-            Dg1, tft1 + np.divide(Dg1,2))) + np.divide(np.multiply(bfb1, np.multiply(tfb1, np.divide((tft1 + Dg1 + tfb1), 2))), Ag1))
+            Dg1, tft1 + np.divide(Dg1, 2))) + np.divide(
+            np.multiply(bfb1, np.multiply(tfb1, np.divide((tft1 + Dg1 + tfb1), 2))), Ag1))
         Dct1 = ytbar1 - tft1
         Dcb1 = Dg1 - Dct1
-        hct1 = ytbar1 - tft1/2
+        hct1 = ytbar1 - tft1 / 2
         hcb1 = hg1 - hct1
-
 
         # End Node
 
@@ -624,7 +624,7 @@ class SABRE2LBCODE(QMainWindow):
 
         # Geometric dimension of Cross-section : P299 E
 
-        #Global frame angle for each element without considering shear center
+        # Global frame angle for each element without considering shear center
 
         alpharef = np.zeros((int(xn), 2))
         q = 0
@@ -632,27 +632,27 @@ class SABRE2LBCODE(QMainWindow):
         # print('mem = ', mem)
         for i in range(int(mem)):
             # print('i = ', i)
-            for j in range(int(np.sum(SNodevalue[i,:,2]))):
+            for j in range(int(np.sum(SNodevalue[i, :, 2]))):
                 opp = JNodeValues_j[i, 3] - JNodeValues_i[i, 3]  # element depth in y-dir
                 adj = JNodeValues_j[i, 2] - JNodeValues_i[i, 2]  # element length in x-dir
-                alpharef[q+j][0] = MI[q+j][0]
-                alpharef[q+j][1] = np.arctan2(opp, adj)  # Only global frame angle
+                alpharef[q + j][0] = MI[q + j][0]
+                alpharef[q + j][1] = np.arctan2(opp, adj)  # Only global frame angle
 
-            q += int(np.sum(SNodevalue[i,:,2]))
+            q += int(np.sum(SNodevalue[i, :, 2]))
 
         # print('alpharef = ', alpharef)
 
         MemLength = SABRE2LBCODE.InitialEleLengthRendering(self, xn, mem, xg1, yg1, zg1, xg2, yg2, zg2, SNodevalue)
         q = 0
         xn = int(xn)
-        val1 = np.zeros((xn,1))
+        val1 = np.zeros((xn, 1))
         for i in range(int(mem)):
-            for j in range(int(np.sum(SNodevalue[i,:,2]))):
-                val1[q+j][0] = Rval[i][1]
+            for j in range(int(np.sum(SNodevalue[i, :, 2]))):
+                val1[q + j][0] = Rval[i][1]
 
-            q += int(np.sum(SNodevalue[i,:,2]))
+            q += int(np.sum(SNodevalue[i, :, 2]))
 
-        NTshe1 , NTshe2 = np.zeros((xn, 4)), np.zeros((xn, 4))
+        NTshe1, NTshe2 = np.zeros((xn, 4)), np.zeros((xn, 4))
         segnum = np.zeros((int(mem) + 1, 1))
         ys1 = np.zeros((xn, 1))
         ys2 = np.zeros((xn, 1))
@@ -736,8 +736,8 @@ class SABRE2LBCODE(QMainWindow):
 
         for n in range(xn):
             tap1, tap2 = SABRE2LBCODE.TapedEleLength(self, NTshe1[n][1], NTshe1[n][2], NTshe1[n][3], NTshe2[n][1],
-                                                 NTshe2[n][2],
-                                                 NTshe2[n][3], alpharef[n][1])
+                                                     NTshe2[n][2],
+                                                     NTshe2[n][3], alpharef[n][1])
             # print("tap1 = ", tap1)
             # print("tap2 = ", tap2)
 
@@ -801,24 +801,24 @@ class SABRE2LBCODE(QMainWindow):
         # print('yg2 = ', yg2)
 
         for i in range(mem):
-            for j in range(int(np.sum(SNodevalue[i,:,2]))):
+            for j in range(int(np.sum(SNodevalue[i, :, 2]))):
                 PP[i][0] = i + 1
                 if j == 0:
                     PP[i][1] = r + j + 1
-                    PP[i][3] = MI[r+j][1]
-                    PP[i][4] = MI[r+j][2]
-                elif np.isclose((j+1), np.sum(SNodevalue[i,:,2])):
+                    PP[i][3] = MI[r + j][1]
+                    PP[i][4] = MI[r + j][2]
+                elif np.isclose((j + 1), np.sum(SNodevalue[i, :, 2])):
                     PP[i][2] = r + j + 1
                     PP[i][5] = MI[r + j][1]
                     PP[i][6] = MI[r + j][2]
-            r += int(np.sum(SNodevalue[i,:,2]))
+            r += int(np.sum(SNodevalue[i, :, 2]))
 
         # print('PP = ' , PP)
         r = 0
         for i in range(mem):
             # print('for 1')
             q = 0
-            if np.isclose(np.sum(SNodevalue[i,:,2]),1):
+            if np.isclose(np.sum(SNodevalue[i, :, 2]), 1):
                 print('if 1')
                 for j in range(mem):
                     # print('for 2')
@@ -856,7 +856,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 6')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                    elif np.isclose(x3, xg2[k]) and np.isclose(y3, yg2[k]):
                                         print('else 6')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -867,10 +867,10 @@ class SABRE2LBCODE(QMainWindow):
                                 y1 = yg1[r]
                                 x2 = xg2[r]
                                 y2 = yg2[r]
-                                x3 = xg1[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
-                                y3 = yg1[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
-                                x4 = xg2[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
 
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
@@ -891,17 +891,17 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 8')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                    elif np.isclose(x4, xg2[k]) and np.isclose(y4, yg2[k]):
                                         print('else 8')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
                             elif np.isclose(PP[i][4], PP[j][3]):
                                 print('elif 4_2')
-                                x1 = xg1[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
                                 x3 = xg1[q]
                                 y3 = yg1[q]
                                 x4 = xg2[q]
@@ -925,20 +925,20 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 10')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                    elif np.isclose(x3, xg2[k]) and np.isclose(y3, yg2[k]):
                                         print('else 10')
                                         xg2[k] = Px
                                         yg2[k] = Py
                             elif np.isclose(PP[i][4], PP[j][4]):
                                 print('elif 4_3')
-                                x1 = xg1[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
-                                x3 = xg1[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
-                                y3 = yg1[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
-                                x4 = xg2[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
 
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
@@ -959,10 +959,10 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 12')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                    elif np.isclose(x4, xg2[k]) and np.isclose(y4, yg2[k]):
                                         print('else 12')
-                                        xg2[k]= Px
-                                        yg2[k]= Py
+                                        xg2[k] = Px
+                                        yg2[k] = Py
                     else:
                         print('else 2')
                         if i != j:
@@ -995,7 +995,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 16')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                    elif np.isclose(x3, xg2[k]) and np.isclose(y3, yg2[k]):
                                         print('else 16')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1029,10 +1029,10 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 18')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                    elif np.isclose(x4, xg2[k]) and np.isclose(y4, yg2[k]):
                                         print('else 18')
-                                        xg2[k]= Px
-                                        yg2[k]= Py
+                                        xg2[k] = Px
+                                        yg2[k] = Py
 
                             elif np.isclose(PP[i][4], PP[j][3]):
                                 print('elif 14_2')
@@ -1063,7 +1063,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 20')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                    elif np.isclose(x3, xg2[k]) and np.isclose(y3, yg2[k]):
                                         print('else 20')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1097,7 +1097,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 22')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                    elif np.isclose(x4, xg2[k]) and np.isclose(y4, yg2[k]):
                                         print('else 22')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1138,7 +1138,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 27')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                    elif np.isclose(x3, xg2[k]) and np.isclose(y3, yg2[k]):
                                         print('else 27')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1172,7 +1172,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 29')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                    elif np.isclose(x4, xg2[k]) and np.isclose(y4, yg2[k]):
                                         print('else 29')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1202,7 +1202,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 31')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                    elif np.isclose(x3, xg2[k]) and np.isclose(y3, yg2[k]):
                                         print('elif 31')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1236,7 +1236,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 33')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                    elif np.isclose(x4, xg2[k]) and np.isclose(y4, yg2[k]):
                                         print('else 33')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1273,7 +1273,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 37')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x3,xg2[k][0]) and np.isclose(y3,yg2[k]):
+                                    elif np.isclose(x3, xg2[k][0]) and np.isclose(y3, yg2[k]):
                                         print('else 37')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1307,7 +1307,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 39')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                    elif np.isclose(x4, xg2[k]) and np.isclose(y4, yg2[k]):
                                         print('else 39')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1319,10 +1319,10 @@ class SABRE2LBCODE(QMainWindow):
                                 # print('xg2 = ', xg2)
                                 # print('yg1 = ', yg1)
                                 # print('yg2 = ', yg2)
-                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))-1]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))-1]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))-1]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))-1]
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
                                 x3 = xg1[q]
                                 y3 = yg1[q]
                                 x4 = xg2[q]
@@ -1353,7 +1353,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 42')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                    elif np.isclose(x3, xg2[k]) and np.isclose(y3, yg2[k]):
                                         print('else 42')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1395,7 +1395,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('if 44')
                                         xg1[k] = Px
                                         yg1[k] = Py
-                                    elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                    elif np.isclose(x4, xg2[k]) and np.isclose(y4, yg2[k]):
                                         print('else 44')
                                         xg2[k] = Px
                                         yg2[k] = Py
@@ -1409,10 +1409,303 @@ class SABRE2LBCODE(QMainWindow):
         yg1 = np.vstack(yg1)
         yg2 = np.vstack(yg2)
 
-        print('xg1 = ', xg1)
-        print('xg2 = ', xg2)
-        print('yg1 = ', yg1)
-        print('yg2 = ', yg2)
+        # print('xg1 = ', xg1)
+        # print('xg2 = ', xg2)
+        # print('yg1 = ', yg1)
+        # print('yg2 = ', yg2)
+
+        # Updated Shear center w.r.t intersections.
+
+        Nshe1[:, 0] = xg1
+        Nshe2[:, 0] = xg2
+        Nshe1[:, 1] = yg1
+        Nshe2[:, 1] = yg2
+        Nshe1[:, 2] = zg1
+        Nshe2[:, 2] = zg2
+
+        for i in range(xn):
+            Nshe1[i][3] = DUP1[i][5]
+            Nshe1[i][4] = DUP1[i][6]
+            Nshe1[i][5] = DUP1[i][7]
+            Nshe1[i][6] = DUP1[i][8]
+            Nshe1[i][7] = DUP1[i][9]
+            Nshe1[i][8] = DUP1[i][10]
+            Nshe1[i][9] = DUP1[i][11]
+            Nshe1[i][10] = DUP1[i][12]
+            Nshe1[i][11] = DUP1[i][13]
+
+            Nshe2[i][3] = DUP2[i][5]
+            Nshe2[i][4] = DUP2[i][6]
+            Nshe2[i][5] = DUP2[i][7]
+            Nshe2[i][6] = DUP2[i][8]
+            Nshe2[i][7] = DUP2[i][9]
+            Nshe2[i][8] = DUP2[i][10]
+            Nshe2[i][9] = DUP2[i][11]
+            Nshe2[i][10] = DUP2[i][12]
+            Nshe2[i][11] = DUP2[i][13]
+
+        SheMemLegth = SABRE2LBCODE.InitialEleLengthRendering(self, xn, mem, SNshe1[:, 0], SNshe1[:, 1], SNshe1[:, 2],
+                                                             SNshe2[:, 0], SNshe2[:, 1], SNshe2[:, 2], SNodevalue)
+        NsheMemLegth = SABRE2LBCODE.InitialEleLengthRendering(self, xn, mem, Nshe1[:, 0], Nshe1[:, 1], Nshe1[:, 2],
+                                                              Nshe2[:, 0], Nshe2[:, 1], Nshe2[:, 2], SNodevalue)
+
+        i_index = 0
+        j_index = 0
+
+        segLoc = np.zeros((1, 2))
+        segLocstep = np.zeros((1, 3))
+
+        for i in range(mem):
+            j_index += int(np.sum(SNodevalue[i,:,2]))
+            if SheMemLegth[i_index - 1][0] >= NsheMemLegth[i_index - 1][0]:
+                segLoc[0][1] = SheMemLegth[i_index - 1][0]
+                segLocstep[0][1] = SheMemLegth[i_index - 1][0] - NsheMemLegth[i_index - 1][0]
+                segLocstep[0][2] = SheMemLegth[i_index - 1][0]
+
+                bfbs = (DUP1[i_index - 1][5],  DUP2[i_index - 1][5])
+                tfbs = (DUP1[i_index - 1][6],  DUP2[i_index - 1][6])
+                bfts = (DUP1[i_index - 1][7],  DUP2[i_index - 1][7])
+                tfts = (DUP1[i_index - 1][8],  DUP2[i_index - 1][8])
+                Dgs  = (DUP1[i_index - 1][9],  DUP2[i_index - 1][9])
+                tws  = (DUP1[i_index - 1][10], DUP2[i_index - 1][10])
+                tdgs = (DUP1[i_index - 1][11], DUP2[i_index - 1][11])
+                hgs  = (DUP1[i_index - 1][12], DUP2[i_index - 1][12])
+                Afs  = (DUP1[i_index - 1][13], DUP2[i_index - 1][13])
+
+                bfbsb = np.interp(segLocstep,segLoc,bfbs)
+                tfbsb = np.interp(segLocstep,segLoc,tfbs)
+                bftsb = np.interp(segLocstep,segLoc,bfts)
+                tftsb = np.interp(segLocstep,segLoc,tfts)
+                Dgsb = np.interp(segLocstep,segLoc,Dgs)
+                twsb = np.interp(segLocstep,segLoc,tws)
+                tdgsb = np.interp(segLocstep,segLoc,tdgs)
+                hgsb = np.interp(segLocstep,segLoc,hgs)
+                Afsb = np.interp(segLocstep,segLoc,Afs)
+
+                Nshe1[i_index - 1][3]  =bfbsb[0][1]
+                Nshe1[i_index - 1][4]  =tfbsb[0][1]
+                Nshe1[i_index - 1][5]  =bftsb[0][1]
+                Nshe1[i_index - 1][6]  =tftsb[0][1]
+                Nshe1[i_index - 1][7]  =Dgsb[0][1]
+                Nshe1[i_index - 1][8]  =twsb [0][1]
+                Nshe1[i_index - 1][9]  =tdgsb[0][1]
+                Nshe1[i_index - 1][10] =hgsb[0][1]
+                Nshe1[i_index - 1][11] =Afsb[0][1]
+
+
+            elif SheMemLegth[i_index - 1][0] < NsheMemLegth[i_index - 1][0]:
+                segLoc[0][1] = SheMemLegth[i_index - 1][0]
+                segLocstep[0][0] = SheMemLegth[i_index - 1][0] - NsheMemLegth[i_index - 1][0]
+                segLocstep[0][2] = SheMemLegth[i_index - 1][0]
+
+                bfbs = (DUP1[i_index - 1][5], DUP2[i_index - 1][5])
+                tfbs = (DUP1[i_index - 1][6], DUP2[i_index - 1][6])
+                bfts = (DUP1[i_index - 1][7], DUP2[i_index - 1][7])
+                tfts = (DUP1[i_index - 1][8], DUP2[i_index - 1][8])
+                Dgs = (DUP1[i_index - 1][9], DUP2[i_index - 1][9])
+                tws = (DUP1[i_index - 1][10], DUP2[i_index - 1][10])
+                tdgs = (DUP1[i_index - 1][11], DUP2[i_index - 1][11])
+                hgs = (DUP1[i_index - 1][12], DUP2[i_index - 1][12])
+                Afs = (DUP1[i_index - 1][13], DUP2[i_index - 1][13])
+
+                f = interp1d(segLocstep, segLoc, fill_value='extrapolate')
+
+                bfbsb = f(bfbs)
+                tfbsb = f(tfbs)
+                bftsb = f(bfts)
+                tftsb = f(tfts)
+                Dgsb = f(Dgs)
+                twsb = f(tws)
+                tdgsb = f(tdgs)
+                hgsb = f(hgs)
+                Afsb = f(Afs)
+
+                Nshe1[i_index - 1][3] = bfbsb[0][0]
+                Nshe1[i_index - 1][4] = tfbsb[0][0]
+                Nshe1[i_index - 1][5] = bftsb[0][0]
+                Nshe1[i_index - 1][6] = tftsb[0][0]
+                Nshe1[i_index - 1][7] = Dgsb[0][0]
+                Nshe1[i_index - 1][8] = twsb[0][0]
+                Nshe1[i_index - 1][9] = tdgsb[0][0]
+                Nshe1[i_index - 1][10] = hgsb[0][0]
+                Nshe1[i_index - 1][11] = Afsb[0][0]
+
+            if np.isclose(i_index - 1, j_index - 1):
+                if SheMemLegth[i_index - 1][0] >= NsheMemLegth[i_index - 1][0]:
+                    segLoc[0][1] = SheMemLegth[i_index - 1][0]
+                    segLocstep[0][1] = SheMemLegth[i_index - 1][0] - NsheMemLegth[i_index - 1][0]
+                    segLocstep[0][2] = SheMemLegth[i_index - 1][0]
+
+                    bfbs = (DUP1[i_index - 1][5], DUP2[i_index - 1][5])
+                    tfbs = (DUP1[i_index - 1][6], DUP2[i_index - 1][6])
+                    bfts = (DUP1[i_index - 1][7], DUP2[i_index - 1][7])
+                    tfts = (DUP1[i_index - 1][8], DUP2[i_index - 1][8])
+                    Dgs = (DUP1[i_index - 1][9], DUP2[i_index - 1][9])
+                    tws = (DUP1[i_index - 1][10], DUP2[i_index - 1][10])
+                    tdgs = (DUP1[i_index - 1][11], DUP2[i_index - 1][11])
+                    hgs = (DUP1[i_index - 1][12], DUP2[i_index - 1][12])
+                    Afs = (DUP1[i_index - 1][13], DUP2[i_index - 1][13])
+
+                    bfbsb = np.interp(segLocstep, segLoc, bfbs)
+                    tfbsb = np.interp(segLocstep, segLoc, tfbs)
+                    bftsb = np.interp(segLocstep, segLoc, bfts)
+                    tftsb = np.interp(segLocstep, segLoc, tfts)
+                    Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                    twsb = np.interp(segLocstep, segLoc, tws)
+                    tdgsb = np.interp(segLocstep, segLoc, tdgs)
+                    hgsb = np.interp(segLocstep, segLoc, hgs)
+                    Afsb = np.interp(segLocstep, segLoc, Afs)
+
+                    Nshe2[j_index - 1][3] = bfbsb[0][2]
+                    Nshe2[j_index - 1][4] = tfbsb[0][2]
+                    Nshe2[j_index - 1][5] = bftsb[0][2]
+                    Nshe2[j_index - 1][6] = tftsb[0][2]
+                    Nshe2[j_index - 1][7] = Dgsb[0][2]
+                    Nshe2[j_index - 1][8] = twsb[0][2]
+                    Nshe2[j_index - 1][9] = tdgsb[0][2]
+                    Nshe2[j_index - 1][10] = hgsb[0][2]
+                    Nshe2[j_index - 1][11] = Afsb[0][2]
+
+                elif SheMemLegth[i_index - 1][0] < NsheMemLegth[i_index - 1][0]:
+                    segLoc[0][1] = SheMemLegth[i_index - 1][0]
+                    segLocstep[0][0] = SheMemLegth[i_index - 1][0] - NsheMemLegth[i_index - 1][0]
+                    segLocstep[0][2] = SheMemLegth[i_index - 1][0]
+
+                    bfbs = (DUP1[i_index - 1][5], DUP2[i_index - 1][5])
+                    tfbs = (DUP1[i_index - 1][6], DUP2[i_index - 1][6])
+                    bfts = (DUP1[i_index - 1][7], DUP2[i_index - 1][7])
+                    tfts = (DUP1[i_index - 1][8], DUP2[i_index - 1][8])
+                    Dgs = (DUP1[i_index - 1][9], DUP2[i_index - 1][9])
+                    tws = (DUP1[i_index - 1][10], DUP2[i_index - 1][10])
+                    tdgs = (DUP1[i_index - 1][11], DUP2[i_index - 1][11])
+                    hgs = (DUP1[i_index - 1][12], DUP2[i_index - 1][12])
+                    Afs = (DUP1[i_index - 1][13], DUP2[i_index - 1][13])
+
+                    f = interp1d(segLocstep, segLoc, fill_value='extrapolate')
+
+                    bfbsb = f(bfbs)
+                    tfbsb = f(tfbs)
+                    bftsb = f(bfts)
+                    tftsb = f(tfts)
+                    Dgsb = f(Dgs)
+                    twsb = f(tws)
+                    tdgsb = f(tdgs)
+                    hgsb = f(hgs)
+                    Afsb = f(Afs)
+
+                    Nshe2[j_index - 1][3] = bfbsb[0][2]
+                    Nshe2[j_index - 1][4] = tfbsb[0][2]
+                    Nshe2[j_index - 1][5] = bftsb[0][2]
+                    Nshe2[j_index - 1][6] = tftsb[0][2]
+                    Nshe2[j_index - 1][7] = Dgsb[0][2]
+                    Nshe2[j_index - 1][8] = twsb[0][2]
+                    Nshe2[j_index - 1][9] = tdgsb[0][2]
+                    Nshe2[j_index - 1][10] = hgsb[0][2]
+                    Nshe2[j_index - 1][11] = Afsb[0][2]
+            else:
+                if (SheMemLegth[j_index - 1][0] - SheMemLegth[j_index - 1-1][0]) >= (SheMemLegth[j_index - 1][0] - SheMemLegth[j_index - 1-1][0]):
+                    segLoc[0][1] = SheMemLegth[j_index - 1][0] - SheMemLegth[j_index - 1 - 1][0]
+                    segLocstep[0][1] = NsheMemLegth[j_index - 1][0] - NsheMemLegth[j_index - 1 -1][0]
+                    segLocstep[0][2] = SheMemLegth[j_index - 1][0] - SheMemLegth[j_index - 1 - 1][0]
+
+                    bfbs = (DUP1[j_index - 1][5], DUP2[j_index - 1][5])
+                    tfbs = (DUP1[j_index - 1][6], DUP2[j_index - 1][6])
+                    bfts = (DUP1[j_index - 1][7], DUP2[j_index - 1][7])
+                    tfts = (DUP1[j_index - 1][8], DUP2[j_index - 1][8])
+                    Dgs = (DUP1[j_index - 1][9], DUP2[j_index - 1][9])
+                    tws = (DUP1[j_index - 1][10], DUP2[j_index - 1][10])
+                    tdgs = (DUP1[j_index - 1][11], DUP2[j_index - 1][11])
+                    hgs = (DUP1[j_index - 1][12], DUP2[j_index - 1][12])
+                    Afs = (DUP1[j_index - 1][13], DUP2[j_index - 1][13])
+
+                    bfbsb = np.interp(segLocstep, segLoc, bfbs)
+                    tfbsb = np.interp(segLocstep, segLoc, tfbs)
+                    bftsb = np.interp(segLocstep, segLoc, bfts)
+                    tftsb = np.interp(segLocstep, segLoc, tfts)
+                    Dgsb = np.interp(segLocstep, segLoc, Dgs)
+                    twsb = np.interp(segLocstep, segLoc, tws)
+                    tdgsb = np.interp(segLocstep, segLoc, tdgs)
+                    hgsb = np.interp(segLocstep, segLoc, hgs)
+                    Afsb = np.interp(segLocstep, segLoc, Afs)
+
+                    Nshe2[j_index - 1][3] = bfbsb[0][1]
+                    Nshe2[j_index - 1][4] = tfbsb[0][1]
+                    Nshe2[j_index - 1][5] = bftsb[0][1]
+                    Nshe2[j_index - 1][6] = tftsb[0][1]
+                    Nshe2[j_index - 1][7] = Dgsb[0][1]
+                    Nshe2[j_index - 1][8] = twsb[0][1]
+                    Nshe2[j_index - 1][9] = tdgsb[0][1]
+                    Nshe2[j_index - 1][10] = hgsb[0][1]
+                    Nshe2[j_index - 1][11] = Afsb[0][1]
+
+                elif SheMemLegth[j_index - 1][0] < NsheMemLegth[j_index - 1][0]:
+                    segLoc[0][0] = SheMemLegth[j_index - 1 - 1][0]
+                    segLoc[0][1] = SheMemLegth[j_index - 1][0]
+
+                    segLocstep[0][0] = SheMemLegth[j_index - 1 - 1][0]
+                    segLocstep[0][1] = SheMemLegth[j_index - 1][0]
+                    segLocstep[0][2] = NsheMemLegth[j_index - 1][0]
+                    bfbs = (DUP1[j_index - 1 - 1][5], DUP2[j_index - 1][5])
+                    tfbs = (DUP1[j_index - 1 - 1][6], DUP2[j_index - 1][6])
+                    bfts = (DUP1[j_index - 1 - 1][7], DUP2[j_index - 1][7])
+                    tfts = (DUP1[j_index - 1 - 1][8], DUP2[j_index - 1][8])
+                    Dgs =  (DUP1[j_index - 1 - 1][9], DUP2[j_index - 1][9])
+                    tws =  (DUP1[j_index - 1 - 1][10], DUP2[j_index - 1][10])
+                    tdgs = (DUP1[j_index - 1 - 1][11], DUP2[j_index - 1][11])
+                    hgs =  (DUP1[j_index - 1 - 1][12], DUP2[j_index - 1][12])
+                    Afs =  (DUP1[j_index - 1 - 1][13], DUP2[j_index - 1][13])
+
+                    f = interp1d(segLocstep, segLoc, fill_value='extrapolate')
+
+                    bfbsb = f(bfbs)
+                    tfbsb = f(tfbs)
+                    bftsb = f(bfts)
+                    tftsb = f(tfts)
+                    Dgsb = f(Dgs)
+                    twsb = f(tws)
+                    tdgsb = f(tdgs)
+                    hgsb = f(hgs)
+                    Afsb = f(Afs)
+
+                    Nshe2[j_index - 1][3] = bfbsb[0][2]
+                    Nshe2[j_index - 1][4] = tfbsb[0][2]
+                    Nshe2[j_index - 1][5] = bftsb[0][2]
+                    Nshe2[j_index - 1][6] = tftsb[0][2]
+                    Nshe2[j_index - 1][7] = Dgsb[0][2]
+                    Nshe2[j_index - 1][8] = twsb[0][2]
+                    Nshe2[j_index - 1][9] = tdgsb[0][2]
+                    Nshe2[j_index - 1][10] = hgsb[0][2]
+                    Nshe2[j_index - 1][11] = Afsb[0][2]
+            i_index += np.sum(SNodevalue[i,:,2])
+
+
+        print('Nshe1 = ', Nshe1)
+        print('Nshe2 = ', Nshe2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

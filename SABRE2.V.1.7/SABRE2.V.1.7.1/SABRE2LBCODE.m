@@ -649,6 +649,7 @@ for i = 1:mem
    end
    r = r+sum(SNodevalue(i,:,3));
 end
+PP
 
 %-------------------------------------------
 r=0;
@@ -1031,6 +1032,14 @@ for i=1:mem
                   x2 = xg2(r+sum(SNodevalue(i,:,3)),1); y2 = yg2(r+sum(SNodevalue(i,:,3)),1);
                   x3 = xg1(q+ sum(SNodevalue(j,:,3)),1); y3 = yg1(q+ sum(SNodevalue(j,:,3)),1);
                   x4 = xg2(q+ sum(SNodevalue(j,:,3)),1); y4 = yg2(q+ sum(SNodevalue(j,:,3)),1);             
+%                   x1 
+%                   y1
+%                   x2
+%                   y2
+%                   x3
+%                   y3
+%                   x4
+%                   y4
                   Px1 = (x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4);
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));

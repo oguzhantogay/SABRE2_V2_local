@@ -800,18 +800,19 @@ class SABRE2LBCODE(QMainWindow):
                     PP[i][4] = MI[r+j][2]
                 elif np.isclose((j+1), np.sum(SNodevalue[i,:,2])):
                     PP[i][2] = r + j + 1
-                    PP[i][3] = MI[r + j][1]
-                    PP[i][4] = MI[r + j][2]
+                    PP[i][5] = MI[r + j][1]
+                    PP[i][6] = MI[r + j][2]
             r += int(np.sum(SNodevalue[i,:,2]))
 
+        # print('PP = ' , PP)
         r = 0
         for i in range(mem):
-            print('for 1')
+            # print('for 1')
             q = 0
             if np.isclose(np.sum(SNodevalue[i,:,2]),1):
                 print('if 1')
                 for j in range(mem):
-                    print('for 2')
+                    # print('for 2')
                     if np.isclose(np.sum(SNodevalue[i, :, 2]), 1):
                         print('if 2')
                         if i != j:
@@ -954,8 +955,11 @@ class SABRE2LBCODE(QMainWindow):
                                         xg2[k]= Px
                                         yg2[k]= Py
                     else:
+                        print('else 2')
                         if i != j:
+                            print('if 13')
                             if np.isclose(PP[i][3], PP[j][3]):
+                                print('if 14')
                                 x1 = xg1[r]
                                 y1 = yg1[r]
                                 x2 = xg2[r]
@@ -969,21 +973,26 @@ class SABRE2LBCODE(QMainWindow):
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 15')
                                     Px = x3
                                     Py = y3
                                 else:
+                                    print('else 15')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        print('if 16')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        print('else 16')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
                             elif np.isclose(PP[i][3], PP[j][6]):
+                                print('elif 14_1')
                                 x1 = xg1[r]
                                 y1 = yg1[r]
                                 x2 = xg2[r]
@@ -998,21 +1007,26 @@ class SABRE2LBCODE(QMainWindow):
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 17')
                                     Px = x4
                                     Py = y4
                                 else:
+                                    print('else 17')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        print('if 18')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        print('else 18')
                                         xg2[k]= Px
                                         yg2[k]= Py
 
                             elif np.isclose(PP[i][4], PP[j][3]):
+                                print('elif 14_2')
                                 x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
                                 y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
                                 x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
@@ -1027,21 +1041,26 @@ class SABRE2LBCODE(QMainWindow):
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 19')
                                     Px = x3
                                     Py = y3
                                 else:
+                                    print('else 19')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        print('if 20')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        print('else 20')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
                             elif np.isclose(PP[i][4], PP[j][6]):
+                                print('elif 14_3')
                                 x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
                                 y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
                                 x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
@@ -1056,26 +1075,34 @@ class SABRE2LBCODE(QMainWindow):
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 21')
                                     Px = x4
                                     Py = y4
                                 else:
+                                    print('else 21')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        print('if 22')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        print('else 22')
                                         xg2[k] = Px
                                         yg2[k] = Py
                     q += int(np.sum(SNodevalue[j, :, 2])) - 1
             else:
+                print('else 1')
                 q = 0
                 for j in range(mem):
                     if np.isclose(np.sum(SNodevalue[j, :, 2]), 1):
+                        print('if 23')
                         if i != j:
+                            print('if 24')
                             if np.isclose(PP[i][3], PP[j][3]):
+                                print('if 25')
                                 x1 = xg1[r]
                                 y1 = yg1[r]
                                 x2 = xg2[r]
@@ -1089,21 +1116,26 @@ class SABRE2LBCODE(QMainWindow):
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 26')
                                     Px = x3
                                     Py = y3
                                 else:
+                                    print('else 26')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        print('if 27')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        print('else 27')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
                             elif np.isclose(PP[i][3], PP[j][4]):
+                                print('elif 25_1')
                                 x1 = xg1[r]
                                 y1 = yg1[r]
                                 x2 = xg2[r]
@@ -1118,21 +1150,26 @@ class SABRE2LBCODE(QMainWindow):
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 28')
                                     Px = x4
                                     Py = y4
                                 else:
+                                    print('else 28')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        print('if 29')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        print('else 29')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
                             elif np.isclose(PP[i][6], PP[j][3]):
+                                print('elif 25_2')
                                 x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
                                 y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
                                 x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
@@ -1143,21 +1180,26 @@ class SABRE2LBCODE(QMainWindow):
                                 y4 = yg2[q]
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 30')
                                     Px = x3
                                     Py = y3
                                 else:
+                                    print('else 30')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        print('if 31')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        print('elif 31')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
                             elif np.isclose(PP[i][6], PP[j][4]):
+                                print('elif 25_3')
                                 x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
                                 y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
                                 x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
@@ -1172,23 +1214,30 @@ class SABRE2LBCODE(QMainWindow):
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 32')
                                     Px = x4
                                     Py = y4
                                 else:
+                                    print('else 32')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        print('if 33')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        print('else 33')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
                     else:
+                        print('else 23')
                         if i != j:
+                            print('if 34')
                             if np.isclose(PP[i][3], PP[j][3]):
+                                print('if 35')
                                 x1 = xg1[r]
                                 y1 = yg1[r]
                                 x2 = xg2[r]
@@ -1202,21 +1251,26 @@ class SABRE2LBCODE(QMainWindow):
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 36')
                                     Px = x3
                                     Py = y3
                                 else:
+                                    print('else 36')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        print('if 37')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x3,xg2[k][0]) and np.isclose(y3,yg2[k]):
+                                        print('else 37')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
                             elif np.isclose(PP[i][3], PP[j][6]):
+                                print('elif 35_1')
                                 x1 = xg1[r]
                                 y1 = yg1[r]
                                 x2 = xg2[r]
@@ -1231,21 +1285,26 @@ class SABRE2LBCODE(QMainWindow):
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 38')
                                     Px = x4
                                     Py = y4
                                 else:
+                                    print('else 38')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        print('if 39')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        print('else 39')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
                             elif np.isclose(PP[i][6], PP[j][3]):
+                                print('elif 35_2')
                                 x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
                                 y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
                                 x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
@@ -1260,53 +1319,69 @@ class SABRE2LBCODE(QMainWindow):
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 40')
                                     Px = x3
                                     Py = y3
                                 else:
+                                    print('else 41')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
+                                        print('if 42')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x3,xg2[k]) and np.isclose(y3,yg2[k]):
+                                        print('else 42')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
 
                             elif np.isclose(PP[i][6], PP[j][6]):
-                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
-
+                                print('elif 35_2')
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))-1]
+                                # print('test=== ' , x1)
+                                # print('test=== ' , y1)
+                                # print('test=== ' , x2)
+                                # print('test=== ' , y2)
+                                # print('test=== ' , x3)
+                                # print('test=== ' , y3)
+                                # print('test=== ' , x4)
+                                # print('test=== ' , y4)
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
 
                                 if np.isclose(round(abs((Pxy1))), 0):
+                                    print('if 43')
                                     Px = x4
                                     Py = y4
                                 else:
+                                    print('else 43')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
                                     if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
+                                        print('if 44')
                                         xg1[k] = Px
                                         yg1[k] = Py
                                     elif np.isclose(x4,xg2[k]) and np.isclose(y4,yg2[k]):
+                                        print('else 44')
                                         xg2[k] = Px
                                         yg2[k] = Py
 
-                    q += int(np.sum(SNodevalue[j, :, 2])) - 1
+                    q += int(np.sum(SNodevalue[j, :, 2]))
 
-            r += int(np.sum(SNodevalue[i, :, 2])) - 1
+            r += int(np.sum(SNodevalue[i, :, 2]))
 
         print('xg1 = ', xg1)
         print('xg2 = ', xg2)

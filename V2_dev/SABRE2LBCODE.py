@@ -762,15 +762,20 @@ class SABRE2LBCODE(QMainWindow):
         # Global frame nodal coordinates w.r.t Shear center
         # Original Shear Center
 
+        print('\ntaper1 = ', taper1, '\nNG1 = ', NG1)
+        print('\ntaper2 = ', taper2, '\nNG2 = ', NG2)
+
         Nshe1 = np.zeros((taper1.shape[0], 3))
         Nshe2 = np.zeros((taper2.shape[0], 3))
 
         Nshe1[:, 0] = taper1[:, 0] + NG1[:, 0]
         Nshe2[:, 0] = taper2[:, 0] + NG2[:, 0]
-        Nshe1[:, 1] = taper1[:, 1] + NG1[:, 0]
-        Nshe2[:, 1] = taper2[:, 1] + NG2[:, 0]
-        Nshe1[:, 2] = taper1[:, 2] + NG1[:, 0]
-        Nshe2[:, 2] = taper2[:, 2] + NG2[:, 0]
+        Nshe1[:, 1] = taper1[:, 1] + NG1[:, 1]
+        Nshe2[:, 1] = taper2[:, 1] + NG2[:, 1]
+        Nshe1[:, 2] = taper1[:, 2] + NG1[:, 2]
+        Nshe2[:, 2] = taper2[:, 2] + NG2[:, 2]
+
+        print("Nshe1 = ", Nshe1, "Nshe2 = ", Nshe2)
 
         # Initial Global frame nodal coordinates w.r.t Shear center
 
@@ -790,6 +795,10 @@ class SABRE2LBCODE(QMainWindow):
 
         r = 0
         PP = np.zeros((mem, 7))
+        # print('xg1 = ', xg1)
+        # print('xg2 = ', xg2)
+        # print('yg1 = ', yg1)
+        # print('yg2 = ', yg2)
 
         for i in range(mem):
             for j in range(int(np.sum(SNodevalue[i,:,2]))):
@@ -813,7 +822,7 @@ class SABRE2LBCODE(QMainWindow):
                 print('if 1')
                 for j in range(mem):
                     # print('for 2')
-                    if np.isclose(np.sum(SNodevalue[i, :, 2]), 1):
+                    if np.isclose(np.sum(SNodevalue[j, :, 2]), 1):
                         print('if 2')
                         if i != j:
                             print('if 3')
@@ -858,10 +867,10 @@ class SABRE2LBCODE(QMainWindow):
                                 y1 = yg1[r]
                                 x2 = xg2[r]
                                 y2 = yg2[r]
-                                x3 = xg1[int(q + np.sum(SNodevalue[j,:, 2]))]
-                                y3 = yg1[int(q + np.sum(SNodevalue[j,:, 2]))]
-                                x4 = xg2[int(q + np.sum(SNodevalue[j,:, 2]))]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j,:, 2]))]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
 
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
@@ -889,10 +898,10 @@ class SABRE2LBCODE(QMainWindow):
 
                             elif np.isclose(PP[i][4], PP[j][3]):
                                 print('elif 4_2')
-                                x1 = xg1[int(r + np.sum(SNodevalue[i,:, 2]))]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i,:, 2]))]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i,:, 2]))]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i,:, 2]))]
+                                x1 = xg1[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
                                 x3 = xg1[q]
                                 y3 = yg1[q]
                                 x4 = xg2[q]
@@ -911,7 +920,7 @@ class SABRE2LBCODE(QMainWindow):
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
-                                    print('for 5')
+                                    # print('for 5')
                                     if np.isclose(x3, xg1[k]) and np.isclose(y3, yg1[k]):
                                         print('if 10')
                                         xg1[k] = Px
@@ -921,15 +930,15 @@ class SABRE2LBCODE(QMainWindow):
                                         xg2[k] = Px
                                         yg2[k] = Py
                             elif np.isclose(PP[i][4], PP[j][4]):
-                                print('if 4_3')
-                                x1 = xg1[int(r + np.sum(SNodevalue[i,:, 2]))]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i,:, 2]))]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i,:, 2]))]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i,:, 2]))]
-                                x3 = xg1[int(q + np.sum(SNodevalue[j,:, 2]))]
-                                y3 = yg1[int(q + np.sum(SNodevalue[j,:, 2]))]
-                                x4 = xg2[int(q + np.sum(SNodevalue[j,:, 2]))]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j,:, 2]))]
+                                print('elif 4_3')
+                                x1 = xg1[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i,:, 2])) - 1]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j,:, 2])) - 1]
 
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
@@ -945,7 +954,7 @@ class SABRE2LBCODE(QMainWindow):
                                     Py = Py1 / Pxy1
 
                                 for k in range(xn):
-                                    print('for 5')
+                                    # print('for 5')
                                     if np.isclose(x4, xg1[k]) and np.isclose(y4, yg1[k]):
                                         print('if 12')
                                         xg1[k] = Px
@@ -997,10 +1006,10 @@ class SABRE2LBCODE(QMainWindow):
                                 y1 = yg1[r]
                                 x2 = xg2[r]
                                 y2 = yg2[r]
-                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
 
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
@@ -1027,10 +1036,10 @@ class SABRE2LBCODE(QMainWindow):
 
                             elif np.isclose(PP[i][4], PP[j][3]):
                                 print('elif 14_2')
-                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
                                 x3 = xg1[q]
                                 y3 = yg1[q]
                                 x4 = xg2[q]
@@ -1061,14 +1070,14 @@ class SABRE2LBCODE(QMainWindow):
 
                             elif np.isclose(PP[i][4], PP[j][6]):
                                 print('elif 14_3')
-                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
 
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
@@ -1092,7 +1101,7 @@ class SABRE2LBCODE(QMainWindow):
                                         print('else 22')
                                         xg2[k] = Px
                                         yg2[k] = Py
-                    q += int(np.sum(SNodevalue[j, :, 2])) - 1
+                    q += int(np.sum(SNodevalue[j, :, 2]))
             else:
                 print('else 1')
                 q = 0
@@ -1140,10 +1149,10 @@ class SABRE2LBCODE(QMainWindow):
                                 y1 = yg1[r]
                                 x2 = xg2[r]
                                 y2 = yg2[r]
-                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
 
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
@@ -1170,10 +1179,10 @@ class SABRE2LBCODE(QMainWindow):
 
                             elif np.isclose(PP[i][6], PP[j][3]):
                                 print('elif 25_2')
-                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
                                 x3 = xg1[q]
                                 y3 = yg1[q]
                                 x4 = xg2[q]
@@ -1200,14 +1209,14 @@ class SABRE2LBCODE(QMainWindow):
 
                             elif np.isclose(PP[i][6], PP[j][4]):
                                 print('elif 25_3')
-                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2])) - 1]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
 
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
@@ -1275,10 +1284,10 @@ class SABRE2LBCODE(QMainWindow):
                                 y1 = yg1[r]
                                 x2 = xg2[r]
                                 y2 = yg2[r]
-                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2]))]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))]
+                                x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
 
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
@@ -1305,25 +1314,37 @@ class SABRE2LBCODE(QMainWindow):
 
                             elif np.isclose(PP[i][6], PP[j][3]):
                                 print('elif 35_2')
-                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))]
-                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))]
+                                # print('index = ', r + np.sum(SNodevalue[i, :, 2]))
+                                # print('xg1 = ', xg1)
+                                # print('xg2 = ', xg2)
+                                # print('yg1 = ', yg1)
+                                # print('yg2 = ', yg2)
+                                x1 = xg1[int(r + np.sum(SNodevalue[i, :, 2]))-1]
+                                y1 = yg1[int(r + np.sum(SNodevalue[i, :, 2]))-1]
+                                x2 = xg2[int(r + np.sum(SNodevalue[i, :, 2]))-1]
+                                y2 = yg2[int(r + np.sum(SNodevalue[i, :, 2]))-1]
                                 x3 = xg1[q]
                                 y3 = yg1[q]
                                 x4 = xg2[q]
                                 y4 = yg2[q]
-
+                                # print('x1 = ', x1)
+                                # print('y1 = ', y1)
+                                # print('x1 = ', x2)
+                                # print('y2 = ', y2)
+                                # print('x3 = ', x3)
+                                # print('y3 = ', y3)
+                                # print('x4 = ', x4)
+                                # print('y4 = ', y4)
                                 Px1 = (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
                                 Py1 = (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
                                 Pxy1 = ((x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4))
-
+                                # print('Pxy1 = ' , Pxy1)
                                 if np.isclose(round(abs((Pxy1))), 0):
                                     print('if 40')
                                     Px = x3
                                     Py = y3
                                 else:
-                                    print('else 41')
+                                    print('else 40')
                                     Px = Px1 / Pxy1
                                     Py = Py1 / Pxy1
 
@@ -1347,7 +1368,7 @@ class SABRE2LBCODE(QMainWindow):
                                 x3 = xg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
                                 y3 = yg1[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
                                 x4 = xg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
-                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2]))-1]
+                                y4 = yg2[int(q + np.sum(SNodevalue[j, :, 2])) - 1]
                                 # print('test=== ' , x1)
                                 # print('test=== ' , y1)
                                 # print('test=== ' , x2)
@@ -1383,17 +1404,15 @@ class SABRE2LBCODE(QMainWindow):
 
             r += int(np.sum(SNodevalue[i, :, 2]))
 
+        xg1 = np.vstack(xg1)
+        xg2 = np.vstack(xg2)
+        yg1 = np.vstack(yg1)
+        yg2 = np.vstack(yg2)
+
         print('xg1 = ', xg1)
         print('xg2 = ', xg2)
-
-
-
-
-
-
-
-
-
+        print('yg1 = ', yg1)
+        print('yg2 = ', yg2)
 
 
 

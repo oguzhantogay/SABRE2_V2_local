@@ -605,6 +605,10 @@ for i = 1:mem
    end
    segnum(i+1,1) = segnum(i,1) + sum(SNodevalue(i,:,3));
 end
+% taper1
+% taper2
+% NG1
+% NG2
 
 % ******************************************************
 % Global frame nodal coordinates w.r.t Shear center
@@ -616,6 +620,9 @@ Nshe1(:,2)=taper1(:,2)+NG1(:,2);
 Nshe2(:,2)=taper2(:,2)+NG2(:,2);
 Nshe1(:,3)=taper1(:,3)+NG1(:,3);
 Nshe2(:,3)=taper2(:,3)+NG2(:,3);
+
+% Nshe1
+% Nshe2
 
 % Initial Global frame nodal coordinates w.r.t Shear center
 xg1=Nshe1(:,1);
@@ -655,11 +662,15 @@ PP
 r=0;
 for i=1:mem
    q=0;
-   if isequal(sum(SNodevalue(i,:,3)),1)   
+   if isequal(sum(SNodevalue(i,:,3)),1) 
+      fprintf('if 1 \n')
       for j=1:mem
          if isequal(sum(SNodevalue(j,:,3)),1)
+             fprintf('if 2 \n')
             if ~isequal(i,j)
-               if isequal(PP(i,4),PP(j,4)) %start node j=1     
+                fprintf('if 3 \n')
+               if isequal(PP(i,4),PP(j,4)) %start node j=1
+                   fprintf('if 4 \n')
                   x1 = xg1(r+1,1); y1 = yg1(r+1,1);
                   x2 = xg2(r+1,1); y2 = yg2(r+1,1);
                   x3 = xg1(q+1,1); y3 = yg1(q+1,1);
@@ -668,21 +679,26 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 5 \n')
                      Px = x3;
                      Py = y3;
                   else
+                      fprintf('else 5 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;              
                   end
                   for k = 1:xn
                      if isequal(x3,xg1(k,1)) && isequal(y3,yg1(k,1))
+                         fprintf('if 6 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x3,xg2(k,1)) && isequal(y3,yg2(k,1))
+                         fprintf('else 6 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end
                %---                  
                elseif isequal(PP(i,4),PP(j,5))      
+                   fprintf('elif 4 \n')
                   x1 = xg1(r+1,1); y1 = yg1(r+1,1);
                   x2 = xg2(r+1,1); y2 = yg2(r+1,1);
                   x3 = xg1(q+ sum(SNodevalue(j,:,3)),1); y3 = yg1(q+ sum(SNodevalue(j,:,3)),1);
@@ -691,22 +707,27 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 7 \n')
                      Px = x4;
                      Py = y4;
                   else
+                      fprintf('else 7 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;              
                   end
                   for k = 1:xn
                      if isequal(x4,xg1(k,1)) && isequal(y4,yg1(k,1))
+                         fprintf('if 8 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x4,xg2(k,1)) && isequal(y4,yg2(k,1))
+                         fprintf('else 8 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end            
 
                elseif isequal(PP(i,5),PP(j,4)) %end node j=sum(SNodevalue(i,:,3))              
-                  x1 = xg1(r+sum(SNodevalue(i,:,3)),1); y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
+                  fprintf('elif 4_2 \n')
+                   x1 = xg1(r+sum(SNodevalue(i,:,3)),1); y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
                   x2 = xg2(r+sum(SNodevalue(i,:,3)),1); y2 = yg2(r+sum(SNodevalue(i,:,3)),1);
                   x3 = xg1(q+1,1); y3 = yg1(q+1,1);
                   x4 = xg2(q+1,1); y4 = yg2(q+1,1);   
@@ -714,21 +735,26 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 9 \n')
                      Px = x3;
                      Py = y3;
                   else
+                      fprintf('else 9 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;              
                   end
                   for k = 1:xn
                      if isequal(x3,xg1(k,1)) && isequal(y3,yg1(k,1))
+                         fprintf('if 10 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x3,xg2(k,1)) && isequal(y3,yg2(k,1))
+                         fprintf('else 10 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end            
 
                elseif isequal(PP(i,5),PP(j,5))
+                   fprintf('elif 4_3 \n')
                   x1 = xg1(r+sum(SNodevalue(i,:,3)),1); y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
                   x2 = xg2(r+sum(SNodevalue(i,:,3)),1); y2 = yg2(r+sum(SNodevalue(i,:,3)),1);
                   x3 = xg1(q+ sum(SNodevalue(j,:,3)),1); y3 = yg1(q+ sum(SNodevalue(j,:,3)),1);
@@ -737,16 +763,20 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 11 \n')
                      Px = x4;
                      Py = y4;
                   else
+                      fprintf('else 11 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;               
                   end
                   for k = 1:xn
                      if isequal(x4,xg1(k,1)) && isequal(y4,yg1(k,1))
+                         fprintf('if 12 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x4,xg2(k,1)) && isequal(y4,yg2(k,1))
+                         fprintf('else 12 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end               
@@ -755,8 +785,11 @@ for i=1:mem
             end % ~isequal(i,j)
             
          else
+             fprintf('else 2 \n')
             if ~isequal(i,j)
-               if isequal(PP(i,4),PP(j,4)) %start node j=1     
+                fprintf('if 13 \n')
+               if isequal(PP(i,4),PP(j,4)) %start node j=1 
+                   fprintf('if 14 \n')
                   x1 = xg1(r+1,1); y1 = yg1(r+1,1);
                   x2 = xg2(r+1,1); y2 = yg2(r+1,1);
                   x3 = xg1(q+1,1); y3 = yg1(q+1,1);
@@ -765,21 +798,26 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 15 \n')
                      Px = x3;
                      Py = y3;
                   else
+                      fprintf('else 15 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;               
                   end
                   for k = 1:xn
                      if isequal(x3,xg1(k,1)) && isequal(y3,yg1(k,1))
+                         fprintf('if 16 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x3,xg2(k,1)) && isequal(y3,yg2(k,1))
+                         fprintf('else 16 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end
 
-               elseif isequal(PP(i,4),PP(j,7))         
+               elseif isequal(PP(i,4),PP(j,7))      
+                   fprintf('elif 14_1 \n')
                   x1 = xg1(r+1,1); y1 = yg1(r+1,1);
                   x2 = xg2(r+1,1); y2 = yg2(r+1,1);
                   x3 = xg1(q+ sum(SNodevalue(j,:,3)),1); y3 = yg1(q+ sum(SNodevalue(j,:,3)),1);
@@ -788,21 +826,26 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 17 \n')
                      Px = x4;
                      Py = y4;
                   else
+                      fprintf('else 17 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;             
                   end
                   for k = 1:xn
                      if isequal(x4,xg1(k,1)) && isequal(y4,yg1(k,1))
+                         fprintf('if 18 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x4,xg2(k,1)) && isequal(y4,yg2(k,1))
+                         fprintf('else 18 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end
                %----
                elseif isequal(PP(i,5),PP(j,4)) %end node j=sum(SNodevalue(i,:,3))              
+                  fprintf('elif 14_2 \n')
                   x1 = xg1(r+sum(SNodevalue(i,:,3)),1); y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
                   x2 = xg2(r+sum(SNodevalue(i,:,3)),1); y2 = yg2(r+sum(SNodevalue(i,:,3)),1);
                   x3 = xg1(q+1,1); y3 = yg1(q+1,1);
@@ -811,21 +854,26 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 19 \n')
                      Px = x3;
                      Py = y3;
                   else
+                      fprintf('else 19 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;              
                   end
                   for k = 1:xn
                      if isequal(x3,xg1(k,1)) && isequal(y3,yg1(k,1))
+                         fprintf('if 20 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x3,xg2(k,1)) && isequal(y3,yg2(k,1))
+                         fprintf('else 20 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end            
 
                elseif isequal(PP(i,5),PP(j,7))
+                   fprintf('elif 14_3 \n')
                   x1 = xg1(r+sum(SNodevalue(i,:,3)),1); y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
                   x2 = xg2(r+sum(SNodevalue(i,:,3)),1); y2 = yg2(r+sum(SNodevalue(i,:,3)),1);
                   x3 = xg1(q+ sum(SNodevalue(j,:,3)),1); y3 = yg1(q+ sum(SNodevalue(j,:,3)),1);
@@ -834,16 +882,20 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 21 \n')
                      Px = x4;
                      Py = y4;
                   else
+                      fprintf('else 21 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;               
                   end
                   for k = 1:xn
                      if isequal(x4,xg1(k,1)) && isequal(y4,yg1(k,1))
+                         fprintf('if 22 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x4,xg2(k,1)) && isequal(y4,yg2(k,1))
+                         fprintf('else 22 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end                           
@@ -855,11 +907,15 @@ for i=1:mem
          q = q+ sum(SNodevalue(j,:,3));
       end      
    else
+       fprintf('else 1 \n')
       q = 0;
       for j=1:mem
          if isequal(sum(SNodevalue(j,:,3)),1)
+             fprintf('if 23 \n')
             if ~isequal(i,j)
-               if isequal(PP(i,4),PP(j,4)) %start node j=1   
+                fprintf('if 24 \n')
+               if isequal(PP(i,4),PP(j,4)) %start node j=1 
+                   fprintf('if 25 \n')
                   x1 = xg1(r+1,1); y1 = yg1(r+1,1);
                   x2 = xg2(r+1,1); y2 = yg2(r+1,1);
                   x3 = xg1(q+1,1); y3 = yg1(q+1,1);
@@ -868,21 +924,26 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 26 \n')
                      Px = x3;
                      Py = y3;
                   else
+                      fprintf('else 26 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;               
                   end
                   for k = 1:xn
                      if isequal(x3,xg1(k,1)) && isequal(y3,yg1(k,1))
+                         fprintf('if 27 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x3,xg2(k,1)) && isequal(y3,yg2(k,1))
+                         fprintf('else 27 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end
                % ----   
-               elseif isequal(PP(i,4),PP(j,5))      
+               elseif isequal(PP(i,4),PP(j,5))   
+                   fprintf('if 25_1 \n')
                   x1 = xg1(r+1,1); y1 = yg1(r+1,1);
                   x2 = xg2(r+1,1); y2 = yg2(r+1,1);
                   x3 = xg1(q+ sum(SNodevalue(j,:,3)),1); y3 = yg1(q+ sum(SNodevalue(j,:,3)),1);
@@ -891,22 +952,27 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 28 \n')
                      Px = x4;
                      Py = y4;
                   else
+                      fprintf('else 28 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;              
                   end
                   for k = 1:xn
                      if isequal(x4,xg1(k,1)) && isequal(y4,yg1(k,1))
+                         fprintf('if 29 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x4,xg2(k,1)) && isequal(y4,yg2(k,1))
+                         fprintf('else 29 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end                      
                %-----     
 
                 elseif isequal(PP(i,7),PP(j,4)) %end node j=sum(SNodevalue(i,:,3))               
+                  fprintf('elif 25_2 \n')
                   x1 = xg1(r+sum(SNodevalue(i,:,3)),1); y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
                   x2 = xg2(r+sum(SNodevalue(i,:,3)),1); y2 = yg2(r+sum(SNodevalue(i,:,3)),1);
                   x3 = xg1(q+1,1); y3 = yg1(q+1,1);
@@ -915,21 +981,26 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 30 \n')
                      Px = x3;
                      Py = y3;
                   else
+                      fprintf('else 30 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;             
                   end
                   for k = 1:xn
                      if isequal(x3,xg1(k,1)) && isequal(y3,yg1(k,1))
+                         fprintf('if 31 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x3,xg2(k,1)) && isequal(y3,yg2(k,1))
+                         fprintf('elif 31 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end
                % ----                 
                elseif isequal(PP(i,7),PP(j,5))
+                   fprintf('elif 25_3 \n')
                   x1 = xg1(r+sum(SNodevalue(i,:,3)),1); y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
                   x2 = xg2(r+sum(SNodevalue(i,:,3)),1); y2 = yg2(r+sum(SNodevalue(i,:,3)),1);
                   x3 = xg1(q+ sum(SNodevalue(j,:,3)),1); y3 = yg1(q+ sum(SNodevalue(j,:,3)),1);
@@ -938,16 +1009,20 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 32 \n')
                      Px = x4;
                      Py = y4;
                   else
+                      fprintf('else 32 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;               
                   end
                   for k = 1:xn
                      if isequal(x4,xg1(k,1)) && isequal(y4,yg1(k,1))
+                         fprintf('if 33 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x4,xg2(k,1)) && isequal(y4,yg2(k,1))
+                         fprintf('else 33 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end                    
@@ -956,9 +1031,12 @@ for i=1:mem
                end % isequal(PP(i,4),PP(j,4)) %start node j=1
             end  % ~isequal(i,j)        
          else
+             fprintf('else 23 \n')
    
             if ~isequal(i,j)
+                fprintf('if 34 \n')
                if isequal(PP(i,4),PP(j,4)) %start node j=1 
+                   fprintf('if 35 \n')
                   x1 = xg1(r+1,1); y1 = yg1(r+1,1);
                   x2 = xg2(r+1,1); y2 = yg2(r+1,1);
                   x3 = xg1(q+1,1); y3 = yg1(q+1,1);
@@ -967,21 +1045,26 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 36 \n')
                      Px = x3;
                      Py = y3;
                   else
+                      fprintf('else 36 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;               
                   end
                   for k = 1:xn
                      if isequal(x3,xg1(k,1)) && isequal(y3,yg1(k,1))
+                         fprintf('if 37 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x3,xg2(k,1)) && isequal(y3,yg2(k,1))
+                         fprintf('else 37 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end
 
-               elseif isequal(PP(i,4),PP(j,7))      
+               elseif isequal(PP(i,4),PP(j,7))  
+                  fprintf('elif 35_1 \n')
                   x1 = xg1(r+1,1); y1 = yg1(r+1,1);
                   x2 = xg2(r+1,1); y2 = yg2(r+1,1);
                   x3 = xg1(q+ sum(SNodevalue(j,:,3)),1); y3 = yg1(q+ sum(SNodevalue(j,:,3)),1);
@@ -990,44 +1073,59 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 38 \n')
                      Px = x4;
                      Py = y4;
                   else
+                      fprintf('else 38 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;              
                   end
                   for k = 1:xn
                      if isequal(x4,xg1(k,1)) && isequal(y4,yg1(k,1))
+                         fprintf('if 39 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x4,xg2(k,1)) && isequal(y4,yg2(k,1))
+                         fprintf('else 39 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end            
 
                elseif isequal(PP(i,7),PP(j,4)) %end node j=sum(SNodevalue(i,:,3))              
-                  x1 = xg1(r+sum(SNodevalue(i,:,3)),1); y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
-                  x2 = xg2(r+sum(SNodevalue(i,:,3)),1); y2 = yg2(r+sum(SNodevalue(i,:,3)),1);
-                  x3 = xg1(q+1,1); y3 = yg1(q+1,1);
-                  x4 = xg2(q+1,1); y4 = yg2(q+1,1);   
+                  fprintf('elif 35_2 \n')
+                  x1 = xg1(r+sum(SNodevalue(i,:,3)),1);
+                  y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
+                  x2 = xg2(r+sum(SNodevalue(i,:,3)),1);
+                  y2 = yg2(r+sum(SNodevalue(i,:,3)),1);
+                  x3 = xg1(q+1,1);
+                  y3 = yg1(q+1,1);
+                  x4 = xg2(q+1,1);
+                  y4 = yg2(q+1,1);
+                  
                   Px1 = (x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4);
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 40 \n')
                      Px = x3;
                      Py = y3;
                   else
+                      fprintf('else 40 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;              
                   end
                   for k = 1:xn
                      if isequal(x3,xg1(k,1)) && isequal(y3,yg1(k,1))
+                         fprintf('if 42 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x3,xg2(k,1)) && isequal(y3,yg2(k,1))
+                         fprintf('else 42 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end            
 
                elseif isequal(PP(i,7),PP(j,7))
+                   fprintf('elif 35_2 \n')
                   x1 = xg1(r+sum(SNodevalue(i,:,3)),1); y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
                   x2 = xg2(r+sum(SNodevalue(i,:,3)),1); y2 = yg2(r+sum(SNodevalue(i,:,3)),1);
                   x3 = xg1(q+ sum(SNodevalue(j,:,3)),1); y3 = yg1(q+ sum(SNodevalue(j,:,3)),1);
@@ -1044,16 +1142,20 @@ for i=1:mem
                   Py1 = (x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4);
                   Pxy1 = ((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
                   if isequal(round(abs(Pxy1)),0)
+                      fprintf('if 43 \n')
                      Px = x4;
                      Py = y4;
                   else
+                      fprintf('else 43 \n')
                      Px = Px1/Pxy1;
                      Py = Py1/Pxy1;               
                   end
                   for k = 1:xn
                      if isequal(x4,xg1(k,1)) && isequal(y4,yg1(k,1))
+                         fprintf('if 44 \n')
                         xg1(k,1)=Px; yg1(k,1)=Py; 
                      elseif isequal(x4,xg2(k,1)) && isequal(y4,yg2(k,1))
+                         fprintf('else 44 \n')
                         xg2(k,1)=Px; yg2(k,1)=Py;                   
                      end
                   end            
@@ -1070,6 +1172,8 @@ end
 %-------------------------------------------
 xg1
 xg2
+yg1
+yg2
 % ------------------------------------------------------------------------
 % ----------       Update Shear center  W.r.t intersections     ----------
 % ------------------------------------------------------------------------

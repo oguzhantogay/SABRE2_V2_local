@@ -326,7 +326,7 @@ class SABRE2LBCODE(QMainWindow):
         for i in range(mem):
             # print('sum =',  np.sum(SNodevalue[i,:,2]))
             size += np.sum(SNodevalue[i, :, 2])
-        print('size =', size)
+        # print('size =', size)
         NCa = np.zeros((int(size) + mem, 16))
 
         mn = NCa[:, 0].shape[0]
@@ -452,16 +452,42 @@ class SABRE2LBCODE(QMainWindow):
         # print('yg2 = ', yg2)
         # print('zg1 = ', zg1)
         # print('zg2 = ', zg2)
+
         xn = int(xn)
         dX0 = np.zeros((xn, 1))
         dY0 = np.zeros((xn, 1))
         dZ0 = np.zeros((xn, 1))
         L0 = np.zeros((xn, 1))
+
+        try:
+            xg1.shape[1] # test for the array size
+        except IndexError:
+            xg1_ = np.zeros((xn,1))
+            xg2_ = np.zeros((xn,1))
+            yg1_ = np.zeros((xn,1))
+            yg2_ = np.zeros((xn,1))
+            zg1_ = np.zeros((xn,1))
+            zg2_ = np.zeros((xn,1))
+
+            xg1_[:,0] = xg1
+            xg2_[:,0] = xg2
+            yg1_[:,0] = yg1
+            yg2_[:,0] = yg2
+            zg1_[:,0] = zg1
+            zg2_[:,0] = zg2
+
+            xg1 = xg1_
+            xg2 = xg2_
+            yg1 = yg1_
+            yg2 = yg2_
+            zg1 = zg1_
+            zg2 = zg2_
+
+
         for i in range(int(xn)):
             dX0[i][0] = xg2[i][0] - xg1[i][0]
             dY0[i][0] = yg2[i][0] - yg1[i][0]
             dZ0[i][0] = zg2[i][0] - zg1[i][0]
-
             L0[i][0] = np.sqrt(np.square(dX0[i][0])) + np.sqrt(np.square(dY0[i][0])) + np.sqrt(np.square(dZ0[i][0]))
 
         # Initial Member x-dir Nodal Coordinates for Each Member
@@ -643,6 +669,7 @@ class SABRE2LBCODE(QMainWindow):
         # print('alpharef = ', alpharef)
 
         MemLength = SABRE2LBCODE.InitialEleLengthRendering(self, xn, mem, xg1, yg1, zg1, xg2, yg2, zg2, SNodevalue)
+        print('MemLength = ', MemLength)
         q = 0
         xn = int(xn)
         val1 = np.zeros((xn, 1))
@@ -762,8 +789,8 @@ class SABRE2LBCODE(QMainWindow):
         # Global frame nodal coordinates w.r.t Shear center
         # Original Shear Center
 
-        print('\ntaper1 = ', taper1, '\nNG1 = ', NG1)
-        print('\ntaper2 = ', taper2, '\nNG2 = ', NG2)
+        # print('\ntaper1 = ', taper1, '\nNG1 = ', NG1)
+        # print('\ntaper2 = ', taper2, '\nNG2 = ', NG2)
 
         Nshe1 = np.zeros((taper1.shape[0], 3))
         Nshe2 = np.zeros((taper2.shape[0], 3))
@@ -775,7 +802,7 @@ class SABRE2LBCODE(QMainWindow):
         Nshe1[:, 2] = taper1[:, 2] + NG1[:, 2]
         Nshe2[:, 2] = taper2[:, 2] + NG2[:, 2]
 
-        print("Nshe1 = ", Nshe1, "Nshe2 = ", Nshe2)
+        # print("Nshe1 = ", Nshe1, "Nshe2 = ", Nshe2)
 
         # Initial Global frame nodal coordinates w.r.t Shear center
 
@@ -1415,13 +1442,19 @@ class SABRE2LBCODE(QMainWindow):
         # print('yg2 = ', yg2)
 
         # Updated Shear center w.r.t intersections.
+        Nshe1 = np.zeros((xn, 12))
+        Nshe2 = np.zeros((xn, 12))
 
-        Nshe1[:, 0] = xg1
-        Nshe2[:, 0] = xg2
-        Nshe1[:, 1] = yg1
-        Nshe2[:, 1] = yg2
+        Nshe1[:, 0] = xg1[:,0]
+        Nshe2[:, 0] = xg2[:,0]
+        Nshe1[:, 1] = yg1[:,0]
+        Nshe2[:, 1] = yg2[:,0]
         Nshe1[:, 2] = zg1
         Nshe2[:, 2] = zg2
+
+        print('Nshe1 = ', Nshe1)
+        print('Nshe2 = ', Nshe2)
+        # print('xn = ', xn)
 
         for i in range(xn):
             Nshe1[i][3] = DUP1[i][5]
@@ -1444,23 +1477,27 @@ class SABRE2LBCODE(QMainWindow):
             Nshe2[i][10] = DUP2[i][12]
             Nshe2[i][11] = DUP2[i][13]
 
+        # print(SNshe1[:,0])
         SheMemLegth = SABRE2LBCODE.InitialEleLengthRendering(self, xn, mem, SNshe1[:, 0], SNshe1[:, 1], SNshe1[:, 2],
                                                              SNshe2[:, 0], SNshe2[:, 1], SNshe2[:, 2], SNodevalue)
         NsheMemLegth = SABRE2LBCODE.InitialEleLengthRendering(self, xn, mem, Nshe1[:, 0], Nshe1[:, 1], Nshe1[:, 2],
                                                               Nshe2[:, 0], Nshe2[:, 1], Nshe2[:, 2], SNodevalue)
 
+
+        SheMemLegth = SheMemLegth[:,0]
+        NsheMemLegth = NsheMemLegth[:,0]
         i_index = 0
         j_index = 0
 
-        segLoc = np.zeros((1, 2))
-        segLocstep = np.zeros((1, 3))
+        segLoc = np.zeros(2)
+        segLocstep = np.zeros(3)
 
         for i in range(mem):
             j_index += int(np.sum(SNodevalue[i,:,2]))
-            if SheMemLegth[i_index - 1][0] >= NsheMemLegth[i_index - 1][0]:
-                segLoc[0][1] = SheMemLegth[i_index - 1][0]
-                segLocstep[0][1] = SheMemLegth[i_index - 1][0] - NsheMemLegth[i_index - 1][0]
-                segLocstep[0][2] = SheMemLegth[i_index - 1][0]
+            if SheMemLegth[i_index - 1]  >= NsheMemLegth[i_index - 1] :
+                segLoc[1] = SheMemLegth[i_index - 1]
+                segLocstep[1] = SheMemLegth[i_index - 1]  - NsheMemLegth[i_index - 1]
+                segLocstep[2] = SheMemLegth[i_index - 1]
 
                 bfbs = (DUP1[i_index - 1][5],  DUP2[i_index - 1][5])
                 tfbs = (DUP1[i_index - 1][6],  DUP2[i_index - 1][6])
@@ -1482,21 +1519,21 @@ class SABRE2LBCODE(QMainWindow):
                 hgsb = np.interp(segLocstep,segLoc,hgs)
                 Afsb = np.interp(segLocstep,segLoc,Afs)
 
-                Nshe1[i_index - 1][3]  =bfbsb[0][1]
-                Nshe1[i_index - 1][4]  =tfbsb[0][1]
-                Nshe1[i_index - 1][5]  =bftsb[0][1]
-                Nshe1[i_index - 1][6]  =tftsb[0][1]
-                Nshe1[i_index - 1][7]  =Dgsb[0][1]
-                Nshe1[i_index - 1][8]  =twsb [0][1]
-                Nshe1[i_index - 1][9]  =tdgsb[0][1]
-                Nshe1[i_index - 1][10] =hgsb[0][1]
-                Nshe1[i_index - 1][11] =Afsb[0][1]
+                Nshe1[i_index - 1][3]  =bfbsb[1]
+                Nshe1[i_index - 1][4]  =tfbsb[1]
+                Nshe1[i_index - 1][5]  =bftsb[1]
+                Nshe1[i_index - 1][6]  =tftsb[1]
+                Nshe1[i_index - 1][7]  =Dgsb[1]
+                Nshe1[i_index - 1][8]  =twsb [1]
+                Nshe1[i_index - 1][9]  =tdgsb[1]
+                Nshe1[i_index - 1][10] =hgsb[1]
+                Nshe1[i_index - 1][11] =Afsb[1]
 
 
-            elif SheMemLegth[i_index - 1][0] < NsheMemLegth[i_index - 1][0]:
-                segLoc[0][1] = SheMemLegth[i_index - 1][0]
-                segLocstep[0][0] = SheMemLegth[i_index - 1][0] - NsheMemLegth[i_index - 1][0]
-                segLocstep[0][2] = SheMemLegth[i_index - 1][0]
+            elif SheMemLegth[i_index - 1]  < NsheMemLegth[i_index - 1] :
+                segLoc[1] = SheMemLegth[i_index - 1]
+                segLocstep[0] = SheMemLegth[i_index - 1]  - NsheMemLegth[i_index - 1]
+                segLocstep[2] = SheMemLegth[i_index - 1]
 
                 bfbs = (DUP1[i_index - 1][5], DUP2[i_index - 1][5])
                 tfbs = (DUP1[i_index - 1][6], DUP2[i_index - 1][6])
@@ -1520,21 +1557,21 @@ class SABRE2LBCODE(QMainWindow):
                 hgsb = f(hgs)
                 Afsb = f(Afs)
 
-                Nshe1[i_index - 1][3] = bfbsb[0][0]
-                Nshe1[i_index - 1][4] = tfbsb[0][0]
-                Nshe1[i_index - 1][5] = bftsb[0][0]
-                Nshe1[i_index - 1][6] = tftsb[0][0]
-                Nshe1[i_index - 1][7] = Dgsb[0][0]
-                Nshe1[i_index - 1][8] = twsb[0][0]
-                Nshe1[i_index - 1][9] = tdgsb[0][0]
-                Nshe1[i_index - 1][10] = hgsb[0][0]
-                Nshe1[i_index - 1][11] = Afsb[0][0]
+                Nshe1[i_index - 1][3] = bfbsb[0]
+                Nshe1[i_index - 1][4] = tfbsb[0]
+                Nshe1[i_index - 1][5] = bftsb[0]
+                Nshe1[i_index - 1][6] = tftsb[0]
+                Nshe1[i_index - 1][7] = Dgsb[0]
+                Nshe1[i_index - 1][8] = twsb[0]
+                Nshe1[i_index - 1][9] = tdgsb[0]
+                Nshe1[i_index - 1][10] = hgsb[0]
+                Nshe1[i_index - 1][11] = Afsb[0]
 
             if np.isclose(i_index - 1, j_index - 1):
-                if SheMemLegth[i_index - 1][0] >= NsheMemLegth[i_index - 1][0]:
-                    segLoc[0][1] = SheMemLegth[i_index - 1][0]
-                    segLocstep[0][1] = SheMemLegth[i_index - 1][0] - NsheMemLegth[i_index - 1][0]
-                    segLocstep[0][2] = SheMemLegth[i_index - 1][0]
+                if SheMemLegth[i_index - 1]  >= NsheMemLegth[i_index - 1] :
+                    segLoc[1] = SheMemLegth[i_index - 1]
+                    segLocstep[1] = SheMemLegth[i_index - 1]  - NsheMemLegth[i_index - 1]
+                    segLocstep[2] = SheMemLegth[i_index - 1]
 
                     bfbs = (DUP1[i_index - 1][5], DUP2[i_index - 1][5])
                     tfbs = (DUP1[i_index - 1][6], DUP2[i_index - 1][6])
@@ -1556,20 +1593,20 @@ class SABRE2LBCODE(QMainWindow):
                     hgsb = np.interp(segLocstep, segLoc, hgs)
                     Afsb = np.interp(segLocstep, segLoc, Afs)
 
-                    Nshe2[j_index - 1][3] = bfbsb[0][2]
-                    Nshe2[j_index - 1][4] = tfbsb[0][2]
-                    Nshe2[j_index - 1][5] = bftsb[0][2]
-                    Nshe2[j_index - 1][6] = tftsb[0][2]
-                    Nshe2[j_index - 1][7] = Dgsb[0][2]
-                    Nshe2[j_index - 1][8] = twsb[0][2]
-                    Nshe2[j_index - 1][9] = tdgsb[0][2]
-                    Nshe2[j_index - 1][10] = hgsb[0][2]
-                    Nshe2[j_index - 1][11] = Afsb[0][2]
+                    Nshe2[j_index - 1][3] = bfbsb[2]
+                    Nshe2[j_index - 1][4] = tfbsb[2]
+                    Nshe2[j_index - 1][5] = bftsb[2]
+                    Nshe2[j_index - 1][6] = tftsb[2]
+                    Nshe2[j_index - 1][7] = Dgsb[2]
+                    Nshe2[j_index - 1][8] = twsb[2]
+                    Nshe2[j_index - 1][9] = tdgsb[2]
+                    Nshe2[j_index - 1][10] = hgsb[2]
+                    Nshe2[j_index - 1][11] = Afsb[2]
 
-                elif SheMemLegth[i_index - 1][0] < NsheMemLegth[i_index - 1][0]:
-                    segLoc[0][1] = SheMemLegth[i_index - 1][0]
-                    segLocstep[0][0] = SheMemLegth[i_index - 1][0] - NsheMemLegth[i_index - 1][0]
-                    segLocstep[0][2] = SheMemLegth[i_index - 1][0]
+                elif SheMemLegth[i_index - 1]  < NsheMemLegth[i_index - 1] :
+                    segLoc[1] = SheMemLegth[i_index - 1]
+                    segLocstep[0] = SheMemLegth[i_index - 1]  - NsheMemLegth[i_index - 1]
+                    segLocstep[2] = SheMemLegth[i_index - 1]
 
                     bfbs = (DUP1[i_index - 1][5], DUP2[i_index - 1][5])
                     tfbs = (DUP1[i_index - 1][6], DUP2[i_index - 1][6])
@@ -1593,20 +1630,20 @@ class SABRE2LBCODE(QMainWindow):
                     hgsb = f(hgs)
                     Afsb = f(Afs)
 
-                    Nshe2[j_index - 1][3] = bfbsb[0][2]
-                    Nshe2[j_index - 1][4] = tfbsb[0][2]
-                    Nshe2[j_index - 1][5] = bftsb[0][2]
-                    Nshe2[j_index - 1][6] = tftsb[0][2]
-                    Nshe2[j_index - 1][7] = Dgsb[0][2]
-                    Nshe2[j_index - 1][8] = twsb[0][2]
-                    Nshe2[j_index - 1][9] = tdgsb[0][2]
-                    Nshe2[j_index - 1][10] = hgsb[0][2]
-                    Nshe2[j_index - 1][11] = Afsb[0][2]
+                    Nshe2[j_index - 1][3] = bfbsb[2]
+                    Nshe2[j_index - 1][4] = tfbsb[2]
+                    Nshe2[j_index - 1][5] = bftsb[2]
+                    Nshe2[j_index - 1][6] = tftsb[2]
+                    Nshe2[j_index - 1][7] = Dgsb[2]
+                    Nshe2[j_index - 1][8] = twsb[2]
+                    Nshe2[j_index - 1][9] = tdgsb[2]
+                    Nshe2[j_index - 1][10] = hgsb[2]
+                    Nshe2[j_index - 1][11] = Afsb[2]
             else:
-                if (SheMemLegth[j_index - 1][0] - SheMemLegth[j_index - 1-1][0]) >= (SheMemLegth[j_index - 1][0] - SheMemLegth[j_index - 1-1][0]):
-                    segLoc[0][1] = SheMemLegth[j_index - 1][0] - SheMemLegth[j_index - 1 - 1][0]
-                    segLocstep[0][1] = NsheMemLegth[j_index - 1][0] - NsheMemLegth[j_index - 1 -1][0]
-                    segLocstep[0][2] = SheMemLegth[j_index - 1][0] - SheMemLegth[j_index - 1 - 1][0]
+                if (SheMemLegth[j_index - 1]  - SheMemLegth[j_index - 1-1] ) >= (SheMemLegth[j_index - 1]  - SheMemLegth[j_index - 1-1] ):
+                    segLoc[1] = SheMemLegth[j_index - 1]  - SheMemLegth[j_index - 1 - 1]
+                    segLocstep[1] = NsheMemLegth[j_index - 1]  - NsheMemLegth[j_index - 1 -1]
+                    segLocstep[2] = SheMemLegth[j_index - 1]  - SheMemLegth[j_index - 1 - 1]
 
                     bfbs = (DUP1[j_index - 1][5], DUP2[j_index - 1][5])
                     tfbs = (DUP1[j_index - 1][6], DUP2[j_index - 1][6])
@@ -1628,23 +1665,23 @@ class SABRE2LBCODE(QMainWindow):
                     hgsb = np.interp(segLocstep, segLoc, hgs)
                     Afsb = np.interp(segLocstep, segLoc, Afs)
 
-                    Nshe2[j_index - 1][3] = bfbsb[0][1]
-                    Nshe2[j_index - 1][4] = tfbsb[0][1]
-                    Nshe2[j_index - 1][5] = bftsb[0][1]
-                    Nshe2[j_index - 1][6] = tftsb[0][1]
-                    Nshe2[j_index - 1][7] = Dgsb[0][1]
-                    Nshe2[j_index - 1][8] = twsb[0][1]
-                    Nshe2[j_index - 1][9] = tdgsb[0][1]
-                    Nshe2[j_index - 1][10] = hgsb[0][1]
-                    Nshe2[j_index - 1][11] = Afsb[0][1]
+                    Nshe2[j_index - 1][3] = bfbsb[1]
+                    Nshe2[j_index - 1][4] = tfbsb[1]
+                    Nshe2[j_index - 1][5] = bftsb[1]
+                    Nshe2[j_index - 1][6] = tftsb[1]
+                    Nshe2[j_index - 1][7] = Dgsb[1]
+                    Nshe2[j_index - 1][8] = twsb[1]
+                    Nshe2[j_index - 1][9] = tdgsb[1]
+                    Nshe2[j_index - 1][10] = hgsb[1]
+                    Nshe2[j_index - 1][11] = Afsb[1]
 
-                elif SheMemLegth[j_index - 1][0] < NsheMemLegth[j_index - 1][0]:
-                    segLoc[0][0] = SheMemLegth[j_index - 1 - 1][0]
-                    segLoc[0][1] = SheMemLegth[j_index - 1][0]
+                elif SheMemLegth[j_index - 1]  < NsheMemLegth[j_index - 1] :
+                    segLoc[0] = SheMemLegth[j_index - 1 - 1]
+                    segLoc[1] = SheMemLegth[j_index - 1]
 
-                    segLocstep[0][0] = SheMemLegth[j_index - 1 - 1][0]
-                    segLocstep[0][1] = SheMemLegth[j_index - 1][0]
-                    segLocstep[0][2] = NsheMemLegth[j_index - 1][0]
+                    segLocstep[0] = SheMemLegth[j_index - 1 - 1]
+                    segLocstep[1] = SheMemLegth[j_index - 1]
+                    segLocstep[2] = NsheMemLegth[j_index - 1]
                     bfbs = (DUP1[j_index - 1 - 1][5], DUP2[j_index - 1][5])
                     tfbs = (DUP1[j_index - 1 - 1][6], DUP2[j_index - 1][6])
                     bfts = (DUP1[j_index - 1 - 1][7], DUP2[j_index - 1][7])
@@ -1667,16 +1704,16 @@ class SABRE2LBCODE(QMainWindow):
                     hgsb = f(hgs)
                     Afsb = f(Afs)
 
-                    Nshe2[j_index - 1][3] = bfbsb[0][2]
-                    Nshe2[j_index - 1][4] = tfbsb[0][2]
-                    Nshe2[j_index - 1][5] = bftsb[0][2]
-                    Nshe2[j_index - 1][6] = tftsb[0][2]
-                    Nshe2[j_index - 1][7] = Dgsb[0][2]
-                    Nshe2[j_index - 1][8] = twsb[0][2]
-                    Nshe2[j_index - 1][9] = tdgsb[0][2]
-                    Nshe2[j_index - 1][10] = hgsb[0][2]
-                    Nshe2[j_index - 1][11] = Afsb[0][2]
-            i_index += np.sum(SNodevalue[i,:,2])
+                    Nshe2[j_index - 1][3] = bfbsb[2]
+                    Nshe2[j_index - 1][4] = tfbsb[2]
+                    Nshe2[j_index - 1][5] = bftsb[2]
+                    Nshe2[j_index - 1][6] = tftsb[2]
+                    Nshe2[j_index - 1][7] = Dgsb[2]
+                    Nshe2[j_index - 1][8] = twsb[2]
+                    Nshe2[j_index - 1][9] = tdgsb[2]
+                    Nshe2[j_index - 1][10] = hgsb[2]
+                    Nshe2[j_index - 1][11] = Afsb[2]
+            i_index += int(np.sum(SNodevalue[i,:,2]))
 
 
         print('Nshe1 = ', Nshe1)

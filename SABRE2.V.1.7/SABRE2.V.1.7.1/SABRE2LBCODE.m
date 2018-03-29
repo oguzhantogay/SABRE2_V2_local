@@ -656,7 +656,7 @@ for i = 1:mem
    end
    r = r+sum(SNodevalue(i,:,3));
 end
-PP
+
 
 %-------------------------------------------
 r=0;
@@ -1093,6 +1093,10 @@ for i=1:mem
 
                elseif isequal(PP(i,7),PP(j,4)) %end node j=sum(SNodevalue(i,:,3))              
                   fprintf('elif 35_2 \n')
+%                   xg1
+%                   yg1
+%                   xg2
+%                   yg2
                   x1 = xg1(r+sum(SNodevalue(i,:,3)),1);
                   y1 = yg1(r+sum(SNodevalue(i,:,3)),1);
                   x2 = xg2(r+sum(SNodevalue(i,:,3)),1);
@@ -1184,6 +1188,10 @@ Nshe1(:,2)=yg1(:,1);
 Nshe2(:,2)=yg2(:,1);
 Nshe1(:,3)=zg1(:,1);
 Nshe2(:,3)=zg2(:,1);
+
+% Nshe1
+% Nshe2
+% xn
 
 for i=1:xn
    Nshe1(i,4) =DUP1(i,6);
@@ -1431,6 +1439,10 @@ for i = 1:mem
    end % end isequal(melei,melej)
    melei = melei+sum(SNodevalue(i,:,3));
 end   
+
+
+Nshe1
+Nshe2
 
 % ------------------------------------------------------------------------
 % ----------------      Updated Tapered Angle       ----------------------

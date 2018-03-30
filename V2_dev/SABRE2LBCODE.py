@@ -441,7 +441,7 @@ class SABRE2LBCODE(QMainWindow):
         #
         # print('DUP1 = ', DUP1)
         # print('DUP2 = ', DUP2)
-        return DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval
+        return DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval, NC, NCa
 
     def InitialEleLengthRendering(self, xn, mem, xg1, yg1, zg1, xg2, yg2, zg2, SNodevalue):
         # Initial Each Element Length
@@ -541,7 +541,7 @@ class SABRE2LBCODE(QMainWindow):
         return tap1, tap2
 
     def modelWithBC(self):
-        DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval = SABRE2LBCODE.LBCode(self)
+        DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval, NC, NCa = SABRE2LBCODE.LBCode(self)
 
         MI = np.zeros((DUP1[:, 0].shape[0], 3))
         MI[:, 0] = DUP1[:, 0]
@@ -1716,8 +1716,106 @@ class SABRE2LBCODE(QMainWindow):
             i_index += int(np.sum(SNodevalue[i,:,2]))
 
 
-        print('Nshe1 = ', Nshe1)
-        print('Nshe2 = ', Nshe2)
+        # print('Nshe1 = ', Nshe1)
+        # print('Nshe2 = ', Nshe2)
+
+        # ------------------------------------------------------------------------
+        # ----------------      Updated Tapered Angle       ----------------------
+        # ------------------------------------------------------------------------
+        # Global frame angle for each element considering shear center
+
+        alphatap = np.zeros((xn, 2))
+
+        for i in range(xn):
+            opp = yg2[i][0] - yg1[i][0]
+            adj = xg2[i][0] - xg1[i][0]
+
+            alphatap[i][0] = MI[i][0]
+            alphatap[i][1] = np.arctan2(opp, adj)
+
+        # ------------------------------------------------------------------------
+        # ---------      Updated NCc w.r.t. shear center      --------------------
+        # ------------------------------------------------------------------------
+        #  RNC (Updated NC)
+        q=0
+        r=0
+        for i in range(mem - 1):
+            q += np.sum(SNodevalue[i,:, 2])+1
+            r += np.sum(SNodevalue[i,:, 2])
+
+        size_rnc = q+r
+
+        RNC = np.zeros((int(q+r), 4))
+        q = 0
+        r = 0
+        for i in range(mem):
+            for j in range(int(np.sum(SNodevalue[i,:,2]))):
+                if np.isclose(j+1, int(np.sum(SNodevalue[i,:,2]))):
+                    RNC[q + j][0] = r + j + 1
+                    RNC[q + j][1] = Nshe1[r + j][0]
+                    RNC[q + j][2] = Nshe1[r + j][1]
+                    RNC[q + j][3] = Nshe1[r + j][2]
+
+                    RNC[q + j + 1][0] = r + j + 1
+                    RNC[q + j + 1][1] = Nshe1[r + j][0]
+                    RNC[q + j + 1][2] = Nshe1[r + j][1]
+                    RNC[q + j + 1][3] = Nshe1[r + j][2]
+                else:
+                    RNC[q + j][0] = r + j + 1
+                    RNC[q + j][1] = Nshe1[r + j][0]
+                    RNC[q + j][2] = Nshe1[r + j][1]
+                    RNC[q + j][3] = Nshe1[r + j][2]
+
+            q += int(np.sum(SNodevalue[i, :, 2]) + 1)
+            r += int(np.sum(SNodevalue[i, :, 2]))
+
+        for i in range(size_rnc):
+            for j in range(4,NC[0,:].shape[0]):
+                RNC[i][j] = NC[i][j]
+
+        # RNCa (Updated NCa)
+        RNCa = np.zeros((NCa[:,0].shape[0], 16))
+
+        for i in range(NCa[:,0].shape[0]):
+
+            if np.isclose(NCa[i][0], 0):
+
+                for k in range(16):
+                    RNCa[i][k] = NCa[i][k]
+
+            else:
+
+                for k in range(13):
+                    RNCa[i][k] = NCa[i][k]
+
+        RNCb = np.zeros((RNCa[:,0].shape[0], 13))
+        r = 0
+
+        for i in range(RNCa[:,0].shape[0]):
+            if not np.isclose(RNCa[i][0], 0):
+                RNCa[i][0] = r + 1
+                for k in range(1, 13):
+                    RNCa[r][k] = NCa[i][k]
+                r += 1
+
+        # ------------------------------------------------------------------------
+        # ------     Updated NCc w.r.t. intersection of shear center      --------
+        # ------------------------------------------------------------------------
+        #  RNCc (Updated NCc)
+
+        RNCc = RNCb
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

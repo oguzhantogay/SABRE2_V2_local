@@ -669,7 +669,7 @@ class SABRE2LBCODE(QMainWindow):
         # print('alpharef = ', alpharef)
 
         MemLength = SABRE2LBCODE.InitialEleLengthRendering(self, xn, mem, xg1, yg1, zg1, xg2, yg2, zg2, SNodevalue)
-        print('MemLength = ', MemLength)
+        # print('MemLength = ', MemLength)
         q = 0
         xn = int(xn)
         val1 = np.zeros((xn, 1))
@@ -1452,8 +1452,8 @@ class SABRE2LBCODE(QMainWindow):
         Nshe1[:, 2] = zg1
         Nshe2[:, 2] = zg2
 
-        print('Nshe1 = ', Nshe1)
-        print('Nshe2 = ', Nshe2)
+        # print('Nshe1 = ', Nshe1)
+        # print('Nshe2 = ', Nshe2)
         # print('xn = ', xn)
 
         for i in range(xn):
@@ -1738,14 +1738,19 @@ class SABRE2LBCODE(QMainWindow):
         # ------------------------------------------------------------------------
         #  RNC (Updated NC)
         q=0
-        r=0
+        a=0
+        b=0
         for i in range(mem - 1):
-            q += np.sum(SNodevalue[i,:, 2])+1
-            r += np.sum(SNodevalue[i,:, 2])
+            q += np.sum(SNodevalue[i, :, 2]) + 1
 
-        size_rnc = q+r
+        for i in range(mem):
+            a = (int(np.sum(SNodevalue[i, :, 2])))
+            if b > a:
+                b = a
 
-        RNC = np.zeros((int(q+r), 4))
+        size_rnc = int(q + a)
+
+        RNC = np.zeros((NC.shape[0], 4))
         q = 0
         r = 0
         for i in range(mem):
@@ -1755,23 +1760,34 @@ class SABRE2LBCODE(QMainWindow):
                     RNC[q + j][1] = Nshe1[r + j][0]
                     RNC[q + j][2] = Nshe1[r + j][1]
                     RNC[q + j][3] = Nshe1[r + j][2]
+                    # print('q = ', q, 'j = ', j)
 
-                    RNC[q + j + 1][0] = r + j + 1
-                    RNC[q + j + 1][1] = Nshe1[r + j][0]
-                    RNC[q + j + 1][2] = Nshe1[r + j][1]
-                    RNC[q + j + 1][3] = Nshe1[r + j][2]
+                    RNC[q + j + 1][0] = r + j + 2
+                    RNC[q + j + 1][1] = Nshe2[r + j][0]
+                    RNC[q + j + 1][2] = Nshe2[r + j][1]
+                    RNC[q + j + 1][3] = Nshe2[r + j][2]
                 else:
                     RNC[q + j][0] = r + j + 1
                     RNC[q + j][1] = Nshe1[r + j][0]
                     RNC[q + j][2] = Nshe1[r + j][1]
                     RNC[q + j][3] = Nshe1[r + j][2]
 
-            q += int(np.sum(SNodevalue[i, :, 2]) + 1)
+            q += int(np.sum(SNodevalue[i, :, 2]))+1
             r += int(np.sum(SNodevalue[i, :, 2]))
+
+
+        # print('NC = ', NC)
+
+        RNC_ = np.zeros((NC.shape[0],13))
+        RNC_[:,0:4] = RNC
+        RNC = RNC_
 
         for i in range(size_rnc):
             for j in range(4,NC[0,:].shape[0]):
+
                 RNC[i][j] = NC[i][j]
+
+        # print('RNC = ', RNC)
 
         # RNCa (Updated NCa)
         RNCa = np.zeros((NCa[:,0].shape[0], 16))
@@ -1788,14 +1804,14 @@ class SABRE2LBCODE(QMainWindow):
                 for k in range(13):
                     RNCa[i][k] = NCa[i][k]
 
-        RNCb = np.zeros((RNCa[:,0].shape[0], 13))
         r = 0
-
+        shape_RNCb = np.count_nonzero(RNCa[:,0])
+        RNCb = np.zeros((shape_RNCb, 13))
         for i in range(RNCa[:,0].shape[0]):
             if not np.isclose(RNCa[i][0], 0):
-                RNCa[i][0] = r + 1
+                RNCb[r][0] = r + 1
                 for k in range(1, 13):
-                    RNCa[r][k] = NCa[i][k]
+                    RNCb[r][k] = NCa[i][k]
                 r += 1
 
         # ------------------------------------------------------------------------
@@ -1804,6 +1820,7 @@ class SABRE2LBCODE(QMainWindow):
         #  RNCc (Updated NCc)
 
         RNCc = RNCb
+        print('RNCc = ', RNCc)
 
 
 

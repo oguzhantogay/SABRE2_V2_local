@@ -1463,6 +1463,7 @@ end
 q=0;r=0;
 for i = 1:mem
    for j = 1:sum(SNodevalue(i,:,3))
+       j
       if isequal(j,sum(SNodevalue(i,:,3))) 
          RNC(q+j,1) = r+j;
          RNC(q+j,2) = Nshe1(r+j,1);
@@ -1480,10 +1481,10 @@ for i = 1:mem
          RNC(q+j,4) = Nshe1(r+j,3);
       end
    end
-   q=q+sum(SNodevalue(i,:,3))+1;
-   r=r+sum(SNodevalue(i,:,3));
+   q=q+sum(SNodevalue(i,:,3))+1
+   r=r+sum(SNodevalue(i,:,3))
 end
-
+% RNC
 for i=1:length(RNC(:,1))
    for j = 5:length(NC(1,:))
       RNC(i,j)=NC(i,j);
@@ -1691,7 +1692,7 @@ end
 % ------     Updated NCc w.r.t. intersection of shear center      --------
 % ------------------------------------------------------------------------ 
 % ***************************************************** RNCc (Updated NCc) 
-   RNCc = RNCb;
+   RNCc = RNCb
 
    % ---------------------------------------------------------------------
    % ----------------    Plot Loading Nodal Points       -----------------

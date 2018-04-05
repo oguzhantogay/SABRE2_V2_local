@@ -33,6 +33,13 @@ class ActionClass(QMainWindow):
         self.point_data_values = None
         self.JNodeValue_i = None
         self.JNodeValue_j = None
+        self.DUP1 = None
+        self.DUP2 = None
+        self.RNCc = None
+        self.PNC = None
+        self.PNC1 = None
+        self.PNC2 = None
+
 
     def AboutAct(self):
         # self.statusMessage(self, message="Learn about Sabre2")
@@ -224,6 +231,12 @@ class ActionClass(QMainWindow):
             self.Members_table_position)
         self.BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
         self.added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        self.DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
+        self.DUP2 = h5_file.h5_Class.read_array(self, 'DUP2')
+        self.RNCc = h5_file.h5_Class.read_array(self, 'RNCc')
+        self.PNC = h5_file.h5_Class.read_array(self, 'PNC')
+        self.PNC1 = h5_file.h5_Class.read_array(self, 'PNC1')
+        self.PNC2 = h5_file.h5_Class.read_array(self, 'PNC2')
         self.shear_panel_values = SABRE2_main_subclass.SABRE2_main_subclass.update_shear_panel_table(self,
                                                                                                      self.ui.Shear_panel_table)
         self.ground_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_ground_table(self,
@@ -254,6 +267,12 @@ class ActionClass(QMainWindow):
                  Massemble = self.Massemble,
                  added_node_information = self.added_node_information,
                  BNodevalue = self.BNodevalue,
+                 DUP1 = self.DUP1,
+                 DUP2 = self.DUP2,
+                 RNCc = self.RNCc,
+                 PNC = self.PNC,
+                 PNC1 = self.PNC1,
+                 PNC2 = self.PNC2,
                  shear_panel_values=self.shear_panel_values,
                  ground_spring_values=self.ground_spring_values,
                  torsional_spring_values=self.torsional_spring_values,
@@ -286,6 +305,12 @@ class ActionClass(QMainWindow):
         self.BNodevalue = aa['BNodevalue']
         self.added_node_information = aa['added_node_information']
         # print('table prop read = ' , self.table_prop)
+        self.DUP1 = aa['DUP1']
+        self.DUP2 = aa['DUP2']
+        self.RNCc = aa['RNCc']
+        self.PNC = aa['PNC']
+        self.PNC1 = aa['PNC1']
+        self.PNC2 = aa['PNC2']
         self.shear_panel_values = aa['shear_panel_values']
         self.ground_spring_values = aa['ground_spring_values']
         self.torsional_spring_values = aa['torsional_spring_values']
@@ -296,6 +321,12 @@ class ActionClass(QMainWindow):
         self.point_data_values = aa['point_data_values']
         h5_file.h5_Class.update_array(self, self.BNodevalue, 'BNodevalue')
         h5_file.h5_Class.update_array(self, self.added_node_information, 'added_node_information')
+        h5_file.h5_Class.update_array(self, self.DUP1, 'DUP1')
+        h5_file.h5_Class.update_array(self, self.DUP2, 'DUP2')
+        h5_file.h5_Class.update_array(self, self.RNCc, 'RNCc')
+        h5_file.h5_Class.update_array(self, self.RNCc, 'PNC')
+        h5_file.h5_Class.update_array(self, self.RNCc, 'PNC1')
+        h5_file.h5_Class.update_array(self, self.RNCc, 'PNC2')
         # print("\njoint values = ", self.joint_values, "\nmember prop values = ", self.member_properties_values,
         #       "\nmembers table values = ", self.members_table_values)
 

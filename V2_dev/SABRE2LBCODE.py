@@ -12,8 +12,11 @@ class SABRE2LBCODE(QMainWindow):
         self.ui = ui_layout
 
     def LBCode(self):
+        # print('LBcode ran')
         BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
         SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
+        # print('SNodevalue in LBCode =', SNodevalue)
+
         import OpenGLcode
         joint_nodes_length, JNodevalue = OpenGLcode.glWidget.JointTableValues(self)
         member_count, member_values, JNodeValues_i, JNodeValues_j, _, Rval = OpenGLcode.glWidget.memberTableValues(self)
@@ -441,10 +444,12 @@ class SABRE2LBCODE(QMainWindow):
         #
         # print('DUP1 = ', DUP1)
         # print('DUP2 = ', DUP2)
+        h5_file.h5_Class.update_array(self, DUP1, 'DUP1')
+        h5_file.h5_Class.update_array(self, DUP2, 'DUP2')
         return DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval, NC, NCa
 
     def InitialEleLengthRendering(self, xn, mem, xg1, yg1, zg1, xg2, yg2, zg2, SNodevalue):
-        # Initial Each Element Length
+        # print('element render ran')# Initial Each Element Length
         # Preallocationg
         # print('xg1 = ', xg1)
         # print('xg2 = ', xg2)
@@ -541,6 +546,7 @@ class SABRE2LBCODE(QMainWindow):
         return tap1, tap2
 
     def modelWithBC(self):
+
         DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval, NC, NCa = SABRE2LBCODE.LBCode(self)
 
         MI = np.zeros((DUP1[:, 0].shape[0], 3))
@@ -1820,7 +1826,15 @@ class SABRE2LBCODE(QMainWindow):
         #  RNCc (Updated NCc)
 
         RNCc = RNCb
-        print('RNCc = ', RNCc)
+        # print('RNCc = ', RNCc)
+        h5_file.h5_Class.update_array(self, RNCc, 'RNCc')
+
+        number_of_nodes = int(RNCc[:, 0].shape[0])
+
+        import SABRE2_main_subclass
+
+        SABRE2_main_subclass.Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes)
+        SABRE2_main_subclass.Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
 
 
 

@@ -8,6 +8,8 @@ class h5_Class:
         """ This function is to generate the h5 file at the beginning or any requested file"""
         file_open = h5py.File(file_name, 'w')
 
+        check_array = np.zeros((1,1)) # to check whether all member cross-section props are defined.
+
         added_node_information = np.zeros((1,2))
 
         added_node_information[0][0] = 1
@@ -20,6 +22,20 @@ class h5_Class:
 
         table_prop =  np.zeros((1,14))
 
+        DUP1 = np.zeros((1,1,1))
+
+        DUP2 = np.zeros((1,1,1))
+
+        RNCc = np.zeros((1,1,1))
+
+        PNC = np.zeros((1,1,1))
+
+        PNC1 = np.zeros((1,1,1))
+
+        PNC2 = np.zeros((1,1,1))
+
+        file_open.create_dataset('check_array', data=check_array)
+
         file_open.create_dataset('added_node_information', data=added_node_information)
 
         file_open.create_dataset('BNodevalue', data=BNodevalue)
@@ -29,6 +45,18 @@ class h5_Class:
         file_open.create_dataset('Massemble', data=Massemble)
 
         file_open.create_dataset('table_prop', data=table_prop)
+
+        file_open.create_dataset('DUP1', data=DUP1)
+
+        file_open.create_dataset('DUP2', data=DUP2)
+
+        file_open.create_dataset('RNCc', data=RNCc)
+
+        file_open.create_dataset('PNC', data=PNC)
+
+        file_open.create_dataset('PNC1', data=PNC1)
+
+        file_open.create_dataset('PNC2', data=PNC2)
 
         file_open.close()
 

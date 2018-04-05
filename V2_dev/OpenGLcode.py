@@ -487,6 +487,7 @@ class glWidget(QGLWidget, QMainWindow):
             # print('test')
             SABRE2LBCODE.SABRE2LBCODE.modelWithBC(self)
 
+
         try:
             if self.ui.Members_table.item(row, 1) is None:
                 pass

@@ -13,6 +13,10 @@ function [PNC,PNC1,PNC2]=SABRE2BConApp(JNodevalue,JNodevalue_i,JNodevalue_j,...
 if isempty(RNCc)
    PNC=[];
 else 
+%     fprintf('before')
+%     PNC
+%     PNC1
+%     PNC2
    Lnode = round(str2double(get(bfm_type_name,'String')));
    if isempty(get(bfm_type_name,'String'))|| isequal(get(bfm_type_name,'String'),'0')    
       PNC(length(RNCc(:,1)),14)=0;
@@ -157,6 +161,9 @@ else
       
 end
 
+PNC
+PNC1
+PNC2
 
 if ~isempty(JNodevalue) 
    % ********************************************** Plot Coordnate Axes S

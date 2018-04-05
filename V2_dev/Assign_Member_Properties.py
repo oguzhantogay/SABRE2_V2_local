@@ -16,44 +16,56 @@ class Assign_All_Class(QMainWindow):
 
     def assign_SNodevalue(self):
         """ Assign the SNodevalue array with the values from Member Properties Tab"""
-        SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
-        # Massemble = h5_file.h5_Class.read_array(self, 'Massemble')
-        BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
-        # print('BNodevalue = ', BNodevalue)
-        from SABRE2_main_subclass import SABRE2_main_subclass
-        member_properties_values = SABRE2_main_subclass.update_member_properties_table(self,
-                                                                                       self.ui.Member_Properties_Table)
+        check_array = h5_file.h5_Class.read_array(self, 'check_array')
+        print('assign check = ' , check_array)
+        non_zeros = np.count_nonzero(check_array)
+        if non_zeros == check_array.shape[0]:
+            self.ui.Member_Properties_Table.setEnabled(True)
+            self.ui.BoundaryConditionsTabs.setEnabled(True)
+            self.ui.LC_tabs.setEnabled(True)
+            # print('in loop')
+            # SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
+            # Massemble = h5_file.h5_Class.read_array(self, 'Massemble')
+            BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
+            # print('BNodevalue = ', BNodevalue)
+            from SABRE2_main_subclass import SABRE2_main_subclass
+            member_properties_values = SABRE2_main_subclass.update_member_properties_table(self,
+                                                                                           self.ui.Member_Properties_Table)
 
-        max_b = 0
-        max_c = 0
+            max_b = 0
+            max_c = 0
 
-        for i in range(int(BNodevalue.shape[0])):
-            max_c = np.amax(BNodevalue[i, :, 1])
-            if max_b < max_c:
-                max_b = max_c
+            for i in range(int(BNodevalue.shape[0])):
+                max_c = np.amax(BNodevalue[i, :, 1])
+                if max_b < max_c:
+                    max_b = max_c
 
 
-        SNodevalue = np.zeros((int(BNodevalue.shape[0]),int(max_b + 1), 11))
-        # print('member prob values = ', member_properties_values)
-        for i in range(int(BNodevalue.shape[0])):
-            for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
-                SNodevalue[i][j][0] = i + 1
-                SNodevalue[i][j][1] = j + 1
-                SNodevalue[i][j][2] = member_properties_values[i][1]
-                SNodevalue[i][j][3] = member_properties_values[i][2]
-                SNodevalue[i][j][4] = member_properties_values[i][3]
-                SNodevalue[i][j][7] = member_properties_values[i][5]
-                SNodevalue[i][j][8] = member_properties_values[i][6]
-                SNodevalue[i][j][9] = member_properties_values[i][7]
-                if SNodevalue[i][j][7] == SNodevalue[i][j][8] ==SNodevalue[i][j][9]:
-                    HomoType = 0
-                    SNodevalue[i][j][5] = SNodevalue[i][j][7]
+            SNodevalue = np.zeros((int(BNodevalue.shape[0]),int(max_b + 1), 11))
+            # print('member prob values = ', member_properties_values)
+            for i in range(int(BNodevalue.shape[0])):
+                for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
+                    SNodevalue[i][j][0] = i + 1
+                    SNodevalue[i][j][1] = j + 1
+                    SNodevalue[i][j][2] = member_properties_values[i][1]
+                    SNodevalue[i][j][3] = member_properties_values[i][2]
+                    SNodevalue[i][j][4] = member_properties_values[i][3]
+                    SNodevalue[i][j][7] = member_properties_values[i][5]
+                    SNodevalue[i][j][8] = member_properties_values[i][6]
+                    SNodevalue[i][j][9] = member_properties_values[i][7]
+                    if SNodevalue[i][j][7] == SNodevalue[i][j][8] ==SNodevalue[i][j][9]:
+                        HomoType = 0
+                        SNodevalue[i][j][5] = SNodevalue[i][j][7]
 
-                else:
-                    HomoType = 1
-                    SNodevalue[i][j][5] = 50
-                SNodevalue[i][j][10] = HomoType
+                    else:
+                        HomoType = 1
+                        SNodevalue[i][j][5] = 50
+                    SNodevalue[i][j][10] = HomoType
 
-        # print('SNodevalue =', SNodevalue)
+            print('SNodevalue =', SNodevalue)
 
-        h5_file.h5_Class.update_array(self,SNodevalue, 'SNodevalue')
+            h5_file.h5_Class.update_array(self,SNodevalue, 'SNodevalue')
+
+            import SABRE2LBCODE
+
+            SABRE2LBCODE.SABRE2LBCODE.modelWithBC(self)

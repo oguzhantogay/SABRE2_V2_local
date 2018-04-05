@@ -5644,6 +5644,7 @@ end % function end
 % --------------------------------------------------------------------
 function bfm_apply_pushbutton_Callback(hObject, eventdata)
    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off');set([vmbf,vmpf], 'Checked', 'on');LabType(1,5)=0; 
+   fprintf('Boundary Condition callback')
    if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background   
    [PNC,PNC1,PNC2]=SABRE2BConAppW(JNodevalue,JNodevalue_i,JNodevalue_j,...
       Massemble,Rval,RNCc,DUP1,DUP2,PNC,PNC1,PNC2,Bhg,Thg,CSg,bfm_type_name,...

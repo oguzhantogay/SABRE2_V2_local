@@ -10,6 +10,7 @@ import h5_file
 import numpy as np
 import sqlite3 as sq
 import Assign_Member_Properties
+import SABRE2LBCODE
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -42,6 +43,9 @@ class SABRE2_main_subclass(QMainWindow):
         SABRE2_main_subclass.Massemble = np.zeros((1, 16))
         self.table_prop = np.zeros((1, 14))
         self.members_table_values = np.zeros((1, 18))
+        ui_layout.Member_Properties_Table.setEnabled(False)
+        ui_layout.BoundaryConditionsTabs.setEnabled(False)
+        ui_layout.LC_tabs.setEnabled(False)
         SABRE2_main_subclass.BNodevalue = None
         self.SNodevalue = None
         ###  Setting validators for the lineEdit positions
@@ -180,6 +184,7 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: self.update_members_table(ui_layout.Members_table,
                                               self.Members_table_position))
 
+        ui_layout.Members_table.itemChanged.connect(lambda: self.members_defined_check())
 
 
         ui_layout.RemoveAddedNodePB.clicked.connect(
@@ -226,8 +231,22 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Mem_def_delete.clicked.connect(
             lambda:self.m_assemble_updater(ui_layout.Members_table, flag="Delete Last"))
 
+        ## Member properties set up with Member cross-section table changes
+
+        ui_layout.Members_table.itemChanged.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+
         ui_layout.Mem_def_delete.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
 
+        ui_layout.Mem_def_add.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+
+        ui_layout.Insert_row_mem_def_button.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+
+        ui_layout.Delete_row_mem_def_button.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+
+        ui_layout.Copy_mem_def_button.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+
+
+        ##
         ui_layout.Delete_row_mem_def_button.clicked.connect(
             lambda: TableChanges.delete_row(self, ui_layout.Members_table, ui_layout.Delete_row_number_mem_def,
                                             "arbitrary"))
@@ -292,8 +311,11 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: MemberPropertiesTable.set_values_with_row(self, ui_layout.Member_Properties_Table,
                                                               ui_layout.Member_prop_line_edit))
 
-        ui_layout.Member_Properties_Table.itemChanged.connect(
-            lambda: MemberPropertiesTable.check_values(self, ui_layout.Member_Properties_Table))
+        # ui_layout.Member_Properties_Table.itemChanged.connect(
+        #     lambda: MemberPropertiesTable.check_values(self, ui_layout.Member_Properties_Table))
+
+        # ui_layout.Member_Properties_Table.itemChanged.connect(
+        #     lambda: MemberPropertiesTable.check_values(self, ui_layout.Member_Properties_Table))
 
         ui_layout.Member_Properties_Table.itemChanged.connect(
             lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
@@ -490,8 +512,35 @@ class SABRE2_main_subclass(QMainWindow):
         # print('self.members_table_values', self.members_table_values)
         # print("main screen node i", JNodeValue_i)
         # print("main screen node j", JNodeValue_j)
-
+        # self.members_defined_check()
         return Members_values, JNodeValue_i, JNodeValue_j, current_row, SABRE2_main_subclass.BNodevalue, flag_mem_values, Rval
+
+    def members_defined_check(self):
+        check_array = h5_file.h5_Class.read_array(self, 'check_array')
+        row_count = self.ui.Members_table.rowCount()
+        current_row = self.ui.Members_table.currentRow()
+        print('row_count = ' ,row_count)
+        print('row_count1 = ' ,check_array.shape[0])
+        if check_array.shape[0] != row_count:
+            check_array = np.zeros((row_count,1))
+        elif check_array[current_row][0] != 1:
+            for j in range(row_count):
+                for i in range(18):
+                    # print(i, '     ' , self.ui.Members_table.item(current_row, i))
+
+                    if i == 3:
+                        pass
+                    elif self.ui.Members_table.item(j, i) is not None:
+                        check_array[j][0] = 1
+                    else:
+                        check_array[j][0] = 0
+
+
+
+
+
+        print('check array = ', check_array)
+        h5_file.h5_Class.update_array(self, check_array, 'check_array')
 
     def AISC_update_fun(self, tableName):
         # tableName.blockSignals(True)
@@ -1415,7 +1464,6 @@ class MemberPropertiesTable(QMainWindow):
         # print('test')
         memberPropertiesTable.blockSignals(True)
         current_column = self.ui.Members_table.currentColumn()
-        print
         if current_column == 1 or current_column == 2:
             row_member = memberPropertiesTable.rowCount()
             row_def = memberDefinitionTable.rowCount()
@@ -1511,19 +1559,19 @@ class MemberPropertiesTable(QMainWindow):
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     memberPropertiesTable.setItem(j, i, item)
 
-    def check_values(self, memberPropertiesTable):
-        col = memberPropertiesTable.currentColumn()
-        row = memberPropertiesTable.currentRow()
-        try:
-            float(memberPropertiesTable.item(row, col).text())
-
-        except ValueError:
-            memberPropertiesTable.clearSelection()
-            memberPropertiesTable.item(row, col).setText("")
-            DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in the cell!")
-
-        except AttributeError:
-            pass
+    # def check_values(self, memberPropertiesTable):
+    #     col = memberPropertiesTable.currentColumn()
+    #     row = memberPropertiesTable.currentRow()
+    #     try:
+    #         float(memberPropertiesTable.item(row, col).text())
+    #
+    #     except ValueError:
+    #         memberPropertiesTable.clearSelection()
+    #         memberPropertiesTable.item(row, col).setText("")
+    #         DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in the cell!")
+    #
+    #     except AttributeError:
+    #         pass
 
 
 class Boundary_Conditions(QMainWindow):
@@ -1533,6 +1581,39 @@ class Boundary_Conditions(QMainWindow):
         QMainWindow.__init__(self)
         self.ui = ui_layout
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
+
+
+    def set_number_of_rows_fixities_table(self, number_of_nodes):
+        self.ui.Fixities_table.blockSignals(True)
+        self.ui.Fixities_table.setRowCount(number_of_nodes)
+        for i in range(int(number_of_nodes)):
+            for j in range(9):
+                if j ==0: #first column row numbering
+                    text = str(int(i+1))
+                    item = QTableWidgetItem(text)
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                    self.ui.Fixities_table.setItem(i, j, item)
+                elif j == 1: # combo box set up, done in the following function
+                    pass
+                else:  # check boxes are setting up
+                    item = QtGui.QTableWidgetItem()
+                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                    item.setCheckState(QtCore.Qt.Unchecked)
+                    self.ui.Fixities_table.setItem(i, j, item)
+        self.ui.Fixities_table.blockSignals(False)
+
+    def Assign_comboBox_fixities_table(self, number_of_nodes):
+        r = int(number_of_nodes)
+        options = ["Shear Center", "Flange 2","Centroid", "Flange 1"]
+        for i in range(r):
+            combo_box = QtGui.QComboBox()
+            for t in options:
+                combo_box.addItem(t)
+            self.ui.Fixities_table.setCellWidget(i, 1, combo_box)
+            # combo_box.currentIndexChanged.connect(
+            #     lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Fixities_table, flag="combo"))
+
 
     def Assign_comboBox_shear(self, tableName, options, position):
         r = tableName.rowCount()
@@ -1554,7 +1635,7 @@ class Boundary_Conditions(QMainWindow):
                     fixities_vals[j, i] = (j + 1)
                 else:
                     fixities_vals[j, i] = table_for_checkbox.item(j, i).checkState()
-        print(fixities_vals)
+        # print(fixities_vals)
 
     def set_active(self, table_name, line_edit):
 

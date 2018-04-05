@@ -107,7 +107,7 @@ else
       PNC(Lnode,10)=str2double(get(bfm_rz_edit,'String'));
       PNC(Lnode,11)=str2double(get(bfm_phix_edit,'String')); 
       PNC(Lnode,12)=0;
-      PNC(Lnode,13)=get(bfm_height_edit,'Value');
+      PNC(Lnode,13)=get(bfm_height_edit,'Value')
       
       PNC1(length(DUP1(:,1)),14)=0;
       PNC2(length(DUP2(:,1)),14)=0;

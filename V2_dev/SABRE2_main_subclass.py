@@ -10,7 +10,7 @@ import h5_file
 import numpy as np
 import sqlite3 as sq
 import Assign_Member_Properties
-import SABRE2LBCODE
+import BoundaryConditionApplication
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -108,8 +108,6 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.DefinitionButton.clicked.connect(lambda: ui_layout.AnalysisTabs.close())
         ui_layout.AnalysisButton.clicked.connect(lambda: ui_layout.DefinitionTabs.close())
         LineChanges.set_member_definition_AISC_combobox(self, ui_layout)  # set AISC database combobox values
-        ui_layout.Fixities_table.itemChanged.connect(
-            lambda: Boundary_Conditions.get_checkbox_values(self, ui_layout.Fixities_table))
 
         # File dropdown actions
         # ui_layout.actionNew.triggered.connect(lambda: ActionClass('uidesign').NewAct())
@@ -199,6 +197,14 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Members_table.itemChanged.connect(
             lambda: MemberPropertiesTable.set_number_of_rows(self, ui_layout.Members_table,
                                                              ui_layout.Member_Properties_Table))
+
+        ## BOUNDARY CONDITIONS APPLICATION
+        # Fixities table:
+        ui_layout.Fixities_table.itemChanged.connect(
+            lambda: Boundary_Conditions.get_checkbox_values(self, ui_layout.Fixities_table))
+
+        ui_layout.Fixities_table.itemChanged.connect(
+            lambda: BoundaryConditionApplication.BoundaryConditionArrays.BC_arrays(self))
 
         # change number of rows of Shear Panel Table
         ui_layout.Members_table.itemChanged.connect(
@@ -1583,9 +1589,10 @@ class Boundary_Conditions(QMainWindow):
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
 
-    def set_number_of_rows_fixities_table(self, number_of_nodes):
+    def set_number_of_rows_fixities_table(self, number_of_nodes, RNCc):
         self.ui.Fixities_table.blockSignals(True)
         self.ui.Fixities_table.setRowCount(number_of_nodes)
+        # print('RNCc = ', RNCc)
         for i in range(int(number_of_nodes)):
             for j in range(9):
                 if j ==0: #first column row numbering
@@ -1601,6 +1608,14 @@ class Boundary_Conditions(QMainWindow):
                     item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                     item.setCheckState(QtCore.Qt.Unchecked)
                     self.ui.Fixities_table.setItem(i, j, item)
+
+            for j in range(9,12):
+                text = str(RNCc[i][int(j - 8)])
+                item = QTableWidgetItem(text)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                self.ui.Fixities_table.setItem(i, j, item)
+
         self.ui.Fixities_table.blockSignals(False)
 
     def Assign_comboBox_fixities_table(self, number_of_nodes):
@@ -1611,8 +1626,8 @@ class Boundary_Conditions(QMainWindow):
             for t in options:
                 combo_box.addItem(t)
             self.ui.Fixities_table.setCellWidget(i, 1, combo_box)
-            # combo_box.currentIndexChanged.connect(
-            #     lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Fixities_table, flag="combo"))
+            combo_box.currentIndexChanged.connect(
+                lambda: BoundaryConditionApplication.BoundaryConditionArrays.BC_arrays(self))
 
 
     def Assign_comboBox_shear(self, tableName, options, position):
@@ -1633,9 +1648,18 @@ class Boundary_Conditions(QMainWindow):
             for i in range(column_count):
                 if i == 0:
                     fixities_vals[j, i] = (j + 1)
+                elif i == 1:
+                    value_combo = table_for_checkbox.cellWidget(j, i).currentIndex()
+                    fixities_vals[j, i] = value_combo + 1
+                elif i == 9 or i == 10 or i == 11:
+                    fixities_vals[j,i] = float(table_for_checkbox.item(j,i).text())
                 else:
                     fixities_vals[j, i] = table_for_checkbox.item(j, i).checkState()
-        # print(fixities_vals)
+                    if fixities_vals[j, i] == 2:
+                        fixities_vals[j, i] = 1
+
+        h5_file.h5_Class.update_array(self, fixities_vals, 'fixities_vals')
+        return fixities_vals
 
     def set_active(self, table_name, line_edit):
 

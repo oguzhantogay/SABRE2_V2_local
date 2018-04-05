@@ -341,6 +341,7 @@ set(bfm_height_text,'String','Constraint Location')
 % -----------------------        EDIT INUPT       ------------------------
 % ------------------------------------------------------------------------  
 % If click white dots, set the data automatically.
+% RNCc
 if ~isempty(get(gco,'Tag'))     
    if isempty(PNC)
       if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background

@@ -17,7 +17,7 @@ class Assign_All_Class(QMainWindow):
     def assign_SNodevalue(self):
         """ Assign the SNodevalue array with the values from Member Properties Tab"""
         check_array = h5_file.h5_Class.read_array(self, 'check_array')
-        print('assign check = ' , check_array)
+        # print('assign check = ' , check_array)
         non_zeros = np.count_nonzero(check_array)
         if non_zeros == check_array.shape[0]:
             self.ui.Member_Properties_Table.setEnabled(True)

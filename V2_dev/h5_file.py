@@ -10,6 +10,8 @@ class h5_Class:
 
         check_array = np.zeros((1,1)) # to check whether all member cross-section props are defined.
 
+        fixities_vals = np.zeros((1,12))
+
         added_node_information = np.zeros((1,2))
 
         added_node_information[0][0] = 1
@@ -35,6 +37,8 @@ class h5_Class:
         PNC2 = np.zeros((1,1,1))
 
         file_open.create_dataset('check_array', data=check_array)
+
+        file_open.create_dataset('fixities_vals', data=fixities_vals)
 
         file_open.create_dataset('added_node_information', data=added_node_information)
 

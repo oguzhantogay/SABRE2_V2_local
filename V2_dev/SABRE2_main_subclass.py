@@ -59,7 +59,6 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Copy_from_number_mem_def.setValidator(validatorInt)
         ui_layout.Insert_after_number_mem_def.setValidator(validatorInt)
         ui_layout.Member_prop_line_edit.setValidator(validatorInt)
-        ui_layout.Add_Shear_Panel_Line.setValidator(validatorInt)
         ui_layout.Copy_number_spring.setValidator(validatorInt)
         ui_layout.Paste_number_spring.setValidator(validatorInt)
         ui_layout.Inser_number_point_load.setValidator(validatorInt)
@@ -171,8 +170,8 @@ class SABRE2_main_subclass(QMainWindow):
         shear_panel_options = ["Flange 2", "Shear Center", "Flange 1"]
         shear_panel_position = 1
 
-        Boundary_Conditions.Assign_comboBox_shear(self, ui_layout.Shear_panel_table, shear_panel_options,
-                                                  shear_panel_position)
+        # Boundary_Conditions.Assign_comboBox_shear(self, ui_layout.Shear_panel_table, shear_panel_options,
+        #                                           shear_panel_position)
 
         Boundary_Conditions.Assign_comboBox_ground(self, ui_layout.Discrete_grounded_spring_table, shear_panel_options,
                                                    shear_panel_position)
@@ -335,9 +334,10 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: Boundary_Conditions.shear_panel_nodes(self, ui_layout.Shear_panel_table, [0, 1]))
 
         ui_layout.Shear_Panel_Add.clicked.connect(
-            lambda: Boundary_Conditions.shear_panel_additional(self, ui_layout.Shear_panel_table,
-                                                               ui_layout.Members_table, shear_panel_options,
-                                                               shear_panel_position, ui_layout.Add_Shear_Panel_Line))
+            lambda: Boundary_Conditions.shear_panel_additional(self))
+
+        ui_layout.Delete_last_panel.clicked.connect(
+            lambda: Boundary_Conditions.shear_panel_delete(self))
 
         ui_layout.Shear_panel_table.itemChanged.connect(
             lambda: self.update_shear_panel_table(ui_layout.Shear_panel_table))
@@ -1630,15 +1630,45 @@ class Boundary_Conditions(QMainWindow):
                 lambda: BoundaryConditionApplication.BoundaryConditionArrays.BC_arrays(self))
 
 
-    def Assign_comboBox_shear(self, tableName, options, position):
-        r = tableName.rowCount()
+    def Assign_comboBox_shear(self, number_of_nodes):
+        r = int(number_of_nodes)
+        options = ["Flange 2", "Shear Center", "Flange 1"]
         for i in range(r):
+            # first column row numbering
+            text = str(int(i + 1))
+            item = QTableWidgetItem(text)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+            self.ui.Shear_panel_table.setItem(i, 0, item)
+
+            # Status
+            text = "Constant"
+            item = QTableWidgetItem(text)
+            item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+            item.setCheckState(QtCore.Qt.Checked)
+            self.ui.Shear_panel_table.setItem(i, 5, item)
+
             combo_box = QtGui.QComboBox()
             for t in options:
                 combo_box.addItem(t)
-            tableName.setCellWidget(i, position, combo_box)
+            self.ui.Shear_panel_table.setCellWidget(i, 1, combo_box)
             combo_box.currentIndexChanged.connect(
-                lambda: SABRE2_main_subclass.update_shear_panel_table(self, tableName, flag="combo"))
+                lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
+            combo_box = QtGui.QComboBox()
+            for t in range(r):
+                combo_box.addItem(str(t+1))
+            self.ui.Shear_panel_table.setCellWidget(i, 2, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
+            combo_box = QtGui.QComboBox()
+            for t in range(r):
+                combo_box.addItem(str(t+1))
+            self.ui.Shear_panel_table.setCellWidget(i, 3, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
 
     def get_checkbox_values(self, table_for_checkbox):
         column_count = table_for_checkbox.columnCount()
@@ -1751,42 +1781,16 @@ class Boundary_Conditions(QMainWindow):
         else:
             pass
 
-    def shear_panel_additional(self, table_for_shear_panel, memberDefinitionTable, options, position, lineName):
-        row_def = memberDefinitionTable.rowCount()
+    def shear_panel_additional(self):
+        RNCc = h5_file.h5_Class.read_array(self, 'RNCc')
+        number_of_nodes = int(RNCc[:, 0].shape[0])
+        row = self.ui.Shear_panel_table.rowCount()
+        self.ui.Shear_panel_table.setRowCount(row+1)
+        Boundary_Conditions.Assign_comboBox_shear(self,number_of_nodes)
 
-        try:
-            extra_shear = DataCollection.update_lineedit_values(self, lineName)
-            if extra_shear > row_def:
-                lineName.setText("")
-                DropDownActions.ActionClass.statusMessage(self, message="Please enter member number within the range!")
-            else:
-                table_for_shear_panel.insertRow(extra_shear)
-
-                item = QTableWidgetItem(str(extra_shear))
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                table_for_shear_panel.setItem(extra_shear, 0, item)
-
-                item1 = QTableWidgetItem("Constant")
-                item1.setFlags(
-                    QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                item1.setCheckState(QtCore.Qt.Checked)
-                table_for_shear_panel.setItem(extra_shear, 5, item1)
-
-                item2 = QTableWidgetItem("0")
-                item2.setTextAlignment(QtCore.Qt.AlignCenter)
-                item2.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                table_for_shear_panel.setItem(extra_shear, 1, item2)
-
-                combo_box = QtGui.QComboBox()
-                for t in options:
-                    combo_box.addItem(t)
-                table_for_shear_panel.setCellWidget(extra_shear, position, combo_box)
-                combo_box.currentIndexChanged.connect(
-                    lambda: SABRE2_main_subclass.update_shear_panel_table(self, table_for_shear_panel, flag="combo"))
-
-        except ValueError and TypeError:
-            pass
+    def shear_panel_delete(self):
+        row = self.ui.Shear_panel_table.rowCount() - 1
+        self.ui.Shear_panel_table.setRowCount(row)
 
     def shear_panel_values(self, tableName, flag="not combo"):
 

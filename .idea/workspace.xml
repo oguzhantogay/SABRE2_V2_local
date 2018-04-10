@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0ee3103-6d08-4b17-8e91-429164a7cb7a" name="Default" comment="Boundary conditions, PNC, PNC1, PNC2 work. visualization required">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2-V3.ui" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/SABRE2-V3.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2LBCODE.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/SABRE2LBCODE.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2_GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/SABRE2_GUI.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" afterDir="false" />
-    </list>
+    <list default="true" id="f0ee3103-6d08-4b17-8e91-429164a7cb7a" name="Default" comment="" />
     <ignored path="C:\Users\Python\Desktop\SABRE2-V2\.idea\shelf/" />
     <ignored path="C:\Oguzhan\SABRE2-V2\.idea\shelf/" />
     <ignored path="C:\Oguzhan\SABRE2_V2_local\.idea\shelf/" />
@@ -21,7 +15,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/SABRE2_V2$OpenGLTest.coverage" NAME="OpenGLTest Coverage Results" MODIFIED="1507430818206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
-    <SUITE FILE_PATH="coverage/SABRE2_V2_local$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1523037177781" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
+    <SUITE FILE_PATH="coverage/SABRE2_V2_local$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1523387427382" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1521504390628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$OpenGLcode2.coverage" NAME="OpenGLcode2 Coverage Results" MODIFIED="1507443683441" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$AddNode.coverage" NAME="AddNode Coverage Results" MODIFIED="1520722527280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
@@ -43,8 +37,8 @@
       <file leaf-file-name="SABRE2_main_subclass.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="123">
-              <caret line="339" selection-start-line="339" selection-end-line="339" />
+            <state relative-caret-position="19">
+              <caret line="201" column="53" lean-forward="true" selection-start-line="201" selection-start-column="53" selection-end-line="201" selection-end-column="53" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -183,25 +177,25 @@
       <replace>from.setText(str(np.around</replace>
       <replace>from.setText(str(np.around(</replace>
       <replace>is_step_checked</replace>
-      <replace />
-      <replace />
-      <replace />
-      <replace />
-      <replace />
-      <replace />
-      <replace />
+      <replace>7 - 2</replace>
+      <replace>- 2</replace>
+      <replace>q + j -1</replace>
+      <replace>q - 3</replace>
+      <replace>,j + 1,</replace>
+      <replace>[q + j - 1]</replace>
+      <replace>[q + j]</replace>
       <replace>int(max(</replace>
-      <replace />
+      <replace>ntap - 1</replace>
       <replace>np.zeros((2,1))</replace>
-      <replace />
+      <replace>[0][0] =</replace>
       <replace>np.interp</replace>
       <replace>,np.vstack(</replace>
-      <replace />
-      <replace />
-      <replace />
+      <replace>[int(q + np.sum(SNodevalue[j,:, 2])) - 1]</replace>
+      <replace>[int(r + np.sum(SNodevalue[i,:, 2])) - 1]</replace>
+      <replace>)) - 1]</replace>
       <replace>j_index</replace>
-      <replace />
-      <replace />
+      <replace>i_index - 1</replace>
+      <replace>j_index - 1</replace>
       <replace />
     </replaceStrings>
   </component>
@@ -241,10 +235,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2268" />
-    <option name="y" value="-23" />
-    <option name="width" value="1304" />
-    <option name="height" value="766" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1096" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -421,13 +415,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1506299146941</updated>
-    </task>
-    <task id="LOCAL-00015" summary="Joint Table multiplication check works&#10;Members table tied to the Joint Table">
-      <created>1511849179312</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1511849179312</updated>
     </task>
     <task id="LOCAL-00016" summary="Transfer">
       <created>1512413008805</created>
@@ -765,7 +752,14 @@
       <option name="project" value="LOCAL" />
       <updated>1522952196203</updated>
     </task>
-    <option name="localTasksCounter" value="64" />
+    <task id="LOCAL-00064" summary="Shear panel application menu works">
+      <created>1523037267913</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1523037267914</updated>
+    </task>
+    <option name="localTasksCounter" value="65" />
     <servers />
   </component>
   <component name="TodoView">
@@ -778,7 +772,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="54" y="-8" width="1320" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286385" />
@@ -786,7 +780,7 @@
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.3271605" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.3287037" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.58246344" visible="true" weight="0.5474006" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.58246344" weight="0.80269057" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.3287037" />
       <window_info content_ui="combo" id="Project" order="0" weight="0.45553294" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
@@ -841,7 +835,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="update on h5 file for read class" />
     <MESSAGE value="update on deleting h5 file with exiting." />
     <MESSAGE value="update on h5 and AddNode file" />
     <MESSAGE value="addnode menu combobox handle" />
@@ -866,7 +859,8 @@
     <MESSAGE value="NTshe1 and NTshe2 works in LBcode" />
     <MESSAGE value="LBCode xg1 and xg2 works for tapered member, further checks required" />
     <MESSAGE value="Boundary conditions, PNC, PNC1, PNC2 work. visualization required" />
-    <option name="LAST_COMMIT_MESSAGE" value="Boundary conditions, PNC, PNC1, PNC2 work. visualization required" />
+    <MESSAGE value="Shear panel application menu works" />
+    <option name="LAST_COMMIT_MESSAGE" value="Shear panel application menu works" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1208,8 +1202,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="123">
-          <caret line="339" selection-start-line="339" selection-end-line="339" />
+        <state relative-caret-position="19">
+          <caret line="201" column="53" lean-forward="true" selection-start-line="201" selection-start-column="53" selection-end-line="201" selection-end-column="53" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>

@@ -206,10 +206,10 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: BoundaryConditionApplication.BoundaryConditionArrays.BC_arrays(self))
 
         # change number of rows of Shear Panel Table
-        ui_layout.Members_table.itemChanged.connect(
-            lambda: Boundary_Conditions.shear_panel_application(self, ui_layout.Shear_panel_table,
-                                                                ui_layout.Members_table,
-                                                                shear_panel_options, shear_panel_position))
+        # ui_layout.Members_table.itemChanged.connect(
+        #     lambda: Boundary_Conditions.shear_panel_application(self, ui_layout.Shear_panel_table,
+        #                                                         ui_layout.Members_table,
+        #                                                         shear_panel_options, shear_panel_position))
 
         ui_layout.Members_table.itemChanged.connect(
             lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
@@ -1630,10 +1630,17 @@ class Boundary_Conditions(QMainWindow):
                 lambda: BoundaryConditionApplication.BoundaryConditionArrays.BC_arrays(self))
 
 
-    def Assign_comboBox_shear(self, number_of_nodes):
+    def Assign_comboBox_shear(self, number_of_nodes, element_member):
         r = int(number_of_nodes)
+        # print('r = ', r)
+        # print('element member = ', element_member)
         options = ["Flange 2", "Shear Center", "Flange 1"]
-        for i in range(r):
+        total_member_number = self.ui.Members_table.rowCount()
+        first_element_nodes = element_member[:,0]
+        # print('first element number = ', first_element_nodes)
+        first_element_nodes = first_element_nodes[first_element_nodes != 0]
+        # print('first element number = ', first_element_nodes)
+        for i in range(total_member_number):
             # first column row numbering
             text = str(int(i + 1))
             item = QTableWidgetItem(text)
@@ -1646,28 +1653,111 @@ class Boundary_Conditions(QMainWindow):
             item = QTableWidgetItem(text)
             item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
             item.setCheckState(QtCore.Qt.Checked)
-            self.ui.Shear_panel_table.setItem(i, 5, item)
+            self.ui.Shear_panel_table.setItem(i, 6, item)
 
             combo_box = QtGui.QComboBox()
-            for t in options:
-                combo_box.addItem(t)
+            for m in range(total_member_number):
+                combo_box.addItem(str(m+1))
             self.ui.Shear_panel_table.setCellWidget(i, 1, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: Boundary_Conditions.set_shear_panel_combo_box_for_members(self, i))
             combo_box.currentIndexChanged.connect(
                 lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
 
             combo_box = QtGui.QComboBox()
-            for t in range(r):
-                combo_box.addItem(str(t+1))
+            for t in options:
+                combo_box.addItem(t)
             self.ui.Shear_panel_table.setCellWidget(i, 2, combo_box)
             combo_box.currentIndexChanged.connect(
                 lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
 
             combo_box = QtGui.QComboBox()
-            for t in range(r):
-                combo_box.addItem(str(t+1))
+            for t in first_element_nodes:
+                combo_box.addItem(str(int(t)))
             self.ui.Shear_panel_table.setCellWidget(i, 3, combo_box)
             combo_box.currentIndexChanged.connect(
                 lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
+            combo_box = QtGui.QComboBox()
+            for t in first_element_nodes:
+                combo_box.addItem(str(int(t)))
+            self.ui.Shear_panel_table.setCellWidget(i, 4, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
+    def set_shear_panel_combo_box_for_members(self, current_panel):
+        element_member = h5_file.h5_Class.read_array(self, 'element_member')
+        print('current panel = ', current_panel)
+        value = self.ui.Shear_panel_table.cellWidget(current_panel-1, 1).currentIndex()
+        element_nodes = element_member[:, value]
+        # print('first element number = ', first_element_nodes)
+        element_nodes = element_nodes[element_nodes != 0]
+        # print('first element number = ', first_element_nodes)
+        combo_box = QtGui.QComboBox()
+        for t in element_nodes:
+            combo_box.addItem(str(int(t)))
+        self.ui.Shear_panel_table.setCellWidget(current_panel-1, 3, combo_box)
+        combo_box.currentIndexChanged.connect(
+            lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
+        combo_box = QtGui.QComboBox()
+        for t in element_nodes:
+            combo_box.addItem(str(int(t)))
+        self.ui.Shear_panel_table.setCellWidget(current_panel-1, 4, combo_box)
+        combo_box.currentIndexChanged.connect(
+            lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
+    def add_shear_panel(self, element_member, row):
+
+        total_member_number = self.ui.Members_table.rowCount()
+        first_element_nodes = element_member[:, 0]
+        # print('first element number = ', first_element_nodes)
+        first_element_nodes = first_element_nodes[first_element_nodes != 0]
+        options = ["Flange 2", "Shear Center", "Flange 1"]
+
+
+        text = str(row+1)
+        item = QTableWidgetItem(text)
+        item.setTextAlignment(QtCore.Qt.AlignCenter)
+        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+        self.ui.Shear_panel_table.setItem(row, 0, item)
+
+        # Status
+        text = "Constant"
+        item = QTableWidgetItem(text)
+        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+        item.setCheckState(QtCore.Qt.Checked)
+        self.ui.Shear_panel_table.setItem(row, 6, item)
+
+        combo_box = QtGui.QComboBox()
+        for m in range(total_member_number):
+            combo_box.addItem(str(m + 1))
+        self.ui.Shear_panel_table.setCellWidget(row, 1, combo_box)
+        combo_box.currentIndexChanged.connect(
+            lambda: Boundary_Conditions.set_shear_panel_combo_box_for_members(self, row+1))
+        combo_box.currentIndexChanged.connect(
+            lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
+        combo_box = QtGui.QComboBox()
+        for t in options:
+            combo_box.addItem(t)
+        self.ui.Shear_panel_table.setCellWidget(row, 2, combo_box)
+        combo_box.currentIndexChanged.connect(
+            lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
+        combo_box = QtGui.QComboBox()
+        for t in first_element_nodes:
+            combo_box.addItem(str(int(t)))
+        self.ui.Shear_panel_table.setCellWidget(row, 3, combo_box)
+        combo_box.currentIndexChanged.connect(
+            lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
+        combo_box = QtGui.QComboBox()
+        for t in first_element_nodes:
+            combo_box.addItem(str(int(t)))
+        self.ui.Shear_panel_table.setCellWidget(row, 4, combo_box)
+        combo_box.currentIndexChanged.connect(
+            lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
 
 
     def get_checkbox_values(self, table_for_checkbox):
@@ -1703,7 +1793,6 @@ class Boundary_Conditions(QMainWindow):
 
     def shear_panel_application(self, table_for_shear_panel, members_table, options, position):
         table_for_shear_panel.blockSignals(True)
-        "Shear_panel_table"
 
         row_def = members_table.rowCount()
 
@@ -1719,16 +1808,6 @@ class Boundary_Conditions(QMainWindow):
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                 item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
                 table_for_shear_panel.setItem(j, 0, item)
-
-                item1 = QTableWidgetItem("Constant")
-                item1.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                item1.setCheckState(QtCore.Qt.Checked)
-                table_for_shear_panel.setItem(j, 5, item1)
-
-                item2 = QTableWidgetItem("0")
-                item2.setTextAlignment(QtCore.Qt.AlignCenter)
-                item2.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                table_for_shear_panel.setItem(j, 1, item2)
 
             for i in range(1, row_def):
                 combo_box = QtGui.QComboBox()
@@ -1786,7 +1865,8 @@ class Boundary_Conditions(QMainWindow):
         number_of_nodes = int(RNCc[:, 0].shape[0])
         row = self.ui.Shear_panel_table.rowCount()
         self.ui.Shear_panel_table.setRowCount(row+1)
-        Boundary_Conditions.Assign_comboBox_shear(self,number_of_nodes)
+        element_member = h5_file.h5_Class.read_array(self,'element_member')
+        Boundary_Conditions.add_shear_panel(self,element_member, row)
 
     def shear_panel_delete(self):
         row = self.ui.Shear_panel_table.rowCount() - 1
@@ -1810,7 +1890,7 @@ class Boundary_Conditions(QMainWindow):
                             pass
                         elif tableName.item(i, j) is None:
                             pass
-                        elif j == 5:
+                        elif j == 6:
                             val1[i, j] = tableName.item(i, j).checkState()
                             DropDownActions.ActionClass.statusMessage(self, message="")
                         else:

@@ -20,13 +20,17 @@ class Assign_All_Class(QMainWindow):
         # print('assign check = ' , check_array)
         non_zeros = np.count_nonzero(check_array)
         if non_zeros == check_array.shape[0]:
+            #### delete for separation of analysis
             self.ui.Member_Properties_Table.setEnabled(True)
             self.ui.BoundaryConditionsTabs.setEnabled(True)
             self.ui.LC_tabs.setEnabled(True)
+            ####
+
             # print('in loop')
             # SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
             # Massemble = h5_file.h5_Class.read_array(self, 'Massemble')
             BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
+            total_member_number = int(BNodevalue.shape[0])
             # print('BNodevalue = ', BNodevalue)
             from SABRE2_main_subclass import SABRE2_main_subclass
             member_properties_values = SABRE2_main_subclass.update_member_properties_table(self,
@@ -62,9 +66,13 @@ class Assign_All_Class(QMainWindow):
                         SNodevalue[i][j][5] = 50
                     SNodevalue[i][j][10] = HomoType
 
-            print('SNodevalue =', SNodevalue)
+            # print('SNodevalue =', SNodevalue)
 
             h5_file.h5_Class.update_array(self,SNodevalue, 'SNodevalue')
+
+
+
+
 
             import SABRE2LBCODE
 

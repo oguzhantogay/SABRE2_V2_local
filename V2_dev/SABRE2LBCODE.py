@@ -15,7 +15,7 @@ class SABRE2LBCODE(QMainWindow):
         # print('LBcode ran')
         BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
         SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
-        # print('SNodevalue in LBCode =', SNodevalue)
+        print('SNodevalue in LBCode =', SNodevalue)
 
         import OpenGLcode
         joint_nodes_length, JNodevalue = OpenGLcode.glWidget.JointTableValues(self)
@@ -1830,12 +1830,51 @@ class SABRE2LBCODE(QMainWindow):
         h5_file.h5_Class.update_array(self, RNCc, 'RNCc')
 
         number_of_nodes = int(RNCc[:, 0].shape[0])
+        # SPn = np.zeros((int(np.amax(SNodevalue[:,:,2] +1)), int(SNodevalue.shape[0])))
+        # print('1 =\n', DUP1[:,1])
+        # print('1 =\n', DUP2[:,1])
 
+
+        element_member = np.zeros((1, 1))
+        # print('shape = ', SNodevalue.shape[0])
+        # print('0 = ', SNodevalue[0][0][0])
+
+        p = 0
+        for i in range(SNodevalue.shape[0]):
+            q = 0
+            SPn1 = np.zeros((int(np.sum(SNodevalue[i, :, 2])), 2))
+            for k in range(int(np.sum(SNodevalue[i, :, 2]))):
+                # print('k =' ,k)
+                # print('q =', q)
+                # print('p =', p)
+                SPn1[k][0] = DUP1[k + p + q][1]
+                SPn1[k][1] = DUP2[k + p + q][1]
+            p += int(np.sum(SNodevalue[i, :, 2]))
+            q += p
+            SPn = np.unique(SPn1)
+            # print('SPn = ', SPn)
+
+            if element_member.shape[1] < SNodevalue.shape[0]:
+                # print('test')
+                element_member.resize(int(SPn.shape[0]), int(element_member.shape[1])+1)
+            elif SPn.shape[0] > element_member.shape[0]:
+                # print('test 1')
+                element_member.resize((SPn.shape[0], element_member.shape[1]))
+
+            if SPn.shape[0] < element_member.shape[0]:
+                # print('test extra')
+                SPn.resize((1,element_member.shape[0]))
+
+            # print('element_member = ', element_member[:(SPn.shape[0]),i])
+            # print('SPn 2 = ', (SPn.shape[0]), i)
+            element_member[:,i] = SPn
+
+        h5_file.h5_Class.update_array(self, element_member, 'element_member')
         import SABRE2_main_subclass
 
         SABRE2_main_subclass.Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, RNCc)
         SABRE2_main_subclass.Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
-        SABRE2_main_subclass.Boundary_Conditions.Assign_comboBox_shear(self, number_of_nodes)
+        SABRE2_main_subclass.Boundary_Conditions.Assign_comboBox_shear(self, number_of_nodes, element_member)
 
 
 

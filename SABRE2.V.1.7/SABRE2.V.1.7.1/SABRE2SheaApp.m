@@ -23,12 +23,17 @@ if isempty(mnum)
 elseif isnan(mnum)
 elseif mnum > mem
 else
+   DUP1(:,2)
+   DUP2(:,2)
    if ~isempty(SNodevalue)
       q=0;
       for i=1:max(SNodevalue(:,1,1))
          p=0;
             if isequal(mnum,i) 
                for k=1:sum(SNodevalue(i,:,3))
+                  p
+                  q
+                  k
                   SPn1(k,1)=DUP1(k+p+q,2);
                   SPn1(k,2)=DUP2(k+p+q,2);
                end
@@ -39,7 +44,7 @@ else
       SPn=unique(SPn1);
    end
 end
-
+SPn1
 SPi=0;SPj=0;
 if isempty(get(bsm_jointi_edit,'String')) || isempty(get(bsm_jointj_edit,'String')) ...
       || isnan(str2double(get(bsm_jointi_edit,'String'))) ...
@@ -56,6 +61,9 @@ else
       end
    end
 end
+
+% SPi
+% SPj
 
 if isempty(RNCc)
    BNC1=[];

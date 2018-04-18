@@ -229,6 +229,7 @@ class ActionClass(QMainWindow):
             self,
             self.ui.Members_table,
             self.Members_table_position)
+        self.element_member = h5_file.h5_Class.read_array(self, 'element_member')
         self.BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
         self.added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         self.DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
@@ -266,6 +267,7 @@ class ActionClass(QMainWindow):
                  table_prop_for_AISC = self.table_prop,
                  Massemble = self.Massemble,
                  added_node_information = self.added_node_information,
+                 element_member = self.element_member,
                  BNodevalue = self.BNodevalue,
                  DUP1 = self.DUP1,
                  DUP2 = self.DUP2,
@@ -302,6 +304,7 @@ class ActionClass(QMainWindow):
         self.members_table_values = aa['members_table_values']
         self.table_prop = aa['table_prop_for_AISC']
         self.Massemble = aa['Massemble']
+        self.element_member = aa['element_member']
         self.BNodevalue = aa['BNodevalue']
         self.added_node_information = aa['added_node_information']
         # print('table prop read = ' , self.table_prop)
@@ -319,6 +322,7 @@ class ActionClass(QMainWindow):
         self.Warping_release_values = aa['Warping_release_values']
         self.uniform_data_values = aa['uniform_data_values']
         self.point_data_values = aa['point_data_values']
+        h5_file.h5_Class.update_array(self, self.element_member, 'element_member')
         h5_file.h5_Class.update_array(self, self.BNodevalue, 'BNodevalue')
         h5_file.h5_Class.update_array(self, self.added_node_information, 'added_node_information')
         h5_file.h5_Class.update_array(self, self.DUP1, 'DUP1')

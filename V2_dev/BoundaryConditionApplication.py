@@ -106,9 +106,9 @@ class BoundaryConditionArrays(QMainWindow):
                     PNC2[i][10] = fixities_table_values[j][8]
                     PNC2[i][12] = fixities_table_values[j][1]
 
-        print('PNC = \n', PNC)
-        print('PNC1 = \n', PNC1)
-        print('PNC2 = \n', PNC2)
+        # print('PNC = \n', PNC)
+        # print('PNC1 = \n', PNC1)
+        # print('PNC2 = \n', PNC2)
 
 
 

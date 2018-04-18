@@ -525,8 +525,8 @@ class SABRE2_main_subclass(QMainWindow):
         check_array = h5_file.h5_Class.read_array(self, 'check_array')
         row_count = self.ui.Members_table.rowCount()
         current_row = self.ui.Members_table.currentRow()
-        print('row_count = ' ,row_count)
-        print('row_count1 = ' ,check_array.shape[0])
+        # print('row_count = ' ,row_count)
+        # print('row_count1 = ' ,check_array.shape[0])
         if check_array.shape[0] != row_count:
             check_array = np.zeros((row_count,1))
         elif check_array[current_row][0] != 1:
@@ -540,12 +540,7 @@ class SABRE2_main_subclass(QMainWindow):
                         check_array[j][0] = 1
                     else:
                         check_array[j][0] = 0
-
-
-
-
-
-        print('check array = ', check_array)
+        # print('check array = ', check_array)
         h5_file.h5_Class.update_array(self, check_array, 'check_array')
 
     def AISC_update_fun(self, tableName):
@@ -1467,37 +1462,53 @@ class MemberPropertiesTable(QMainWindow):
 
     def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable):
         ''' this function sets the initial configuration of the member properties table after added nodes'''
-        # print('test')
+
         memberPropertiesTable.blockSignals(True)
         current_column = self.ui.Members_table.currentColumn()
         if current_column == 1 or current_column == 2:
+            SNodevalue = h5_file.h5_Class.read_array(self,'SNodevalue')
+            initial_values = np.zeros((int(SNodevalue.shape[0]*SNodevalue.shape[1]),11))
+            q = 0
+
+            for i in range(int(SNodevalue.shape[0])):
+                for j in range(int(SNodevalue.shape[1])):
+                    initial_values[q,:] = SNodevalue[i,j,:]
+                    q +=1
+
+            print('initial values 1 = ', initial_values)
             row_member = memberPropertiesTable.rowCount()
             row_def = memberDefinitionTable.rowCount()
+
             added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
             if row_def != row_member:
                 memberPropertiesTable.setRowCount(row_def)
 
             if added_node_information.shape[0] < row_def:
                 for j in range(0, row_def):
-                    text = text = 'M' + str(j+1) + 'S1'
+                    text = 'M' + str(j+1) + 'S1'
                     item = QTableWidgetItem(text)
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
                     memberPropertiesTable.setItem(j, 0, item)
-                initial_values = JointTable.tableValues(self, memberPropertiesTable)
+                        # initial_values = JointTable.tableValues(self, memberPropertiesTable)
+
+                # print('initial_values in if = ', initial_values)
                 for i in range(1, 8):
                     for j in range(1, row_def):
-                        if i == 0:
-                            item = QTableWidgetItem(str(j + 1))
+                        if i == 1 :
+                            item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
                             item.setTextAlignment(QtCore.Qt.AlignCenter)
-                            item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                            memberPropertiesTable.setItem(j, i, item)
+                        elif i == 2 or i == 3:
+                            item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
+                            item.setTextAlignment(QtCore.Qt.AlignCenter)
+                            memberPropertiesTable.setItem(j, i, item)
+                        elif i == 5 or i == 6 or i == 7:
+                            item = QTableWidgetItem(str(int(initial_values[j, i + 2])))
+                            item.setTextAlignment(QtCore.Qt.AlignCenter)
                             memberPropertiesTable.setItem(j, i, item)
                         elif i == 4:
-                            item = QTableWidgetItem(str(initial_values[0, i]))
-                            item.setTextAlignment(QtCore.Qt.AlignCenter)
-                            memberPropertiesTable.setItem(j, i, item)
-                        else:
-                            item = QTableWidgetItem(str(int(initial_values[0, i])))
+                            item = QTableWidgetItem(str(0.00034028))
                             item.setTextAlignment(QtCore.Qt.AlignCenter)
                             memberPropertiesTable.setItem(j, i, item)
 
@@ -1505,11 +1516,10 @@ class MemberPropertiesTable(QMainWindow):
                 total_number_row = np.sum(added_node_information[:, 1])
                 row_def = int(total_number_row) + int(row_def)
                 memberPropertiesTable.setRowCount(row_def)
-                print('')
                 k = 0
                 for i in range(int(added_node_information[:,0].shape[0])):
                     if added_node_information[i][1] == 0:
-                        text = text = 'M' + str(i + 1) + 'S1'
+                        text = 'M' + str(i + 1) + 'S1'
                         item = QTableWidgetItem(text)
                         item.setTextAlignment(QtCore.Qt.AlignCenter)
                         item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
@@ -1525,23 +1535,24 @@ class MemberPropertiesTable(QMainWindow):
 
                             k += 1
 
-
-
-
                     initial_values = JointTable.tableValues(self, memberPropertiesTable)
+                    print('initial_values in else = ', initial_values)
                     for i in range(1, 8):
                         for j in range(1, row_def):
-                            if i == 0:
-                                item = QTableWidgetItem(str(j + 1))
+                            if i == 1:
+                                item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
                                 item.setTextAlignment(QtCore.Qt.AlignCenter)
-                                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                                memberPropertiesTable.setItem(j, i, item)
+                            elif i == 2 or i == 3:
+                                item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
+                                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                memberPropertiesTable.setItem(j, i, item)
+                            elif i == 5 or i == 6 or i == 7:
+                                item = QTableWidgetItem(str(int(initial_values[j, i + 2])))
+                                item.setTextAlignment(QtCore.Qt.AlignCenter)
                                 memberPropertiesTable.setItem(j, i, item)
                             elif i == 4:
-                                item = QTableWidgetItem(str(initial_values[0, i]))
-                                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                                memberPropertiesTable.setItem(j, i, item)
-                            else:
-                                item = QTableWidgetItem(str(int(initial_values[0, i])))
+                                item = QTableWidgetItem(str(0.00034028))
                                 item.setTextAlignment(QtCore.Qt.AlignCenter)
                                 memberPropertiesTable.setItem(j, i, item)
         memberPropertiesTable.blockSignals(False)

@@ -488,7 +488,17 @@ class SABRE2LBCODE(QMainWindow):
             zg1 = zg1_
             zg2 = zg2_
 
-
+        # print('dx0 = ', dX0)
+        # print('dy0 = ', dY0)
+        # print('dz0 = ', dZ0)
+        # print('xn = ', xn)
+        # print('L0 = ', L0)
+        # print('xg1 = ', xg1)
+        # print('xg2 = ', xg2)
+        # print('yg1 = ', yg1)
+        # print('yg2 = ', yg2)
+        # print('zg1 = ', zg1)
+        # print('zg2 = ', zg2)
         for i in range(int(xn)):
             dX0[i][0] = xg2[i][0] - xg1[i][0]
             dY0[i][0] = yg2[i][0] - yg1[i][0]

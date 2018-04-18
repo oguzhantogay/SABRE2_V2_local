@@ -231,6 +231,7 @@ class ActionClass(QMainWindow):
             self.Members_table_position)
         self.element_member = h5_file.h5_Class.read_array(self, 'element_member')
         self.BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
+        self.SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
         self.added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         self.DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
         self.DUP2 = h5_file.h5_Class.read_array(self, 'DUP2')
@@ -256,9 +257,10 @@ class ActionClass(QMainWindow):
                                                                                              combo_flag=0)
 
         # print('self.members_table_values', self.members_table_values)
+        print('self.SNodevalue', self.SNodevalue)
         # print('table prop save = ' , self.table_prop)
 
-        filename = 'test5.npz'
+        filename = 'test_after_shear_panel.npz'
         file = open(filename, 'wb')
 
         np.savez(file, joint_values=self.joint_values,
@@ -269,6 +271,7 @@ class ActionClass(QMainWindow):
                  added_node_information = self.added_node_information,
                  element_member = self.element_member,
                  BNodevalue = self.BNodevalue,
+                 SNodevalue = self.SNodevalue,
                  DUP1 = self.DUP1,
                  DUP2 = self.DUP2,
                  RNCc = self.RNCc,
@@ -295,7 +298,7 @@ class ActionClass(QMainWindow):
 
         self.OpenGLwidget = OpenGLcode.glWidget(self.ui)
 
-        filename = 'test5.npz'
+        filename = 'test_after_shear_panel.npz'
 
         aa = np.load(filename)
 
@@ -306,6 +309,7 @@ class ActionClass(QMainWindow):
         self.Massemble = aa['Massemble']
         self.element_member = aa['element_member']
         self.BNodevalue = aa['BNodevalue']
+        self.SNodevalue = aa['SNodevalue']
         self.added_node_information = aa['added_node_information']
         # print('table prop read = ' , self.table_prop)
         self.DUP1 = aa['DUP1']
@@ -324,6 +328,7 @@ class ActionClass(QMainWindow):
         self.point_data_values = aa['point_data_values']
         h5_file.h5_Class.update_array(self, self.element_member, 'element_member')
         h5_file.h5_Class.update_array(self, self.BNodevalue, 'BNodevalue')
+        h5_file.h5_Class.update_array(self, self.SNodevalue, 'SNodevalue')
         h5_file.h5_Class.update_array(self, self.added_node_information, 'added_node_information')
         h5_file.h5_Class.update_array(self, self.DUP1, 'DUP1')
         h5_file.h5_Class.update_array(self, self.DUP2, 'DUP2')
@@ -334,6 +339,7 @@ class ActionClass(QMainWindow):
         # print("\njoint values = ", self.joint_values, "\nmember prop values = ", self.member_properties_values,
         #       "\nmembers table values = ", self.members_table_values)
 
+        # print('read self.SNodevalue', self.SNodevalue)
         shape_joint_table = int(self.joint_values.shape[0])
         shape_members_table_values = int(self.members_table_values.shape[0])
         shape_shear_panel_values = int(self.shear_panel_values.shape[0])

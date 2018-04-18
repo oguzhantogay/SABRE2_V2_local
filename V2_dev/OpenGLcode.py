@@ -483,9 +483,9 @@ class glWidget(QGLWidget, QMainWindow):
         none_checker = self.noneDetector(self.ui.Joints_Table)
         glWidget.render_checked = self.ui.actionRender_All_Members.isChecked()
         self.joint_nodes_length, self.joint_nodes = self.JointTableValues()
-        if self.ui.DefinitionTabs.currentIndex() == 3:
-            # print('test')
-            SABRE2LBCODE.SABRE2LBCODE.modelWithBC(self)
+        # if self.ui.DefinitionTabs.currentIndex() == 3:
+        #     # print('test')
+        #     SABRE2LBCODE.SABRE2LBCODE.modelWithBC(self)
 
 
         try:

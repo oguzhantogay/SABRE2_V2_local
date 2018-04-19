@@ -46,7 +46,7 @@ class Assign_All_Class(QMainWindow):
 
 
             SNodevalue = np.zeros((int(BNodevalue.shape[0]),int(max_b + 1), 11))
-            print('member prob values = ', member_properties_values)
+            # print('member prob values = ', member_properties_values)
             p= 0
             for i in range(int(BNodevalue.shape[0])):
                 for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):

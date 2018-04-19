@@ -786,7 +786,7 @@ class AddNodeClass(QMainWindow):
                 AddNodeClass.addedNodeInformationArrayUpdate(self, BNodevalue)
                 # print("BNodevalue apply button = ", BNodevalue)
                 h5_file.h5_Class.update_array(self, BNodevalue, 'BNodevalue')
-                added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+                # added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
                 # print('added node array =', added_node_information)
 
 

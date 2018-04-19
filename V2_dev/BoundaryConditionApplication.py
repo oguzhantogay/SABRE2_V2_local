@@ -16,7 +16,7 @@ class BoundaryConditionArrays(QMainWindow):
         self.ui = ui_layout
 
     def BC_arrays(self):
-        Lnode = self.ui.Fixities_table.currentRow()
+        # Lnode = self.ui.Fixities_table.currentRow()
         SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
         DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
         DUP2 = h5_file.h5_Class.read_array(self, 'DUP2')
@@ -30,7 +30,7 @@ class BoundaryConditionArrays(QMainWindow):
 
 
 
-        print('SNodevalue in BC arrays = ', SNodevalue)
+        # print('SNodevalue in BC arrays = ', SNodevalue)
         if PNC.shape[0] == 1:
             xn = int(np.sum(np.sum(SNodevalue[:, :, 2])))
             PNC = np.zeros((RNCc[:,0].shape[0], 14))
@@ -48,7 +48,7 @@ class BoundaryConditionArrays(QMainWindow):
 
         fixities_table_values = SABRE2_main_subclass.Boundary_Conditions.get_checkbox_values(self, self.ui.Fixities_table)
 
-        # print('application = \n', fixities_table_values)
+        h5_file.h5_Class.update_array(self, fixities_table_values, 'fixities_vals')
 
         PNC[RNCc[:,0].shape[0]-1, 13] = 0
         for i in range(PNC.shape[0]):
@@ -110,6 +110,9 @@ class BoundaryConditionArrays(QMainWindow):
         # print('PNC1 = \n', PNC1)
         # print('PNC2 = \n', PNC2)
 
+        h5_file.h5_Class.update_array(self, PNC , 'PNC')
+        h5_file.h5_Class.update_array(self, PNC1, 'PNC1')
+        h5_file.h5_Class.update_array(self, PNC2, 'PNC2')
 
 
 

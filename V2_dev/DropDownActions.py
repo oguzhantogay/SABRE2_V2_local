@@ -39,6 +39,7 @@ class ActionClass(QMainWindow):
         self.PNC = None
         self.PNC1 = None
         self.PNC2 = None
+        self.fixities_vals = None
 
 
     def AboutAct(self):
@@ -233,6 +234,7 @@ class ActionClass(QMainWindow):
         self.BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
         self.SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
         self.added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        self.fixities_vals = h5_file.h5_Class.read_array(self, 'fixities_vals')
         self.DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
         self.DUP2 = h5_file.h5_Class.read_array(self, 'DUP2')
         self.RNCc = h5_file.h5_Class.read_array(self, 'RNCc')
@@ -272,6 +274,7 @@ class ActionClass(QMainWindow):
                  element_member = self.element_member,
                  BNodevalue = self.BNodevalue,
                  SNodevalue = self.SNodevalue,
+                 fixities_vals = self.fixities_vals,
                  DUP1 = self.DUP1,
                  DUP2 = self.DUP2,
                  RNCc = self.RNCc,
@@ -310,8 +313,8 @@ class ActionClass(QMainWindow):
         self.element_member = aa['element_member']
         self.BNodevalue = aa['BNodevalue']
         self.SNodevalue = aa['SNodevalue']
+        self.fixities_vals = aa['fixities_vals']
         self.added_node_information = aa['added_node_information']
-        # print('table prop read = ' , self.table_prop)
         self.DUP1 = aa['DUP1']
         self.DUP2 = aa['DUP2']
         self.RNCc = aa['RNCc']
@@ -330,16 +333,22 @@ class ActionClass(QMainWindow):
         h5_file.h5_Class.update_array(self, self.BNodevalue, 'BNodevalue')
         h5_file.h5_Class.update_array(self, self.SNodevalue, 'SNodevalue')
         h5_file.h5_Class.update_array(self, self.added_node_information, 'added_node_information')
+        h5_file.h5_Class.update_array(self, self.fixities_vals, 'fixities_vals')
         h5_file.h5_Class.update_array(self, self.DUP1, 'DUP1')
         h5_file.h5_Class.update_array(self, self.DUP2, 'DUP2')
         h5_file.h5_Class.update_array(self, self.RNCc, 'RNCc')
-        h5_file.h5_Class.update_array(self, self.RNCc, 'PNC')
-        h5_file.h5_Class.update_array(self, self.RNCc, 'PNC1')
-        h5_file.h5_Class.update_array(self, self.RNCc, 'PNC2')
+        h5_file.h5_Class.update_array(self, self.PNC, 'PNC')
+        h5_file.h5_Class.update_array(self, self.PNC1, 'PNC1')
+        h5_file.h5_Class.update_array(self, self.PNC2, 'PNC2')
         # print("\njoint values = ", self.joint_values, "\nmember prop values = ", self.member_properties_values,
         #       "\nmembers table values = ", self.members_table_values)
-
-        print('read self.SNodevalue', self.SNodevalue)
+        # print('read DUP1 = ', self.DUP1)
+        # print('read DUP2 = ', self.DUP2)
+        # print('read RNCc = ', self.RNCc)
+        # print('read PNC = ', self.PNC)
+        # print('read PNC1 = ', self.PNC1)
+        # print('read PNC2 = ', self.PNC2)
+        # print('read self.SNodevalue', self.SNodevalue)
         shape_joint_table = int(self.joint_values.shape[0])
         shape_members_table_values = int(self.members_table_values.shape[0])
         shape_shear_panel_values = int(self.shear_panel_values.shape[0])
@@ -421,4 +430,12 @@ class ActionClass(QMainWindow):
         AddNode.AddNodeClass.setAddNodeComboBox(self)
 
         #RETURN REQUIRED ARRAYS ONLY
+        for i in range(self.fixities_vals.shape[0]):
+            for j in range(self.fixities_vals.shape[1]):
+                if j == 1:
+                    self.ui.Fixities_table.cellWidget(i,j).setCurrentIndex(int(self.fixities_vals[i,j]-1))
+                elif j == 2 or j == 3 or j == 4 or j == 5 or j == 6 or j == 7 or j == 8:
+                    if self.fixities_vals[i,j] == 1:
+                        self.ui.Fixities_table.item(i, j).setCheckState(QtCore.Qt.Checked)
+
         return self.table_prop, self.Massemble

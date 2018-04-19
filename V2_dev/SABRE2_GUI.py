@@ -1951,7 +1951,7 @@ class Ui_SABRE2_V3(object):
         self.retranslateUi(SABRE2_V3)
         self.AnalysisTabs.setCurrentIndex(1)
         self.DefinitionTabs.setCurrentIndex(0)
-        self.Members_tabs.setCurrentIndex(1)
+        self.Members_tabs.setCurrentIndex(0)
         self.AdditionalNodeNumberComboBox.setCurrentIndex(-1)
         self.BoundaryConditionsTabs.setCurrentIndex(1)
         self.LC_tabs.setCurrentIndex(0)

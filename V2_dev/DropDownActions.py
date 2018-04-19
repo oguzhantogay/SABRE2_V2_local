@@ -440,12 +440,16 @@ class ActionClass(QMainWindow):
 
         for i in range(self.shear_panel_values.shape[0]):
             for j in range(self.shear_panel_values.shape[1]):
+                # print('i = ', i, 'j = ', j)
                 if j == 1 or j == 2 or j == 3 or j == 4:
-                    self.ui.Shear_panel_table.cellWidget(i,j).setCurrentIndex(int(self.fixities_vals[i,j]-1))
+                    self.ui.Shear_panel_table.cellWidget(i,j).setCurrentIndex(int(self.shear_panel_values[i,j]))
                 elif j == 6:
                     if self.shear_panel_values[i,j] == 1:
                         self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Checked)
                 elif j == 5:
-                    self.ui.Shear_panel_table.item(i, j).setText(str(self.shear_panel_values[i,j]))
+                    # print(str(self.shear_panel_values[i,j]))
+                    item = QTableWidgetItem()
+                    item.setText(str(self.shear_panel_values[i,j]))
+                    self.ui.Shear_panel_table.setItem(i, j,item)
 
         return self.table_prop, self.Massemble

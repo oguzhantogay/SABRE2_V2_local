@@ -1884,7 +1884,7 @@ class SABRE2LBCODE(QMainWindow):
 
         SABRE2_main_subclass.Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, RNCc)
         SABRE2_main_subclass.Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
-        SABRE2_main_subclass.Boundary_Conditions.Assign_comboBox_shear(self, number_of_nodes, element_member)
+        SABRE2_main_subclass.Boundary_Conditions.add_shear_panel(self, element_member, 0)
 
 
 

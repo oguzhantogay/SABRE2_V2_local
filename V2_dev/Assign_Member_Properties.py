@@ -31,7 +31,7 @@ class Assign_All_Class(QMainWindow):
             # Massemble = h5_file.h5_Class.read_array(self, 'Massemble')
             BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
             total_member_number = int(BNodevalue.shape[0])
-            # print('BNodevalue = ', BNodevalue)
+            print('BNodevalue = ', BNodevalue)
             from SABRE2_main_subclass import SABRE2_main_subclass
             member_properties_values = SABRE2_main_subclass.update_member_properties_table(self,
                                                                                            self.ui.Member_Properties_Table)
@@ -46,17 +46,20 @@ class Assign_All_Class(QMainWindow):
 
 
             SNodevalue = np.zeros((int(BNodevalue.shape[0]),int(max_b + 1), 11))
-            # print('member prob values = ', member_properties_values)
+            print('member prob values = ', member_properties_values)
+            p= 0
             for i in range(int(BNodevalue.shape[0])):
                 for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
+                    print(member_properties_values[i][1])
                     SNodevalue[i][j][0] = i + 1
                     SNodevalue[i][j][1] = j + 1
-                    SNodevalue[i][j][2] = member_properties_values[i][1]
-                    SNodevalue[i][j][3] = member_properties_values[i][2]
-                    SNodevalue[i][j][4] = member_properties_values[i][3]
-                    SNodevalue[i][j][7] = member_properties_values[i][5]
-                    SNodevalue[i][j][8] = member_properties_values[i][6]
-                    SNodevalue[i][j][9] = member_properties_values[i][7]
+                    SNodevalue[i][j][2] = member_properties_values[p][1]
+                    SNodevalue[i][j][3] = member_properties_values[p][2]
+                    SNodevalue[i][j][4] = member_properties_values[p][3]
+                    SNodevalue[i][j][6] = member_properties_values[p][4]
+                    SNodevalue[i][j][7] = member_properties_values[p][5]
+                    SNodevalue[i][j][8] = member_properties_values[p][6]
+                    SNodevalue[i][j][9] = member_properties_values[p][7]
                     if SNodevalue[i][j][7] == SNodevalue[i][j][8] ==SNodevalue[i][j][9]:
                         HomoType = 0
                         SNodevalue[i][j][5] = SNodevalue[i][j][7]
@@ -65,8 +68,9 @@ class Assign_All_Class(QMainWindow):
                         HomoType = 1
                         SNodevalue[i][j][5] = 50
                     SNodevalue[i][j][10] = HomoType
+                    p+=1
 
-            # print('SNodevalue =', SNodevalue)
+            print('\n \n \n \nSNodevalue in assign =', SNodevalue)
 
             h5_file.h5_Class.update_array(self,SNodevalue, 'SNodevalue')
 

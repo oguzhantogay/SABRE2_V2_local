@@ -339,7 +339,7 @@ class ActionClass(QMainWindow):
         # print("\njoint values = ", self.joint_values, "\nmember prop values = ", self.member_properties_values,
         #       "\nmembers table values = ", self.members_table_values)
 
-        # print('read self.SNodevalue', self.SNodevalue)
+        print('read self.SNodevalue', self.SNodevalue)
         shape_joint_table = int(self.joint_values.shape[0])
         shape_members_table_values = int(self.members_table_values.shape[0])
         shape_shear_panel_values = int(self.shear_panel_values.shape[0])

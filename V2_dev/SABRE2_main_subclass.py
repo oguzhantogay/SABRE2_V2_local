@@ -1467,6 +1467,7 @@ class MemberPropertiesTable(QMainWindow):
         current_column = self.ui.Members_table.currentColumn()
         if current_column == 1 or current_column == 2:
             SNodevalue = h5_file.h5_Class.read_array(self,'SNodevalue')
+            print('SNode in set rows = ', SNodevalue)
             initial_values = np.zeros((int(SNodevalue.shape[0]*SNodevalue.shape[1]),11))
             q = 0
 
@@ -1484,7 +1485,7 @@ class MemberPropertiesTable(QMainWindow):
                 memberPropertiesTable.setRowCount(row_def)
 
             if added_node_information.shape[0] < row_def:
-                for j in range(0, row_def):
+                for j in range(row_def):
                     text = 'M' + str(j+1) + 'S1'
                     item = QTableWidgetItem(text)
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
@@ -1494,21 +1495,18 @@ class MemberPropertiesTable(QMainWindow):
 
                 # print('initial_values in if = ', initial_values)
                 for i in range(1, 8):
-                    for j in range(1, row_def):
+                    for j in range(row_def):
+                        print('j in if = ', j, 'i in if = ', i)
                         if i == 1 :
-                            item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
+                            item = QTableWidgetItem(str(4))
                             item.setTextAlignment(QtCore.Qt.AlignCenter)
                             memberPropertiesTable.setItem(j, i, item)
-                        elif i == 2 or i == 3:
+                        elif i == 2 or i == 3 or i == 4:
                             item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
                             item.setTextAlignment(QtCore.Qt.AlignCenter)
                             memberPropertiesTable.setItem(j, i, item)
                         elif i == 5 or i == 6 or i == 7:
                             item = QTableWidgetItem(str(int(initial_values[j, i + 2])))
-                            item.setTextAlignment(QtCore.Qt.AlignCenter)
-                            memberPropertiesTable.setItem(j, i, item)
-                        elif i == 4:
-                            item = QTableWidgetItem(str(0.00034028))
                             item.setTextAlignment(QtCore.Qt.AlignCenter)
                             memberPropertiesTable.setItem(j, i, item)
 
@@ -1534,27 +1532,38 @@ class MemberPropertiesTable(QMainWindow):
                             memberPropertiesTable.setItem(k, 0, item)
 
                             k += 1
-
-                    initial_values = JointTable.tableValues(self, memberPropertiesTable)
-                    print('initial_values in else = ', initial_values)
                     for i in range(1, 8):
-                        for j in range(1, row_def):
-                            if i == 1:
-                                item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
-                                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                                memberPropertiesTable.setItem(j, i, item)
-                            elif i == 2 or i == 3:
-                                item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
-                                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                                memberPropertiesTable.setItem(j, i, item)
-                            elif i == 5 or i == 6 or i == 7:
-                                item = QTableWidgetItem(str(int(initial_values[j, i + 2])))
-                                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                                memberPropertiesTable.setItem(j, i, item)
-                            elif i == 4:
-                                item = QTableWidgetItem(str(0.00034028))
-                                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                                memberPropertiesTable.setItem(j, i, item)
+                        for j in range(row_def):
+                            print('j in else = ', j, 'i in else = ', i)
+                            if j ==(row_def - 1) and initial_values[j,i+1] == 0:
+                                if i == 1:
+                                    item = QTableWidgetItem(str(int(initial_values[j - 1, i + 1])))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                                elif i == 2 or i == 3:
+                                    item = QTableWidgetItem(str(int(initial_values[j - 1, i + 1])))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                                elif i == 4 or i == 5 or i == 6 or i == 7:
+                                    item = QTableWidgetItem(str((initial_values[j - 1, i + 2])))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                            else:
+                                if i == 1:
+                                    item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                                elif i == 2 or i == 3:
+                                    item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                                elif i ==4 or i == 5 or i == 6 or i == 7:
+                                    item = QTableWidgetItem(str((initial_values[j, i + 2])))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+
+
+
         memberPropertiesTable.blockSignals(False)
 
     def set_values_with_row(self, memberPropertiesTable, member_prop_line_edit):

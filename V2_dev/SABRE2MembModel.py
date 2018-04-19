@@ -15,7 +15,7 @@ class MemberModel(QMainWindow):
 
     def coordinates(self):
         self.JNodevalue = sMain.SABRE2_main_subclass.update_joints_table(self, self.ui.Joints_Table)
-        print("JNodevalue in membModel", self.JNodevalue)
+        # print("JNodevalue in membModel", self.JNodevalue)
 
 
         for k in range(13):

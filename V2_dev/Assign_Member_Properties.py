@@ -50,7 +50,7 @@ class Assign_All_Class(QMainWindow):
             p= 0
             for i in range(int(BNodevalue.shape[0])):
                 for j in range(int(np.amax(BNodevalue[i, :, 1]) + 1)):
-                    print(member_properties_values[i][1])
+                    # print(member_properties_values[i][1])
                     SNodevalue[i][j][0] = i + 1
                     SNodevalue[i][j][1] = j + 1
                     SNodevalue[i][j][2] = member_properties_values[p][1]
@@ -70,7 +70,7 @@ class Assign_All_Class(QMainWindow):
                     SNodevalue[i][j][10] = HomoType
                     p+=1
 
-            print('\n \n \n \nSNodevalue in assign =', SNodevalue)
+            # print('\n \n \n \nSNodevalue in assign =', SNodevalue)
 
             h5_file.h5_Class.update_array(self,SNodevalue, 'SNodevalue')
 

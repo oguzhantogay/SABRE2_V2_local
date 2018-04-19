@@ -241,8 +241,7 @@ class ActionClass(QMainWindow):
         self.PNC = h5_file.h5_Class.read_array(self, 'PNC')
         self.PNC1 = h5_file.h5_Class.read_array(self, 'PNC1')
         self.PNC2 = h5_file.h5_Class.read_array(self, 'PNC2')
-        self.shear_panel_values = SABRE2_main_subclass.SABRE2_main_subclass.update_shear_panel_table(self,
-                                                                                                     self.ui.Shear_panel_table)
+        self.shear_panel_values = h5_file.h5_Class.read_array(self, 'shear_panel_values')
         self.ground_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_ground_table(self,
                                                                                                   self.ui.Discrete_grounded_spring_table)
         self.torsional_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_torsional_release(self,
@@ -332,6 +331,7 @@ class ActionClass(QMainWindow):
         h5_file.h5_Class.update_array(self, self.element_member, 'element_member')
         h5_file.h5_Class.update_array(self, self.BNodevalue, 'BNodevalue')
         h5_file.h5_Class.update_array(self, self.SNodevalue, 'SNodevalue')
+        h5_file.h5_Class.update_array(self, self.shear_panel_values, 'shear_panel_values')
         h5_file.h5_Class.update_array(self, self.added_node_information, 'added_node_information')
         h5_file.h5_Class.update_array(self, self.fixities_vals, 'fixities_vals')
         h5_file.h5_Class.update_array(self, self.DUP1, 'DUP1')
@@ -437,5 +437,15 @@ class ActionClass(QMainWindow):
                 elif j == 2 or j == 3 or j == 4 or j == 5 or j == 6 or j == 7 or j == 8:
                     if self.fixities_vals[i,j] == 1:
                         self.ui.Fixities_table.item(i, j).setCheckState(QtCore.Qt.Checked)
+
+        for i in range(self.shear_panel_values.shape[0]):
+            for j in range(self.shear_panel_values.shape[1]):
+                if j == 1 or j == 2 or j == 3 or j == 4:
+                    self.ui.Shear_panel_table.cellWidget(i,j).setCurrentIndex(int(self.fixities_vals[i,j]-1))
+                elif j == 6:
+                    if self.shear_panel_values[i,j] == 1:
+                        self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Checked)
+                elif j == 5:
+                    self.ui.Shear_panel_table.item(i, j).setText(str(self.shear_panel_values[i,j]))
 
         return self.table_prop, self.Massemble

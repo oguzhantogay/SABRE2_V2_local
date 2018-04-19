@@ -623,7 +623,8 @@ class SABRE2_main_subclass(QMainWindow):
 
     def update_shear_panel_table(self, tableName, flag="not combo"):
         shear_values = Boundary_Conditions.shear_panel_values(self, tableName, flag)
-        print("main screen Shear Table Values", shear_values)
+        h5_file.h5_Class.update_array(self, shear_values, 'shear_panel_values')
+        # print("main screen Shear Table Values", shear_values)
         return shear_values
 
     def update_ground_table(self, tableName, flag="not combo"):
@@ -1912,16 +1913,18 @@ class Boundary_Conditions(QMainWindow):
             try:
                 for i in range(row_check):
                     for j in range(col_check):
-                        if j == 1:
+                        if j == 1 or j == 2 or j == 3 or j == 4:
                             value_combo = tableName.cellWidget(i, j).currentIndex()
                             val1[i, j] = value_combo
                             DropDownActions.ActionClass.statusMessage(self, message="")
                             pass
-                        elif tableName.item(i, j) is None:
-                            pass
+
                         elif j == 6:
                             val1[i, j] = tableName.item(i, j).checkState()
                             DropDownActions.ActionClass.statusMessage(self, message="")
+
+                        elif tableName.item(i, j) is None:
+                            pass
                         else:
                             val1[i, j] = float(tableName.item(i, j).text())
                             DropDownActions.ActionClass.statusMessage(self, message="")

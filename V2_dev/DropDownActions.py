@@ -446,7 +446,7 @@ class ActionClass(QMainWindow):
             if i > 0:
                 Boundary_Conditions.shear_panel_additional(self)
             for j in range(self.shear_panel_values.shape[1]):
-                # print('i = ', i, 'j = ', j)
+                print('i = ', i, 'j = ', j)
                 if j == 5:
                     if self.shear_panel_values[i,j] == 0:
                         continue

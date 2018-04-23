@@ -727,7 +727,7 @@ class AddNodeClass(QMainWindow):
             float(self.ui.AddNodePositionFrom.text())  # test for the node i is filled or not ?
 
             BNodevalue_read = h5_file.h5_Class.read_array(self,'BNodevalue')
-            Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag = 'apply 1')
+            # Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag = 'apply 1')
 
             if BNodevalue_read.shape[2] > BNodevalue.shape[2]:
                 BNodevalue = BNodevalue_read

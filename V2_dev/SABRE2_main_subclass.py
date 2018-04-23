@@ -1747,8 +1747,9 @@ class Boundary_Conditions(QMainWindow):
             lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
 
     def add_shear_panel(self, element_member, row, flag = 'test'):
-        # print('add shear panel run ! ,', flag)
-
+        print('add shear panel run ! ,', flag)
+        # shear_panel_vals = h5_file.h5_Class.read_array(self, 'shear_panel_values')
+        # print('shear panel vals = ', shear_panel_vals, '\nrow = ' ,row)
         total_member_number = self.ui.Members_table.rowCount()
         first_element_nodes = element_member[:, 0]
         # print('first element number = ', first_element_nodes)
@@ -1772,6 +1773,7 @@ class Boundary_Conditions(QMainWindow):
         combo_box = QtGui.QComboBox()
         for m in range(total_member_number):
             combo_box.addItem(str(m + 1))
+        # combo_box.setCurrentIndex()
         self.ui.Shear_panel_table.setCellWidget(row, 1, combo_box)
         combo_box.currentIndexChanged.connect(
             lambda: Boundary_Conditions.set_shear_panel_combo_box_for_members(self, row))

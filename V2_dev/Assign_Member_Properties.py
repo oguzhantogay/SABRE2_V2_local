@@ -19,7 +19,7 @@ class Assign_All_Class(QMainWindow):
         check_array = h5_file.h5_Class.read_array(self, 'check_array')
         from SABRE2_main_subclass import SABRE2_main_subclass
         SABRE2_main_subclass.members_defined_check(self)
-        # print('flag = ', flag)
+        print('flag = ', flag)
         # print('assign check = ' , check_array)
         non_zeros = np.count_nonzero(check_array)
         # print('non zero = ', non_zeros)

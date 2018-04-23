@@ -15,7 +15,7 @@ class SABRE2LBCODE(QMainWindow):
         # print('LBcode ran')
         BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
         SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
-        print('SNodevalue in LBCode =', SNodevalue)
+        # print('SNodevalue in LBCode =', SNodevalue)
 
         import OpenGLcode
         joint_nodes_length, JNodevalue = OpenGLcode.glWidget.JointTableValues(self)
@@ -555,7 +555,7 @@ class SABRE2LBCODE(QMainWindow):
 
         return tap1, tap2
 
-    def modelWithBC(self):
+    def modelWithBC(self, flag):
 
         DUP1, DUP2, mem, xn, JNodeValues_i, JNodeValues_j, SNodevalue, Rval, NC, NCa = SABRE2LBCODE.LBCode(self)
 
@@ -1875,62 +1875,16 @@ class SABRE2LBCODE(QMainWindow):
                 # print('test extra')
                 SPn.resize((1,element_member.shape[0]))
 
-            # print('element_member = ', element_member[:(SPn.shape[0]),i])
+
             # print('SPn 2 = ', (SPn.shape[0]), i)
             element_member[:,i] = SPn
-
+        # print('element_member = ', element_member)
         h5_file.h5_Class.update_array(self, element_member, 'element_member')
         import SABRE2_main_subclass
 
         SABRE2_main_subclass.Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, RNCc)
         SABRE2_main_subclass.Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
-        SABRE2_main_subclass.Boundary_Conditions.add_shear_panel(self, element_member, 0)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        SABRE2_main_subclass.Boundary_Conditions.add_shear_panel(self, element_member, 0, flag)
 
 
 

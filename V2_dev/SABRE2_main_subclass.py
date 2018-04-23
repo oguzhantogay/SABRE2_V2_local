@@ -112,7 +112,7 @@ class SABRE2_main_subclass(QMainWindow):
         # ui_layout.actionNew.triggered.connect(lambda: ActionClass('uidesign').NewAct())
         ui_layout.actionOpen.triggered.connect(lambda: self.ActionMenus.OpenAct())
         ui_layout.actionSave.triggered.connect(lambda: self.ActionMenus.SaveAct())
-        ui_layout.actionOpen.triggered.connect(lambda: self.table_prop_read())
+        # ui_layout.actionOpen.triggered.connect(lambda: self.table_prop_read())
         ui_layout.actionOpen.triggered.connect(lambda: AddNode.AddNodeClass.ApplyButton(self))
         ui_layout.actionJoint_Member_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         ui_layout.actionMember_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
@@ -170,8 +170,6 @@ class SABRE2_main_subclass(QMainWindow):
         shear_panel_options = ["Flange 2", "Shear Center", "Flange 1"]
         shear_panel_position = 1
 
-        # Boundary_Conditions.Assign_comboBox_shear(self, ui_layout.Shear_panel_table, shear_panel_options,
-        #                                           shear_panel_position)
 
         Boundary_Conditions.Assign_comboBox_ground(self, ui_layout.Discrete_grounded_spring_table, shear_panel_options,
                                                    shear_panel_position)
@@ -196,7 +194,6 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Members_table.itemChanged.connect(
             lambda: MemberPropertiesTable.set_number_of_rows(self, ui_layout.Members_table,
                                                              ui_layout.Member_Properties_Table))
-
         ## BOUNDARY CONDITIONS APPLICATION
         # Fixities table:
         ui_layout.Fixities_table.itemChanged.connect(
@@ -238,17 +235,17 @@ class SABRE2_main_subclass(QMainWindow):
 
         ## Member properties set up with Member cross-section table changes
 
-        ui_layout.Members_table.itemChanged.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+        ui_layout.Members_table.itemChanged.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag='members table'))
 
-        ui_layout.Mem_def_delete.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+        ui_layout.Mem_def_delete.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag='Mem_def_delete table'))
 
-        ui_layout.Mem_def_add.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+        ui_layout.Mem_def_add.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag='Mem_def_add table'))
 
-        ui_layout.Insert_row_mem_def_button.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+        ui_layout.Insert_row_mem_def_button.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag='Insert_row_mem_def_button table'))
 
-        ui_layout.Delete_row_mem_def_button.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+        ui_layout.Delete_row_mem_def_button.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag='Delete_row_mem_def_button table'))
 
-        ui_layout.Copy_mem_def_button.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self))
+        ui_layout.Copy_mem_def_button.clicked.connect(lambda: Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag='Copy_mem_def_button table'))
 
 
         ##
@@ -624,7 +621,7 @@ class SABRE2_main_subclass(QMainWindow):
     def update_shear_panel_table(self, tableName, flag="not combo"):
         shear_values = Boundary_Conditions.shear_panel_values(self, tableName, flag)
         h5_file.h5_Class.update_array(self, shear_values, 'shear_panel_values')
-        print("main screen Shear Table Values", shear_values)
+        # print("main screen Shear Table Values", shear_values)
         return shear_values
 
     def update_ground_table(self, tableName, flag="not combo"):
@@ -1498,7 +1495,7 @@ class MemberPropertiesTable(QMainWindow):
                 # print('initial_values in if = ', initial_values)
                 for i in range(1, 8):
                     for j in range(row_def):
-                        print('j in if = ', j, 'i in if = ', i)
+                        # print('j in if = ', j, 'i in if = ', i)
                         if i == 1 :
                             item = QTableWidgetItem(str(4))
                             item.setTextAlignment(QtCore.Qt.AlignCenter)
@@ -1536,9 +1533,22 @@ class MemberPropertiesTable(QMainWindow):
                             k += 1
                     for i in range(1, 8):
                         for j in range(row_def):
-                            print('j in else = ', j, 'i in else = ', i)
-
-                            if j ==(row_def - 1) and initial_values[j,i+1] == 0:
+                            # print('j in else = ', j, 'i in else = ', i)
+                            # print('initial values shape = ', initial_values.shape[0], j)
+                            if j >= initial_values.shape[0]:
+                                if i == 1:
+                                    item = QTableWidgetItem(str(int(initial_values[j-1, i + 1])))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                                elif i == 2 or i == 3:
+                                    item = QTableWidgetItem(str(int(initial_values[j-1, i + 1])))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                                elif i ==4 or i == 5 or i == 6 or i == 7:
+                                    item = QTableWidgetItem(str((initial_values[j-1, i + 2])))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                            elif j ==(row_def - 1) and initial_values[j,i+1] == 0:
                                 if i == 1:
                                     item = QTableWidgetItem(str(4))
                                     item.setTextAlignment(QtCore.Qt.AlignCenter)
@@ -1559,7 +1569,7 @@ class MemberPropertiesTable(QMainWindow):
                                     item = QTableWidgetItem(str(50))
                                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                                     memberPropertiesTable.setItem(j, i, item)
-                            elif j < initial_values.shape[0]:
+                            else:
                                 if i == 1:
                                     item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
                                     item.setTextAlignment(QtCore.Qt.AlignCenter)
@@ -1572,8 +1582,6 @@ class MemberPropertiesTable(QMainWindow):
                                     item = QTableWidgetItem(str((initial_values[j, i + 2])))
                                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                                     memberPropertiesTable.setItem(j, i, item)
-
-
 
         memberPropertiesTable.blockSignals(False)
 
@@ -1661,61 +1669,61 @@ class Boundary_Conditions(QMainWindow):
                 lambda: BoundaryConditionApplication.BoundaryConditionArrays.BC_arrays(self))
 
 
-    def Assign_comboBox_shear(self, number_of_nodes, element_member):
-        r = int(number_of_nodes)
-        # print('r = ', r)
-        # print('element member = ', element_member)
-        options = ["Flange 2", "Shear Center", "Flange 1"]
-        total_member_number = self.ui.Members_table.rowCount()
-        first_element_nodes = element_member[:,0]
-        # print('first element number = ', first_element_nodes)
-        first_element_nodes = first_element_nodes[first_element_nodes != 0]
-        # print('first element number = ', first_element_nodes)
-        # for i in range(total_member_number):
-            # first column row numbering
-        text = str(int(1))
-        item = QTableWidgetItem(text)
-        item.setTextAlignment(QtCore.Qt.AlignCenter)
-        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-        self.ui.Shear_panel_table.setItem(0, 0, item)
-
-        # Status
-        text = "Constant"
-        item = QTableWidgetItem(text)
-        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-        item.setCheckState(QtCore.Qt.Checked)
-        self.ui.Shear_panel_table.setItem(0, 6, item)
-
-        combo_box = QtGui.QComboBox()
-        for m in range(total_member_number):
-            combo_box.addItem(str(m+1))
-        self.ui.Shear_panel_table.setCellWidget(0, 1, combo_box)
-        combo_box.currentIndexChanged.connect(
-            lambda: Boundary_Conditions.set_shear_panel_combo_box_for_members(self, 0))
-        combo_box.currentIndexChanged.connect(
-            lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
-
-        combo_box = QtGui.QComboBox()
-        for t in options:
-            combo_box.addItem(t)
-        self.ui.Shear_panel_table.setCellWidget(0, 2, combo_box)
-        combo_box.currentIndexChanged.connect(
-            lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
-
-        combo_box = QtGui.QComboBox()
-        for t in first_element_nodes:
-            combo_box.addItem(str(int(t)))
-        self.ui.Shear_panel_table.setCellWidget(0, 3, combo_box)
-        combo_box.currentIndexChanged.connect(
-            lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
-
-        combo_box = QtGui.QComboBox()
-        for t in first_element_nodes:
-            combo_box.addItem(str(int(t)))
-        self.ui.Shear_panel_table.setCellWidget(0, 4, combo_box)
-        combo_box.currentIndexChanged.connect(
-            lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
-
+    # def Assign_comboBox_shear(self, number_of_nodes, element_member):
+    #     r = int(number_of_nodes)
+    #     # print('r = ', r)
+    #     # print('element member = ', element_member)
+    #     options = ["Flange 2", "Shear Center", "Flange 1"]
+    #     total_member_number = self.ui.Members_table.rowCount()
+    #     first_element_nodes = element_member[:,0]
+    #     # print('first element number = ', first_element_nodes)
+    #     first_element_nodes = first_element_nodes[first_element_nodes != 0]
+    #     # print('first element number = ', first_element_nodes)
+    #     # for i in range(total_member_number):
+    #         # first column row numbering
+    #     text = str(int(1))
+    #     item = QTableWidgetItem(text)
+    #     item.setTextAlignment(QtCore.Qt.AlignCenter)
+    #     item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+    #     self.ui.Shear_panel_table.setItem(0, 0, item)
+    #
+    #     # Status
+    #     text = "Constant"
+    #     item = QTableWidgetItem(text)
+    #     item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+    #     item.setCheckState(QtCore.Qt.Checked)
+    #     self.ui.Shear_panel_table.setItem(0, 6, item)
+    #
+    #     combo_box = QtGui.QComboBox()
+    #     for m in range(total_member_number):
+    #         combo_box.addItem(str(m+1))
+    #     self.ui.Shear_panel_table.setCellWidget(0, 1, combo_box)
+    #     combo_box.currentIndexChanged.connect(
+    #         lambda: Boundary_Conditions.set_shear_panel_combo_box_for_members(self, 0))
+    #     combo_box.currentIndexChanged.connect(
+    #         lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+    #
+    #     combo_box = QtGui.QComboBox()
+    #     for t in options:
+    #         combo_box.addItem(t)
+    #     self.ui.Shear_panel_table.setCellWidget(0, 2, combo_box)
+    #     combo_box.currentIndexChanged.connect(
+    #         lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+    #
+    #     combo_box = QtGui.QComboBox()
+    #     for t in first_element_nodes:
+    #         combo_box.addItem(str(int(t)))
+    #     self.ui.Shear_panel_table.setCellWidget(0, 3, combo_box)
+    #     combo_box.currentIndexChanged.connect(
+    #         lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+    #
+    #     combo_box = QtGui.QComboBox()
+    #     for t in first_element_nodes:
+    #         combo_box.addItem(str(int(t)))
+    #     self.ui.Shear_panel_table.setCellWidget(0, 4, combo_box)
+    #     combo_box.currentIndexChanged.connect(
+    #         lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+    #
     def set_shear_panel_combo_box_for_members(self, current_panel):
         element_member = h5_file.h5_Class.read_array(self, 'element_member')
         print('current panel = ', current_panel)
@@ -1738,7 +1746,8 @@ class Boundary_Conditions(QMainWindow):
         combo_box.currentIndexChanged.connect(
             lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
 
-    def add_shear_panel(self, element_member, row):
+    def add_shear_panel(self, element_member, row, flag = 'test'):
+        # print('add shear panel run ! ,', flag)
 
         total_member_number = self.ui.Members_table.rowCount()
         first_element_nodes = element_member[:, 0]
@@ -1892,12 +1901,12 @@ class Boundary_Conditions(QMainWindow):
             pass
 
     def shear_panel_additional(self):
-        RNCc = h5_file.h5_Class.read_array(self, 'RNCc')
-        number_of_nodes = int(RNCc[:, 0].shape[0])
+        # RNCc = h5_file.h5_Class.read_array(self, 'RNCc')
+        # number_of_nodes = int(RNCc[:, 0].shape[0])
         row = self.ui.Shear_panel_table.rowCount()
         self.ui.Shear_panel_table.setRowCount(row+1)
         element_member = h5_file.h5_Class.read_array(self,'element_member')
-        Boundary_Conditions.add_shear_panel(self,element_member, row)
+        Boundary_Conditions.add_shear_panel(self,element_member, row, flag = 'additional flag')
 
     def shear_panel_delete(self):
         row = self.ui.Shear_panel_table.rowCount() - 1

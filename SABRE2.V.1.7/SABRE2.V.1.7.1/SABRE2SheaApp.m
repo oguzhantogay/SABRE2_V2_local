@@ -157,7 +157,8 @@ else
    end
       
 end
-
+BNC1
+BNC2
 if ~isempty(JNodevalue) 
    % ********************************************** Plot Coordnate Axes S
    if ~isempty(RNCc)  

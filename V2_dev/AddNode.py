@@ -727,7 +727,7 @@ class AddNodeClass(QMainWindow):
             float(self.ui.AddNodePositionFrom.text())  # test for the node i is filled or not ?
 
             BNodevalue_read = h5_file.h5_Class.read_array(self,'BNodevalue')
-            Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self)
+            Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag = 'apply 1')
 
             if BNodevalue_read.shape[2] > BNodevalue.shape[2]:
                 BNodevalue = BNodevalue_read
@@ -797,7 +797,7 @@ class AddNodeClass(QMainWindow):
                                                          self.ui.Member_Properties_Table)
 
 
-                Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self)
+                Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag = 'apply 2')
 
         except ValueError:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
@@ -923,7 +923,7 @@ class SegmRemove(QMainWindow):
         # set member properties table and assign values
         MemberPropertiesTable.set_number_of_rows(self, self.ui.Members_table,
                                                  self.ui.Member_Properties_Table)
-        Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self)
+        Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag = 'remove')
 
 class PlotSegments(QMainWindow):
     """ This class removes previously added nodes"""

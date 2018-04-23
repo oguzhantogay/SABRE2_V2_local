@@ -114,6 +114,38 @@ class BoundaryConditionArrays(QMainWindow):
         h5_file.h5_Class.update_array(self, PNC1, 'PNC1')
         h5_file.h5_Class.update_array(self, PNC2, 'PNC2')
 
+class ShearPanelApplication(QMainWindow):
 
+    def __init__(self, ui_layout, parent=None):
+        super(BoundaryConditionArrays, self).__init__(parent)
+        self.ui = ui_layout
 
+    def shear_panel_values(self):
+        number_of_shear_panel = self.ui.Shear_panel_table.rowCount()
+        BC1 = np.zeros((number_of_shear_panel, 11))
+        BC2 = np.zeros((number_of_shear_panel, 11))
+        shear_panel_values = h5_file.h5_Class.read_array(self,'shear_panel_values')
+        RNCc = h5_file.h5_Class.read_array(self,'RNCc')
 
+        for i in range(number_of_shear_panel):
+            if shear_panel_values[i][5] != 0:
+                BC1[i][0] = shear_panel_values[i][0]
+                BC1[i][1] = shear_panel_values[i][3]
+                BC1[i][2] = RNCc[int(shear_panel_values[i][3] - 1)][1]
+                BC1[i][3] = RNCc[int(shear_panel_values[i][3] - 1)][2]
+                BC1[i][4] = RNCc[int(shear_panel_values[i][3] - 1)][4]
+                BC1[i][7] = shear_panel_values[i][5]
+                BC1[i][8] = shear_panel_values[i][2]
+                BC1[i][9] = shear_panel_values[i][1]
+
+                BC2[i][0] = shear_panel_values[i][0]
+                BC2[i][1] = shear_panel_values[i][4]
+                BC2[i][2] = RNCc[int(shear_panel_values[i][4] - 1)][1]
+                BC2[i][3] = RNCc[int(shear_panel_values[i][4] - 1)][2]
+                BC2[i][4] = RNCc[int(shear_panel_values[i][4] - 1)][4]
+                BC2[i][7] = shear_panel_values[i][5]
+                BC2[i][8] = shear_panel_values[i][2]
+                BC2[i][9] = shear_panel_values[i][1]
+
+        print('BC2 = ', BC1)
+        print('BC1 = ', BC2)

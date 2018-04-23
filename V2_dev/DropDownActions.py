@@ -387,12 +387,10 @@ class ActionClass(QMainWindow):
         self.Members_table_position = 3
 
         # print("member shape = ", )
-
+        # print('self.fixities vals = ', self.fixities_vals)
         self.ui.Members_table.blockSignals(True)
         for i in range(shape_members_table_values):
-
             for j in range(1, 18):
-
                 if j == 3:
                     # print('test = ', self.ui.Members_table, self.Members_table_options,
                     #                                                     self.Members_table_position, self.members_table_values[i][3])
@@ -428,28 +426,42 @@ class ActionClass(QMainWindow):
         import AddNode
 
         AddNode.AddNodeClass.setAddNodeComboBox(self)
-
+        from SABRE2_main_subclass import Boundary_Conditions
+        number_of_nodes = int(self.RNCc[:, 0].shape[0])
+        Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, self.RNCc)
+        Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
         #RETURN REQUIRED ARRAYS ONLY
         for i in range(self.fixities_vals.shape[0]):
             for j in range(self.fixities_vals.shape[1]):
+                self.ui.BoundaryConditionsTabs.setEnabled(True)
                 if j == 1:
                     self.ui.Fixities_table.cellWidget(i,j).setCurrentIndex(int(self.fixities_vals[i,j]-1))
                 elif j == 2 or j == 3 or j == 4 or j == 5 or j == 6 or j == 7 or j == 8:
                     if self.fixities_vals[i,j] == 1:
                         self.ui.Fixities_table.item(i, j).setCheckState(QtCore.Qt.Checked)
-
+        element_member = h5_file.h5_Class.read_array(self, 'element_member')
+        # print('shear panel vals = ', self.shear_panel_values)
+        Boundary_Conditions.add_shear_panel(self, element_member, 0, flag='drop down last')
         for i in range(self.shear_panel_values.shape[0]):
+            if i > 0:
+                Boundary_Conditions.shear_panel_additional(self)
             for j in range(self.shear_panel_values.shape[1]):
                 # print('i = ', i, 'j = ', j)
-                if j == 1 or j == 2 or j == 3 or j == 4:
-                    self.ui.Shear_panel_table.cellWidget(i,j).setCurrentIndex(int(self.shear_panel_values[i,j]))
+                if j == 5:
+                    if self.shear_panel_values[i,j] == 0:
+                        continue
+                    else:
+                        self.ui.BoundaryConditionsTabs.setEnabled(True)
+                        item = QTableWidgetItem()
+                        item.setText(str(self.shear_panel_values[i, j]))
+                        self.ui.Shear_panel_table.setItem(i, j, item)
+                elif j == 1 or j == 2 or j == 3 or j == 4:
+                    self.ui.Shear_panel_table.cellWidget(i, j).setCurrentIndex(int(self.shear_panel_values[i,j]))
                 elif j == 6:
-                    if self.shear_panel_values[i,j] == 1:
+                    if self.shear_panel_values[i,j] == 2:
                         self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Checked)
-                elif j == 5:
-                    # print(str(self.shear_panel_values[i,j]))
-                    item = QTableWidgetItem()
-                    item.setText(str(self.shear_panel_values[i,j]))
-                    self.ui.Shear_panel_table.setItem(i, j,item)
+                    else:
+                        self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Unchecked)
+
 
         return self.table_prop, self.Massemble

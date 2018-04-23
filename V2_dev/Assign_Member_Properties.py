@@ -14,11 +14,15 @@ class Assign_All_Class(QMainWindow):
         super(Assign_All_Class, self).__init__(parent)
         self.ui = ui_layout
 
-    def assign_SNodevalue(self):
+    def assign_SNodevalue(self, flag = 'test'):
         """ Assign the SNodevalue array with the values from Member Properties Tab"""
         check_array = h5_file.h5_Class.read_array(self, 'check_array')
+        from SABRE2_main_subclass import SABRE2_main_subclass
+        SABRE2_main_subclass.members_defined_check(self)
+        # print('flag = ', flag)
         # print('assign check = ' , check_array)
         non_zeros = np.count_nonzero(check_array)
+        # print('non zero = ', non_zeros)
         if non_zeros == check_array.shape[0]:
             #### delete for separation of analysis
             self.ui.Member_Properties_Table.setEnabled(True)
@@ -31,7 +35,7 @@ class Assign_All_Class(QMainWindow):
             # Massemble = h5_file.h5_Class.read_array(self, 'Massemble')
             BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
             total_member_number = int(BNodevalue.shape[0])
-            print('BNodevalue = ', BNodevalue)
+            # print('BNodevalue = ', BNodevalue)
             from SABRE2_main_subclass import SABRE2_main_subclass
             member_properties_values = SABRE2_main_subclass.update_member_properties_table(self,
                                                                                            self.ui.Member_Properties_Table)
@@ -74,10 +78,6 @@ class Assign_All_Class(QMainWindow):
 
             h5_file.h5_Class.update_array(self,SNodevalue, 'SNodevalue')
 
-
-
-
-
             import SABRE2LBCODE
 
-            SABRE2LBCODE.SABRE2LBCODE.modelWithBC(self)
+            SABRE2LBCODE.SABRE2LBCODE.modelWithBC(self, flag)

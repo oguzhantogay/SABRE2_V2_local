@@ -336,7 +336,7 @@ class SABRE2LBCODE(QMainWindow):
         for i in range(mem):
             for j in range(int(np.sum(SNodevalue[i, :, 2])) + 1):
                 if np.isclose(i, 0):
-                    print('\n## if 1\n')
+                    # print('\n## if 1\n')
                     for k in range(13):
                         NCa[j + q][k] = NC[j + q][k]
 
@@ -1880,11 +1880,13 @@ class SABRE2LBCODE(QMainWindow):
             element_member[:,i] = SPn
         # print('element_member = ', element_member)
         h5_file.h5_Class.update_array(self, element_member, 'element_member')
-        import SABRE2_main_subclass
+        from SABRE2_main_subclass import Boundary_Conditions
 
-        SABRE2_main_subclass.Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, RNCc)
-        SABRE2_main_subclass.Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
-        SABRE2_main_subclass.Boundary_Conditions.add_shear_panel(self, element_member, 0, flag)
+        Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, RNCc)
+        Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
+        Boundary_Conditions.add_shear_panel(self, element_member, 0, flag)
+        Boundary_Conditions.set_number_of_rows_springs_table(self, number_of_nodes)
+        Boundary_Conditions.Assign_comboBox_springs_table(self, number_of_nodes)
 
 
 

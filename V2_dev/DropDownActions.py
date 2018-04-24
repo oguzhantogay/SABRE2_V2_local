@@ -235,6 +235,7 @@ class ActionClass(QMainWindow):
         self.SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
         self.added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         self.fixities_vals = h5_file.h5_Class.read_array(self, 'fixities_vals')
+        self.spring_values = h5_file.h5_Class.read_array(self, 'spring_values')
         self.DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
         self.DUP2 = h5_file.h5_Class.read_array(self, 'DUP2')
         self.RNCc = h5_file.h5_Class.read_array(self, 'RNCc')
@@ -258,7 +259,7 @@ class ActionClass(QMainWindow):
                                                                                              combo_flag=0)
 
         # print('self.members_table_values', self.members_table_values)
-        print('self.SNodevalue', self.SNodevalue)
+        # print('self.SNodevalue', self.SNodevalue)
         # print('table prop save = ' , self.table_prop)
 
         filename = 'test_after_shear_panel.npz'
@@ -274,6 +275,7 @@ class ActionClass(QMainWindow):
                  BNodevalue = self.BNodevalue,
                  SNodevalue = self.SNodevalue,
                  fixities_vals = self.fixities_vals,
+                 spring_values = self.spring_values,
                  DUP1 = self.DUP1,
                  DUP2 = self.DUP2,
                  RNCc = self.RNCc,
@@ -290,6 +292,8 @@ class ActionClass(QMainWindow):
                  point_data_values=self.point_data_values
                  )
         file.close()
+
+        print('file saved to ', filename)
 
     def read_fun(self):
 
@@ -313,6 +317,7 @@ class ActionClass(QMainWindow):
         self.BNodevalue = aa['BNodevalue']
         self.SNodevalue = aa['SNodevalue']
         self.fixities_vals = aa['fixities_vals']
+        self.spring_values = aa['spring_values']
         self.added_node_information = aa['added_node_information']
         self.DUP1 = aa['DUP1']
         self.DUP2 = aa['DUP2']
@@ -334,6 +339,7 @@ class ActionClass(QMainWindow):
         h5_file.h5_Class.update_array(self, self.shear_panel_values, 'shear_panel_values')
         h5_file.h5_Class.update_array(self, self.added_node_information, 'added_node_information')
         h5_file.h5_Class.update_array(self, self.fixities_vals, 'fixities_vals')
+        h5_file.h5_Class.update_array(self, self.spring_values, 'spring_values')
         h5_file.h5_Class.update_array(self, self.DUP1, 'DUP1')
         h5_file.h5_Class.update_array(self, self.DUP2, 'DUP2')
         h5_file.h5_Class.update_array(self, self.RNCc, 'RNCc')
@@ -351,7 +357,6 @@ class ActionClass(QMainWindow):
         # print('read self.SNodevalue', self.SNodevalue)
         shape_joint_table = int(self.joint_values.shape[0])
         shape_members_table_values = int(self.members_table_values.shape[0])
-        shape_shear_panel_values = int(self.shear_panel_values.shape[0])
         shape_ground_spring_values = int(self.ground_spring_values.shape[0])
         shape_torsional_spring_values = int(self.torsional_spring_values.shape[0])
         shape_My_values = int(self.My_release_values.shape[0])
@@ -430,6 +435,9 @@ class ActionClass(QMainWindow):
         number_of_nodes = int(self.RNCc[:, 0].shape[0])
         Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, self.RNCc)
         Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
+        Boundary_Conditions.set_number_of_rows_springs_table(self, number_of_nodes)
+        Boundary_Conditions.Assign_comboBox_springs_table(self, number_of_nodes)
+
         #RETURN REQUIRED ARRAYS ONLY
         for i in range(self.fixities_vals.shape[0]):
             for j in range(self.fixities_vals.shape[1]):
@@ -463,5 +471,18 @@ class ActionClass(QMainWindow):
                     else:
                         self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Unchecked)
 
+        for i in range(self.spring_values.shape[0]):
+            for j in range(1, self.spring_values.shape[1]):
+                # self.ui.BoundaryConditionsTabs.setEnabled(True)
+                if j == 1:
+                    self.ui.Discrete_grounded_spring_table.cellWidget(i,j).setCurrentIndex(int(self.spring_values[i,j]-1))
+                elif j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
+                    if self.spring_values[i,j] == 1:
+                        self.ui.Discrete_grounded_spring_table.item(i, j).setCheckState(QtCore.Qt.Checked)
+                else:
+                    item = QTableWidgetItem()
+                    item.setText(str(self.shear_panel_values[i, j]))
+                    self.ui.Shear_panel_table.setItem(i, j, item)
+        print('file read from ', filename)
 
         return self.table_prop, self.Massemble

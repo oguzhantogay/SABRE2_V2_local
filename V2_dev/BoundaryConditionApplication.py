@@ -44,9 +44,9 @@ class BoundaryConditionArrays(QMainWindow):
                 if np.isclose(PNC2[i, 12], 0):
                     PNC2[i, 12] = 1
 
-        import SABRE2_main_subclass
+        from SABRE2_main_subclass import Boundary_Conditions
 
-        fixities_table_values = SABRE2_main_subclass.Boundary_Conditions.get_checkbox_values(self, self.ui.Fixities_table)
+        fixities_table_values = Boundary_Conditions.get_checkbox_values(self, self.ui.Fixities_table)
 
         h5_file.h5_Class.update_array(self, fixities_table_values, 'fixities_vals')
 
@@ -149,3 +149,38 @@ class ShearPanelApplication(QMainWindow):
 
         print('BC2 = ', BC1)
         print('BC1 = ', BC2)
+
+class GroundSpringApplication(QMainWindow):
+
+    def __init__(self, ui_layout, parent=None):
+        super(GroundSpringApplication, self).__init__(parent)
+        self.ui = ui_layout
+
+    def groundSpringValues(self):
+        RNCc = h5_file.h5_Class.read_array(self, 'RNCc')
+        number_of_nodes = RNCc[:, 0].shape[0]
+        # ground_spring_values = h5_file.h5_Class.read_array(self, 'ground_spring_values')
+        from SABRE2_main_subclass import Boundary_Conditions
+        fixities_table_values = Boundary_Conditions.get_checkbox_values(self, self.ui.Fixities_table)
+        spring_values = Boundary_Conditions.get_spring_values(self)
+        BNC = np.zeros((number_of_nodes, 14))
+        for i in range(number_of_nodes):
+            BNC[i][0] = i+1
+            BNC[i][1] = fixities_table_values[i][9]
+            BNC[i][2] = fixities_table_values[i][10]
+            BNC[i][3] = fixities_table_values[i][11]
+            BNC[i][4] = spring_values[i][2]
+            BNC[i][5] = spring_values[i][4]
+            BNC[i][6] = spring_values[i][6]
+            BNC[i][7] = spring_values[i][8]
+            BNC[i][8] = spring_values[i][10]
+            BNC[i][9] = spring_values[i][12]
+            BNC[i][10] = spring_values[i][14]
+            BNC[i][12] = spring_values[i][1]
+
+        print('BNC = ', BNC)
+
+
+
+
+

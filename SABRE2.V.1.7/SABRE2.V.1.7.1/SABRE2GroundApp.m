@@ -44,7 +44,7 @@ else
       
    end
 end
-   
+BNC
 if ~isempty(JNodevalue) 
    % ********************************************** Plot Coordnate Axes S
    if ~isempty(RNCc)  

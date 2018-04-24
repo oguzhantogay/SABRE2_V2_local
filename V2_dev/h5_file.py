@@ -30,6 +30,8 @@ class h5_Class:
 
         shear_panel_values =  np.zeros((1,1))
 
+        spring_values =  np.zeros((1,1))
+
         DUP1 = np.zeros((1,1,1))
 
         DUP2 = np.zeros((1,1,1))
@@ -47,6 +49,8 @@ class h5_Class:
         file_open.create_dataset('fixities_vals', data=fixities_vals)
 
         file_open.create_dataset('shear_panel_values', data=shear_panel_values)
+
+        file_open.create_dataset('spring_values', data=spring_values)
 
         file_open.create_dataset('added_node_information', data=added_node_information)
 

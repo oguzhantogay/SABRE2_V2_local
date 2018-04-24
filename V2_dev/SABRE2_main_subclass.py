@@ -626,42 +626,42 @@ class SABRE2_main_subclass(QMainWindow):
 
     def update_ground_table(self, tableName, flag="not combo"):
         shear_values = Boundary_Conditions.ground_spring_values(self, tableName, flag)
-        print("main screen Ground Table Values", shear_values)
+        # print("main screen Ground Table Values", shear_values)
         return shear_values
 
     def update_torsional_release(self, tableName):
         torsional_values = Boundary_Conditions.release_tables_values(self, tableName)
-        print("main screen Torsional Table Values", torsional_values)
+        # print("main screen Torsional Table Values", torsional_values)
         return torsional_values
 
     def update_My_release(self, tableName):
         My_values = Boundary_Conditions.release_tables_values(self, tableName)
-        print("main screen My Table Values", My_values)
+        # print("main screen My Table Values", My_values)
         return My_values
 
     def update_Mz_release(self, tableName):
         Mz_values = Boundary_Conditions.release_tables_values(self, tableName)
-        print("main screen Mz Table Values", Mz_values)
+        # print("main screen Mz Table Values", Mz_values)
         return Mz_values
 
     def update_warping_release(self, tableName):
         warping_values = Boundary_Conditions.release_tables_values(self, tableName)
-        print("main screen Warping Table Values", warping_values)
+        # print("main screen Warping Table Values", warping_values)
         return warping_values
 
     def update_loading_types_conditions(self, tableName):
         [table_data, ID_data] = LoadingClass.defined_load_names(self, tableName)
-        print("main screen load type IDs", ID_data)
+        # print("main screen load type IDs", ID_data)
         return ID_data
 
     def update_uniform_data(self, tableName, combo_flag):
         [uniform_data_vals, SegmentNames] = uniform_load_def.uniform_data_table(self, tableName, combo_flag)
-        print("main screen uniform load values", uniform_data_vals)
+        # print("main screen uniform load values", uniform_data_vals)
         return uniform_data_vals
 
     def update_point_data(self, tableName, combo_flag):
         point_data_vals = point_load_def.point_data_table(self, tableName, combo_flag)
-        print("main screen uniform load values", point_data_vals)
+        # print("main screen uniform load values", point_data_vals)
         return point_load_def
 
     def m_assemble_updater(self, tableName, Copy_from_number=1, Insert_after_number=1, lineName=1, Delete_row = 1,
@@ -676,7 +676,7 @@ class SABRE2_main_subclass(QMainWindow):
 
 
         if flag == "last":
-            print('test last')
+            # print('test last')
             # print(self.table_prop)
             SABRE2_main_subclass.Massemble = np.append(SABRE2_main_subclass.Massemble, to_append, axis=0)
             self.table_prop = np.append(self.table_prop, to_append_prop, axis=0)
@@ -1460,15 +1460,15 @@ class MemberPropertiesTable(QMainWindow):
 
     def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable, flag ='add node'):
         ''' this function sets the initial configuration of the member properties table after added nodes'''
-        print('set number of rows runs', flag)
+        # print('set number of rows runs', flag)
         memberPropertiesTable.blockSignals(True)
         current_column = self.ui.Members_table.currentColumn()
         row_member = memberPropertiesTable.rowCount()
         row_def = memberDefinitionTable.rowCount()
-        print('row def before = ', row_def)
+        # print('row def before = ', row_def)
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
-        print('added node info = ', added_node_information)
-        if current_column == 1 or current_column == 2 and flag == 'add node':
+        # print('added node info = ', added_node_information)
+        if current_column == 1 or current_column == 2 or flag == 'add node':
             SNodevalue = h5_file.h5_Class.read_array(self,'SNodevalue')
             # print('SNode in set rows = ', SNodevalue)
             initial_values = np.zeros((int(SNodevalue.shape[0]*SNodevalue.shape[1]),11))
@@ -1480,8 +1480,6 @@ class MemberPropertiesTable(QMainWindow):
                     q +=1
 
             # print('initial values 1 = ', initial_values)
-
-
 
             # print('added = ', added_node_information)
             if row_def != row_member:
@@ -1495,9 +1493,8 @@ class MemberPropertiesTable(QMainWindow):
                 memberPropertiesTable.setItem(j, 0, item)
 
             if added_node_information.shape[0] < row_def and flag != 'add node':
-
-                        # initial_values = JointTable.tableValues(self, memberPropertiesTable)
-                print('if in set row')
+                # initial_values = JointTable.tableValues(self, memberPropertiesTable)
+                # print('if in set row')
                 # print('initial_values in if = ', initial_values)
                 for i in range(1, 8):
                     for j in range(row_def):
@@ -1516,10 +1513,10 @@ class MemberPropertiesTable(QMainWindow):
                             memberPropertiesTable.setItem(j, i, item)
 
             else:
-                print('else in set row')
+                # print('else in set row')
                 total_number_row = np.sum(added_node_information[:, 1])
                 row_def = int(total_number_row) + int(row_def)
-                print(' row def', row_def)
+                # print(' row def', row_def)
                 memberPropertiesTable.setRowCount(row_def)
                 k = 0
                 for i in range(int(added_node_information[:,0].shape[0])):
@@ -1666,6 +1663,7 @@ class Boundary_Conditions(QMainWindow):
         self.ui.Fixities_table.blockSignals(False)
 
     def Assign_comboBox_fixities_table(self, number_of_nodes):
+        self.ui.Fixities_table.blockSignals(True)
         r = int(number_of_nodes)
         options = ["Shear Center", "Flange 2","Centroid", "Flange 1"]
         for i in range(r):
@@ -1675,6 +1673,7 @@ class Boundary_Conditions(QMainWindow):
             self.ui.Fixities_table.setCellWidget(i, 1, combo_box)
             combo_box.currentIndexChanged.connect(
                 lambda: BoundaryConditionApplication.BoundaryConditionArrays.BC_arrays(self))
+        self.ui.Fixities_table.blockSignals(False)
 
 
     # def Assign_comboBox_shear(self, number_of_nodes, element_member):
@@ -1734,12 +1733,12 @@ class Boundary_Conditions(QMainWindow):
     #
     def set_shear_panel_combo_box_for_members(self, current_panel):
         element_member = h5_file.h5_Class.read_array(self, 'element_member')
-        print('current panel = ', current_panel)
+        # print('current panel = ', current_panel)
         value = self.ui.Shear_panel_table.cellWidget(current_panel, 1).currentIndex()
         element_nodes = element_member[:, value]
         # print('first element number = ', first_element_nodes)
         element_nodes = element_nodes[element_nodes != 0]
-        print('element_nodes = ', element_nodes)
+        # print('element_nodes = ', element_nodes)
         combo_box = QtGui.QComboBox()
         for t in element_nodes:
             combo_box.addItem(str(int(t)))
@@ -1755,7 +1754,7 @@ class Boundary_Conditions(QMainWindow):
             lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
 
     def add_shear_panel(self, element_member, row, flag = 'test'):
-        print('add shear panel run ! ,', flag)
+        # print('add shear panel run ! ,', flag)
         # shear_panel_vals = h5_file.h5_Class.read_array(self, 'shear_panel_values')
         # print('shear panel vals = ', shear_panel_vals, '\nrow = ' ,row)
         total_member_number = self.ui.Members_table.rowCount()
@@ -1830,6 +1829,69 @@ class Boundary_Conditions(QMainWindow):
 
         h5_file.h5_Class.update_array(self, fixities_vals, 'fixities_vals')
         return fixities_vals
+
+    def set_number_of_rows_springs_table(self, number_of_nodes):
+        self.ui.Discrete_grounded_spring_table.blockSignals(True)
+        self.ui.Discrete_grounded_spring_table.setRowCount(number_of_nodes)
+        # print('RNCc = ', RNCc)
+        for i in range(int(number_of_nodes)):
+            for j in range(16):
+                if j ==0: #first column row numbering
+                    text = str(int(i+1))
+                    item = QTableWidgetItem(text)
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                    self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
+                elif j == 1: # combo box set up, done in the following function
+                    pass
+                elif j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
+                    text = "Constant"
+                    item = QTableWidgetItem(text)
+                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                    item.setCheckState(QtCore.Qt.Checked)
+                    self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
+                else:
+                    text = "0"
+                    item = QTableWidgetItem(text)
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
+
+        self.ui.Discrete_grounded_spring_table.blockSignals(False)
+
+    def Assign_comboBox_springs_table(self, number_of_nodes):
+        self.ui.Discrete_grounded_spring_table.blockSignals(True)
+        r = int(number_of_nodes)
+        options = ["Shear Center", "Flange 2", "Flange 1"]
+        for i in range(r):
+            combo_box = QtGui.QComboBox()
+            for t in options:
+                combo_box.addItem(t)
+            self.ui.Discrete_grounded_spring_table.setCellWidget(i, 1, combo_box)
+            combo_box.currentIndexChanged.connect(
+                lambda: BoundaryConditionApplication.GroundSpringApplication.groundSpringValues(self))
+        self.ui.Discrete_grounded_spring_table.blockSignals(False)
+
+    def get_spring_values(self):
+        ''' This function obtains the Ground Spring values'''
+        row_count = self.ui.Discrete_grounded_spring_table.rowCount()
+        spring_values = np.zeros((row_count, 16))
+        for j in range(row_count):
+            for i in range(16):
+                if i == 0:
+                    spring_values[j, i] = (j + 1)
+                elif i == 1:
+                    value_combo = self.ui.Discrete_grounded_spring_table.cellWidget(j, i).currentIndex()
+                    spring_values[j, i] = value_combo + 1
+                elif i == 2 or i == 4 or i == 6 or i == 8 or i == 10 or i == 12 or i == 14:
+                    spring_values[j,i] = float(self.ui.Discrete_grounded_spring_table.item(j,i).text())
+                else:
+                    spring_values[j, i] = self.ui.Discrete_grounded_spring_table.item(j, i).checkState()
+                    if spring_values[j, i] == 2:
+                        spring_values[j, i] = 1
+
+        h5_file.h5_Class.update_array(self, spring_values, 'spring_values')
+        return spring_values
+
 
     def set_active(self, table_name, line_edit):
 
@@ -1965,46 +2027,6 @@ class Boundary_Conditions(QMainWindow):
             tableName.clearSelection()
             tableName.item(row, col).setText("")
             DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
-
-    def Assign_comboBox_ground(self, tableName, options, position):
-        r = tableName.rowCount()
-        for i in range(r):
-            combo_box = QtGui.QComboBox()
-            for t in options:
-                combo_box.addItem(t)
-            tableName.setCellWidget(i, position, combo_box)
-            combo_box.currentIndexChanged.connect(
-                lambda: SABRE2_main_subclass.update_ground_table(self, tableName, flag="combo"))
-
-    def ground_spring_values(self, tableName, flag="not combo"):
-        col = tableName.currentColumn()
-        row = tableName.currentRow()
-        row_check = tableName.rowCount()
-        col_check = tableName.columnCount()
-        val1 = np.zeros((row_check, col_check))
-        if flag == "not combo" or flag == "combo":
-            try:
-                for i in range(row_check):
-                    for j in range(col_check):
-                        if j == 1:
-                            value_combo = tableName.cellWidget(i, j).currentIndex()
-                            val1[i, j] = value_combo
-                            DropDownActions.ActionClass.statusMessage(self, message="")
-                            pass
-                        elif tableName.item(i, j) is None:
-                            pass
-                        elif j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
-                            val1[i, j] = tableName.item(i, j).checkState()
-                            DropDownActions.ActionClass.statusMessage(self, message="")
-                        else:
-                            val1[i, j] = float(tableName.item(i, j).text())
-                            DropDownActions.ActionClass.statusMessage(self, "")
-            except ValueError:
-                tableName.clearSelection()
-                tableName.item(row, col).setText("")
-                DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
-        return val1
-
     def release_tables_values(self, table_name):
         " this function is to get values of release tables"
 

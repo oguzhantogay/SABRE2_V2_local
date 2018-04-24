@@ -62,7 +62,7 @@ class AddNodeClass(QMainWindow):
 
 
     def addedNodeInformationArrayUpdate(self, BNodevalue):
-        print('added node information runs')
+        # print('added node information runs')
         current_added_node_number = 0
         # print('Bnode = ', BNodevalue)
         total_member_number = BNodevalue.shape[0]
@@ -95,7 +95,7 @@ class AddNodeClass(QMainWindow):
         # print(' member_count = ',added_node_information )
         h5_file.h5_Class.update_array(self, added_node_information, 'added_node_information')
         AddNodeClass.setAddedNodeComboBox(self)
-        print('added node information = ', added_node_information)
+        # print('added node information = ', added_node_information)
 
 
     def setAddedNodeComboBox(self):
@@ -715,7 +715,7 @@ class AddNodeClass(QMainWindow):
 
     def ApplyButton(self):
         '''executes when the apply button pressed in the Add Nodes menu'''
-        # print('apply pressed')
+        print('apply pressed')
         self.ui.addNodePushButton.setEnabled(True)
         AddNodeClass.apply_button_pressed = True
         mnum = int(self.ui.AddNodeMember.currentIndex())

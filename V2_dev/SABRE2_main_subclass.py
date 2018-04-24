@@ -113,7 +113,7 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.actionOpen.triggered.connect(lambda: self.ActionMenus.OpenAct())
         ui_layout.actionSave.triggered.connect(lambda: self.ActionMenus.SaveAct())
         # ui_layout.actionOpen.triggered.connect(lambda: self.table_prop_read())
-        ui_layout.actionOpen.triggered.connect(lambda: AddNode.AddNodeClass.ApplyButton(self))
+        # ui_layout.actionOpen.triggered.connect(lambda: AddNode.AddNodeClass.ApplyButton(self))
         ui_layout.actionJoint_Member_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         ui_layout.actionMember_Labels.triggered.connect(lambda: SABRE2_main_subclass.OpenGLwidget.updateTheWidget())
         # ui_layout.actionSave_As.triggered.connect(lambda: ActionClass('uidesign').Save_AsAct())
@@ -1458,12 +1458,17 @@ class MemberPropertiesTable(QMainWindow):
         self.ui = ui_layout
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
-    def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable):
+    def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable, flag ='add node'):
         ''' this function sets the initial configuration of the member properties table after added nodes'''
-
+        print('set number of rows runs', flag)
         memberPropertiesTable.blockSignals(True)
         current_column = self.ui.Members_table.currentColumn()
-        if current_column == 1 or current_column == 2:
+        row_member = memberPropertiesTable.rowCount()
+        row_def = memberDefinitionTable.rowCount()
+        print('row def before = ', row_def)
+        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        print('added node info = ', added_node_information)
+        if current_column == 1 or current_column == 2 and flag == 'add node':
             SNodevalue = h5_file.h5_Class.read_array(self,'SNodevalue')
             # print('SNode in set rows = ', SNodevalue)
             initial_values = np.zeros((int(SNodevalue.shape[0]*SNodevalue.shape[1]),11))
@@ -1475,23 +1480,24 @@ class MemberPropertiesTable(QMainWindow):
                     q +=1
 
             # print('initial values 1 = ', initial_values)
-            row_member = memberPropertiesTable.rowCount()
-            row_def = memberDefinitionTable.rowCount()
 
-            added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+
+
             # print('added = ', added_node_information)
             if row_def != row_member:
                 memberPropertiesTable.setRowCount(row_def)
 
-            if added_node_information.shape[0] < row_def:
-                for j in range(row_def):
-                    text = 'M' + str(j+1) + 'S1'
-                    item = QTableWidgetItem(text)
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
-                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                    memberPropertiesTable.setItem(j, 0, item)
-                        # initial_values = JointTable.tableValues(self, memberPropertiesTable)
+            for j in range(row_def):
+                text = 'M' + str(j + 1) + 'S1'
+                item = QTableWidgetItem(text)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                memberPropertiesTable.setItem(j, 0, item)
 
+            if added_node_information.shape[0] < row_def and flag != 'add node':
+
+                        # initial_values = JointTable.tableValues(self, memberPropertiesTable)
+                print('if in set row')
                 # print('initial_values in if = ', initial_values)
                 for i in range(1, 8):
                     for j in range(row_def):
@@ -1500,18 +1506,20 @@ class MemberPropertiesTable(QMainWindow):
                             item = QTableWidgetItem(str(4))
                             item.setTextAlignment(QtCore.Qt.AlignCenter)
                             memberPropertiesTable.setItem(j, i, item)
-                        elif i == 2 or i == 3 or i == 4:
+                        elif i == 2 or i == 3:
                             item = QTableWidgetItem(str(int(initial_values[j-1, i + 1])))
                             item.setTextAlignment(QtCore.Qt.AlignCenter)
                             memberPropertiesTable.setItem(j, i, item)
-                        elif i == 5 or i == 6 or i == 7:
-                            item = QTableWidgetItem(str(int(initial_values[j-1, i + 2])))
+                        elif i == 4 or i == 5 or i == 6 or i == 7:
+                            item = QTableWidgetItem(str(initial_values[j-1, i + 2]))
                             item.setTextAlignment(QtCore.Qt.AlignCenter)
                             memberPropertiesTable.setItem(j, i, item)
 
             else:
+                print('else in set row')
                 total_number_row = np.sum(added_node_information[:, 1])
                 row_def = int(total_number_row) + int(row_def)
+                print(' row def', row_def)
                 memberPropertiesTable.setRowCount(row_def)
                 k = 0
                 for i in range(int(added_node_information[:,0].shape[0])):

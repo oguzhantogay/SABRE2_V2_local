@@ -1846,7 +1846,7 @@ class SABRE2LBCODE(QMainWindow):
 
 
         # element_member = np.zeros((1, 1))
-        print('shape = ', SNodevalue.shape[0])
+        # print('shape = ', SNodevalue.shape[0])
         # print('0 = ', SNodevalue[0][0][0])
 
         p = 0
@@ -1862,7 +1862,7 @@ class SABRE2LBCODE(QMainWindow):
             p += int(np.sum(SNodevalue[i, :, 2]))
             q += p
             SPn = np.unique(SPn1)
-            print('SPn = ', SPn)
+            # print('SPn = ', SPn)
             if i == 0:
                 element_member = np.vstack(SPn)
                 # print('element member 0 = ', element_member)
@@ -1892,7 +1892,7 @@ class SABRE2LBCODE(QMainWindow):
             #
             # # print('SPn 2 = ', (SPn.shape[0]), i)
             # element_member[:,i] = SPn
-        print('element_member = ', element_member)
+        # print('element_member = ', element_member)
         h5_file.h5_Class.update_array(self, element_member, 'element_member')
 
         from SABRE2_main_subclass import Boundary_Conditions

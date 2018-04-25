@@ -715,7 +715,7 @@ class AddNodeClass(QMainWindow):
 
     def ApplyButton(self):
         '''executes when the apply button pressed in the Add Nodes menu'''
-        print('apply pressed')
+        # print('apply pressed')
         self.ui.addNodePushButton.setEnabled(True)
         AddNodeClass.apply_button_pressed = True
         mnum = int(self.ui.AddNodeMember.currentIndex())
@@ -917,13 +917,14 @@ class SegmRemove(QMainWindow):
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
         added_node_information[memnum][1] = nbnode
         h5_file.h5_Class.update_array(self,added_node_information,'added_node_information')
-        # print('added = ', added_node_information)
+        print('added = ', added_node_information)
         import SABRE2SegmCODE
         BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
         if BNodevalue[memnum,0,0] == 0:
             BNodevalue[memnum,0,0] = memnum+1
+
         from SABRE2_main_subclass import MemberPropertiesTable
-        # print('remove node BNodevalue = ', BNodevalue)
+        print('remove node BNodevalue = ', BNodevalue)
         h5_file.h5_Class.update_array(self,BNodevalue,'BNodevalue')
 
         # set member properties table and assign values

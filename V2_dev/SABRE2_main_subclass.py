@@ -325,8 +325,7 @@ class SABRE2_main_subclass(QMainWindow):
         #                                            ui_layout.Delete_number_shear_panel))
 
         # Boundary conditions tab - shear panel settings
-        ui_layout.Shear_panel_table.itemChanged.connect(
-            lambda: Boundary_Conditions.shear_panel_nodes(self, ui_layout.Shear_panel_table, [0, 1]))
+
 
         ui_layout.Shear_Panel_Add.clicked.connect(
             lambda: Boundary_Conditions.shear_panel_additional(self))
@@ -1455,7 +1454,7 @@ class MemberPropertiesTable(QMainWindow):
 
     def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable, flag ='add node'):
         ''' this function sets the initial configuration of the member properties table after added nodes'''
-        print('set number of rows runs', flag)
+        # print('set number of rows runs', flag)
         memberPropertiesTable.blockSignals(True)
         current_column = self.ui.Members_table.currentColumn()
         row_member = memberPropertiesTable.rowCount()
@@ -1476,7 +1475,7 @@ class MemberPropertiesTable(QMainWindow):
 
             # print('initial values 1 = ', initial_values)
 
-            print('added = ', added_node_information)
+            # print('added = ', added_node_information)
             if row_def != row_member:
                 memberPropertiesTable.setRowCount(row_def)
 
@@ -1489,7 +1488,7 @@ class MemberPropertiesTable(QMainWindow):
 
             if added_node_information.shape[0] < row_def and flag != 'add node':
                 # initial_values = JointTable.tableValues(self, memberPropertiesTable)
-                print('if in set row')
+                # print('if in set row')
                 # print('initial_values in if = ', initial_values)
                 for i in range(1, 8):
                     for j in range(row_def):
@@ -1508,7 +1507,7 @@ class MemberPropertiesTable(QMainWindow):
                             memberPropertiesTable.setItem(j, i, item)
 
             else:
-                print('else in set row')
+                # print('else in set row')
                 total_number_row = np.sum(added_node_information[:, 1])
                 row_def = int(total_number_row) + int(row_def)
                 # print(' row def', row_def)
@@ -1537,15 +1536,23 @@ class MemberPropertiesTable(QMainWindow):
                             # print('initial values shape = ', initial_values.shape[0], j)
                             if j >= initial_values.shape[0]:
                                 if i == 1:
-                                    item = QTableWidgetItem(str(int(initial_values[j-1, i + 1])))
+                                    item = QTableWidgetItem(str(4))
                                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                                     memberPropertiesTable.setItem(j, i, item)
-                                elif i == 2 or i == 3:
-                                    item = QTableWidgetItem(str(int(initial_values[j-1, i + 1])))
+                                elif i == 2:
+                                    item = QTableWidgetItem(str(29000))
                                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                                     memberPropertiesTable.setItem(j, i, item)
-                                elif i ==4 or i == 5 or i == 6 or i == 7:
-                                    item = QTableWidgetItem(str((initial_values[j-1, i + 2])))
+                                elif i == 3:
+                                    item = QTableWidgetItem(str(11200))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                                elif i == 4:
+                                    item = QTableWidgetItem(str(0.00034028))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                                elif i == 5 or i == 6 or i == 7:
+                                    item = QTableWidgetItem(str(50))
                                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                                     memberPropertiesTable.setItem(j, i, item)
                             elif j ==(row_def - 1) and initial_values[j,i+1] == 0:
@@ -1571,18 +1578,26 @@ class MemberPropertiesTable(QMainWindow):
                                     memberPropertiesTable.setItem(j, i, item)
                             else:
                                 if i == 1:
-                                    item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
+                                    item = QTableWidgetItem(str(4))
                                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                                     memberPropertiesTable.setItem(j, i, item)
-                                elif i == 2 or i == 3:
-                                    item = QTableWidgetItem(str(int(initial_values[j, i + 1])))
+                                elif i == 2:
+                                    item = QTableWidgetItem(str(29000))
                                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                                     memberPropertiesTable.setItem(j, i, item)
-                                elif i ==4 or i == 5 or i == 6 or i == 7:
-                                    item = QTableWidgetItem(str((initial_values[j, i + 2])))
+                                elif i == 3:
+                                    item = QTableWidgetItem(str(11200))
                                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                                     memberPropertiesTable.setItem(j, i, item)
-
+                                elif i == 4:
+                                    item = QTableWidgetItem(str(0.00034028))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                                elif i == 5 or i == 6 or i == 7:
+                                    item = QTableWidgetItem(str(50))
+                                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                                    memberPropertiesTable.setItem(j, i, item)
+                DropDownActions.ActionClass.statusMessage(self, message="Please re-visit the Member Properties Tab!")
         memberPropertiesTable.blockSignals(False)
 
     def set_values_with_row(self, memberPropertiesTable, member_prop_line_edit):
@@ -2064,18 +2079,14 @@ class Boundary_Conditions(QMainWindow):
                         if j == 1 or j == 2 or j == 3 or j == 4:
                             value_combo = tableName.cellWidget(i, j).currentIndex()
                             val1[i, j] = value_combo
-                            DropDownActions.ActionClass.statusMessage(self, message="")
                             pass
-
                         elif j == 6:
                             val1[i, j] = tableName.item(i, j).checkState()
-                            DropDownActions.ActionClass.statusMessage(self, message="")
-
                         elif tableName.item(i, j) is None:
                             pass
                         else:
                             val1[i, j] = float(tableName.item(i, j).text())
-                            DropDownActions.ActionClass.statusMessage(self, message="")
+                DropDownActions.ActionClass.statusMessage(self, message="")
             except ValueError:
                 tableName.clearSelection()
                 tableName.item(row, col).setText("")
@@ -2267,10 +2278,9 @@ class uniform_load_def(QMainWindow):
                     elif j == 1 or j == 2:
                         value_combo = tableName.cellWidget(i, j).currentIndex()
                         val1[i, j] = value_combo
-                        DropDownActions.ActionClass.statusMessage(self, message="")
                     else:
                         val1[i, j] = float(tableName.item(i, j).text())
-                        DropDownActions.ActionClass.statusMessage(self, message="")
+            DropDownActions.ActionClass.statusMessage(self, message="")
 
         except ValueError:
             tableName.clearSelection()

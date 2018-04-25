@@ -801,8 +801,12 @@ class AddNodeClass(QMainWindow):
 
                 Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag = 'apply 2')
 
-        except ValueError:
+        except ValueError as e:
             DropDownActions.ActionClass.statusMessage(self, message="Position from i is not defined!")
+            import sys, os
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            print(exc_type, fname, exc_tb.tb_lineno)
 
         return BNodevalue
 

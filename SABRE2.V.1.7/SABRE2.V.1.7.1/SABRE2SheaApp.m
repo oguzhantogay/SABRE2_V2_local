@@ -44,7 +44,7 @@ else
       SPn=unique(SPn1);
    end
 end
-SPn1
+SPn
 SPi=0;SPj=0;
 if isempty(get(bsm_jointi_edit,'String')) || isempty(get(bsm_jointj_edit,'String')) ...
       || isnan(str2double(get(bsm_jointi_edit,'String'))) ...

@@ -178,7 +178,7 @@ class GroundSpringApplication(QMainWindow):
             BNC[i][10] = spring_values[i][14]
             BNC[i][12] = spring_values[i][1]
 
-        print('BNC = ', BNC)
+        # print('BNC = ', BNC)
 
 
 

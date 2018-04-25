@@ -1845,8 +1845,8 @@ class SABRE2LBCODE(QMainWindow):
         # print('1 =\n', DUP2[:,1])
 
 
-        element_member = np.zeros((1, 1))
-        # print('shape = ', SNodevalue.shape[0])
+        # element_member = np.zeros((1, 1))
+        print('shape = ', SNodevalue.shape[0])
         # print('0 = ', SNodevalue[0][0][0])
 
         p = 0
@@ -1862,24 +1862,39 @@ class SABRE2LBCODE(QMainWindow):
             p += int(np.sum(SNodevalue[i, :, 2]))
             q += p
             SPn = np.unique(SPn1)
-            # print('SPn = ', SPn)
+            print('SPn = ', SPn)
+            if i == 0:
+                element_member = np.vstack(SPn)
+                # print('element member 0 = ', element_member)
+            else:
+                if element_member.shape[0] < SPn.shape[0]:
+                    temp_array = np.zeros((SPn.shape[0], element_member.shape[1] + 1))
+                else:
+                    temp_array = np.zeros((element_member.shape[0],element_member.shape[1] + 1))
 
-            if element_member.shape[1] < SNodevalue.shape[0]:
-                # print('test')
-                element_member.resize(int(SPn.shape[0]), int(element_member.shape[1])+1)
-            elif SPn.shape[0] > element_member.shape[0]:
-                # print('test 1')
-                element_member.resize((SPn.shape[0], element_member.shape[1]))
+                for i in range(element_member.shape[1]):
+                    temp_array[:element_member.shape[0], i] = element_member[:,i]
+                temp_array[:SPn.shape[0],temp_array.shape[1] - 1] = SPn
 
-            if SPn.shape[0] < element_member.shape[0]:
-                # print('test extra')
-                SPn.resize((1,element_member.shape[0]))
-
-
-            # print('SPn 2 = ', (SPn.shape[0]), i)
-            element_member[:,i] = SPn
-        # print('element_member = ', element_member)
+                element_member = temp_array
+                # print('element member after = ' , element_member)
+            # if element_member.shape[1] < SNodevalue.shape[0]:
+            #     # print('test')
+            #     element_member.resize(int(SPn.shape[0]), int(element_member.shape[1])+1)
+            # elif SPn.shape[0] > element_member.shape[0]:
+            #     # print('test 1')
+            #     element_member.resize((SPn.shape[0], element_member.shape[1]))
+            #
+            # if SPn.shape[0] < element_member.shape[0]:
+            #     # print('test extra')
+            #     SPn.resize((1,element_member.shape[0]))
+            #
+            #
+            # # print('SPn 2 = ', (SPn.shape[0]), i)
+            # element_member[:,i] = SPn
+        print('element_member = ', element_member)
         h5_file.h5_Class.update_array(self, element_member, 'element_member')
+
         from SABRE2_main_subclass import Boundary_Conditions
 
         Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, RNCc)

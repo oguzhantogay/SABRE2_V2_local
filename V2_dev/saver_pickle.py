@@ -36,8 +36,6 @@ class SaverPicker(QMainWindow):
                                                                                         self.Members_table_position)
         self.shear_panel_values = SABRE2_main_subclass.SABRE2_main_subclass.update_shear_panel_table(self,
                                                                                           self.ui.Shear_panel_table)
-        self.ground_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_ground_table(self,
-                                                                                       self.ui.Discrete_grounded_spring_table)
         self.torsional_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_torsional_release(self,
                                                                                                self.ui.Torsional_Release)
         self.My_release_values = SABRE2_main_subclass.SABRE2_main_subclass.update_My_release(self, self.ui.My_release)

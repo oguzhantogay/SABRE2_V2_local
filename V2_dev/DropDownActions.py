@@ -243,8 +243,6 @@ class ActionClass(QMainWindow):
         self.PNC1 = h5_file.h5_Class.read_array(self, 'PNC1')
         self.PNC2 = h5_file.h5_Class.read_array(self, 'PNC2')
         self.shear_panel_values = h5_file.h5_Class.read_array(self, 'shear_panel_values')
-        self.ground_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_ground_table(self,
-                                                                                                  self.ui.Discrete_grounded_spring_table)
         self.torsional_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_torsional_release(self,
                                                                                                           self.ui.Torsional_Release)
         self.My_release_values = SABRE2_main_subclass.SABRE2_main_subclass.update_My_release(self, self.ui.My_release)
@@ -357,7 +355,6 @@ class ActionClass(QMainWindow):
         # print('read self.SNodevalue', self.SNodevalue)
         shape_joint_table = int(self.joint_values.shape[0])
         shape_members_table_values = int(self.members_table_values.shape[0])
-        shape_ground_spring_values = int(self.ground_spring_values.shape[0])
         shape_torsional_spring_values = int(self.torsional_spring_values.shape[0])
         shape_My_values = int(self.My_release_values.shape[0])
         shape_Mz_values = int(self.Mz_release_values.shape[0])
@@ -366,8 +363,11 @@ class ActionClass(QMainWindow):
         # shape_point_data_values = int(self.point_data_values.shape[0])
         # print('shape member table = ', shape_members_table_values)
         # print('shape member table = ', self.members_table_values)
-
+        # print('self.SNodevalue', self.SNodevalue)
+        total_element_number = np.sum(self.SNodevalue[:,:,2])
+        # print('total element number = ', total_element_number)
         # print('BNodevalue = ', self.BNodevalue)
+        print('element_member = ', self.element_member)
         # filling for joints table
         for i in range(shape_joint_table):
 
@@ -433,20 +433,20 @@ class ActionClass(QMainWindow):
         AddNode.AddNodeClass.setAddNodeComboBox(self)
         from SABRE2_main_subclass import Boundary_Conditions
         number_of_nodes = int(self.RNCc[:, 0].shape[0])
-        Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, self.RNCc)
-        Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
-        Boundary_Conditions.set_number_of_rows_springs_table(self, number_of_nodes)
-        Boundary_Conditions.Assign_comboBox_springs_table(self, number_of_nodes)
+        Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, self.RNCc, self.fixities_vals)
+        Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes, self.fixities_vals[:,1])
+        Boundary_Conditions.set_number_of_rows_springs_table(self, number_of_nodes, self.spring_values)
+        Boundary_Conditions.Assign_comboBox_springs_table(self, number_of_nodes, self.spring_values[:,1])
 
         #RETURN REQUIRED ARRAYS ONLY
-        for i in range(self.fixities_vals.shape[0]):
-            for j in range(self.fixities_vals.shape[1]):
-                self.ui.BoundaryConditionsTabs.setEnabled(True)
-                if j == 1:
-                    self.ui.Fixities_table.cellWidget(i,j).setCurrentIndex(int(self.fixities_vals[i,j]-1))
-                elif j == 2 or j == 3 or j == 4 or j == 5 or j == 6 or j == 7 or j == 8:
-                    if self.fixities_vals[i,j] == 1:
-                        self.ui.Fixities_table.item(i, j).setCheckState(QtCore.Qt.Checked)
+        # for i in range(self.fixities_vals.shape[0]):
+        #     for j in range(self.fixities_vals.shape[1]):
+        #         self.ui.BoundaryConditionsTabs.setEnabled(True)
+        #         if j == 1 and self.fixities_vals[i,j] != 1:
+        #             self.ui.Fixities_table.cellWidget(i,j).setCurrentIndex(int(self.fixities_vals[i,j]-1))
+        #         elif j == 2 or j == 3 or j == 4 or j == 5 or j == 6 or j == 7 or j == 8:
+        #             if self.fixities_vals[i,j] == 1:
+        #                 self.ui.Fixities_table.item(i, j).setCheckState(QtCore.Qt.Checked)
         element_member = h5_file.h5_Class.read_array(self, 'element_member')
         # print('shear panel vals = ', self.shear_panel_values)
         Boundary_Conditions.add_shear_panel(self, element_member, 0, flag='drop down last')
@@ -470,19 +470,21 @@ class ActionClass(QMainWindow):
                         self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Checked)
                     else:
                         self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Unchecked)
-
-        for i in range(self.spring_values.shape[0]):
-            for j in range(1, self.spring_values.shape[1]):
-                # self.ui.BoundaryConditionsTabs.setEnabled(True)
-                if j == 1:
-                    self.ui.Discrete_grounded_spring_table.cellWidget(i,j).setCurrentIndex(int(self.spring_values[i,j]-1))
-                elif j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
-                    if self.spring_values[i,j] == 1:
-                        self.ui.Discrete_grounded_spring_table.item(i, j).setCheckState(QtCore.Qt.Checked)
-                else:
-                    item = QTableWidgetItem()
-                    item.setText(str(self.shear_panel_values[i, j]))
-                    self.ui.Shear_panel_table.setItem(i, j, item)
+        # print('spring values = \n', self.spring_values)
+        # for i in range(self.spring_values.shape[0]):
+        #     for j in range(1, self.spring_values.shape[1]):
+        #         if self.spring_values[i,j] != 0:
+        #             # print('i = ', i, 'j = ' , j)
+        #             # self.ui.BoundaryConditionsTabs.setEnabled(True)
+        #             # if j == 1 and self.spring_values[i,j] != 1:
+        #             #     self.ui.Discrete_grounded_spring_table.cellWidget(i,j).setCurrentIndex(int(self.spring_values[i,j]-1))
+        #             if j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
+        #                 if self.spring_values[i,j] != 1:
+        #                     self.ui.Discrete_grounded_spring_table.item(i, j).setCheckState(QtCore.Qt.Unchecked)
+        #             else:
+        #                 item = QTableWidgetItem()
+        #                 item.setText(str(self.spring_values[i, j]))
+        #                 self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
         print('file read from ', filename)
 
         return self.table_prop, self.Massemble

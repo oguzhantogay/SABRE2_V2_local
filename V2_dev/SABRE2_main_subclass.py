@@ -59,8 +59,6 @@ class SABRE2_main_subclass(QMainWindow):
         ui_layout.Copy_from_number_mem_def.setValidator(validatorInt)
         ui_layout.Insert_after_number_mem_def.setValidator(validatorInt)
         ui_layout.Member_prop_line_edit.setValidator(validatorInt)
-        ui_layout.Copy_number_spring.setValidator(validatorInt)
-        ui_layout.Paste_number_spring.setValidator(validatorInt)
         ui_layout.Inser_number_point_load.setValidator(validatorInt)
         ui_layout.Delete_number_point_load.setValidator(validatorInt)
         ui_layout.Inser_number_uni_load.setValidator(validatorInt)
@@ -171,8 +169,8 @@ class SABRE2_main_subclass(QMainWindow):
         shear_panel_position = 1
 
 
-        Boundary_Conditions.Assign_comboBox_ground(self, ui_layout.Discrete_grounded_spring_table, shear_panel_options,
-                                                   shear_panel_position)
+        # Boundary_Conditions.Assign_comboBox_ground(self, ui_layout.Discrete_grounded_spring_table, shear_panel_options,
+        #                                            shear_panel_position)
 
         # Add new row button # self, tableName, options, position
         ui_layout.Members_table.itemChanged.connect(
@@ -340,10 +338,7 @@ class SABRE2_main_subclass(QMainWindow):
             lambda: self.update_shear_panel_table(ui_layout.Shear_panel_table))
 
         ui_layout.Discrete_grounded_spring_table.itemChanged.connect(
-            lambda: Boundary_Conditions.check_entered_data(self, ui_layout.Discrete_grounded_spring_table))
-
-        ui_layout.Discrete_grounded_spring_table.itemChanged.connect(
-            lambda: self.update_ground_table(ui_layout.Discrete_grounded_spring_table, flag="not combo"))
+            lambda: BoundaryConditionApplication.GroundSpringApplication.groundSpringValues(self))
 
         # Release Tab
         ui_layout.Torsional_Release.itemChanged.connect(
@@ -624,10 +619,10 @@ class SABRE2_main_subclass(QMainWindow):
         # print("main screen Shear Table Values", shear_values)
         return shear_values
 
-    def update_ground_table(self, tableName, flag="not combo"):
-        shear_values = Boundary_Conditions.ground_spring_values(self, tableName, flag)
-        # print("main screen Ground Table Values", shear_values)
-        return shear_values
+    # def update_ground_table(self, tableName, flag="not combo"):
+    #     shear_values = Boundary_Conditions.ground_spring_values(self, tableName, flag)
+    #     # print("main screen Ground Table Values", shear_values)
+    #     return shear_values
 
     def update_torsional_release(self, tableName):
         torsional_values = Boundary_Conditions.release_tables_values(self, tableName)
@@ -1460,7 +1455,7 @@ class MemberPropertiesTable(QMainWindow):
 
     def set_number_of_rows(self, memberDefinitionTable, memberPropertiesTable, flag ='add node'):
         ''' this function sets the initial configuration of the member properties table after added nodes'''
-        # print('set number of rows runs', flag)
+        print('set number of rows runs', flag)
         memberPropertiesTable.blockSignals(True)
         current_column = self.ui.Members_table.currentColumn()
         row_member = memberPropertiesTable.rowCount()
@@ -1481,7 +1476,7 @@ class MemberPropertiesTable(QMainWindow):
 
             # print('initial values 1 = ', initial_values)
 
-            # print('added = ', added_node_information)
+            print('added = ', added_node_information)
             if row_def != row_member:
                 memberPropertiesTable.setRowCount(row_def)
 
@@ -1494,7 +1489,7 @@ class MemberPropertiesTable(QMainWindow):
 
             if added_node_information.shape[0] < row_def and flag != 'add node':
                 # initial_values = JointTable.tableValues(self, memberPropertiesTable)
-                # print('if in set row')
+                print('if in set row')
                 # print('initial_values in if = ', initial_values)
                 for i in range(1, 8):
                     for j in range(row_def):
@@ -1513,7 +1508,7 @@ class MemberPropertiesTable(QMainWindow):
                             memberPropertiesTable.setItem(j, i, item)
 
             else:
-                # print('else in set row')
+                print('else in set row')
                 total_number_row = np.sum(added_node_information[:, 1])
                 row_def = int(total_number_row) + int(row_def)
                 # print(' row def', row_def)
@@ -1633,46 +1628,83 @@ class Boundary_Conditions(QMainWindow):
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
 
-    def set_number_of_rows_fixities_table(self, number_of_nodes, RNCc):
+    def set_number_of_rows_fixities_table(self, number_of_nodes, RNCc, index = 0):
         self.ui.Fixities_table.blockSignals(True)
         self.ui.Fixities_table.setRowCount(number_of_nodes)
         # print('RNCc = ', RNCc)
-        for i in range(int(number_of_nodes)):
-            for j in range(9):
-                if j ==0: #first column row numbering
-                    text = str(int(i+1))
+        if isinstance(index, np.ndarray):
+            for i in range(int(number_of_nodes)):
+                for j in range(9):
+                    if j ==0: #first column row numbering
+                        text = str(int(i+1))
+                        item = QTableWidgetItem(text)
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                        self.ui.Fixities_table.setItem(i, j, item)
+                    elif j == 1: # combo box set up, done in the following function
+                        pass
+                    else:  # check boxes are setting up
+                        item = QtGui.QTableWidgetItem()
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                        if index[i,j] == 1:
+                            item.setCheckState(QtCore.Qt.Checked)
+                        else:
+                            item.setCheckState(QtCore.Qt.Unchecked)
+                        self.ui.Fixities_table.setItem(i, j, item)
+                    for j in range(9, 12):
+                        text = str(RNCc[i][int(j - 8)])
+                        item = QTableWidgetItem(text)
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                        self.ui.Fixities_table.setItem(i, j, item)
+        else:
+            for i in range(int(number_of_nodes)):
+                for j in range(9):
+                    if j ==0: #first column row numbering
+                        text = str(int(i+1))
+                        item = QTableWidgetItem(text)
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                        self.ui.Fixities_table.setItem(i, j, item)
+                    elif j == 1: # combo box set up, done in the following function
+                        pass
+                    else:  # check boxes are setting up
+                        item = QtGui.QTableWidgetItem()
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                        item.setCheckState(QtCore.Qt.Unchecked)
+                        self.ui.Fixities_table.setItem(i, j, item)
+
+                for j in range(9,12):
+                    text = str(RNCc[i][int(j - 8)])
                     item = QTableWidgetItem(text)
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
                     self.ui.Fixities_table.setItem(i, j, item)
-                elif j == 1: # combo box set up, done in the following function
-                    pass
-                else:  # check boxes are setting up
-                    item = QtGui.QTableWidgetItem()
-                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                    item.setCheckState(QtCore.Qt.Unchecked)
-                    self.ui.Fixities_table.setItem(i, j, item)
-
-            for j in range(9,12):
-                text = str(RNCc[i][int(j - 8)])
-                item = QTableWidgetItem(text)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                self.ui.Fixities_table.setItem(i, j, item)
 
         self.ui.Fixities_table.blockSignals(False)
 
-    def Assign_comboBox_fixities_table(self, number_of_nodes):
+    def Assign_comboBox_fixities_table(self, number_of_nodes, index = 0):
         self.ui.Fixities_table.blockSignals(True)
         r = int(number_of_nodes)
         options = ["Shear Center", "Flange 2","Centroid", "Flange 1"]
-        for i in range(r):
-            combo_box = QtGui.QComboBox()
-            for t in options:
-                combo_box.addItem(t)
-            self.ui.Fixities_table.setCellWidget(i, 1, combo_box)
-            combo_box.currentIndexChanged.connect(
-                lambda: BoundaryConditionApplication.BoundaryConditionArrays.BC_arrays(self))
+        if isinstance(index,np.ndarray):
+            for i in range(r):
+                combo_box = QtGui.QComboBox()
+                for t in options:
+                    combo_box.addItem(t)
+                self.ui.Fixities_table.setCellWidget(i, 1, combo_box)
+                combo_box.setCurrentIndex(int(index[i]-1))
+                combo_box.currentIndexChanged.connect(
+                    lambda: BoundaryConditionApplication.BoundaryConditionArrays.BC_arrays(self))
+        else:
+            for i in range(r):
+                combo_box = QtGui.QComboBox()
+                for t in options:
+                    combo_box.addItem(t)
+
+                self.ui.Fixities_table.setCellWidget(i, 1, combo_box)
+                combo_box.currentIndexChanged.connect(
+                    lambda: BoundaryConditionApplication.BoundaryConditionArrays.BC_arrays(self))
         self.ui.Fixities_table.blockSignals(False)
 
 
@@ -1830,45 +1862,79 @@ class Boundary_Conditions(QMainWindow):
         h5_file.h5_Class.update_array(self, fixities_vals, 'fixities_vals')
         return fixities_vals
 
-    def set_number_of_rows_springs_table(self, number_of_nodes):
+    def set_number_of_rows_springs_table(self, number_of_nodes, index = 0):
         self.ui.Discrete_grounded_spring_table.blockSignals(True)
         self.ui.Discrete_grounded_spring_table.setRowCount(number_of_nodes)
         # print('RNCc = ', RNCc)
-        for i in range(int(number_of_nodes)):
-            for j in range(16):
-                if j ==0: #first column row numbering
-                    text = str(int(i+1))
-                    item = QTableWidgetItem(text)
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
-                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
-                    self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
-                elif j == 1: # combo box set up, done in the following function
-                    pass
-                elif j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
-                    text = "Constant"
-                    item = QTableWidgetItem(text)
-                    item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                    item.setCheckState(QtCore.Qt.Checked)
-                    self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
-                else:
-                    text = "0"
-                    item = QTableWidgetItem(text)
-                    item.setTextAlignment(QtCore.Qt.AlignCenter)
-                    self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
+        if isinstance(index, np.ndarray):
+            for i in range(int(number_of_nodes)):
+                for j in range(16):
+                    if j == 0:  # first column row numbering
+                        text = str(int(i + 1))
+                        item = QTableWidgetItem(text)
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                        self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
+                    elif j == 1:  # combo box set up, done in the following function
+                        pass
+                    elif j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
+                        text = "Constant"
+                        item = QTableWidgetItem(text)
+                        item.setFlags(
+                            QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                        if index[i, j] == 1:
+                            item.setCheckState(QtCore.Qt.Checked)
+                        self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
+                    else:
+                        item = QTableWidgetItem(str(index[i,j]))
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
+        else:
+            for i in range(int(number_of_nodes)):
+                for j in range(16):
+                    if j ==0: #first column row numbering
+                        text = str(int(i+1))
+                        item = QTableWidgetItem(text)
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                        self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
+                    elif j == 1: # combo box set up, done in the following function
+                        pass
+                    elif j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
+                        text = "Constant"
+                        item = QTableWidgetItem(text)
+                        item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                        item.setCheckState(QtCore.Qt.Checked)
+                        self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
+                    else:
+                        text = "0"
+                        item = QTableWidgetItem(text)
+                        item.setTextAlignment(QtCore.Qt.AlignCenter)
+                        self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
 
         self.ui.Discrete_grounded_spring_table.blockSignals(False)
 
-    def Assign_comboBox_springs_table(self, number_of_nodes):
+    def Assign_comboBox_springs_table(self, number_of_nodes, index = 0):
         self.ui.Discrete_grounded_spring_table.blockSignals(True)
         r = int(number_of_nodes)
         options = ["Shear Center", "Flange 2", "Flange 1"]
-        for i in range(r):
-            combo_box = QtGui.QComboBox()
-            for t in options:
-                combo_box.addItem(t)
-            self.ui.Discrete_grounded_spring_table.setCellWidget(i, 1, combo_box)
-            combo_box.currentIndexChanged.connect(
-                lambda: BoundaryConditionApplication.GroundSpringApplication.groundSpringValues(self))
+        if not isinstance(index, list):
+            for i in range(r):
+                combo_box = QtGui.QComboBox()
+                for t in options:
+                    combo_box.addItem(t)
+                self.ui.Discrete_grounded_spring_table.setCellWidget(i, 1, combo_box)
+                combo_box.currentIndexChanged.connect(
+                    lambda: BoundaryConditionApplication.GroundSpringApplication.groundSpringValues(self))
+        else:
+            for i in range(r):
+                combo_box = QtGui.QComboBox()
+                for t in options:
+                    combo_box.addItem(t)
+                combo_box.setCurrentIndex(int(index[i]))
+                self.ui.Discrete_grounded_spring_table.setCellWidget(i, 1, combo_box)
+                combo_box.currentIndexChanged.connect(
+                    lambda: BoundaryConditionApplication.GroundSpringApplication.groundSpringValues(self))
         self.ui.Discrete_grounded_spring_table.blockSignals(False)
 
     def get_spring_values(self):
@@ -2018,15 +2084,6 @@ class Boundary_Conditions(QMainWindow):
                 pass
         return val1
 
-    def check_entered_data(self, tableName):
-        col = tableName.currentColumn()
-        row = tableName.currentRow()
-        try:
-            value = float(tableName.item(row, col).text())
-        except:
-            tableName.clearSelection()
-            tableName.item(row, col).setText("")
-            DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
     def release_tables_values(self, table_name):
         " this function is to get values of release tables"
 

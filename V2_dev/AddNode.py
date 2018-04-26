@@ -912,14 +912,16 @@ class SegmRemove(QMainWindow):
         # print('Bnodevalue = ', BNodevalue)
         # print('Bnodedev = ', BNodedev)
         BNodevalue[memnum, :, :] = BNodedev[memnum, :, :]
-        # print('remove node BNodevalue = ', BNodevalue)
         # handle SNODE later
         added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
-        added_node_information[memnum][1] = nbnode
+        added_node_information[memnum][1] = added_node_information[memnum][1] - 1
+
         h5_file.h5_Class.update_array(self,added_node_information,'added_node_information')
         print('added = ', added_node_information)
         import SABRE2SegmCODE
         BNodevalue = SABRE2SegmCODE.ClassA.BNodevalueUpdater(self, BNodevalue, JNodevalue_i, JNodevalue_j, Massemble)
+
+        print('remove node BNodevalue = ', BNodevalue)
         if BNodevalue[memnum,0,0] == 0:
             BNodevalue[memnum,0,0] = memnum+1
 
@@ -931,6 +933,7 @@ class SegmRemove(QMainWindow):
         MemberPropertiesTable.set_number_of_rows(self, self.ui.Members_table,
                                                  self.ui.Member_Properties_Table)
         Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag = 'remove')
+        AddNodeClass.setAddedNodeComboBox(self)
 
 class PlotSegments(QMainWindow):
     """ This class removes previously added nodes"""

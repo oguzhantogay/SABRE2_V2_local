@@ -15,7 +15,7 @@ class SABRE2LBCODE(QMainWindow):
         # print('LBcode ran')
         BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
         SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
-        # print('SNodevalue in LBCode =', SNodevalue)
+        print('SNodevalue in LBCode =', SNodevalue)
 
         import OpenGLcode
         joint_nodes_length, JNodevalue = OpenGLcode.glWidget.JointTableValues(self)

@@ -42,9 +42,9 @@ class ClassA(QMainWindow):
 
             # print('mem = ', mem, 'max_b = ', max_b, 'added node count = ' , added_node_count)
             BNodevalueOrder = np.zeros((mem, max_b, 16))
+            print('L0 = ' , L0)
             for i in range(mem):
                 L1 = np.zeros((int(np.amax(BNodevalue[i, :, 1])), 16))
-                # print('L0 = ' , L0)
                 # print('BNodevalueorder = ', BNodevalueOrder)
                 if np.amax(BNodevalue[i, :, 1]) == 0:
                     # print("if # a ")
@@ -60,6 +60,7 @@ class ClassA(QMainWindow):
                     # print("BNodevalueorder = ", BNodevalueOrder)
 
                     for j in range(int(np.amax(BNodevalue[i, :, 1]))):
+
                         for k in range(16):
                             # print('j = ', j, 'k = ', k)
                             BNodevalueOrder[i][j][k] = L1[j][k]
@@ -88,7 +89,7 @@ class ClassA(QMainWindow):
             ###############################
             #### Add Stepped Elements #####
             ###############################
-            # print('bnode val before for 1 = ', BNodevalue)
+            print('bnode val before for 1 = ', BNodevalue)
             for i in range(mem):
                 print("for 1")
                 if not np.isclose(int(np.amax(BNodeval[i, :, 1])), 0):  # No Bracing
@@ -256,7 +257,7 @@ class ClassA(QMainWindow):
                                                 Lb2[0] = BNodeval[i][j][15] - s
                                                 Lb2 = np.dot(Rz, Lb2) + Additive
                                                 # print('LB2 # 6 - 1 =', Lb2)
-                                                
+
                                                 # print('Dgsb # 6 - 1 =', Dgsb)
                                                 # print('dtsb # 6 - 1 =', dtsb)
                                                 # print('hgsb # 6 - 1 =', hgsb)
@@ -2101,9 +2102,9 @@ class ClassA(QMainWindow):
                             BNodevalue[i][p][14] = 1
                             BNodevalue[i][p][15] = BNodeval[i][j][15]
                             p = p + 1
-                            # print('BNodevalue in after # 1 - 2 = ', BNodevalue)
-                            # print('BNodeval in after # 1 - 2 = ', BNodeval)
-                            # print('i # 1 - 2 = ', i, '\nj # 1 - 2 = ', j, '\np # 1 - 2 = ', p)
+            print('BNodevalue in after # 1 - 2 = ', BNodevalue)
+            print('BNodeval in after # 1 - 2 = ', BNodeval)
+            # print('i # 1 - 2 = ', i, '\nj # 1 - 2 = ', j, '\np # 1 - 2 = ', p)
 
             # ADD Step E
             # Sorting S
@@ -2139,16 +2140,33 @@ class ClassA(QMainWindow):
 
                 L1 = L1[L1[:,15].argsort()]
                 # print("L1 = ", L1)
-
+                p = 0
                 for j in range(int(np.amax(BNodevalue[i, :, 1]))):
                     for k in range(16):
                         BNodevalueOrder[i][j][k] = L1[j][k]
 
+                    if BNodevalueOrder[i, j, 5] == 0:
+                        BNodevalueOrder[i, j, 1] = 0
+                        BNodevalueOrder[i, j, 15] = 0
+                        BNodevalueOrder[i, j, 14] = 0
+            p = 0
+            for i in range(mem):
+                any_delete = np.count_nonzero(BNodevalueOrder[i,:,0] == 0)
+                if any_delete == 0:
+                    break
+
+            print('any delete = ', any_delete, 'shape = ', BNodevalueOrder.shape[0], BNodevalueOrder.shape[1], BNodevalueOrder.shape[2])
+            # any_delete = BNodevalueOrder.shape[1] - any_delete
+            print('any delete = ', any_delete, 'mem = ', mem)
+            if any_delete != 0 and BNodevalueOrder.shape[1] != 1:
+                BNodevalueOrder = np.delete(BNodevalueOrder,BNodevalueOrder.shape[1] - 1, axis=1)
+
+
             del(L1)
 
-            # print('test bnode end =', BNodevalueOrder)
+            print('test bnode end =', BNodevalueOrder)
             BNodevalue = BNodevalueOrder
 
-            # print("BNodevalue at the end in conditions = ", BNodevalue)
+            print("BNodevalue at the end in conditions = ", BNodevalue)
 
         return BNodevalue

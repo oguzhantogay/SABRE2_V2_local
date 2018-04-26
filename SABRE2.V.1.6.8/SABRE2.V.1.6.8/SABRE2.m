@@ -5487,8 +5487,9 @@ function pdb_cancel_pushbutton_Callback(hObject, eventdata)
          pdb_coordz_edit,pdb_length_edit,pdb_bfb_edit,pdb_tfb_edit,...
          pdb_bft_edit,pdb_tft_edit,pdb_dw_edit,pdb_tw_edit,pdb_fil_edit,pdb_step_edit,LabType,axesm,vstm);  
    end
-%    fprintf('main file')
-%    BNodevalue
+   fprintf('main file')
+   BNodevalue
+   SNodevalue
 end % function end
 % --------------------------------------------------------------------
 function pdmi_apply_pushbutton_Callback(hObject, eventdata)  
@@ -5545,6 +5546,7 @@ function pam_apply_pushbutton_Callback(hObject, eventdata)
       LNC1,LNC2,LUEC,PNC,PNC1,PNC2,BNC,BNC1,BNC2,FEL,pam_segment_edit,pamse_assign_edit,...
       pt_title_name,pamen_assign_edit,pame_assign_edit,pamg_assign_edit,pamfy_assign_edit,...
       pamrho_assign_edit,pamfyfi_assign_edit,pamfyw_assign_edit,pamfyfo_assign_edit,HomoType,punit_edit,vstm); 
+  SNodevalue
 end % function end 
 % --------------------------------------------------------------------
 function pam_cancel_pushbutton_Callback(hObject, eventdata)

@@ -28,7 +28,7 @@ else
          end
       end
    end  
-%    L0
+   L0
    
    % Sort whole columns with respect to distance from i node
    L1=[];BNodevalueOrder=[];
@@ -1749,11 +1749,14 @@ else
    
    for i = 1:mem    
       if isequal(max(BNodevalue(i,:,2)),0) % No Bracing
+          fprintf(' @@ if 1')
 %          for n=1:max(BNodevalue(:,:,2))
             BNodevalueOrder(i,1,1) = L0(i,1,1);
             BNodevalueOrder(i,1,2) = L0(i,1,2);
 %          end
+          BNodevalueOrder
       else
+          fprintf(' @@ else 1')
          for j = 1:max(BNodevalue(i,:,2))
             L1(j,:) =  L0(i,j,:);   
          end
@@ -1768,8 +1771,8 @@ else
          L1(:,:)=[];
       end
    end
-%    fprintf('BNodevalueorder at last')
-%    BNodevalueOrder
+   fprintf('BNodevalueorder at last')
+   BNodevalueOrder
    % Reset BNodevalue Using Sorted BNodevalueOrder
    BNodevalue=BNodevalueOrder;
    % *********************************************************** Sorting E   

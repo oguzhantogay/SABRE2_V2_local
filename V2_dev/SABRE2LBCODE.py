@@ -1893,6 +1893,7 @@ class SABRE2LBCODE(QMainWindow):
             # # print('SPn 2 = ', (SPn.shape[0]), i)
             # element_member[:,i] = SPn
         # print('element_member = ', element_member)
+        element_number = np.sum(SNodevalue[:,:,2])
         h5_file.h5_Class.update_array(self, element_member, 'element_member')
 
         from SABRE2_main_subclass import Boundary_Conditions
@@ -1902,6 +1903,11 @@ class SABRE2LBCODE(QMainWindow):
         Boundary_Conditions.add_shear_panel(self, element_member, 0, flag)
         Boundary_Conditions.set_number_of_rows_springs_table(self, number_of_nodes)
         Boundary_Conditions.Assign_comboBox_springs_table(self, number_of_nodes)
+        Boundary_Conditions.set_release_tables_rows(self, self.ui.Torsional_Release,element_number)
+        Boundary_Conditions.set_release_tables_rows(self, self.ui.My_release,element_number)
+        Boundary_Conditions.set_release_tables_rows(self, self.ui.Mz_release,element_number)
+        Boundary_Conditions.set_release_tables_rows(self, self.ui.Warping_Release,element_number)
+
 
 
 

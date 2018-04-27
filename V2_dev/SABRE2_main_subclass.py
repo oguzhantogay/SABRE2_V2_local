@@ -341,16 +341,16 @@ class SABRE2_main_subclass(QMainWindow):
 
         # Release Tab
         ui_layout.Torsional_Release.itemChanged.connect(
-            lambda: self.update_torsional_release(ui_layout.Torsional_Release))
+            lambda: BoundaryConditionApplication.releases_Values.release_values(self))
 
         ui_layout.My_release.itemChanged.connect(
-            lambda: self.update_My_release(ui_layout.My_release))
+            lambda: BoundaryConditionApplication.releases_Values.release_values(self))
 
         ui_layout.Mz_release.itemChanged.connect(
-            lambda: self.update_Mz_release(ui_layout.Mz_release))
+            lambda: BoundaryConditionApplication.releases_Values.release_values(self))
 
         ui_layout.Warping_Release.itemChanged.connect(
-            lambda: self.update_warping_release(ui_layout.Warping_Release))
+            lambda: BoundaryConditionApplication.releases_Values.release_values(self))
 
         # Loading Tabs
 
@@ -625,22 +625,22 @@ class SABRE2_main_subclass(QMainWindow):
 
     def update_torsional_release(self, tableName):
         torsional_values = Boundary_Conditions.release_tables_values(self, tableName)
-        # print("main screen Torsional Table Values", torsional_values)
+        print("main screen Torsional Table Values\n", torsional_values)
         return torsional_values
 
     def update_My_release(self, tableName):
         My_values = Boundary_Conditions.release_tables_values(self, tableName)
-        # print("main screen My Table Values", My_values)
+        print("main screen My Table Values\n", My_values)
         return My_values
 
     def update_Mz_release(self, tableName):
         Mz_values = Boundary_Conditions.release_tables_values(self, tableName)
-        # print("main screen Mz Table Values", Mz_values)
+        print("main screen Mz Table Values\n", Mz_values)
         return Mz_values
 
     def update_warping_release(self, tableName):
         warping_values = Boundary_Conditions.release_tables_values(self, tableName)
-        # print("main screen Warping Table Values", warping_values)
+        print("main screen Warping Table Values\n", warping_values)
         return warping_values
 
     def update_loading_types_conditions(self, tableName):
@@ -1661,10 +1661,11 @@ class Boundary_Conditions(QMainWindow):
                     else:  # check boxes are setting up
                         item = QtGui.QTableWidgetItem()
                         item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                        if index[i,j] == 1:
-                            item.setCheckState(QtCore.Qt.Checked)
-                        else:
-                            item.setCheckState(QtCore.Qt.Unchecked)
+                        if index.shape[0] != 1:
+                            if index[i,j] == 1:
+                                item.setCheckState(QtCore.Qt.Checked)
+                            else:
+                                item.setCheckState(QtCore.Qt.Unchecked)
                         self.ui.Fixities_table.setItem(i, j, item)
                     for j in range(9, 12):
                         text = str(RNCc[i][int(j - 8)])
@@ -1702,7 +1703,7 @@ class Boundary_Conditions(QMainWindow):
         self.ui.Fixities_table.blockSignals(True)
         r = int(number_of_nodes)
         options = ["Shear Center", "Flange 2","Centroid", "Flange 1"]
-        if isinstance(index,np.ndarray):
+        if isinstance(index,np.ndarray) and index.shape[0] != 1:
             for i in range(r):
                 combo_box = QtGui.QComboBox()
                 for t in options:
@@ -1881,7 +1882,7 @@ class Boundary_Conditions(QMainWindow):
         self.ui.Discrete_grounded_spring_table.blockSignals(True)
         self.ui.Discrete_grounded_spring_table.setRowCount(number_of_nodes)
         # print('RNCc = ', RNCc)
-        if isinstance(index, np.ndarray):
+        if isinstance(index, np.ndarray) and index.shape[0] != 1:
             for i in range(int(number_of_nodes)):
                 for j in range(16):
                     if j == 0:  # first column row numbering
@@ -1934,8 +1935,8 @@ class Boundary_Conditions(QMainWindow):
         print('index = ', index)
         r = int(number_of_nodes)
         options = ["Shear Center", "Flange 2", "Flange 1"]
-        if not isinstance(index, np.ndarray):
-            print('if 1')
+        if not isinstance(index, np.ndarray) :
+            # print('if 1')
             for i in range(r):
                 combo_box = QtGui.QComboBox()
                 for t in options:
@@ -1943,8 +1944,8 @@ class Boundary_Conditions(QMainWindow):
                 self.ui.Discrete_grounded_spring_table.setCellWidget(i, 1, combo_box)
                 combo_box.currentIndexChanged.connect(
                     lambda: BoundaryConditionApplication.GroundSpringApplication.groundSpringValues(self))
-        else:
-            print('else 1')
+        elif index.shape[0] != 1:
+            # print('else 1')
             for i in range(r):
                 combo_box = QtGui.QComboBox()
                 for t in options:
@@ -2098,20 +2099,59 @@ class Boundary_Conditions(QMainWindow):
                 pass
         return val1
 
+    def set_release_tables_rows(self, tableName, element_number, index1 = 0, index2 = 0):
+        tableName.blockSignals(True)
+        tableName.setRowCount(int(element_number))
+
+        for j in range(int(element_number)):
+            item = QTableWidgetItem(str(j + 1))
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+            tableName.setItem(j, 0, item)
+            if isinstance(index1, np.ndarray):
+                text = "Continuous"
+                item = QTableWidgetItem(text)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                if index1[j] == 1:
+                    item.setCheckState(QtCore.Qt.Checked)
+                else:
+                    item.setCheckState(QtCore.Qt.Unchecked)
+                tableName.setItem(j, 1, item)
+                if index2[j] == 1:
+                    item.setCheckState(QtCore.Qt.Checked)
+                else:
+                    item.setCheckState(QtCore.Qt.Unchecked)
+                tableName.setItem(j, 2, item)
+            else:
+                text = "Continuous"
+                item = QTableWidgetItem(text)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                item.setCheckState(QtCore.Qt.Checked)
+                tableName.setItem(j, 1, item)
+
+                text = "Continuous"
+                item = QTableWidgetItem(text)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+                item.setCheckState(QtCore.Qt.Checked)
+                tableName.setItem(j, 2, item)
+
+        tableName.blockSignals(False)
+
     def release_tables_values(self, table_name):
         " this function is to get values of release tables"
 
         row = table_name.rowCount()
         col = table_name.columnCount()
 
-        val_table = np.zeros((row, col))
+        val_table = np.zeros((row, col - 1))
 
         for i in range(row):
-            for j in range(col):
-                if j == 0:
-                    val_table[i, j] = i + 1
+            for j in range(1, col):
+                val_table[i, j-1] = table_name.item(i, j).checkState()
+                if val_table[i,j-1] == 2:
+                    val_table[i,j-1] = 1
                 else:
-                    val_table[i, j] = table_name.item(i, j).checkState()
+                    val_table[i,j-1] = 2
 
         return val_table
 

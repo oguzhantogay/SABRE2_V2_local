@@ -180,6 +180,29 @@ class GroundSpringApplication(QMainWindow):
 
         # print('BNC = ', BNC)
 
+class releases_Values(QMainWindow):
+
+    def __init__(self, ui_layout, parent=None):
+        super(GroundSpringApplication, self).__init__(parent)
+        self.ui = ui_layout
+
+    def release_values(self):
+        from SABRE2_main_subclass import Boundary_Conditions
+        mx_release = Boundary_Conditions.release_tables_values(self, self.ui.Torsional_Release)
+        my_release = Boundary_Conditions.release_tables_values(self, self.ui.My_release)
+        mz_release = Boundary_Conditions.release_tables_values(self, self.ui.Mz_release)
+        wa_release = Boundary_Conditions.release_tables_values(self, self.ui.Warping_Release)
+        element_numbers = np.vstack(np.arange(mx_release.shape[0])) + 1
+
+        release_values = np.concatenate((element_numbers, mx_release, my_release, mz_release, wa_release), axis= 1)
+
+        h5_file.h5_Class.update_array(self, release_values, 'release_values')
+
+        # print('release values test = \n', release_values)
+
+
+
+
 
 
 

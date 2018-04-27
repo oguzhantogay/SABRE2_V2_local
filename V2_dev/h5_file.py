@@ -26,11 +26,13 @@ class h5_Class:
 
         table_prop =  np.zeros((1,14))
 
-        fixities_vals =  np.zeros((1,1))
+        fixities_vals =  np.zeros((1,2))
 
         shear_panel_values =  np.zeros((1,1))
 
-        spring_values =  np.zeros((1,1))
+        spring_values =  np.zeros((1,2))
+
+        release_values =  np.zeros((1,2))
 
         DUP1 = np.zeros((1,1,1))
 
@@ -63,6 +65,8 @@ class h5_Class:
         file_open.create_dataset('Massemble', data=Massemble)
 
         file_open.create_dataset('table_prop', data=table_prop)
+
+        file_open.create_dataset('release_values', data=release_values)
 
         file_open.create_dataset('DUP1', data=DUP1)
 

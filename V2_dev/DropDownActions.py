@@ -40,6 +40,7 @@ class ActionClass(QMainWindow):
         self.PNC1 = None
         self.PNC2 = None
         self.fixities_vals = None
+        self.release_values = None
 
 
     def AboutAct(self):
@@ -243,12 +244,8 @@ class ActionClass(QMainWindow):
         self.PNC1 = h5_file.h5_Class.read_array(self, 'PNC1')
         self.PNC2 = h5_file.h5_Class.read_array(self, 'PNC2')
         self.shear_panel_values = h5_file.h5_Class.read_array(self, 'shear_panel_values')
-        self.torsional_spring_values = SABRE2_main_subclass.SABRE2_main_subclass.update_torsional_release(self,
-                                                                                                          self.ui.Torsional_Release)
-        self.My_release_values = SABRE2_main_subclass.SABRE2_main_subclass.update_My_release(self, self.ui.My_release)
-        self.Mz_release_values = SABRE2_main_subclass.SABRE2_main_subclass.update_Mz_release(self, self.ui.Mz_release)
-        self.Warping_release_values = SABRE2_main_subclass.SABRE2_main_subclass.update_warping_release(self,
-                                                                                                       self.ui.Warping_Release)
+        self.release_values = h5_file.h5_Class.read_array(self, 'release_values')
+
         self.uniform_data_values = SABRE2_main_subclass.SABRE2_main_subclass.update_uniform_data(self,
                                                                                                  self.ui.Uniform_loading_table,
                                                                                                  combo_flag=0)
@@ -274,6 +271,7 @@ class ActionClass(QMainWindow):
                  SNodevalue = self.SNodevalue,
                  fixities_vals = self.fixities_vals,
                  spring_values = self.spring_values,
+                 release_values = self.release_values,
                  DUP1 = self.DUP1,
                  DUP2 = self.DUP2,
                  RNCc = self.RNCc,
@@ -325,10 +323,7 @@ class ActionClass(QMainWindow):
         self.PNC2 = aa['PNC2']
         self.shear_panel_values = aa['shear_panel_values']
         self.ground_spring_values = aa['ground_spring_values']
-        self.torsional_spring_values = aa['torsional_spring_values']
-        self.My_release_values = aa['My_release_values']
-        self.Mz_release_values = aa['Mz_release_values']
-        self.Warping_release_values = aa['Warping_release_values']
+        self.release_values = aa['release_values']
         self.uniform_data_values = aa['uniform_data_values']
         self.point_data_values = aa['point_data_values']
         h5_file.h5_Class.update_array(self, self.element_member, 'element_member')
@@ -338,6 +333,7 @@ class ActionClass(QMainWindow):
         h5_file.h5_Class.update_array(self, self.added_node_information, 'added_node_information')
         h5_file.h5_Class.update_array(self, self.fixities_vals, 'fixities_vals')
         h5_file.h5_Class.update_array(self, self.spring_values, 'spring_values')
+        h5_file.h5_Class.update_array(self, self.release_values, 'release_values')
         h5_file.h5_Class.update_array(self, self.DUP1, 'DUP1')
         h5_file.h5_Class.update_array(self, self.DUP2, 'DUP2')
         h5_file.h5_Class.update_array(self, self.RNCc, 'RNCc')
@@ -355,10 +351,6 @@ class ActionClass(QMainWindow):
         # print('read self.SNodevalue', self.SNodevalue)
         shape_joint_table = int(self.joint_values.shape[0])
         shape_members_table_values = int(self.members_table_values.shape[0])
-        shape_torsional_spring_values = int(self.torsional_spring_values.shape[0])
-        shape_My_values = int(self.My_release_values.shape[0])
-        shape_Mz_values = int(self.Mz_release_values.shape[0])
-        shape_warping_release_values = int(self.Warping_release_values.shape[0])
         shape_uniform_data_values = int(self.uniform_data_values.shape[0])
         # shape_point_data_values = int(self.point_data_values.shape[0])
         # print('shape member table = ', shape_members_table_values)
@@ -437,6 +429,10 @@ class ActionClass(QMainWindow):
         Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes, self.fixities_vals[:,1])
         Boundary_Conditions.set_number_of_rows_springs_table(self, number_of_nodes, self.spring_values)
         Boundary_Conditions.Assign_comboBox_springs_table(self, number_of_nodes, self.spring_values[:,1])
+        Boundary_Conditions.set_release_tables_rows(self, self.ui.Torsional_Release, total_element_number, self.release_values[:,1], self.release_values[:,2])
+        Boundary_Conditions.set_release_tables_rows(self, self.ui.My_release, total_element_number, self.release_values[:,3], self.release_values[:,4])
+        Boundary_Conditions.set_release_tables_rows(self, self.ui.Mz_release, total_element_number, self.release_values[:,5], self.release_values[:,6])
+        Boundary_Conditions.set_release_tables_rows(self, self.ui.Warping_Release, total_element_number, self.release_values[:,7], self.release_values[:,8])
 
         #RETURN REQUIRED ARRAYS ONLY
         # for i in range(self.fixities_vals.shape[0]):

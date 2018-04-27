@@ -1931,9 +1931,11 @@ class Boundary_Conditions(QMainWindow):
 
     def Assign_comboBox_springs_table(self, number_of_nodes, index = 0):
         self.ui.Discrete_grounded_spring_table.blockSignals(True)
+        print('index = ', index)
         r = int(number_of_nodes)
         options = ["Shear Center", "Flange 2", "Flange 1"]
-        if not isinstance(index, list):
+        if not isinstance(index, np.ndarray):
+            print('if 1')
             for i in range(r):
                 combo_box = QtGui.QComboBox()
                 for t in options:
@@ -1942,11 +1944,12 @@ class Boundary_Conditions(QMainWindow):
                 combo_box.currentIndexChanged.connect(
                     lambda: BoundaryConditionApplication.GroundSpringApplication.groundSpringValues(self))
         else:
+            print('else 1')
             for i in range(r):
                 combo_box = QtGui.QComboBox()
                 for t in options:
                     combo_box.addItem(t)
-                combo_box.setCurrentIndex(int(index[i]))
+                combo_box.setCurrentIndex(int(index[i])- 1)
                 self.ui.Discrete_grounded_spring_table.setCellWidget(i, 1, combo_box)
                 combo_box.currentIndexChanged.connect(
                     lambda: BoundaryConditionApplication.GroundSpringApplication.groundSpringValues(self))

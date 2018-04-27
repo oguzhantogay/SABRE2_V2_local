@@ -344,7 +344,7 @@ class ActionClass(QMainWindow):
         h5_file.h5_Class.update_array(self, self.PNC, 'PNC')
         h5_file.h5_Class.update_array(self, self.PNC1, 'PNC1')
         h5_file.h5_Class.update_array(self, self.PNC2, 'PNC2')
-        # print("\njoint values = ", self.joint_values, "\nmember prop values = ", self.member_properties_values,
+        # print("\njoint values = ", self.joint_values)#, "\nmember prop values = ", self.member_properties_values,
         #       "\nmembers table values = ", self.members_table_values)
         # print('read DUP1 = ', self.DUP1)
         # print('read DUP2 = ', self.DUP2)
@@ -367,10 +367,10 @@ class ActionClass(QMainWindow):
         total_element_number = np.sum(self.SNodevalue[:,:,2])
         # print('total element number = ', total_element_number)
         # print('BNodevalue = ', self.BNodevalue)
-        print('element_member = ', self.element_member)
+        # print('element_member = ', self.element_member)
         # filling for joints table
-        for i in range(shape_joint_table):
 
+        for i in range(shape_joint_table):
             if i == (shape_joint_table - 1):
                 self.ui.Joints_Table.blockSignals(False)
             else:
@@ -378,7 +378,7 @@ class ActionClass(QMainWindow):
 
             if shape_joint_table > 2:
                 if shape_joint_table != self.ui.Joints_Table.rowCount():
-                    for i in range(shape_joint_table - 2):
+                    for k in range(shape_joint_table - 2):
                         SABRE2_main_subclass.JointTable.add_new_row(self, self.ui.Joints_Table,
                                                                     self.ui.Insert_row_number_Joint, "last")
 

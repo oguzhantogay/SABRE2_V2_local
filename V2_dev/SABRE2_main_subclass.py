@@ -1661,11 +1661,10 @@ class Boundary_Conditions(QMainWindow):
                     else:  # check boxes are setting up
                         item = QtGui.QTableWidgetItem()
                         item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                        if index.shape[0] != 1:
-                            if index[i,j] == 1:
-                                item.setCheckState(QtCore.Qt.Checked)
-                            else:
-                                item.setCheckState(QtCore.Qt.Unchecked)
+                        if index[i,j] == 1:
+                            item.setCheckState(QtCore.Qt.Checked)
+                        else:
+                            item.setCheckState(QtCore.Qt.Unchecked)
                         self.ui.Fixities_table.setItem(i, j, item)
                     for j in range(9, 12):
                         text = str(RNCc[i][int(j - 8)])
@@ -1703,7 +1702,7 @@ class Boundary_Conditions(QMainWindow):
         self.ui.Fixities_table.blockSignals(True)
         r = int(number_of_nodes)
         options = ["Shear Center", "Flange 2","Centroid", "Flange 1"]
-        if isinstance(index,np.ndarray) and index.shape[0] != 1:
+        if isinstance(index,np.ndarray):
             for i in range(r):
                 combo_box = QtGui.QComboBox()
                 for t in options:
@@ -1882,7 +1881,7 @@ class Boundary_Conditions(QMainWindow):
         self.ui.Discrete_grounded_spring_table.blockSignals(True)
         self.ui.Discrete_grounded_spring_table.setRowCount(number_of_nodes)
         # print('RNCc = ', RNCc)
-        if isinstance(index, np.ndarray) and index.shape[0] != 1:
+        if isinstance(index, np.ndarray):
             for i in range(int(number_of_nodes)):
                 for j in range(16):
                     if j == 0:  # first column row numbering
@@ -1932,10 +1931,10 @@ class Boundary_Conditions(QMainWindow):
 
     def Assign_comboBox_springs_table(self, number_of_nodes, index = 0):
         self.ui.Discrete_grounded_spring_table.blockSignals(True)
-        print('index = ', index)
+        # print('index = ', index)
         r = int(number_of_nodes)
         options = ["Shear Center", "Flange 2", "Flange 1"]
-        if not isinstance(index, np.ndarray) :
+        if not isinstance(index, np.ndarray):
             # print('if 1')
             for i in range(r):
                 combo_box = QtGui.QComboBox()
@@ -1944,7 +1943,7 @@ class Boundary_Conditions(QMainWindow):
                 self.ui.Discrete_grounded_spring_table.setCellWidget(i, 1, combo_box)
                 combo_box.currentIndexChanged.connect(
                     lambda: BoundaryConditionApplication.GroundSpringApplication.groundSpringValues(self))
-        elif index.shape[0] != 1:
+        else:
             # print('else 1')
             for i in range(r):
                 combo_box = QtGui.QComboBox()
@@ -2101,9 +2100,12 @@ class Boundary_Conditions(QMainWindow):
 
     def set_release_tables_rows(self, tableName, element_number, index1 = 0, index2 = 0):
         tableName.blockSignals(True)
+        # print(str(tableName))
         tableName.setRowCount(int(element_number))
+        self.ui.BoundaryConditionsTabs.setEnabled(True)
 
         for j in range(int(element_number)):
+            # print('j = ', j)
             item = QTableWidgetItem(str(j + 1))
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
@@ -2113,16 +2115,24 @@ class Boundary_Conditions(QMainWindow):
                 item = QTableWidgetItem(text)
                 item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                 if index1[j] == 1:
+                    # print('1')
                     item.setCheckState(QtCore.Qt.Checked)
                 else:
+                    # print('2')
                     item.setCheckState(QtCore.Qt.Unchecked)
                 tableName.setItem(j, 1, item)
+                text = "Continuous"
+                item = QTableWidgetItem(text)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
                 if index2[j] == 1:
+                    # print('1')
                     item.setCheckState(QtCore.Qt.Checked)
                 else:
+                    # print('2')
                     item.setCheckState(QtCore.Qt.Unchecked)
                 tableName.setItem(j, 2, item)
             else:
+                # print('else')
                 text = "Continuous"
                 item = QTableWidgetItem(text)
                 item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)

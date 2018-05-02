@@ -26,13 +26,13 @@ class h5_Class:
 
         table_prop =  np.zeros((1,14))
 
-        fixities_vals =  np.zeros((1,2))
+        fixities_vals =  np.zeros((1,1))
 
         shear_panel_values =  np.zeros((1,1))
 
-        spring_values =  np.zeros((1,2))
+        spring_values =  np.zeros((1,1))
 
-        release_values =  np.zeros((1,2))
+        release_values =  np.zeros((1,1))
 
         DUP1 = np.zeros((1,1,1))
 

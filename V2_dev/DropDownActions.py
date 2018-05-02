@@ -351,6 +351,10 @@ class ActionClass(QMainWindow):
         # print('read self.SNodevalue', self.SNodevalue)
         shape_joint_table = int(self.joint_values.shape[0])
         shape_members_table_values = int(self.members_table_values.shape[0])
+        # shape_torsional_spring_values = int(self.torsional_spring_values.shape[0])
+        # shape_My_values = int(self.My_release_values.shape[0])
+        # shape_Mz_values = int(self.Mz_release_values.shape[0])
+        # shape_warping_release_values = int(self.Warping_release_values.shape[0])
         shape_uniform_data_values = int(self.uniform_data_values.shape[0])
         # shape_point_data_values = int(self.point_data_values.shape[0])
         # print('shape member table = ', shape_members_table_values)
@@ -425,62 +429,56 @@ class ActionClass(QMainWindow):
         AddNode.AddNodeClass.setAddNodeComboBox(self)
         from SABRE2_main_subclass import Boundary_Conditions
         number_of_nodes = int(self.RNCc[:, 0].shape[0])
-        Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, self.RNCc, self.fixities_vals)
-        Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes, self.fixities_vals[:,1])
-        Boundary_Conditions.set_number_of_rows_springs_table(self, number_of_nodes, self.spring_values)
-        Boundary_Conditions.Assign_comboBox_springs_table(self, number_of_nodes, self.spring_values[:,1])
-        Boundary_Conditions.set_release_tables_rows(self, self.ui.Torsional_Release, total_element_number, self.release_values[:,1], self.release_values[:,2])
-        Boundary_Conditions.set_release_tables_rows(self, self.ui.My_release, total_element_number, self.release_values[:,3], self.release_values[:,4])
-        Boundary_Conditions.set_release_tables_rows(self, self.ui.Mz_release, total_element_number, self.release_values[:,5], self.release_values[:,6])
-        Boundary_Conditions.set_release_tables_rows(self, self.ui.Warping_Release, total_element_number, self.release_values[:,7], self.release_values[:,8])
+        if self.fixities_vals.shape[0] != 1 or self.fixities_vals.shape[1] != 1:
+            Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, self.RNCc, self.fixities_vals)
+            Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes, self.fixities_vals[:,1])
+        else:
+            Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, self.RNCc)
+            Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
+        if self.spring_values.shape[0] != 1 or self.spring_values.shape[1] != 1:
+            Boundary_Conditions.set_number_of_rows_springs_table(self, number_of_nodes, self.spring_values)
+            Boundary_Conditions.Assign_comboBox_springs_table(self, number_of_nodes, self.spring_values[:,1])
+        else:
+            Boundary_Conditions.set_number_of_rows_springs_table(self, number_of_nodes)
+            Boundary_Conditions.Assign_comboBox_springs_table(self, number_of_nodes)
+        if self.release_values.shape[0] != 1 or self.release_values.shape[1] != 1:
+            Boundary_Conditions.set_release_tables_rows(self, self.ui.Torsional_Release, total_element_number, self.release_values[:,1], self.release_values[:,2])
+            Boundary_Conditions.set_release_tables_rows(self, self.ui.My_release, total_element_number, self.release_values[:,3], self.release_values[:,4])
+            Boundary_Conditions.set_release_tables_rows(self, self.ui.Mz_release, total_element_number, self.release_values[:,5], self.release_values[:,6])
+            Boundary_Conditions.set_release_tables_rows(self, self.ui.Warping_Release, total_element_number, self.release_values[:,7], self.release_values[:,8])
+        else:
+            Boundary_Conditions.set_release_tables_rows(self, self.ui.Torsional_Release, total_element_number)
+            Boundary_Conditions.set_release_tables_rows(self, self.ui.My_release, total_element_number)
+            Boundary_Conditions.set_release_tables_rows(self, self.ui.Mz_release, total_element_number)
+            Boundary_Conditions.set_release_tables_rows(self, self.ui.Warping_Release, total_element_number)
+        if self.shear_panel_values.shape[0] != 1 or self.shear_panel_values.shape[1] != 1:
+            element_member = h5_file.h5_Class.read_array(self, 'element_member')
+            # print('shear panel vals = ', self.shear_panel_values)
+            Boundary_Conditions.add_shear_panel(self, element_member, 0, flag='drop down last')
+            for i in range(self.shear_panel_values.shape[0]):
+                if i > 0:
+                    Boundary_Conditions.shear_panel_additional(self)
+                for j in range(self.shear_panel_values.shape[1]):
+                    # print('i = ', i, 'j = ', j)
+                    if j == 5:
+                        if self.shear_panel_values[i,j] == 0:
+                            continue
+                        else:
+                            self.ui.BoundaryConditionsTabs.setEnabled(True)
+                            item = QTableWidgetItem()
+                            item.setText(str(self.shear_panel_values[i, j]))
+                            self.ui.Shear_panel_table.setItem(i, j, item)
+                    elif j == 1 or j == 2 or j == 3 or j == 4:
+                        self.ui.Shear_panel_table.cellWidget(i, j).setCurrentIndex(int(self.shear_panel_values[i,j]))
+                    elif j == 6:
+                        if self.shear_panel_values[i,j] == 2:
+                            self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Checked)
+                        else:
+                            self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Unchecked)
 
-        #RETURN REQUIRED ARRAYS ONLY
-        # for i in range(self.fixities_vals.shape[0]):
-        #     for j in range(self.fixities_vals.shape[1]):
-        #         self.ui.BoundaryConditionsTabs.setEnabled(True)
-        #         if j == 1 and self.fixities_vals[i,j] != 1:
-        #             self.ui.Fixities_table.cellWidget(i,j).setCurrentIndex(int(self.fixities_vals[i,j]-1))
-        #         elif j == 2 or j == 3 or j == 4 or j == 5 or j == 6 or j == 7 or j == 8:
-        #             if self.fixities_vals[i,j] == 1:
-        #                 self.ui.Fixities_table.item(i, j).setCheckState(QtCore.Qt.Checked)
-        element_member = h5_file.h5_Class.read_array(self, 'element_member')
-        # print('shear panel vals = ', self.shear_panel_values)
-        Boundary_Conditions.add_shear_panel(self, element_member, 0, flag='drop down last')
-        for i in range(self.shear_panel_values.shape[0]):
-            if i > 0:
-                Boundary_Conditions.shear_panel_additional(self)
-            for j in range(self.shear_panel_values.shape[1]):
-                # print('i = ', i, 'j = ', j)
-                if j == 5:
-                    if self.shear_panel_values[i,j] == 0:
-                        continue
-                    else:
-                        self.ui.BoundaryConditionsTabs.setEnabled(True)
-                        item = QTableWidgetItem()
-                        item.setText(str(self.shear_panel_values[i, j]))
-                        self.ui.Shear_panel_table.setItem(i, j, item)
-                elif j == 1 or j == 2 or j == 3 or j == 4:
-                    self.ui.Shear_panel_table.cellWidget(i, j).setCurrentIndex(int(self.shear_panel_values[i,j]))
-                elif j == 6:
-                    if self.shear_panel_values[i,j] == 2:
-                        self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Checked)
-                    else:
-                        self.ui.Shear_panel_table.item(i, j).setCheckState(QtCore.Qt.Unchecked)
-        # print('spring values = \n', self.spring_values)
-        # for i in range(self.spring_values.shape[0]):
-        #     for j in range(1, self.spring_values.shape[1]):
-        #         if self.spring_values[i,j] != 0:
-        #             # print('i = ', i, 'j = ' , j)
-        #             # self.ui.BoundaryConditionsTabs.setEnabled(True)
-        #             # if j == 1 and self.spring_values[i,j] != 1:
-        #             #     self.ui.Discrete_grounded_spring_table.cellWidget(i,j).setCurrentIndex(int(self.spring_values[i,j]-1))
-        #             if j == 3 or j == 5 or j == 7 or j == 9 or j == 11 or j == 13 or j == 15:
-        #                 if self.spring_values[i,j] != 1:
-        #                     self.ui.Discrete_grounded_spring_table.item(i, j).setCheckState(QtCore.Qt.Unchecked)
-        #             else:
-        #                 item = QTableWidgetItem()
-        #                 item.setText(str(self.spring_values[i, j]))
-        #                 self.ui.Discrete_grounded_spring_table.setItem(i, j, item)
+        else:
+            Boundary_Conditions.add_shear_panel(self, total_element_number, 0)
+
         print('file read from ', filename)
 
         return self.table_prop, self.Massemble

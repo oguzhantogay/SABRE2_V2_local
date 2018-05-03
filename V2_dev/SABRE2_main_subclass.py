@@ -45,7 +45,7 @@ class SABRE2_main_subclass(QMainWindow):
         self.members_table_values = np.zeros((1, 18))
         ui_layout.Member_Properties_Table.setEnabled(False)
         ui_layout.BoundaryConditionsTabs.setEnabled(False)
-        ui_layout.LC_tabs.setEnabled(False)
+        # ui_layout.LC_tabs.setEnabled(False)
         SABRE2_main_subclass.BNodevalue = None
         self.SNodevalue = None
         ###  Setting validators for the lineEdit positions
@@ -374,13 +374,14 @@ class SABRE2_main_subclass(QMainWindow):
 
         # Distributed Load table arrangements
 
-        uniform_load_options = ["Flange 2", "Shear Center", "Flange 1", "Mid Web", "Centroid"]
+        uniform_load_options = ["Shear Center", "Flange 2", "Flange 1", "Centroid", "Mid Web"]
         load_place_position = 2
         load_type_position = 1
 
-        ui_layout.LoadTypeTable.itemChanged.connect(
-            lambda: uniform_load_def.combo_box_types(self, ui_layout.Uniform_loading_table, ui_layout.LoadTypeTable,
-                                                     load_type_position))
+        ui_layout.Add_new_row_uni_load.clicked.connect(lambda: uniform_load_def.uniform_data_table(self))
+        # ui_layout.LoadTypeTable.itemChanged.connect(
+        #     lambda: uniform_load_def.combo_box_types(self, ui_layout.Uniform_loading_table, ui_layout.LoadTypeTable,
+        #                                              load_type_position))
 
         uniform_load_def.set_combo_box(self, ui_layout.Uniform_loading_table, uniform_load_options,
                                        load_place_position)
@@ -388,8 +389,8 @@ class SABRE2_main_subclass(QMainWindow):
         uniform_load_def.combo_box_types(self, ui_layout.Uniform_loading_table, ui_layout.LoadTypeTable,
                                          load_type_position)
 
-        ui_layout.Uniform_loading_table.itemChanged.connect(
-            lambda: self.update_uniform_data(ui_layout.Uniform_loading_table, combo_flag=0))
+        # ui_layout.Uniform_loading_table.itemChanged.connect(
+        #     lambda: self.update_uniform_data(ui_layout.Uniform_loading_table, combo_flag=0))
 
         # Point Load table arrangements
 
@@ -2166,6 +2167,8 @@ class Boundary_Conditions(QMainWindow):
         return val_table
 
 
+
+
 class LoadingClass(QMainWindow):
     " This class is to for defining loading conditions"
 
@@ -2298,6 +2301,27 @@ class uniform_load_def(QMainWindow):
         self.ui = ui_layout
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
+    def set_row_names(self):
+        # print('set row names run!')
+        row_count_properties_table = self.ui.Member_Properties_Table.rowCount()
+        self.ui.Uniform_loading_table.setRowCount(int(row_count_properties_table))
+        uniform_load_options = ["Shear Center", "Flange 2", "Flange 1", "Centroid", "Mid Web"]
+        uniform_load_def.combo_box_types(self, self.ui.Uniform_loading_table, self.ui.LoadTypeTable, 1)
+        uniform_load_def.set_combo_box(self, self.ui.Uniform_loading_table,uniform_load_options,2)
+        for i in range(int(row_count_properties_table)):
+            # print('i = ', i, self.ui.Member_Properties_Table.item(i,0).text())
+            text = str(self.ui.Member_Properties_Table.item(i,0).text())
+            item = QTableWidgetItem(text)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+            self.ui.Uniform_loading_table.setItem(i, 0, item)
+
+            for j in range(3,6):
+                text = '0'
+                item = QTableWidgetItem(text)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.ui.Uniform_loading_table.setItem(i, j, item)
+
     def combo_box_types(self, tableName, table_load_type, position):
         [var1, IDs] = LoadingClass.defined_load_names(self, table_load_type)
         uniform_load_def.set_combo_box(self, tableName, IDs, position)
@@ -2313,38 +2337,97 @@ class uniform_load_def(QMainWindow):
             combo_box.currentIndexChanged.connect(
                 lambda: SABRE2_main_subclass.update_uniform_data(self, tableName, combo_flag=1))
 
-    def uniform_data_table(self, tableName, combo_flag=0):
+    def uniform_data_table(self):
+        DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
+        DUP2 = h5_file.h5_Class.read_array(self, 'DUP2')
+        SNodevalue = h5_file.h5_Class.read_array(self, 'SNodevalue')
+        total_element_number = int(np.sum(SNodevalue[:, :, 2]))
+        table_values = uniform_load_def.uniform_load_values(self, self.ui.Uniform_loading_table)
+        uniform_load_array = np.zeros((total_element_number, 19))
+        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        print('Snode in uniform data = ', SNodevalue)
+        # for i in range(int(added_node_information[:, 0].shape[0])):
+        #     for j in range(int(added_node_information[i][1]) + 1):
+        #         text = 'M' + str(i + 1) + 'S' + str(j + 1)
+        #         print(text)
+        print('table values = ', table_values)
+        # print('DUP1 = ', DUP1)
+        for i in range(total_element_number):
+            # print(' i = ', i)
+            uniform_load_array[i][0] = DUP1[i][0]
+            uniform_load_array[i][1] = DUP1[i][1]
+            uniform_load_array[i][2] = DUP2[i][1]
+
+
+
+        p = 1
+        k = 1
+        for i in range(int(SNodevalue.shape[0])):
+            k = 0
+            for j in range(int(SNodevalue.shape[1])):
+                for t in range(int(np.amax(SNodevalue[i][j][2]))):
+                    print('j =' , j, ' i = ', i)
+                    uniform_load_array[k][4] = table_values[i+j][3]
+                    uniform_load_array[k][5] = table_values[i+j][4]
+                    uniform_load_array[k][6] = table_values[i+j][5]
+                    uniform_load_array[k][16] = table_values[i+j][2]
+                    uniform_load_array[i][14] = k+1
+                    k += 1
+            uniform_load_array[i][13] = p
+            p += 1
+
+        print('uniform load array = ', uniform_load_array)
+
+
+    def uniform_load_values(self, tableName):
+
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
         col_check = tableName.columnCount()
-        SegmentNames = {}
         val1 = np.zeros((row_check, col_check))
         try:
             for i in range(row_check):
                 for j in range(col_check):
-                    if tableName.item(i, j) is None:
-                        item = QTableWidgetItem("0")
-                        tableName.setItem(i, j, item)
-                    elif j == 0:
-                        SegmentNames[i] = tableName.item(i, j).text()
+                    if j == 0:
+                        val1[i][j] = j + 1
                     elif j == 1 or j == 2:
                         value_combo = tableName.cellWidget(i, j).currentIndex()
-                        val1[i, j] = value_combo
+                        val1[i, j] = value_combo+1
                     else:
                         val1[i, j] = float(tableName.item(i, j).text())
             DropDownActions.ActionClass.statusMessage(self, message="")
-
         except ValueError:
             tableName.clearSelection()
-            if combo_flag == 1:
-                pass
-            else:
-                tableName.item(row, col).setText("0")
-                DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
+            tableName.item(row, col).setText("0")
+            DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
+        except AttributeError:
+            pass
+        return val1
 
-        print(SegmentNames)
-        return val1, SegmentNames
+        # val1 = np.zeros((row_check, col_check))
+        # try:
+        #     for i in range(row_check):
+        #         for j in range(col_check):
+        #             if j == 0:
+        #                 val1[i,j] = j + 1
+        #             elif j == 1 or j == 2:
+        #                 value_combo = tableName.cellWidget(i, j).currentIndex()
+        #                 val1[i, j] = value_combo
+        #             else:
+        #                 val1[i, j] = float(tableName.item(i, j).text())
+        #     DropDownActions.ActionClass.statusMessage(self, message="")
+        #
+        # except ValueError:
+        #     tableName.clearSelection()
+        #     if combo_flag == 1:
+        #         pass
+        #     else:
+        #         tableName.item(row, col).setText("0")
+        #         DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
+        #
+        # print(SegmentNames)
+        # return val1, SegmentNames
 
 
 class point_load_def(QMainWindow):

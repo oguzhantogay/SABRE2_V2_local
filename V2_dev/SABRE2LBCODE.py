@@ -1907,6 +1907,9 @@ class SABRE2LBCODE(QMainWindow):
         Boundary_Conditions.set_release_tables_rows(self, self.ui.My_release,element_number)
         Boundary_Conditions.set_release_tables_rows(self, self.ui.Mz_release,element_number)
         Boundary_Conditions.set_release_tables_rows(self, self.ui.Warping_Release,element_number)
+        from SABRE2_main_subclass import uniform_load_def
+        uniform_load_def.set_row_names(self)
+
 
 
 

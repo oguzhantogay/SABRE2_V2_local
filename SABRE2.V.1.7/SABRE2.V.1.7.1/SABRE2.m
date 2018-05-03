@@ -5573,6 +5573,9 @@ function lfm_apply_pushbutton_Callback(hObject, eventdata)
       lfm_fy_edit,lfm_fz_edit,lfm_mx_edit,lfm_my_edit,lfm_mz_edit,...
       lfm_height_edit,lfm_alpha_edit,pt_title_name,axesm,vstm);
    end
+   LNC
+   LNC1
+   LNC2
 end % function end 
 % --------------------------------------------------------------------
 function lfm_cancel_pushbutton_Callback(hObject, eventdata)
@@ -5606,6 +5609,7 @@ end % function end
 % --------------------------------------------------------------------
 function lum_apply_pushbutton_Callback(hObject, eventdata)
    clc; pan off; zoom off; rotate3d off; set([vzm,vrm,vpm], 'Checked', 'off'); set(vmbu, 'Checked', 'on');LabType(1,10)=0;
+   fprintf('uniform moment apply')
    if isequal(strcmp(get(vstm,'Checked'),'on'),1) % white background   
    [LUEC]=SABRE2UnifAppW(JNodevalue,Massemble,Rval,...
       RNCc,DUP1,DUP2,NCc,LNC,LUEC,ULoad,SNodevalue,Nshe1,Nshe2,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,Mhg,lum_type_mem,lum_type_seg,...
@@ -5633,6 +5637,7 @@ function lum_cancel_pushbutton_Callback(hObject, eventdata)
          lum_height_edit,lum_wx_edit,lum_wy_edit,lum_wz_edit,t,pt_title_name,axesm,vstm); 
    end
    end
+   LUEC
 end % function end
 % *********************************************** UNIFORM LOADS Callback E
 % **************************************************** POINT BC Callback S

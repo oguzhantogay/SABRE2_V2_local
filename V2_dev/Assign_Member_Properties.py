@@ -35,7 +35,7 @@ class Assign_All_Class(QMainWindow):
             # Massemble = h5_file.h5_Class.read_array(self, 'Massemble')
             BNodevalue = h5_file.h5_Class.read_array(self, 'BNodevalue')
             total_member_number = int(BNodevalue.shape[0])
-            print('BNodevalue in assign sNode = ', BNodevalue)
+            # print('BNodevalue in assign sNode = ', BNodevalue)
             from SABRE2_main_subclass import SABRE2_main_subclass
             member_properties_values = SABRE2_main_subclass.update_member_properties_table(self,
                                                                                            self.ui.Member_Properties_Table)

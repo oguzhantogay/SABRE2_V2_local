@@ -95,7 +95,7 @@ else
    end
 
 end   
-LUEC
+
 if ~isempty(JNodevalue) 
    % ********************************************** Plot Coordnate Axes S
    if ~isempty(RNCc)  

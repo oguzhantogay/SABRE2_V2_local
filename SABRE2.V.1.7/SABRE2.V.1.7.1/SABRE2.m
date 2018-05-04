@@ -5619,6 +5619,7 @@ function lum_apply_pushbutton_Callback(hObject, eventdata)
       RNCc,DUP1,DUP2,NCc,LNC,LUEC,ULoad,SNodevalue,Nshe1,Nshe2,Bhe1,Bhe2,The1,The2,SGhe1,SGhe2,Mhe1,Mhe2,Bhg,Thg,CSg,Mhg,lum_type_mem,lum_type_seg,...
       lum_height_edit,lum_wx_edit,lum_wy_edit,lum_wz_edit,t,pt_title_name,axesm,vstm); 
    end
+   LUEC
 end % function end 
 % --------------------------------------------------------------------
 function lum_cancel_pushbutton_Callback(hObject, eventdata)
@@ -5637,7 +5638,7 @@ function lum_cancel_pushbutton_Callback(hObject, eventdata)
          lum_height_edit,lum_wx_edit,lum_wy_edit,lum_wz_edit,t,pt_title_name,axesm,vstm); 
    end
    end
-   LUEC
+   
 end % function end
 % *********************************************** UNIFORM LOADS Callback E
 % **************************************************** POINT BC Callback S

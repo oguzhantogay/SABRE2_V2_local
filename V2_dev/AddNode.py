@@ -929,7 +929,7 @@ class SegmRemove(QMainWindow):
         print('remove node BNodevalue = ', BNodevalue)
         h5_file.h5_Class.update_array(self,BNodevalue,'BNodevalue')
 
-        # set member properties table and assign values
+        # set member properties table and 1wassign values
         MemberPropertiesTable.set_number_of_rows(self, self.ui.Members_table,
                                                  self.ui.Member_Properties_Table)
         Assign_Member_Properties.Assign_All_Class.assign_SNodevalue(self, flag = 'remove')

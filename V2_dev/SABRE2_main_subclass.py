@@ -2361,19 +2361,19 @@ class uniform_load_def(QMainWindow):
 
 
         p = 1
-        k = 1
+        k = 0
         for i in range(int(SNodevalue.shape[0])):
-            k = 0
+
             for j in range(int(SNodevalue.shape[1])):
                 for t in range(int(np.amax(SNodevalue[i][j][2]))):
-                    print('j =' , j, ' i = ', i)
+                    # print('j =' , j, ' i = ', i)
                     uniform_load_array[k][4] = table_values[i+j][3]
                     uniform_load_array[k][5] = table_values[i+j][4]
                     uniform_load_array[k][6] = table_values[i+j][5]
                     uniform_load_array[k][16] = table_values[i+j][2]
-                    uniform_load_array[i][14] = k+1
+                    uniform_load_array[k][14] = SNodevalue[i][j][1]
+                    uniform_load_array[k][13] = p
                     k += 1
-            uniform_load_array[i][13] = p
             p += 1
 
         print('uniform load array = ', uniform_load_array)

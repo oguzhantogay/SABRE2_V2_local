@@ -2,17 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f0ee3103-6d08-4b17-8e91-429164a7cb7a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_4_25_2018_12_39_PM_[Default]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_4_25_2018_12_39_PM__Default_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SABRE2.V.1.7/SABRE2.V.1.7.1/SABRE2.m" beforeDir="false" afterPath="$PROJECT_DIR$/SABRE2.V.1.7/SABRE2.V.1.7.1/SABRE2.m" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/SABRE2.V.1.7/SABRE2.V.1.7.1/SABRE2UnifApp.m" beforeDir="false" afterPath="$PROJECT_DIR$/SABRE2.V.1.7/SABRE2.V.1.7.1/SABRE2UnifApp.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SABRE2.V.1.7/SABRE2.V.1.7.1/SABRE2UnifAppW.m" beforeDir="false" afterPath="$PROJECT_DIR$/SABRE2.V.1.7/SABRE2.V.1.7.1/SABRE2UnifAppW.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SABRE2.V.1.7/SABRE2.V.1.7.1/tese_remove.mat" beforeDir="false" afterPath="$PROJECT_DIR$/SABRE2.V.1.7/SABRE2.V.1.7.1/tese_remove.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2-V3.ui" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/SABRE2-V3.ui" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2LBCODE.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/SABRE2LBCODE.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2_GUI.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/SABRE2_GUI.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/V2_dev/AddNode.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/AddNode.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" afterDir="false" />
     </list>
     <ignored path="C:\Users\Python\Desktop\SABRE2-V2\.idea\shelf/" />
@@ -28,10 +21,10 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/sabre2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1524532845628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
-    <SUITE FILE_PATH="coverage/SABRE2_V2_local$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1525360624994" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$OpenGLTest.coverage" NAME="OpenGLTest Coverage Results" MODIFIED="1507430818206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
+    <SUITE FILE_PATH="coverage/SABRE2_V2_local$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1525451793244" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1521504390628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
+    <SUITE FILE_PATH="coverage/sabre2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1524532845628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$AddNode.coverage" NAME="AddNode Coverage Results" MODIFIED="1520722527280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$OpenGLcode2.coverage" NAME="OpenGLcode2 Coverage Results" MODIFIED="1507443683441" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
   </component>
@@ -55,8 +48,8 @@
       <file leaf-file-name="DropDownActions.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/DropDownActions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="193">
-              <caret line="359" column="68" lean-forward="true" selection-start-line="359" selection-start-column="68" selection-end-line="359" selection-end-column="68" />
+            <state relative-caret-position="7040">
+              <caret line="359" column="68" selection-start-line="359" selection-start-column="68" selection-end-line="359" selection-end-column="68" />
             </state>
           </provider>
         </entry>
@@ -64,8 +57,8 @@
       <file leaf-file-name="SABRE2LBCODE.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2LBCODE.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="1910" column="36" lean-forward="true" selection-start-line="1910" selection-start-column="36" selection-end-line="1910" selection-end-column="36" />
+            <state relative-caret-position="38200">
+              <caret line="1910" column="36" selection-start-line="1910" selection-start-column="36" selection-end-line="1910" selection-end-column="36" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -76,8 +69,8 @@
       <file leaf-file-name="Assign_Member_Properties.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="30" column="16" lean-forward="true" selection-start-line="29" selection-start-column="44" selection-end-line="30" selection-end-column="16" />
+            <state relative-caret-position="520">
+              <caret line="30" column="16" selection-start-line="29" selection-start-column="44" selection-end-line="30" selection-end-column="16" />
             </state>
           </provider>
         </entry>
@@ -85,12 +78,11 @@
       <file leaf-file-name="BoundaryConditionApplication.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/BoundaryConditionApplication.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="132">
+            <state relative-caret-position="3720">
               <caret line="188" column="29" selection-start-line="188" selection-start-column="29" selection-end-line="188" selection-end-column="29" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
                 <element signature="e#7675#7756#0" />
-                <element signature="e#7796#8464#0" />
               </folding>
             </state>
           </provider>
@@ -99,7 +91,7 @@
       <file leaf-file-name="h5_file.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/h5_file.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
+            <state relative-caret-position="680">
               <caret line="35" selection-start-line="35" selection-end-line="36" />
             </state>
           </provider>
@@ -108,7 +100,7 @@
       <file leaf-file-name="AddNode.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/AddNode.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
+            <state relative-caret-position="18240">
               <caret line="921" column="56" selection-start-line="921" selection-start-column="56" selection-end-line="921" selection-end-column="56" />
             </state>
           </provider>
@@ -117,8 +109,8 @@
       <file leaf-file-name="SABRE2_main_subclass.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="59">
-              <caret line="2373" column="51" lean-forward="true" selection-start-line="2373" selection-start-column="51" selection-end-line="2373" selection-end-column="51" />
+            <state relative-caret-position="258">
+              <caret line="2363" column="13" selection-start-line="2363" selection-start-column="13" selection-end-line="2363" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -126,7 +118,7 @@
       <file leaf-file-name="SABRE2_GUI.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_GUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="16626">
+            <state relative-caret-position="19560">
               <caret line="978" column="13" selection-start-line="978" selection-start-column="13" selection-end-line="978" selection-end-column="13" />
             </state>
           </provider>
@@ -238,9 +230,10 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
-    <option name="width" value="666" />
-    <option name="height" value="775" />
+    <option name="x" value="2013" />
+    <option name="y" value="-17" />
+    <option name="width" value="1813" />
+    <option name="height" value="1044" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -765,26 +758,23 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1320" height="784" extended-state="6" />
-    <editor active="true" />
+    <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286385" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.41947854" side_tool="true" weight="0.3497758" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.3271605" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.3287037" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.58052146" visible="true" weight="0.5844544" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.58052146" visible="true" weight="0.64091855" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.3287037" />
       <window_info content_ui="combo" id="Project" order="0" weight="0.4552239" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="right" id="Database" order="3" weight="0.32857144" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3258595" />
       <window_info anchor="right" x="917" y="4" width="992" height="613" id="SciView" order="4" weight="0.51666665" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" weight="0.31838566" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49539876" weight="0.5366218" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Coverage" order="5" side_tool="true" weight="0.3296875" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -793,33 +783,35 @@
       <window_info anchor="right" x="0" y="0" width="193" height="887" id="Documentation" order="7" side_tool="true" weight="0.74444443" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3258595" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" weight="0.31838566" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="0" weight="0.4552239" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="12" weight="0.3271605" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" x="917" y="4" width="992" height="613" id="SciView" order="4" weight="0.51666665" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="right" id="Data View" order="6" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286385" />
-      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.58246344" visible="true" weight="0.34828103" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3287037" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3258595" />
-      <window_info anchor="right" id="Data View" order="6" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49583334" weight="0.5366218" />
       <window_info anchor="right" x="0" y="0" width="193" height="887" id="Documentation" order="7" side_tool="true" weight="0.74444443" />
-      <window_info anchor="right" id="Database" order="3" weight="0.32857144" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49583334" weight="0.5366218" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.3287037" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.41753653" side_tool="true" weight="0.23716633" />
+      <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="12" weight="0.3271605" />
+      <window_info anchor="right" x="917" y="4" width="992" height="613" id="SciView" order="4" weight="0.51666665" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" weight="0.31838566" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="right" id="Database" order="3" weight="0.32857144" />
       <window_info anchor="right" id="Coverage" order="5" side_tool="true" weight="0.3296875" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3287037" />
+      <window_info id="Favorites" order="2" side_tool="true" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -893,7 +885,6 @@
           <folding>
             <element signature="e#0#14#0" expanded="true" />
             <element signature="e#7675#7756#0" />
-            <element signature="e#7796#8464#0" />
           </folding>
         </state>
       </provider>
@@ -1121,7 +1112,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_GUI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16626">
+        <state relative-caret-position="19560">
           <caret line="978" column="13" selection-start-line="978" selection-start-column="13" selection-end-line="978" selection-end-column="13" />
         </state>
       </provider>
@@ -1135,27 +1126,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/AddNode.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="18240">
           <caret line="921" column="56" selection-start-line="921" selection-start-column="56" selection-end-line="921" selection-end-column="56" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/BoundaryConditionApplication.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
+        <state relative-caret-position="3720">
           <caret line="188" column="29" selection-start-line="188" selection-start-column="29" selection-end-line="188" selection-end-column="29" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
             <element signature="e#7675#7756#0" />
-            <element signature="e#7796#8464#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2LBCODE.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="1910" column="36" lean-forward="true" selection-start-line="1910" selection-start-column="36" selection-end-line="1910" selection-end-column="36" />
+        <state relative-caret-position="38200">
+          <caret line="1910" column="36" selection-start-line="1910" selection-start-column="36" selection-end-line="1910" selection-end-column="36" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -1164,29 +1154,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/h5_file.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="680">
           <caret line="35" selection-start-line="35" selection-end-line="36" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="30" column="16" lean-forward="true" selection-start-line="29" selection-start-column="44" selection-end-line="30" selection-end-column="16" />
+        <state relative-caret-position="520">
+          <caret line="30" column="16" selection-start-line="29" selection-start-column="44" selection-end-line="30" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/DropDownActions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="193">
-          <caret line="359" column="68" lean-forward="true" selection-start-line="359" selection-start-column="68" selection-end-line="359" selection-end-column="68" />
+        <state relative-caret-position="7040">
+          <caret line="359" column="68" selection-start-line="359" selection-start-column="68" selection-end-line="359" selection-end-column="68" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="59">
-          <caret line="2373" column="51" lean-forward="true" selection-start-line="2373" selection-start-column="51" selection-end-line="2373" selection-end-column="51" />
+        <state relative-caret-position="258">
+          <caret line="2363" column="13" selection-start-line="2363" selection-start-column="13" selection-end-line="2363" selection-end-column="13" />
         </state>
       </provider>
     </entry>

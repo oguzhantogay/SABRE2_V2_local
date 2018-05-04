@@ -2344,13 +2344,13 @@ class uniform_load_def(QMainWindow):
         total_element_number = int(np.sum(SNodevalue[:, :, 2]))
         table_values = uniform_load_def.uniform_load_values(self, self.ui.Uniform_loading_table)
         uniform_load_array = np.zeros((total_element_number, 19))
-        added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
-        print('Snode in uniform data = ', SNodevalue)
+        # added_node_information = h5_file.h5_Class.read_array(self, 'added_node_information')
+        # print('Snode in uniform data = ', SNodevalue)
         # for i in range(int(added_node_information[:, 0].shape[0])):
         #     for j in range(int(added_node_information[i][1]) + 1):
         #         text = 'M' + str(i + 1) + 'S' + str(j + 1)
         #         print(text)
-        print('table values = ', table_values)
+        # print('table values = ', table_values)
         # print('DUP1 = ', DUP1)
         for i in range(total_element_number):
             # print(' i = ', i)
@@ -2375,11 +2375,12 @@ class uniform_load_def(QMainWindow):
                     uniform_load_array[k][13] = p
                     k += 1
             p += 1
-
-        print('uniform load array = ', uniform_load_array)
+        h5_file.h5_Class.update_array(self, uniform_load_array, 'uniform_load_array')
+        # print('uniform load array = ', uniform_load_array)
 
 
     def uniform_load_values(self, tableName):
+        '''this function reads the uniform loading table values'''
 
         col = tableName.currentColumn()
         row = tableName.currentRow()
@@ -2405,31 +2406,6 @@ class uniform_load_def(QMainWindow):
             pass
         return val1
 
-        # val1 = np.zeros((row_check, col_check))
-        # try:
-        #     for i in range(row_check):
-        #         for j in range(col_check):
-        #             if j == 0:
-        #                 val1[i,j] = j + 1
-        #             elif j == 1 or j == 2:
-        #                 value_combo = tableName.cellWidget(i, j).currentIndex()
-        #                 val1[i, j] = value_combo
-        #             else:
-        #                 val1[i, j] = float(tableName.item(i, j).text())
-        #     DropDownActions.ActionClass.statusMessage(self, message="")
-        #
-        # except ValueError:
-        #     tableName.clearSelection()
-        #     if combo_flag == 1:
-        #         pass
-        #     else:
-        #         tableName.item(row, col).setText("0")
-        #         DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
-        #
-        # print(SegmentNames)
-        # return val1, SegmentNames
-
-
 class point_load_def(QMainWindow):
     def __init__(self, ui_layout):
         QMainWindow.__init__(self)
@@ -2450,6 +2426,20 @@ class point_load_def(QMainWindow):
             tableName.setCellWidget(i, position, combo_box)
             combo_box.currentIndexChanged.connect(
                 lambda: SABRE2_main_subclass.update_point_data(self, tableName, combo_flag=1))
+
+    def point_load_array(self):
+        DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
+        DUP2 = h5_file.h5_Class.read_array(self, 'DUP2')
+        RNCc = h5_file.h5_Class.read_array(self, 'RNCc')
+
+        # web depths :
+        Dg1 = DUP1[:,9]
+        Dg2 = DUP2[:,9]
+
+        min_web_depth = np.amin(np.amin(Dg1), np.amin(Dg2))
+
+        # Load array 1 preallocation:
+        LNC = np.zeros((RNCc.shape[0], 14))
 
     def point_data_table(self, tableName, combo_flag=0):
         col = tableName.currentColumn()

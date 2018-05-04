@@ -46,6 +46,8 @@ class h5_Class:
 
         PNC2 = np.zeros((1,1,1))
 
+        uniform_load_array = np.zeros((1,1))
+
         file_open.create_dataset('check_array', data=check_array)
 
         file_open.create_dataset('fixities_vals', data=fixities_vals)
@@ -67,6 +69,8 @@ class h5_Class:
         file_open.create_dataset('table_prop', data=table_prop)
 
         file_open.create_dataset('release_values', data=release_values)
+
+        file_open.create_dataset('uniform_load_array', data=uniform_load_array)
 
         file_open.create_dataset('DUP1', data=DUP1)
 

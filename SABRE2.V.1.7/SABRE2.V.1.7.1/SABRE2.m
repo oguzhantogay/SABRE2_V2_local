@@ -5598,6 +5598,7 @@ function lfm_cancel_pushbutton_Callback(hObject, eventdata)
          lfm_height_edit,pt_title_name,axesm,vstm);
    end
    end
+   
 end % function end
 % ************************************************* FORCE LOADS Callback E
 % *********************************************** UNIFORM LOADS Callback S

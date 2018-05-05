@@ -13,6 +13,7 @@ if isempty(RNCc)
 else 
    
 if strcmp(get(lfm_ld_edit,'String'),'All')
+   fprintf('\nL if 1')
    Dg1=DUP1(:,10);Dg2=DUP2(:,10);  % dw:Web depth (y-dir)
    min_webdepth = min(min(Dg1),min(Dg2));   
    set(pt_title_name,'Visible','off')
@@ -36,6 +37,7 @@ if strcmp(get(lfm_ld_edit,'String'),'All')
       set(pt_title_name,'Visible','on')       
    else
       % Load S
+      fprintf('L else 1')
       for i=1:length(RNCc(:,1))   
          LNC(i,1) =  i;
          LNC(i,2) = RNCc(i,2);
@@ -48,12 +50,16 @@ if strcmp(get(lfm_ld_edit,'String'),'All')
          LNC(i,9) = str2double(get(lfm_my_edit,'String'));
          LNC(i,10)= str2double(get(lfm_mz_edit,'String')); 
          if isequal(get(lfm_height_edit,'Value'),2) || isequal(get(lfm_height_edit,'Value'),3)
+            fprintf('L if 2')
             if abs(str2double(get(lfm_alpha_edit,'String'))) > min_webdepth/2
+               fprintf('L if 3')
                LNC(i,12)= min_webdepth/2;
             else
+               fprintf('L else 3')
                LNC(i,12)= str2double(get(lfm_alpha_edit,'String'));
             end
          else
+            fprintf('L else 2')
             LNC(i,12)= 0;
          end
          LNC(i,13)= get(lfm_height_edit,'Value');  
@@ -72,12 +78,16 @@ if strcmp(get(lfm_ld_edit,'String'),'All')
          LNC1(i,9) = str2double(get(lfm_my_edit,'String'));
          LNC1(i,10)= str2double(get(lfm_mz_edit,'String'));
          if isequal(get(lfm_height_edit,'Value'),2) || isequal(get(lfm_height_edit,'Value'),3)
+            fprintf('L if 4')
             if abs(str2double(get(lfm_alpha_edit,'String'))) > min_webdepth/2
-               LNC1(i,12)= min_webdepth/2;
+               fprintf('L if 5')
+                LNC1(i,12)= min_webdepth/2;
             else
+                fprintf('L else 5')
                LNC1(i,12)= str2double(get(lfm_alpha_edit,'String'));
             end
          else
+            fprintf('L else 4')
             LNC1(i,12)=0;
          end
          LNC1(i,13)= get(lfm_height_edit,'Value');  
@@ -96,12 +106,16 @@ if strcmp(get(lfm_ld_edit,'String'),'All')
             LNC2(i,9) = str2double(get(lfm_my_edit,'String'));
             LNC2(i,10)= str2double(get(lfm_mz_edit,'String')); 
             if isequal(get(lfm_height_edit,'Value'),2) || isequal(get(lfm_height_edit,'Value'),3)
+               fprintf('L if 6')
                if abs(str2double(get(lfm_alpha_edit,'String'))) > min_webdepth/2
+                   fprintf('L if 7')
                   LNC2(i,12)= min_webdepth/2;
                else
+                   fprintf('L else 7')
                   LNC2(i,12)= str2double(get(lfm_alpha_edit,'String'));
                end
             else
+                fprintf('L else 6')
                LNC2(i,12)= 0;
             end
             LNC2(i,13)= get(lfm_height_edit,'Value');  
@@ -110,7 +124,11 @@ if strcmp(get(lfm_ld_edit,'String'),'All')
    end
       
 else
+   fprintf('\nL else else 1')
+   LTYPE
    Dg1=DUP1(:,10);Dg2=DUP2(:,10);  % dw:Web depth (y-dir)
+   Dg1
+   Dg2
    min_webdepth = min(min(Dg1),min(Dg2));     
    Lnode = round(str2double(get(lfm_type_name,'String')));
    if isempty(get(lfm_type_name,'String')) || isnan(str2double(get(lfm_type_name,'String'))) ...
@@ -141,6 +159,7 @@ else
       set(pt_title_name,'String','Please define loads ')
       set(pt_title_name,'Visible','on')       
    else
+       fprintf('\nL else else else 1')
       set(pt_title_name,'Visible','off')
       LNC(length(RNCc(:,1)),14)=0;
       for j=1:length(LTYPE(1,:))
@@ -155,12 +174,16 @@ else
          LNC(LTYPE(1,j),9) = str2double(get(lfm_my_edit,'String'));
          LNC(LTYPE(1,j),10)= str2double(get(lfm_mz_edit,'String')); 
          if isequal(get(lfm_height_edit,'Value'),2) || isequal(get(lfm_height_edit,'Value'),3)
+             fprintf('\nL if 10')
             if abs(str2double(get(lfm_alpha_edit,'String'))) > min_webdepth/2
+                fprintf('\nL if 11')
                LNC(LTYPE(1,j),12)= min_webdepth/2;
             else
+                fprintf('\nL else 11')
                LNC(LTYPE(1,j),12)= str2double(get(lfm_alpha_edit,'String'));
             end
          else
+             fprintf('\nL else 10')
             LNC(LTYPE(1,j),12)= 0;
          end
          LNC(LTYPE(1,j),13)= get(lfm_height_edit,'Value');

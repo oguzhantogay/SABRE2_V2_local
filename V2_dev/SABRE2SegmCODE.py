@@ -42,7 +42,7 @@ class ClassA(QMainWindow):
 
             # print('mem = ', mem, 'max_b = ', max_b, 'added node count = ' , added_node_count)
             BNodevalueOrder = np.zeros((mem, max_b, 16))
-            print('L0 = ' , L0)
+            # print('L0 = ' , L0)
             for i in range(mem):
                 L1 = np.zeros((int(np.amax(BNodevalue[i, :, 1])), 16))
                 # print('BNodevalueorder = ', BNodevalueOrder)
@@ -89,7 +89,7 @@ class ClassA(QMainWindow):
             ###############################
             #### Add Stepped Elements #####
             ###############################
-            print('bnode val before for 1 = ', BNodevalue)
+            # print('bnode val before for 1 = ', BNodevalue)
             for i in range(mem):
                 print("for 1")
                 if not np.isclose(int(np.amax(BNodeval[i, :, 1])), 0):  # No Bracing
@@ -2102,8 +2102,8 @@ class ClassA(QMainWindow):
                             BNodevalue[i][p][14] = 1
                             BNodevalue[i][p][15] = BNodeval[i][j][15]
                             p = p + 1
-            print('BNodevalue in after # 1 - 2 = ', BNodevalue)
-            print('BNodeval in after # 1 - 2 = ', BNodeval)
+            # print('BNodevalue in after # 1 - 2 = ', BNodevalue)
+            # print('BNodeval in after # 1 - 2 = ', BNodeval)
             # print('i # 1 - 2 = ', i, '\nj # 1 - 2 = ', j, '\np # 1 - 2 = ', p)
 
             # ADD Step E
@@ -2155,16 +2155,16 @@ class ClassA(QMainWindow):
                 if any_delete == 0:
                     break
 
-            print('any delete = ', any_delete, 'shape = ', BNodevalueOrder.shape[0], BNodevalueOrder.shape[1], BNodevalueOrder.shape[2])
+            # print('any delete = ', any_delete, 'shape = ', BNodevalueOrder.shape[0], BNodevalueOrder.shape[1], BNodevalueOrder.shape[2])
             # any_delete = BNodevalueOrder.shape[1] - any_delete
-            print('any delete = ', any_delete, 'mem = ', mem)
+            # print('any delete = ', any_delete, 'mem = ', mem)
             if any_delete != 0 and BNodevalueOrder.shape[1] != 1:
                 BNodevalueOrder = np.delete(BNodevalueOrder,BNodevalueOrder.shape[1] - 1, axis=1)
 
 
             del(L1)
 
-            print('test bnode end =', BNodevalueOrder)
+            # print('test bnode end =', BNodevalueOrder)
             BNodevalue = BNodevalueOrder
 
             print("BNodevalue at the end in conditions = ", BNodevalue)

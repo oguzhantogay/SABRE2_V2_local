@@ -415,6 +415,8 @@ if ~isempty(get(gco,'Tag'))
 
    end
 end
+fprintf('LTYPE in force fun')
+LTYPE
 
 set( gca, 'Units', 'normalized', 'Position', [0 0 0.9 1] );
 

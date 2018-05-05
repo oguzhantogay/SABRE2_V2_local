@@ -1896,7 +1896,7 @@ class SABRE2LBCODE(QMainWindow):
         element_number = np.sum(SNodevalue[:,:,2])
         h5_file.h5_Class.update_array(self, element_member, 'element_member')
 
-        from SABRE2_main_subclass import Boundary_Conditions
+        from SABRE2_main_subclass import Boundary_Conditions, uniform_load_def, point_load_def
 
         Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, RNCc)
         Boundary_Conditions.Assign_comboBox_fixities_table(self, number_of_nodes)
@@ -1907,8 +1907,8 @@ class SABRE2LBCODE(QMainWindow):
         Boundary_Conditions.set_release_tables_rows(self, self.ui.My_release,element_number)
         Boundary_Conditions.set_release_tables_rows(self, self.ui.Mz_release,element_number)
         Boundary_Conditions.set_release_tables_rows(self, self.ui.Warping_Release,element_number)
-        from SABRE2_main_subclass import uniform_load_def
         uniform_load_def.set_row_names(self)
+        point_load_def.set_row_names(self, number_of_nodes, RNCc)
 
 
 

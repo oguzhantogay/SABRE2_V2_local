@@ -2769,7 +2769,7 @@ rgb(170, 255, 255)}</string>
         <item>
          <widget class="QTabWidget" name="LC_tabs">
           <property name="currentIndex">
-           <number>1</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="Load_Combinations">
            <attribute name="title">
@@ -3482,6 +3482,39 @@ Number</string>
               <column>
                <property name="text">
                 <string>Mz</string>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>X_Loc</string>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Y_Loc</string>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Z_Loc</string>
                </property>
                <property name="font">
                 <font>

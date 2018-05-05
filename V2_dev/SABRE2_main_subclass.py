@@ -374,40 +374,32 @@ class SABRE2_main_subclass(QMainWindow):
 
         # Distributed Load table arrangements
 
-        uniform_load_options = ["Shear Center", "Flange 2", "Flange 1", "Centroid", "Mid Web"]
-        load_place_position = 2
-        load_type_position = 1
 
-        ui_layout.Add_new_row_uni_load.clicked.connect(lambda: uniform_load_def.uniform_data_table(self))
-        # ui_layout.LoadTypeTable.itemChanged.connect(
-        #     lambda: uniform_load_def.combo_box_types(self, ui_layout.Uniform_loading_table, ui_layout.LoadTypeTable,
-        #                                              load_type_position))
 
-        uniform_load_def.set_combo_box(self, ui_layout.Uniform_loading_table, uniform_load_options,
-                                       load_place_position)
+        ui_layout.Uniform_loading_table.itemChanged.connect(
+            lambda: uniform_load_def.uniform_data_table(self))
 
-        uniform_load_def.combo_box_types(self, ui_layout.Uniform_loading_table, ui_layout.LoadTypeTable,
-                                         load_type_position)
+        ui_layout.Add_new_row_point_load.clicked.connect(lambda : point_load_def.point_load_array(self))
 
-        # ui_layout.Uniform_loading_table.itemChanged.connect(
-        #     lambda: self.update_uniform_data(ui_layout.Uniform_loading_table, combo_flag=0))
+        # ui_layout.Point_load_table.itemChanged.connect(
+        #     lambda: point_load_def.point_data_table(self))
 
         # Point Load table arrangements
 
-        uniform_load_options = ["Shear Center", "Flange 2 + alpha", "Flange 1 + alpha", "Centroid"]
-
-        ui_layout.LoadTypeTable.itemChanged.connect(
-            lambda: point_load_def.combo_box_types(self, ui_layout.Point_load_table, ui_layout.LoadTypeTable,
-                                                   load_type_position))
-
-        point_load_def.set_combo_box(self, ui_layout.Point_load_table, uniform_load_options,
-                                     load_place_position)
-
-        point_load_def.combo_box_types(self, ui_layout.Point_load_table, ui_layout.LoadTypeTable,
-                                       load_type_position)
-
-        ui_layout.Point_load_table.itemChanged.connect(
-            lambda: self.update_point_data(ui_layout.Point_load_table, combo_flag=0))
+        # uniform_load_options = ["Shear Center", "Flange 2 + alpha", "Flange 1 + alpha", "Centroid"]
+        #
+        # ui_layout.LoadTypeTable.itemChanged.connect(
+        #     lambda: point_load_def.combo_box_types(self, ui_layout.Point_load_table, ui_layout.LoadTypeTable,
+        #                                            load_type_position))
+        #
+        # point_load_def.set_combo_box(self, ui_layout.Point_load_table, uniform_load_options,
+        #                              load_place_position)
+        #
+        # point_load_def.combo_box_types(self, ui_layout.Point_load_table, ui_layout.LoadTypeTable,
+        #                                load_type_position)
+        #
+        # ui_layout.Point_load_table.itemChanged.connect(
+        #     lambda: self.update_point_data(ui_layout.Point_load_table, combo_flag=0))
 
         # Progress bar
         # put me in analysis section
@@ -655,8 +647,9 @@ class SABRE2_main_subclass(QMainWindow):
         return uniform_data_vals
 
     def update_point_data(self, tableName, combo_flag):
-        point_data_vals = point_load_def.point_data_table(self, tableName, combo_flag)
+        # point_data_vals = point_load_def.point_data_table(self, tableName, combo_flag)
         # print("main screen uniform load values", point_data_vals)
+        point_load_def = 0
         return point_load_def
 
     def m_assemble_updater(self, tableName, Copy_from_number=1, Insert_after_number=1, lineName=1, Delete_row = 1,
@@ -2335,7 +2328,7 @@ class uniform_load_def(QMainWindow):
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
             combo_box.currentIndexChanged.connect(
-                lambda: SABRE2_main_subclass.update_uniform_data(self, tableName, combo_flag=1))
+                lambda: uniform_load_def.uniform_data_table(self))
 
     def uniform_data_table(self):
         DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
@@ -2412,6 +2405,33 @@ class point_load_def(QMainWindow):
         self.ui = ui_layout
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
+    def set_row_names(self, number_of_nodes, RNCc):
+        # print('set row names run!')
+
+        self.ui.Point_load_table.setRowCount(int(number_of_nodes))
+        point_load_options = ["Shear Center", "Flange 2 + alpha", "Flange 1 + alpha", "Centroid", "Mid Web"]
+        point_load_def.combo_box_types(self, self.ui.Point_load_table, self.ui.LoadTypeTable, 1)
+        point_load_def.set_combo_box(self, self.ui.Point_load_table,point_load_options,2)
+        for i in range(int(number_of_nodes)):
+            text = str(int(i + 1))
+            item = QTableWidgetItem(text)
+            item.setTextAlignment(QtCore.Qt.AlignCenter)
+            item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+            self.ui.Point_load_table.setItem(i, 0, item)
+
+            for j in range(3, 10):
+                text = '0'
+                item = QTableWidgetItem(text)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.ui.Point_load_table.setItem(i, j, item)
+
+            for j in range(10, 13):
+                text = str(RNCc[i][int(j - 9)])
+                item = QTableWidgetItem(text)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
+                self.ui.Point_load_table.setItem(i, j, item)
+
     def combo_box_types(self, tableName, table_load_type, position):
         [var1, IDs] = LoadingClass.defined_load_names(self, table_load_type)
         point_load_def.set_combo_box(self, tableName, IDs, position)
@@ -2425,7 +2445,7 @@ class point_load_def(QMainWindow):
                 combo_box.addItem(t)
             tableName.setCellWidget(i, position, combo_box)
             combo_box.currentIndexChanged.connect(
-                lambda: SABRE2_main_subclass.update_point_data(self, tableName, combo_flag=1))
+                lambda: point_load_def.point_load_array(self))
 
     def point_load_array(self):
         DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
@@ -2435,11 +2455,73 @@ class point_load_def(QMainWindow):
         # web depths :
         Dg1 = DUP1[:,9]
         Dg2 = DUP2[:,9]
-
-        min_web_depth = np.amin(np.amin(Dg1), np.amin(Dg2))
-
-        # Load array 1 preallocation:
+        # print('Dg1 = \n', np.amin(Dg1))
+        # print('Dg2 = \n', np.amin(Dg2))
+        min_web_depth = min(np.amin(Dg1), np.amin(Dg2))
+        table_values = point_load_def.point_data_table(self, self.ui.Point_load_table)
+        print('table values = \n', table_values)# Load array 1 preallocation:
         LNC = np.zeros((RNCc.shape[0], 14))
+        LNC1 = np.zeros((DUP1.shape[0], 14))
+        LNC2 = np.zeros((DUP2.shape[0], 14))
+
+        for i in range(RNCc.shape[0]):
+            LNC[i][0] = i + 1
+            LNC[i][1] = RNCc[i][1]
+            LNC[i][2] = RNCc[i][2]
+            LNC[i][3] = RNCc[i][3]
+            LNC[i][4] = table_values[i][4]
+            LNC[i][5] = table_values[i][5]
+            LNC[i][6] = table_values[i][6]
+            LNC[i][7] = table_values[i][7]
+            LNC[i][8] = table_values[i][8]
+            LNC[i][9] = table_values[i][9]
+            if table_values[i][2] == 2 or  table_values[i][2] == 3:
+                if table_values[i][3] > min_web_depth/2:
+                    LNC[i][11] = min_web_depth/2
+                else:
+                    LNC[i][11] = table_values[i][3]
+            LNC[i][12] = table_values[i][2]
+
+        for i in range(DUP1.shape[0]):
+            LNC1[i][0] = DUP1[i][1]
+            LNC1[i][1] = RNCc[int(DUP1[i][1]) - 1][1]
+            LNC1[i][2] = RNCc[int(DUP1[i][1]) - 1][2]
+            LNC1[i][3] = RNCc[int(DUP1[i][1]) - 1][3]
+            LNC1[i][4] = table_values[i][4]
+            LNC1[i][5] = table_values[i][5]
+            LNC1[i][6] = table_values[i][6]
+            LNC1[i][7] = table_values[i][7]
+            LNC1[i][8] = table_values[i][8]
+            LNC1[i][9] = table_values[i][9]
+            if table_values[i][2] == 2 or  table_values[i][2] == 3:
+                if table_values[i][3] > min_web_depth/2:
+                    LNC1[i][11] = min_web_depth/2
+                else:
+                    LNC1[i][11] = table_values[i][3]
+            LNC1[i][12] = table_values[i][2]
+
+        for i in range(DUP2.shape[0]):
+            LNC2[i][0] = DUP2[i][1]
+            LNC2[i][1] = RNCc[int(DUP2[i][1]) - 1][1]
+            LNC2[i][2] = RNCc[int(DUP2[i][1]) - 1][2]
+            LNC2[i][3] = RNCc[int(DUP2[i][1]) - 1][3]
+            LNC2[i][4] = table_values[i+1][4]
+            LNC2[i][5] = table_values[i+1][5]
+            LNC2[i][6] = table_values[i+1][6]
+            LNC2[i][7] = table_values[i+1][7]
+            LNC2[i][8] = table_values[i+1][8]
+            LNC2[i][9] = table_values[i+1][9]
+            if table_values[i][2] == 2 or  table_values[i][2] == 3:
+                if table_values[i][3] > min_web_depth/2:
+                    LNC2[i][11] = min_web_depth/2
+                else:
+                    LNC2[i][11] = table_values[i+1][3]
+            LNC2[i][12] = table_values[i+1][2]
+
+        print('LNC = \n', LNC)
+        print('LNC1 = \n', LNC1)
+        print('LNC2 = \n', LNC2)
+
 
     def point_data_table(self, tableName, combo_flag=0):
         col = tableName.currentColumn()
@@ -2450,23 +2532,17 @@ class point_load_def(QMainWindow):
         try:
             for i in range(row_check):
                 for j in range(col_check):
-                    if tableName.item(i, j) is None:
-                        item = QTableWidgetItem("0")
-                        tableName.setItem(i, j, item)
-                    elif j == 1 or j == 2:
+                    if j == 1 or j == 2:
                         value_combo = tableName.cellWidget(i, j).currentIndex()
-                        val1[i, j] = value_combo
+                        val1[i, j] = value_combo + 1
                         DropDownActions.ActionClass.statusMessage(self, message="")
-                    else:
+                    elif j == 0 or j == 3 or j == 4 or j == 5 or j == 6 or j == 7 or j == 8 or j == 9:
                         val1[i, j] = float(tableName.item(i, j).text())
                         DropDownActions.ActionClass.statusMessage(self, message="")
 
         except ValueError:
             tableName.clearSelection()
-            if combo_flag == 1:
-                pass
-            else:
-                tableName.item(row, col).setText("0")
-                DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
-
+            tableName.item(row, col).setText("0")
+            DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
+        print('point table values = ', val1)
         return val1

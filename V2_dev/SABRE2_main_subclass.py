@@ -1798,6 +1798,7 @@ class Boundary_Conditions(QMainWindow):
         # print('add shear panel run ! ,', flag)
         # shear_panel_vals = h5_file.h5_Class.read_array(self, 'shear_panel_values')
         # print('shear panel vals = ', shear_panel_vals, '\nrow = ' ,row)
+        self.ui.Shear_panel_table.blockSignals(True)
         total_member_number = self.ui.Members_table.rowCount()
         first_element_nodes = element_member[:, 0]
         # print('first element number = ', first_element_nodes)
@@ -1848,6 +1849,9 @@ class Boundary_Conditions(QMainWindow):
         self.ui.Shear_panel_table.setCellWidget(row, 4, combo_box)
         combo_box.currentIndexChanged.connect(
             lambda: SABRE2_main_subclass.update_shear_panel_table(self, self.ui.Shear_panel_table, flag="combo"))
+
+        self.ui.Shear_panel_table.blockSignals(False)
+
 
 
     def get_checkbox_values(self, table_for_checkbox):
@@ -2295,7 +2299,8 @@ class uniform_load_def(QMainWindow):
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
     def set_row_names(self,array_from_save = 0, uniform_table_values = 0):
-        # print('set row names run!')
+        ''' Setting the number of the rows and combo boxes in the uniform '''
+        self.ui.Uniform_loading_table.blockSignals(True)
         row_count_properties_table = self.ui.Member_Properties_Table.rowCount()
         self.ui.Uniform_loading_table.setRowCount(int(row_count_properties_table))
         uniform_load_options = ["Shear Center", "Flange 2", "Flange 1", "Centroid", "Mid Web"]
@@ -2337,6 +2342,7 @@ class uniform_load_def(QMainWindow):
                     item = QTableWidgetItem(text)
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     self.ui.Uniform_loading_table.setItem(i, j, item)
+        self.ui.Uniform_loading_table.blockSignals(False)
 
     def combo_box_types(self, tableName, table_load_type, position, index = 0):
         if isinstance(index, np.ndarray):
@@ -2446,7 +2452,7 @@ class point_load_def(QMainWindow):
 
     def set_row_names(self, number_of_nodes, RNCc, point_load_table_values = 0):
         # print('set row names run!')
-
+        self.ui.Point_load_table.blockSignals(True)
         self.ui.Point_load_table.setRowCount(int(number_of_nodes))
         point_load_options = ["Shear Center", "Flange 2 + alpha", "Flange 1 + alpha", "Centroid", "Mid Web"]
         point_load_def.combo_box_types(self, self.ui.Point_load_table, self.ui.LoadTypeTable, 1)
@@ -2488,6 +2494,8 @@ class point_load_def(QMainWindow):
                     item = QTableWidgetItem(text)
                     item.setTextAlignment(QtCore.Qt.AlignCenter)
                     self.ui.Point_load_table.setItem(i, j, item)
+
+        self.ui.Point_load_table.blockSignals(False)
 
 
     def combo_box_types(self, tableName, table_load_type, position):
@@ -2612,7 +2620,7 @@ class point_load_def(QMainWindow):
                         val1[i, j] = value_combo + 1
                         DropDownActions.ActionClass.statusMessage(self, message="")
                     elif j == 0 or j == 3 or j == 4 or j == 5 or j == 6 or j == 7 or j == 8 or j == 9:
-                        print('j in data table = ', j, ' i  = ', i)
+                        # print('j in data table = ', j, ' i  = ', i)
                         val1[i, j] = float(tableName.item(i, j).text())
                         DropDownActions.ActionClass.statusMessage(self, message="")
 

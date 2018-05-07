@@ -253,6 +253,7 @@ class ActionClass(QMainWindow):
         # print('self.members_table_values', self.members_table_values)
         # print('self.SNodevalue', self.SNodevalue)
         # print('table prop save = ' , self.table_prop)
+        print('point_load_table_values = ' , point_load_table_values)
 
         filename = 'test_after_shear_panel.npz'
         file = open(filename, 'wb')
@@ -491,6 +492,7 @@ class ActionClass(QMainWindow):
             uniform_load_def.set_row_names(self)
 
         if LNC.shape[0] != 1 or LNC.shape[1] !=1:
+            # print('drop down actions point load table values = \n', point_load_table_values)
             point_load_def.set_row_names(self, number_of_nodes, self.RNCc, point_load_table_values)
         else:
             point_load_def.set_row_names(self, number_of_nodes, self.RNCc)

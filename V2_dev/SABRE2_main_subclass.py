@@ -381,8 +381,8 @@ class SABRE2_main_subclass(QMainWindow):
 
         ui_layout.Add_new_row_point_load.clicked.connect(lambda : point_load_def.point_load_array(self))
 
-        # ui_layout.Point_load_table.itemChanged.connect(
-        #     lambda: point_load_def.point_data_table(self))
+        ui_layout.Point_load_table.itemChanged.connect(
+            lambda:point_load_def.point_data_table(self, ui_layout.Point_load_table))
 
         # Point Load table arrangements
 
@@ -2294,41 +2294,79 @@ class uniform_load_def(QMainWindow):
         self.ui = ui_layout
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
-    def set_row_names(self):
+    def set_row_names(self,array_from_save = 0, uniform_table_values = 0):
         # print('set row names run!')
         row_count_properties_table = self.ui.Member_Properties_Table.rowCount()
         self.ui.Uniform_loading_table.setRowCount(int(row_count_properties_table))
         uniform_load_options = ["Shear Center", "Flange 2", "Flange 1", "Centroid", "Mid Web"]
-        uniform_load_def.combo_box_types(self, self.ui.Uniform_loading_table, self.ui.LoadTypeTable, 1)
-        uniform_load_def.set_combo_box(self, self.ui.Uniform_loading_table,uniform_load_options,2)
         for i in range(int(row_count_properties_table)):
             # print('i = ', i, self.ui.Member_Properties_Table.item(i,0).text())
-            text = str(self.ui.Member_Properties_Table.item(i,0).text())
+            text = str(self.ui.Member_Properties_Table.item(i, 0).text())
             item = QTableWidgetItem(text)
             item.setTextAlignment(QtCore.Qt.AlignCenter)
             item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
             self.ui.Uniform_loading_table.setItem(i, 0, item)
-
-            for j in range(3,6):
-                text = '0'
+        if isinstance(array_from_save, np.ndarray):
+            options_array = array_from_save[:,16]
+            # load_combinations_array = array_from_save[:,16] #implement later on
+            uniform_load_def.combo_box_types(self, self.ui.Uniform_loading_table, self.ui.LoadTypeTable, 1)
+            uniform_load_def.set_combo_box(self, self.ui.Uniform_loading_table, uniform_load_options, 2, options_array)
+            for i in range(int(row_count_properties_table)):
+                text = str(uniform_table_values[i][3])
                 item = QTableWidgetItem(text)
                 item.setTextAlignment(QtCore.Qt.AlignCenter)
-                self.ui.Uniform_loading_table.setItem(i, j, item)
+                self.ui.Uniform_loading_table.setItem(i, 3, item)
 
-    def combo_box_types(self, tableName, table_load_type, position):
-        [var1, IDs] = LoadingClass.defined_load_names(self, table_load_type)
-        uniform_load_def.set_combo_box(self, tableName, IDs, position)
+                text = str(uniform_table_values[i][4])
+                item = QTableWidgetItem(text)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.ui.Uniform_loading_table.setItem(i, 4, item)
 
-    def set_combo_box(self, tableName, options, position):
+                text = str(uniform_table_values[i][5])
+                item = QTableWidgetItem(text)
+                item.setTextAlignment(QtCore.Qt.AlignCenter)
+                self.ui.Uniform_loading_table.setItem(i, 5, item)
 
-        r = tableName.rowCount()
-        for i in range(r):
-            combo_box = QtGui.QComboBox()
-            for t in options:
-                combo_box.addItem(t)
-            tableName.setCellWidget(i, position, combo_box)
-            combo_box.currentIndexChanged.connect(
-                lambda: uniform_load_def.uniform_data_table(self))
+
+        else:
+            uniform_load_def.combo_box_types(self, self.ui.Uniform_loading_table, self.ui.LoadTypeTable, 1)
+            uniform_load_def.set_combo_box(self, self.ui.Uniform_loading_table,uniform_load_options,2)
+            for i in range(int(row_count_properties_table)):
+                for j in range(3,6):
+                    text = '0'
+                    item = QTableWidgetItem(text)
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.ui.Uniform_loading_table.setItem(i, j, item)
+
+    def combo_box_types(self, tableName, table_load_type, position, index = 0):
+        if isinstance(index, np.ndarray):
+            [var1, IDs] = LoadingClass.defined_load_names(self, table_load_type)
+            uniform_load_def.set_combo_box(self, tableName, IDs, position, index)
+        else:
+            [var1, IDs] = LoadingClass.defined_load_names(self, table_load_type)
+            uniform_load_def.set_combo_box(self, tableName, IDs, position,)
+
+    def set_combo_box(self, tableName, options, position, array = 0):
+
+        if isinstance(array, np.ndarray):
+            r = tableName.rowCount()
+            for i in range(r):
+                combo_box = QtGui.QComboBox()
+                for t in options:
+                    combo_box.addItem(t)
+                combo_box.setCurrentIndex(int(array[i]) - 1)
+                tableName.setCellWidget(i, position, combo_box)
+                combo_box.currentIndexChanged.connect(
+                    lambda: uniform_load_def.uniform_data_table(self))
+        else:
+            r = tableName.rowCount()
+            for i in range(r):
+                combo_box = QtGui.QComboBox()
+                for t in options:
+                    combo_box.addItem(t)
+                tableName.setCellWidget(i, position, combo_box)
+                combo_box.currentIndexChanged.connect(
+                    lambda: uniform_load_def.uniform_data_table(self))
 
     def uniform_data_table(self):
         DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
@@ -2369,6 +2407,7 @@ class uniform_load_def(QMainWindow):
                     k += 1
             p += 1
         h5_file.h5_Class.update_array(self, uniform_load_array, 'uniform_load_array')
+        h5_file.h5_Class.update_array(self, table_values, 'uniform_table_values')
         # print('uniform load array = ', uniform_load_array)
 
 
@@ -2405,7 +2444,7 @@ class point_load_def(QMainWindow):
         self.ui = ui_layout
         self.ActionMenus = DropDownActions.ActionClass(ui_layout)
 
-    def set_row_names(self, number_of_nodes, RNCc):
+    def set_row_names(self, number_of_nodes, RNCc, point_load_table_values = 0):
         # print('set row names run!')
 
         self.ui.Point_load_table.setRowCount(int(number_of_nodes))
@@ -2419,12 +2458,6 @@ class point_load_def(QMainWindow):
             item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
             self.ui.Point_load_table.setItem(i, 0, item)
 
-            for j in range(3, 10):
-                text = '0'
-                item = QTableWidgetItem(text)
-                item.setTextAlignment(QtCore.Qt.AlignCenter)
-                self.ui.Point_load_table.setItem(i, j, item)
-
             for j in range(10, 13):
                 text = str(RNCc[i][int(j - 9)])
                 item = QTableWidgetItem(text)
@@ -2432,20 +2465,59 @@ class point_load_def(QMainWindow):
                 item.setFlags(QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable)
                 self.ui.Point_load_table.setItem(i, j, item)
 
+        if isinstance(point_load_table_values, np.ndarray):
+            # print('point load array in set rows = ', point_load_table_values)
+            point_load_def.combo_box_types(self, self.ui.Point_load_table, self.ui.LoadTypeTable, 1)
+            point_load_def.set_combo_box(self, self.ui.Point_load_table, point_load_options, 2,
+                                         point_load_table_values[:, 2])
+            for i in range(int(number_of_nodes)):
+                for j in range(7):
+                    # print('point table values = ', point_load_table_values[i][j+3])
+                    text = str(point_load_table_values[i, j+3])
+                    item = QTableWidgetItem(text)
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.ui.Point_load_table.setItem(i, j+3, item)
+
+
+        else:
+            point_load_def.combo_box_types(self, self.ui.Point_load_table, self.ui.LoadTypeTable, 1)
+            point_load_def.set_combo_box(self, self.ui.Point_load_table, point_load_options, 2)
+            for i in range(int(number_of_nodes)):
+                for j in range(3, 10):
+                    text = '0'
+                    item = QTableWidgetItem(text)
+                    item.setTextAlignment(QtCore.Qt.AlignCenter)
+                    self.ui.Point_load_table.setItem(i, j, item)
+
+
     def combo_box_types(self, tableName, table_load_type, position):
         [var1, IDs] = LoadingClass.defined_load_names(self, table_load_type)
         point_load_def.set_combo_box(self, tableName, IDs, position)
 
-    def set_combo_box(self, tableName, options, position):
+    def set_combo_box(self, tableName, options, position,array = 0):
 
         r = tableName.rowCount()
-        for i in range(r):
-            combo_box = QtGui.QComboBox()
-            for t in options:
-                combo_box.addItem(t)
-            tableName.setCellWidget(i, position, combo_box)
-            combo_box.currentIndexChanged.connect(
-                lambda: point_load_def.point_load_array(self))
+
+        if isinstance(array, np.ndarray):
+            # print('array = ', array)
+            for i in range(r):
+
+                combo_box = QtGui.QComboBox()
+                for t in options:
+                    combo_box.addItem(t)
+                # print(int(array[i]) - 1, position)
+                combo_box.setCurrentIndex(int(array[i]) - 1)
+                tableName.setCellWidget(i, position, combo_box)
+                combo_box.currentIndexChanged.connect(
+                    lambda: point_load_def.point_load_array(self))
+        else:
+            for i in range(r):
+                combo_box = QtGui.QComboBox()
+                for t in options:
+                    combo_box.addItem(t)
+                tableName.setCellWidget(i, position, combo_box)
+                combo_box.currentIndexChanged.connect(
+                    lambda: point_load_def.point_load_array(self))
 
     def point_load_array(self):
         DUP1 = h5_file.h5_Class.read_array(self, 'DUP1')
@@ -2459,7 +2531,7 @@ class point_load_def(QMainWindow):
         # print('Dg2 = \n', np.amin(Dg2))
         min_web_depth = min(np.amin(Dg1), np.amin(Dg2))
         table_values = point_load_def.point_data_table(self, self.ui.Point_load_table)
-        print('table values = \n', table_values)# Load array 1 preallocation:
+        # print('table values = \n', table_values)# Load array 1 preallocation:
         LNC = np.zeros((RNCc.shape[0], 14))
         LNC1 = np.zeros((DUP1.shape[0], 14))
         LNC2 = np.zeros((DUP2.shape[0], 14))
@@ -2518,12 +2590,15 @@ class point_load_def(QMainWindow):
                     LNC2[i][11] = table_values[i+1][3]
             LNC2[i][12] = table_values[i+1][2]
 
-        print('LNC = \n', LNC)
-        print('LNC1 = \n', LNC1)
-        print('LNC2 = \n', LNC2)
+        # print('LNC = \n', LNC)
+        # print('LNC1 = \n', LNC1)
+        # print('LNC2 = \n', LNC2)
+        h5_file.h5_Class.update_array(self, LNC,'LNC')
+        h5_file.h5_Class.update_array(self, LNC,'LNC1')
+        h5_file.h5_Class.update_array(self, LNC,'LNC2')
 
-
-    def point_data_table(self, tableName, combo_flag=0):
+    def point_data_table(self, tableName):
+        tableName.blockSignals(True)
         col = tableName.currentColumn()
         row = tableName.currentRow()
         row_check = tableName.rowCount()
@@ -2537,6 +2612,7 @@ class point_load_def(QMainWindow):
                         val1[i, j] = value_combo + 1
                         DropDownActions.ActionClass.statusMessage(self, message="")
                     elif j == 0 or j == 3 or j == 4 or j == 5 or j == 6 or j == 7 or j == 8 or j == 9:
+                        print('j in data table = ', j, ' i  = ', i)
                         val1[i, j] = float(tableName.item(i, j).text())
                         DropDownActions.ActionClass.statusMessage(self, message="")
 
@@ -2544,5 +2620,7 @@ class point_load_def(QMainWindow):
             tableName.clearSelection()
             tableName.item(row, col).setText("0")
             DropDownActions.ActionClass.statusMessage(self, message="Please enter only numbers in this cell!")
-        print('point table values = ', val1)
+        # print('point table values = ', val1)
+        h5_file.h5_Class.update_array(self, val1, 'point_load_table_values')
+        tableName.blockSignals(True)
         return val1

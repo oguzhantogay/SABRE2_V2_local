@@ -29,8 +29,6 @@ class ActionClass(QMainWindow):
         self.My_release_values = None
         self.Mz_release_values = None
         self.Warping_release_values = None
-        self.uniform_data_values = None
-        self.point_data_values = None
         self.JNodeValue_i = None
         self.JNodeValue_j = None
         self.DUP1 = None
@@ -243,15 +241,14 @@ class ActionClass(QMainWindow):
         self.PNC = h5_file.h5_Class.read_array(self, 'PNC')
         self.PNC1 = h5_file.h5_Class.read_array(self, 'PNC1')
         self.PNC2 = h5_file.h5_Class.read_array(self, 'PNC2')
+        uniform_load_array = h5_file.h5_Class.read_array(self, 'uniform_load_array')
+        LNC = h5_file.h5_Class.read_array(self, 'LNC')
+        LNC1 = h5_file.h5_Class.read_array(self, 'LNC1')
+        LNC2 = h5_file.h5_Class.read_array(self, 'LNC2')
+        uniform_table_values = h5_file.h5_Class.read_array(self, 'uniform_table_values')
+        point_load_table_values = h5_file.h5_Class.read_array(self, 'point_load_table_values')
         self.shear_panel_values = h5_file.h5_Class.read_array(self, 'shear_panel_values')
         self.release_values = h5_file.h5_Class.read_array(self, 'release_values')
-
-        self.uniform_data_values = SABRE2_main_subclass.SABRE2_main_subclass.update_uniform_data(self,
-                                                                                                 self.ui.Uniform_loading_table,
-                                                                                                 combo_flag=0)
-        self.point_data_values = SABRE2_main_subclass.SABRE2_main_subclass.update_point_data(self,
-                                                                                             self.ui.Point_load_table,
-                                                                                             combo_flag=0)
 
         # print('self.members_table_values', self.members_table_values)
         # print('self.SNodevalue', self.SNodevalue)
@@ -278,14 +275,18 @@ class ActionClass(QMainWindow):
                  PNC = self.PNC,
                  PNC1 = self.PNC1,
                  PNC2 = self.PNC2,
+                 LNC = LNC,
+                 LNC1 = LNC1,
+                 LNC2 = LNC2,
+                 uniform_table_values = uniform_table_values,
+                 point_load_table_values = point_load_table_values,
+                 uniform_load_array = uniform_load_array,
                  shear_panel_values=self.shear_panel_values,
                  ground_spring_values=self.ground_spring_values,
                  torsional_spring_values=self.torsional_spring_values,
                  My_release_values=self.My_release_values,
                  Mz_release_values=self.Mz_release_values,
-                 Warping_release_values=self.Warping_release_values,
-                 uniform_data_values=self.uniform_data_values,
-                 point_data_values=self.point_data_values
+                 Warping_release_values=self.Warping_release_values
                  )
         file.close()
 
@@ -321,11 +322,16 @@ class ActionClass(QMainWindow):
         self.PNC = aa['PNC']
         self.PNC1 = aa['PNC1']
         self.PNC2 = aa['PNC2']
+        LNC = aa['LNC']
+        LNC1 = aa['LNC1']
+        LNC2 = aa['LNC2']
         self.shear_panel_values = aa['shear_panel_values']
         self.ground_spring_values = aa['ground_spring_values']
         self.release_values = aa['release_values']
-        self.uniform_data_values = aa['uniform_data_values']
-        self.point_data_values = aa['point_data_values']
+        uniform_load_array = aa['uniform_load_array']
+        uniform_table_values = aa['uniform_table_values']
+        point_load_table_values = aa['point_load_table_values']
+
         h5_file.h5_Class.update_array(self, self.element_member, 'element_member')
         h5_file.h5_Class.update_array(self, self.BNodevalue, 'BNodevalue')
         h5_file.h5_Class.update_array(self, self.SNodevalue, 'SNodevalue')
@@ -340,6 +346,12 @@ class ActionClass(QMainWindow):
         h5_file.h5_Class.update_array(self, self.PNC, 'PNC')
         h5_file.h5_Class.update_array(self, self.PNC1, 'PNC1')
         h5_file.h5_Class.update_array(self, self.PNC2, 'PNC2')
+        h5_file.h5_Class.update_array(self, LNC, 'LNC')
+        h5_file.h5_Class.update_array(self, LNC1, 'LNC1')
+        h5_file.h5_Class.update_array(self, LNC2, 'LNC2')
+        h5_file.h5_Class.update_array(self, uniform_load_array, 'uniform_load_array')
+        h5_file.h5_Class.update_array(self, uniform_table_values, 'uniform_table_values')
+        h5_file.h5_Class.update_array(self, point_load_table_values, 'point_load_table_values')
         # print("\njoint values = ", self.joint_values)#, "\nmember prop values = ", self.member_properties_values,
         #       "\nmembers table values = ", self.members_table_values)
         # print('read DUP1 = ', self.DUP1)
@@ -350,13 +362,7 @@ class ActionClass(QMainWindow):
         # print('read PNC2 = ', self.PNC2)
         # print('read self.SNodevalue', self.SNodevalue)
         shape_joint_table = int(self.joint_values.shape[0])
-        shape_members_table_values = int(self.members_table_values.shape[0])
-        # shape_torsional_spring_values = int(self.torsional_spring_values.shape[0])
-        # shape_My_values = int(self.My_release_values.shape[0])
-        # shape_Mz_values = int(self.Mz_release_values.shape[0])
-        # shape_warping_release_values = int(self.Warping_release_values.shape[0])
-        shape_uniform_data_values = int(self.uniform_data_values.shape[0])
-        # shape_point_data_values = int(self.point_data_values.shape[0])
+        shape_members_table_values = int(self.members_table_values.shape[0])\
         # print('shape member table = ', shape_members_table_values)
         # print('shape member table = ', self.members_table_values)
         # print('self.SNodevalue', self.SNodevalue)
@@ -427,7 +433,7 @@ class ActionClass(QMainWindow):
         import AddNode
 
         AddNode.AddNodeClass.setAddNodeComboBox(self)
-        from SABRE2_main_subclass import Boundary_Conditions
+        from SABRE2_main_subclass import Boundary_Conditions, uniform_load_def, point_load_def
         number_of_nodes = int(self.RNCc[:, 0].shape[0])
         if self.fixities_vals.shape[0] != 1 or self.fixities_vals.shape[1] != 1:
             Boundary_Conditions.set_number_of_rows_fixities_table(self, number_of_nodes, self.RNCc, self.fixities_vals)
@@ -478,6 +484,16 @@ class ActionClass(QMainWindow):
 
         else:
             Boundary_Conditions.add_shear_panel(self, total_element_number, 0)
+
+        if uniform_load_array.shape[0] != 1 or uniform_load_array.shape[1] != 1:
+            uniform_load_def.set_row_names(self, uniform_load_array, uniform_table_values)
+        else:
+            uniform_load_def.set_row_names(self)
+
+        if LNC.shape[0] != 1 or LNC.shape[1] !=1:
+            point_load_def.set_row_names(self, number_of_nodes, self.RNCc, point_load_table_values)
+        else:
+            point_load_def.set_row_names(self, number_of_nodes, self.RNCc)
 
         print('file read from ', filename)
 

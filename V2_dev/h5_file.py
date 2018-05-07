@@ -10,8 +10,6 @@ class h5_Class:
 
         check_array = np.zeros((1,1)) # to check whether all member cross-section props are defined.
 
-        fixities_vals = np.zeros((1,12))
-
         added_node_information = np.zeros((1,2))
 
         added_node_information[0][0] = 1
@@ -34,6 +32,12 @@ class h5_Class:
 
         release_values =  np.zeros((1,1))
 
+        LNC =  np.zeros((1,1))
+
+        LNC1 =  np.zeros((1,1))
+
+        LNC2 =  np.zeros((1,1))
+
         DUP1 = np.zeros((1,1,1))
 
         DUP2 = np.zeros((1,1,1))
@@ -47,6 +51,10 @@ class h5_Class:
         PNC2 = np.zeros((1,1,1))
 
         uniform_load_array = np.zeros((1,1))
+
+        uniform_table_values = np.zeros((1,1))
+
+        point_load_table_values = np.zeros((1,1))
 
         file_open.create_dataset('check_array', data=check_array)
 
@@ -72,6 +80,10 @@ class h5_Class:
 
         file_open.create_dataset('uniform_load_array', data=uniform_load_array)
 
+        file_open.create_dataset('uniform_table_values', data=uniform_table_values)
+
+        file_open.create_dataset('point_load_table_values', data=point_load_table_values)
+
         file_open.create_dataset('DUP1', data=DUP1)
 
         file_open.create_dataset('DUP2', data=DUP2)
@@ -83,6 +95,12 @@ class h5_Class:
         file_open.create_dataset('PNC1', data=PNC1)
 
         file_open.create_dataset('PNC2', data=PNC2)
+
+        file_open.create_dataset('LNC', data=LNC)
+
+        file_open.create_dataset('LNC1', data=LNC1)
+
+        file_open.create_dataset('LNC2', data=LNC2)
 
         file_open.close()
 

@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f0ee3103-6d08-4b17-8e91-429164a7cb7a" name="Default" comment="">
+    <list default="true" id="f0ee3103-6d08-4b17-8e91-429164a7cb7a" name="Default" comment="read and save fun for the pre-processing works! next processing =&gt; ELBA">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/DropDownActions.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/DropDownActions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/h5_file.py" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/h5_file.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/V2_dev/test_after_shear_panel.npz" beforeDir="false" afterPath="$PROJECT_DIR$/V2_dev/test_after_shear_panel.npz" afterDir="false" />
     </list>
     <ignored path="C:\Users\Python\Desktop\SABRE2-V2\.idea\shelf/" />
     <ignored path="C:\Oguzhan\SABRE2-V2\.idea\shelf/" />
@@ -21,10 +17,10 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/sabre2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1524532845628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
-    <SUITE FILE_PATH="coverage/SABRE2_V2_local$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1525665923951" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$OpenGLTest.coverage" NAME="OpenGLTest Coverage Results" MODIFIED="1507430818206" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
+    <SUITE FILE_PATH="coverage/SABRE2_V2_local$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1525716002596" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1521504390628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
+    <SUITE FILE_PATH="coverage/sabre2$SABRE2_main.coverage" NAME="SABRE2_main Coverage Results" MODIFIED="1524532845628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$AddNode.coverage" NAME="AddNode Coverage Results" MODIFIED="1520722527280" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
     <SUITE FILE_PATH="coverage/SABRE2_V2$OpenGLcode2.coverage" NAME="OpenGLcode2 Coverage Results" MODIFIED="1507443683441" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/V2_dev" />
   </component>
@@ -48,8 +44,8 @@
       <file leaf-file-name="DropDownActions.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/DropDownActions.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="91">
-              <caret line="332" column="31" selection-start-line="332" selection-start-column="8" selection-end-line="332" selection-end-column="31" />
+            <state relative-caret-position="187">
+              <caret line="486" column="42" lean-forward="true" selection-start-line="486" selection-start-column="42" selection-end-line="486" selection-end-column="42" />
             </state>
           </provider>
         </entry>
@@ -58,7 +54,7 @@
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2LBCODE.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="213">
-              <caret line="1898" column="62" lean-forward="true" selection-start-line="1898" selection-start-column="62" selection-end-line="1898" selection-end-column="94" />
+              <caret line="1898" column="62" selection-start-line="1898" selection-start-column="62" selection-end-line="1898" selection-end-column="94" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
@@ -69,7 +65,7 @@
       <file leaf-file-name="Assign_Member_Properties.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
+            <state relative-caret-position="520">
               <caret line="30" column="16" selection-start-line="29" selection-start-column="44" selection-end-line="30" selection-end-column="16" />
             </state>
           </provider>
@@ -78,8 +74,8 @@
       <file leaf-file-name="BoundaryConditionApplication.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/BoundaryConditionApplication.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-8">
-              <caret line="176" column="44" lean-forward="true" selection-start-line="176" selection-start-column="44" selection-end-line="176" selection-end-column="44" />
+            <state relative-caret-position="3520">
+              <caret line="176" column="44" selection-start-line="176" selection-start-column="44" selection-end-line="176" selection-end-column="44" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
                 <element signature="e#7675#7756#0" />
@@ -91,8 +87,8 @@
       <file leaf-file-name="h5_file.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/h5_file.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="10" column="100" lean-forward="true" selection-start-line="10" selection-start-column="100" selection-end-line="10" selection-end-column="100" />
+            <state relative-caret-position="180">
+              <caret line="10" column="100" selection-start-line="10" selection-start-column="100" selection-end-line="10" selection-end-column="100" />
             </state>
           </provider>
         </entry>
@@ -100,7 +96,7 @@
       <file leaf-file-name="AddNode.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/AddNode.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="15504">
+            <state relative-caret-position="18240">
               <caret line="921" column="56" selection-start-line="921" selection-start-column="56" selection-end-line="921" selection-end-column="56" />
             </state>
           </provider>
@@ -109,17 +105,8 @@
       <file leaf-file-name="SABRE2_main_subclass.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="74">
-              <caret line="383" column="34" selection-start-line="383" selection-start-column="18" selection-end-line="383" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="_methods.py" pinned="false" current-in-tab="false">
-        <entry file="file://C:/Python3.6/Lib/site-packages/numpy/core/_methods.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="28" selection-start-line="28" selection-end-line="28" />
+            <state relative-caret-position="38">
+              <caret line="1930" column="65" lean-forward="true" selection-start-line="1930" selection-start-column="65" selection-end-line="1930" selection-end-column="65" />
             </state>
           </provider>
         </entry>
@@ -127,7 +114,7 @@
       <file leaf-file-name="SABRE2_GUI.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_GUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="16626">
+            <state relative-caret-position="19560">
               <caret line="978" column="13" selection-start-line="978" selection-start-column="13" selection-end-line="978" selection-end-column="13" />
             </state>
           </provider>
@@ -144,8 +131,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>set num</find>
-      <find>bnode va</find>
       <find>test b</find>
       <find>Torsional_Release</find>
       <find>Consta</find>
@@ -172,8 +157,10 @@
       <find>self.point_data_values</find>
       <find>shape_point_data_values</find>
       <find>setCurrentIndex</find>
-      <find>point_load_table_values</find>
       <find>block</find>
+      <find>point_load_table_values</find>
+      <find>drop down actions point load table values =</find>
+      <find>j in da</find>
     </findStrings>
     <replaceStrings>
       <replace>glWidget.font2</replace>
@@ -241,9 +228,10 @@
     <packageJsonPaths />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-7" />
-    <option name="width" value="666" />
-    <option name="height" value="775" />
+    <option name="x" value="131" />
+    <option name="y" value="-8" />
+    <option name="width" value="1813" />
+    <option name="height" value="1044" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -411,13 +399,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1506299146941</updated>
-    </task>
-    <task id="LOCAL-00023" summary="tr">
-      <created>1515605463918</created>
-      <option name="number" value="00023" />
-      <option name="presentableId" value="LOCAL-00023" />
-      <option name="project" value="LOCAL" />
-      <updated>1515605463918</updated>
     </task>
     <task id="LOCAL-00024" summary="tr">
       <created>1515657325666</created>
@@ -755,7 +736,14 @@
       <option name="project" value="LOCAL" />
       <updated>1525499813870</updated>
     </task>
-    <option name="localTasksCounter" value="72" />
+    <task id="LOCAL-00072" summary="read and save fun for the pre-processing works! next processing =&gt; ELBA">
+      <created>1525707549777</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1525707549777</updated>
+    </task>
+    <option name="localTasksCounter" value="73" />
     <servers />
   </component>
   <component name="TodoView">
@@ -768,15 +756,14 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1320" height="784" extended-state="6" />
-    <editor active="true" />
+    <frame x="54" y="-8" width="1320" height="784" extended-state="6" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286385" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.41947854" side_tool="true" weight="0.3497758" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.3271605" />
       <window_info anchor="bottom" id="Python Console" order="8" weight="0.3287037" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.58052146" visible="true" weight="0.47683108" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.58052146" weight="0.7058824" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.3287037" />
       <window_info content_ui="combo" id="Project" order="0" weight="0.4552239" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
@@ -786,8 +773,8 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49539876" weight="0.5366218" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" weight="0.31838566" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Coverage" order="5" side_tool="true" weight="0.3296875" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -795,34 +782,34 @@
       <window_info anchor="right" x="0" y="0" width="193" height="887" id="Documentation" order="7" side_tool="true" weight="0.74444443" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="11" weight="0.31838566" />
+      <window_info anchor="right" id="Coverage" order="5" side_tool="true" weight="0.3296875" />
     </layout>
     <layout-to-restore>
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.4552239" />
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
-      <window_info anchor="right" id="Database" order="3" weight="0.32857144" />
       <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.58246344" visible="true" weight="0.34828103" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="right" id="Data View" order="6" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286385" />
-      <window_info content_ui="combo" id="Project" order="0" weight="0.4552239" />
-      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3287037" />
-      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Version Control" order="12" weight="0.3271605" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.3258595" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" x="0" y="0" width="193" height="887" id="Documentation" order="7" side_tool="true" weight="0.74444443" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49583334" weight="0.5366218" />
+      <window_info anchor="right" id="Database" order="3" weight="0.32857144" />
       <window_info anchor="right" id="Coverage" order="5" side_tool="true" weight="0.3296875" />
-      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.41753653" side_tool="true" weight="0.23716633" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49583334" weight="0.5366218" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="12" weight="0.3271605" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.41753653" side_tool="true" weight="0.23716633" />
       <window_info anchor="right" x="917" y="4" width="992" height="613" id="SciView" order="4" weight="0.51666665" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3258595" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.3287037" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" weight="0.31838566" />
-      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Python Console" order="10" weight="0.3287037" />
     </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -832,7 +819,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Member Props file added" />
     <MESSAGE value="Add Node bug in step member fixed # 6 - 1" />
     <MESSAGE value="Step added works continue, combobox fixed" />
     <MESSAGE value="Add Node OpenGL Rendering Works, work on segment numbering and add node minimized rendering" />
@@ -857,7 +843,8 @@
     <MESSAGE value="Release table works, next to read fun for release tables" />
     <MESSAGE value="Read fun works till warping tab" />
     <MESSAGE value="point load array works, next work on save and read fun for uniform and point load menu." />
-    <option name="LAST_COMMIT_MESSAGE" value="point load array works, next work on save and read fun for uniform and point load menu." />
+    <MESSAGE value="read and save fun for the pre-processing works! next processing =&gt; ELBA" />
+    <option name="LAST_COMMIT_MESSAGE" value="read and save fun for the pre-processing works! next processing =&gt; ELBA" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1109,7 +1096,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_GUI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="16626">
+        <state relative-caret-position="19560">
           <caret line="978" column="13" selection-start-line="978" selection-start-column="13" selection-end-line="978" selection-end-column="13" />
         </state>
       </provider>
@@ -1123,29 +1110,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/AddNode.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15504">
+        <state relative-caret-position="18240">
           <caret line="921" column="56" selection-start-line="921" selection-start-column="56" selection-end-line="921" selection-end-column="56" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Python3.6/Lib/site-packages/numpy/core/_methods.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="28" selection-start-line="28" selection-end-line="28" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://C:/Python3.6/Lib/site-packages/numpy/core/_methods.py" />
     <entry file="file://$PROJECT_DIR$/V2_dev/Assign_Member_Properties.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
+        <state relative-caret-position="520">
           <caret line="30" column="16" selection-start-line="29" selection-start-column="44" selection-end-line="30" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/BoundaryConditionApplication.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-8">
-          <caret line="176" column="44" lean-forward="true" selection-start-line="176" selection-start-column="44" selection-end-line="176" selection-end-column="44" />
+        <state relative-caret-position="3520">
+          <caret line="176" column="44" selection-start-line="176" selection-start-column="44" selection-end-line="176" selection-end-column="44" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
             <element signature="e#7675#7756#0" />
@@ -1153,24 +1134,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2018.1/system/python_stubs/652478984/PyQt4/QtGui/QTableWidgetItem.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27">
-          <caret line="174" column="35" lean-forward="true" selection-start-line="174" selection-start-column="35" selection-end-line="174" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/.PyCharm2018.1/system/python_stubs/652478984/PyQt4/QtGui/QTableWidgetItem.py" />
     <entry file="file://$PROJECT_DIR$/V2_dev/h5_file.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="10" column="100" lean-forward="true" selection-start-line="10" selection-start-column="100" selection-end-line="10" selection-end-column="100" />
+        <state relative-caret-position="180">
+          <caret line="10" column="100" selection-start-line="10" selection-start-column="100" selection-end-line="10" selection-end-column="100" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2LBCODE.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="213">
-          <caret line="1898" column="62" lean-forward="true" selection-start-line="1898" selection-start-column="62" selection-end-line="1898" selection-end-column="94" />
+          <caret line="1898" column="62" selection-start-line="1898" selection-start-column="62" selection-end-line="1898" selection-end-column="94" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>
@@ -1179,15 +1154,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/DropDownActions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="91">
-          <caret line="332" column="31" selection-start-line="332" selection-start-column="8" selection-end-line="332" selection-end-column="31" />
+        <state relative-caret-position="187">
+          <caret line="486" column="42" lean-forward="true" selection-start-line="486" selection-start-column="42" selection-end-line="486" selection-end-column="42" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/V2_dev/SABRE2_main_subclass.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="74">
-          <caret line="383" column="34" selection-start-line="383" selection-start-column="18" selection-end-line="383" selection-end-column="34" />
+        <state relative-caret-position="38">
+          <caret line="1930" column="65" lean-forward="true" selection-start-line="1930" selection-start-column="65" selection-end-line="1930" selection-end-column="65" />
         </state>
       </provider>
     </entry>

@@ -1,0 +1,22 @@
+beep off; tic
+%% --------Only edit the directory--------------------------------------
+inpath=pwd;
+outpath=pwd;
+%% ---------------------------------------------------------------------
+gamma_out   = fopen(strcat(fullfile(outpath,'gamma.txt')),'wt');            % Output file is opened. 
+inpfilename = ls(fullfile(inpath, '*.inp'));                                % import all .inp files within a path directory
+for runs=1:size(inpfilename,1)
+filename=inpfilename(runs,:)
+slend_flag_temp=strtrim(filename); slend_flag=slend_flag_temp(end-4:end-4);
+
+[Geometry_data,Member_data,Loading_data,DistLoading_data,...
+   BC_data,ShearPanel_data,Spring_data,Material_data,Analysis_data]...
+   =SABRE2InpOpen(inpath,filename);  
+
+[gamma]=BucklingAnalysis_new4(Geometry_data,Member_data,Loading_data,DistLoading_data,...
+BC_data,Material_data,slend_flag);
+
+PostProcess(gamma_out,filename,gamma);                                      %Post-processing of the data
+end
+toc
+fclose('all'); close all; clear
